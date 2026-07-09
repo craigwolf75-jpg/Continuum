@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#0E1B2E}
+  body{font-family:'Inter',sans-serif}
+  a{color:#C9963C;text-decoration:none}
+  a:hover{color:#E3B968}
+  .rv{opacity:0;transform:translateY(14px);transition:opacity .45s ease-out,transform .45s ease-out}
+  .rv.in{opacity:1;transform:none}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="font-family:'Inter',sans-serif;color:#16202E;background:#0E1B2E">
+
+  <!-- ================= HEADER ================= -->
+  <div style="position:sticky;top:0;z-index:80;background:rgba(14,27,46,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)">
+    <div style="max-width:1200px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:21px;color:#fff;letter-spacing:-0.01em;flex-shrink:0">Continuum<span style="color:#C9963C">.</span></div>
+      <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap;justify-content:flex-end">
+        <a href="#home" style="font-size:13.5px;color:#fff;font-weight:500">Home</a>
+        <a href="#how" style="font-size:13.5px;color:#AAB6C6;font-weight:500" style-hover="color:#fff">How It Works</a>
+        <a href="#roles" style="font-size:13.5px;color:#AAB6C6;font-weight:500" style-hover="color:#fff">For Employers</a>
+        <a href="#doctrine" style="font-size:13.5px;color:#AAB6C6;font-weight:500" style-hover="color:#fff">For Clinicians</a>
+        <a href="#signal" style="font-size:13.5px;color:#AAB6C6;font-weight:500" style-hover="color:#fff">For Workers</a>
+        <a href="#privacy" style="font-size:13.5px;color:#AAB6C6;font-weight:500" style-hover="color:#fff">Privacy &amp; Trust</a>
+        <a href="#evidence" style="font-size:13.5px;color:#AAB6C6;font-weight:500" style-hover="color:#fff">Evidence</a>
+        <a href="#cta" style="background:#C9963C;color:#0E1B2E;font-size:13.5px;font-weight:600;padding:10px 20px;border-radius:10px" style-hover="background:#E3B968;color:#0E1B2E">Start a Pilot</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= S1 HERO (navy) ================= -->
+  <div id="home" style="background:linear-gradient(175deg,#0E1B2E 0%,#0A1526 100%);padding:110px 32px 120px">
+    <div style="max-width:1200px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1.2;min-width:420px">
+        <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:22px">The new standard for workplace injury management</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;letter-spacing:-0.025em;line-height:1.06;color:#fff;margin:0 0 26px">Where care ends,<br><span style="color:#C9963C">Continuum begins.</span></h1>
+        <p style="font-size:18px;line-height:1.6;color:#AAB6C6;margin:0 0 36px;max-width:540px">The visit gets the worker to a doctor. Continuum manages everything after: daily check-ins, safe duties, and WCB-ready reporting, all the way back to full duty.</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <a href="#cta" style="background:#C9963C;color:#0E1B2E;font-size:15px;font-weight:600;padding:15px 30px;border-radius:12px;display:inline-block" style-hover="background:#E3B968;color:#0E1B2E">Start a Pilot</a>
+          <a href="#how" style="border:1px solid rgba(255,255,255,.25);color:#fff;font-size:15px;font-weight:600;padding:15px 30px;border-radius:12px;display:inline-block" style-hover="border-color:#E3B968;color:#E3B968">See How It Works</a>
+        </div>
+      </div>
+
+      <!-- product vignette · SOURCE: real screens, public-safe variants (2c audit). Phone = Worker App Today (Prompt 02 A4). Browser crop = Hub H2 KPI row, demo-cast aggregates only. -->
+      <div style="flex:1;min-width:380px;display:flex;flex-direction:column;gap:22px;align-items:center">
+        <!-- phone · source: Continuum Worker App.dc.html (Today screen) -->
+        <div style="width:280px;background:#0A1424;border-radius:38px;padding:10px;box-shadow:0 30px 70px rgba(0,0,0,.5);flex-shrink:0;transform:rotate(4deg)">
+          <div style="background:#FAF9F6;border-radius:30px;overflow:hidden;padding:18px 16px 14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <div style="display:flex;align-items:center;gap:7px">
+                <div style="width:22px;height:22px;border-radius:7px;background:#0E1B2E;color:#C9963C;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px">C</div>
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#16202E">Continuum</span>
+              </div>
+              <div style="background:rgba(201,150,60,.14);color:#A97C2E;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:20px">Day 9</div>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:#16202E;letter-spacing:-0.01em">Good morning, Mateo</div>
+            <div style="font-size:11.5px;color:#5E6B7C;margin:3px 0 12px">Right wrist sprain · recovery day 9</div>
+            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:14px;padding:13px;box-shadow:0 2px 8px rgba(22,32,46,.04)">
+              <div style="font-size:12.5px;font-weight:600;color:#16202E;margin-bottom:10px">How's your pain today?</div>
+              <div style="height:6px;background:#EEEAE1;border-radius:6px;position:relative">
+                <div style="position:absolute;left:0;top:0;height:100%;width:30%;background:#C9963C;border-radius:6px"></div>
+                <div style="position:absolute;left:30%;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:#C9963C;border-radius:50%;box-shadow:0 2px 6px rgba(22,32,46,.25)"></div>
+              </div>
+              <div style="font-size:11px;color:#A97C2E;font-weight:600;margin-top:8px">Down from 5 last week</div>
+            </div>
+            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:14px;padding:12px 13px;margin-top:9px;box-shadow:0 2px 8px rgba(22,32,46,.04)">
+              <div style="display:flex;align-items:center;gap:9px;padding:3px 0;font-size:12px;color:#5E6B7C"><span style="width:16px;height:16px;border-radius:50%;background:#C9963C;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0">✓</span><span style="text-decoration:line-through">Wrist mobility · 5 min</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:3px 0;font-size:12px;color:#16202E"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(22,32,46,.2);box-sizing:border-box;flex-shrink:0"></span>Gentle stretches</div>
+            </div>
+            <div style="background:#0E1B2E;border-radius:12px;padding:10px 13px;margin-top:9px;display:flex;align-items:center;gap:9px">
+              <span style="width:7px;height:7px;border-radius:50%;background:#C9963C;flex-shrink:0"></span>
+              <span style="font-size:11.5px;color:#fff;font-weight:500">Cleared for light duty today</span>
+            </div>
+            <div style="background:#C9963C;color:#0E1B2E;border-radius:12px;padding:12px;text-align:center;font-size:13px;font-weight:600;margin-top:9px">Submit today's check-in</div>
+            <div style="display:flex;align-items:center;gap:11px;padding:12px 2px 2px">
+              <svg width="38" height="38" viewBox="0 0 38 38" style="flex-shrink:0">
+                <circle cx="19" cy="19" r="15" fill="none" stroke="#EEEAE1" stroke-width="4"></circle>
+                <circle cx="19" cy="19" r="15" fill="none" stroke="#C9963C" stroke-width="4" stroke-linecap="round" stroke-dasharray="58.4 94.2" transform="rotate(-90 19 19)"></circle>
+                <text x="19" y="23" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="9.5" font-weight="700" fill="#16202E">62%</text>
+              </svg>
+              <div style="font-size:11px;color:#5E6B7C;line-height:1.4"><b style="color:#16202E">On track</b> · full duty in ~3 weeks</div>
+            </div>
+          </div>
+        </div>
+        <!-- browser crop · source: Hub H2 Overview Dashboard.dc.html (KPI row, employer variant) -->
+        <div style="width:420px;max-width:100%;background:#14243B;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.4)">
+          <div style="display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.08)">
+            <span style="width:8px;height:8px;border-radius:50%;background:#5E6B7C"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:#5E6B7C;opacity:.6"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:#5E6B7C;opacity:.35"></span>
+            <span style="font-size:10px;color:#AAB6C6;margin-left:10px">hub.continuum.ca · Overview</span>
+          </div>
+          <div style="background:#F7F7F5;padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:9px;padding:10px">
+              <div style="font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5E6B7C;font-weight:600">Injured workers</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#16202E;margin-top:3px">28</div>
+              <div style="font-size:9px;font-weight:600;color:#4C8A6A;margin-top:2px">down 8%</div>
+            </div>
+            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:9px;padding:10px">
+              <div style="font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5E6B7C;font-weight:600">On light duty</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#16202E;margin-top:3px">18</div>
+              <div style="font-size:9px;font-weight:600;color:#A97C2E;margin-top:2px">64% of active</div>
+            </div>
+            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:9px;padding:10px">
+              <div style="font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5E6B7C;font-weight:600">RTW rate</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#16202E;margin-top:3px">76%</div>
+              <div style="font-size:9px;font-weight:600;color:#4C8A6A;margin-top:2px">up 6%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= S2 PROBLEM IN NUMBERS (cream) ================= -->
+  <div style="background:#F7F4EE;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">Canada, every year</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 48px;line-height:1.1">A workplace injury isn't rare. <span style="color:#C9963C">It's routine.</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
+        <sc-for list="{{ stats }}" as="st" hint-placeholder-count="3">
+          <div class="rv" style="background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 34px">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;letter-spacing:-0.02em;color:#C9963C;line-height:1">{{ st.value }}</div>
+            <div style="font-size:14.5px;color:#5E6B7C;margin-top:14px;line-height:1.5">{{ st.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <p class="rv" style="font-size:16px;color:#5E6B7C;margin:36px 0 0;max-width:640px;line-height:1.6">About 2,091 claims a day. Behind every number is a worker, a crew, and a recovery someone has to manage.</p>
+      <div class="rv" style="font-size:12px;color:#AAB6C6;margin-top:14px">Source: AWCBC Key Statistical Measures, 2023</div>
+    </div>
+  </div>
+
+  <!-- ================= S3 THE GAP (navy) ================= -->
+  <div style="background:#0E1B2E;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1.2;min-width:400px">
+        <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">The problem</div>
+        <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 24px;line-height:1.1">The visit ends. <span style="color:#C9963C">The recovery doesn't.</span></h2>
+        <p class="rv" style="font-size:17px;line-height:1.65;color:#AAB6C6;margin:0;max-width:540px">Care gets the worker to a doctor quickly. That part works. Then they go home, and for weeks no one can see how the recovery is actually going. Restrictions get forgotten. Light duty never gets arranged. A claim quietly drifts.</p>
+      </div>
+      <div class="rv" style="flex:1;min-width:320px;background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:48px 44px;text-align:center">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;letter-spacing:-0.03em;color:#C9963C;line-height:1">{{ days63 }}<span style="font-size:40px"> days</span></div>
+        <div style="font-size:15px;color:#AAB6C6;margin-top:18px;line-height:1.6;max-width:340px;margin-left:auto;margin-right:auto">The average lost-time claim duration. Two months of recovery that today no one is watching closely.</div>
+        <div style="font-size:12px;color:#5E6B7C;margin-top:16px">Source: WCB Alberta 2024 Annual Report</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= S4 THE HANDOFF (cream) ================= -->
+  <div style="background:#F7F4EE;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">From care to recovery</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 48px;line-height:1.1">One starts the process. <span style="color:#C9963C">The other keeps it moving.</span></h2>
+      <div class="rv" style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap">
+        <div style="flex:1;min-width:300px;background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:14px">Your clinician</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:#16202E;margin-bottom:12px">The care</div>
+          <div style="font-size:15.5px;color:#5E6B7C;line-height:1.7">Doctor access, assessment, light-duty paperwork, WCB documentation.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 22px;min-width:120px">
+          <svg width="64" height="24" viewBox="0 0 64 24" fill="none"><path d="M2 12h56m0 0l-9-9m9 9l-9 9" stroke="#C9963C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-top:10px;white-space:nowrap">Paperwork complete</div>
+        </div>
+        <div style="flex:1;min-width:300px;background:#0E1B2E;border-radius:16px;padding:38px 36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:14px">Continuum</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:#fff;margin-bottom:12px">The recovery</div>
+          <div style="font-size:15.5px;color:#AAB6C6;line-height:1.7">Check-ins, functional guidance, return to work, all the way to full duty.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= S5 ONE RECORD, EVERY ROLE (navy) ================= -->
+  <div id="roles" style="background:#0E1B2E;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">The solution</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">One recovery, one timeline. <span style="color:#C9963C">Each sees only their part.</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <sc-for list="{{ roleCards }}" as="r" hint-placeholder-count="8">
+          <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px 24px;transition:transform .2s ease,box-shadow .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.3)">
+            <div style="width:42px;height:42px;border-radius:50%;background:rgba(201,150,60,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9963C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="{{ r.icon }}"></path></svg>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:16.5px;font-weight:600;color:#fff;margin-bottom:7px">{{ r.name }}</div>
+            <div style="font-size:13.5px;color:#AAB6C6;line-height:1.55">{{ r.desc }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <p class="rv" style="font-size:16px;color:#AAB6C6;margin:40px 0 0;text-align:center">One record, one channel, one standard. Privacy protected. <span style="color:#E3B968;font-weight:600">It coordinates everyone, replaces no one.</span></p>
+    </div>
+  </div>
+
+  <!-- ================= S6 THE DAILY SIGNAL (cream) ================= -->
+  <div id="signal" style="background:#F7F4EE;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap">
+      <div class="rv" style="flex:1;min-width:320px;display:flex;justify-content:center">
+        <!-- source: Worker App W2 Check-in.dc.html (Step 1 · Pain) · public-safe variant, demo cast only (2c audit) -->
+        <div>
+          <div style="width:280px;background:#0A1424;border-radius:38px;padding:10px;box-shadow:0 24px 56px rgba(22,32,46,.28)">
+            <div style="background:#FAF9F6;border-radius:30px;overflow:hidden;padding:18px 20px 20px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+                <div style="display:flex;gap:6px">
+                  <span style="width:8px;height:8px;border-radius:50%;background:#C9963C"></span>
+                  <span style="width:8px;height:8px;border-radius:50%;background:#EEEAE1"></span>
+                  <span style="width:8px;height:8px;border-radius:50%;background:#EEEAE1"></span>
+                </div>
+                <div style="background:rgba(201,150,60,.14);color:#A97C2E;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:20px">Day 9</div>
+              </div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:#16202E;letter-spacing:-0.01em;margin-bottom:18px">How's your pain today?</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;color:#16202E;text-align:center;letter-spacing:-0.02em">3</div>
+              <div style="height:7px;background:#EEEAE1;border-radius:6px;position:relative;margin-top:10px">
+                <div style="position:absolute;left:0;top:0;height:100%;width:30%;background:#C9963C;border-radius:6px"></div>
+                <div style="position:absolute;left:30%;top:50%;transform:translate(-50%,-50%);width:22px;height:22px;background:#C9963C;border-radius:50%;box-shadow:0 2px 6px rgba(22,32,46,.25)"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#5E6B7C;margin-top:7px"><span>No pain</span><span>Worst</span></div>
+              <div style="font-size:13px;color:#A97C2E;font-weight:600;text-align:center;margin-top:14px">Down from 5 last week</div>
+              <div style="font-size:11.5px;color:#5E6B7C;text-align:center;margin-top:10px;line-height:1.5">There's no wrong answer. This goes to your care team only.</div>
+              <div style="background:#C9963C;color:#0E1B2E;border-radius:12px;padding:13px;text-align:center;font-size:13.5px;font-weight:600;margin-top:18px">Next</div>
+            </div>
+          </div>
+          <div style="font-size:13px;color:#5E6B7C;text-align:center;margin-top:14px">Thirty seconds. No typing.</div>
+        </div>
+      </div>
+      <div style="flex:1.1;min-width:400px">
+        <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">Between visits</div>
+        <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 24px;line-height:1.1">Recovery doesn't stop when the worker <span style="color:#C9963C">goes home.</span></h2>
+        <p class="rv" style="font-size:17px;line-height:1.65;color:#5E6B7C;margin:0 0 18px;max-width:520px">A 30-second daily check-in on the worker's own phone, on a cadence set by severity. Pain, duties, and plan confirmation, no free text required. Miss one, and a coordinator nudges, not a manager.</p>
+        <div class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:600;color:#C9963C">Supported, not surveilled.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= S7 PRIVACY BY TRANSLATION (navy) ================= -->
+  <div id="privacy" style="background:#0E1B2E;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">Privacy by design</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">Work limits, <span style="color:#C9963C">not medical details.</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px">
+        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:22px">The employer sees</div>
+          <sc-for list="{{ empSees }}" as="item" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#fff;line-height:1.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9963C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"></path></svg>
+              {{ item }}
+            </div>
+          </sc-for>
+        </div>
+        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#AAB6C6;font-weight:600;margin-bottom:22px">Stays in the clinic</div>
+          <sc-for list="{{ clinicKeeps }}" as="item" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#AAB6C6;line-height:1.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6B7C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
+              {{ item }}
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <p class="rv" style="font-size:16px;color:#AAB6C6;margin:36px 0 0;text-align:center">Privacy by translation: <span style="color:#fff;font-weight:600">the workplace gets capacity, the clinic keeps the medicine.</span></p>
+    </div>
+  </div>
+
+  <!-- ================= S8 THE POWER FEATURE (cream) ================= -->
+  <div style="background:#F7F4EE;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">The power feature</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 48px;line-height:1.15;max-width:820px">"No overhead work" becomes <span style="color:#C9963C">a list of safe jobs.</span></h2>
+      <div class="rv" style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap">
+        <div style="flex:1;min-width:300px;background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 36px;display:flex;flex-direction:column;justify-content:center">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;color:#16202E;line-height:1.35">"No overhead work."</div>
+          <div style="font-size:14.5px;color:#5E6B7C;margin-top:16px;line-height:1.6">A list of don'ts is not a return-to-work plan.</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;padding:0 22px;min-width:100px">
+          <svg width="64" height="24" viewBox="0 0 64 24" fill="none"><path d="M2 12h56m0 0l-9-9m9 9l-9 9" stroke="#C9963C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <div style="flex:1;min-width:300px;background:#0E1B2E;border-radius:16px;padding:38px 36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:20px">Safe duties, matched</div>
+          <sc-for list="{{ safeDuties }}" as="d" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#fff">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9963C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M20 6L9 17l-5-5"></path></svg>
+              {{ d }}
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <p class="rv" style="font-size:14px;color:#5E6B7C;margin:28px 0 0;line-height:1.6">The list grows automatically as the worker recovers. Every assignment stays inside the clinician's restrictions.</p>
+    </div>
+  </div>
+
+  <!-- ================= S9 THE DOCTRINE (navy) ================= -->
+  <div id="doctrine" style="background:#0E1B2E;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">The doctrine</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">AI tracks. <span style="color:#C9963C">Clinicians decide.</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px">
+        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:22px">AI does</div>
+          <sc-for list="{{ aiDoes }}" as="item" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#fff;line-height:1.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9963C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"></path></svg>
+              {{ item }}
+            </div>
+          </sc-for>
+        </div>
+        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#AAB6C6;font-weight:600;margin-bottom:22px">AI never</div>
+          <sc-for list="{{ aiNever }}" as="item" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#AAB6C6;line-height:1.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6B7C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+              {{ item }}
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <p class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:20px;color:#C9963C;font-weight:600;margin:40px 0 0;text-align:center">Powerful intelligence, under permanent clinical authority.</p>
+    </div>
+  </div>
+
+  <!-- ================= S10 FITS WHAT YOU RUN (cream) ================= -->
+  <div id="how" style="background:#F7F4EE;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">Integration, not replacement</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 48px;line-height:1.1">Works with the systems <span style="color:#C9963C">you already run.</span></h2>
+      <div class="rv" style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap">
+        <div style="flex:1;min-width:300px;background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:14px">Your safety platform</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:#16202E;margin-bottom:20px">Records the incident</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <sc-for list="{{ platforms }}" as="p" hint-placeholder-count="5">
+              <span style="border:1px solid rgba(22,32,46,.12);color:#5E6B7C;font-size:13px;font-weight:500;padding:7px 14px;border-radius:20px">{{ p }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;padding:0 22px;min-width:100px">
+          <svg width="64" height="24" viewBox="0 0 64 24" fill="none"><path d="M2 12h56m0 0l-9-9m9 9l-9 9" stroke="#C9963C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <div style="flex:1;min-width:300px;background:#0E1B2E;border-radius:16px;padding:38px 36px">
+          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:14px">Continuum</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:#fff;margin-bottom:12px">Tracks the recovery</div>
+          <div style="font-size:15.5px;color:#AAB6C6;line-height:1.7">From the first report onward, all the way to full duty.</div>
+        </div>
+      </div>
+      <p class="rv" style="font-size:14px;color:#5E6B7C;margin:28px 0 0;line-height:1.6">Continuum runs standalone, works with any clinical provider, and integration adds value without being required.</p>
+    </div>
+  </div>
+
+  <!-- ================= S11 THE PAYOFF (navy) ================= -->
+  <div id="evidence" style="background:#0E1B2E;padding:112px 32px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C9963C;font-weight:600;margin-bottom:16px">The payoff</div>
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">Employers don't buy software. <span style="color:#C9963C">They buy certainty.</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
+        <sc-for list="{{ payoffs }}" as="p" hint-placeholder-count="3">
+          <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:34px 32px;transition:transform .2s ease,box-shadow .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.3)">
+            <div style="width:42px;height:42px;border-radius:50%;background:rgba(201,150,60,.12);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9963C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="{{ p.icon }}"></path></svg>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;color:#fff;margin-bottom:10px">{{ p.title }}</div>
+            <div style="font-size:14.5px;color:#AAB6C6;line-height:1.6">{{ p.desc }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= S12 CTA BAND + FOOTER ================= -->
+  <div id="cta" style="background:#0A1526;padding:104px 32px;text-align:center;border-top:1px solid rgba(255,255,255,.08)">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:46px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 18px">Green-light <span style="color:#C9963C">the pilot.</span></h2>
+      <p class="rv" style="font-size:17px;color:#AAB6C6;margin:0 0 36px;line-height:1.6">One employer. Real claims. Measured against the 63-day national baseline.</p>
+      <div class="rv" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a href="#cta" style="background:#C9963C;color:#0E1B2E;font-size:15px;font-weight:600;padding:15px 32px;border-radius:12px;display:inline-block" style-hover="background:#E3B968;color:#0E1B2E">Start a Pilot</a>
+        <a href="#cta" style="border:1px solid rgba(255,255,255,.25);color:#fff;font-size:15px;font-weight:600;padding:15px 32px;border-radius:12px;display:inline-block" style-hover="border-color:#E3B968;color:#E3B968">Talk to Us</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#0A1526;border-top:1px solid rgba(255,255,255,.08);padding:72px 32px 40px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#fff">Continuum<span style="color:#C9963C">.</span></div>
+          <div style="font-size:13.5px;color:#AAB6C6;margin-top:12px;line-height:1.6;max-width:260px">The coordination layer for workplace injury recovery.</div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:16px">Product</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
+            <a href="#how" style="color:#AAB6C6" style-hover="color:#fff">How It Works</a>
+            <a href="#privacy" style="color:#AAB6C6" style-hover="color:#fff">Privacy &amp; Trust</a>
+            <a href="#evidence" style="color:#AAB6C6" style-hover="color:#fff">Evidence</a>
+            <a href="#cta" style="color:#AAB6C6" style-hover="color:#fff">Pricing</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:16px">Audiences</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
+            <a href="#roles" style="color:#AAB6C6" style-hover="color:#fff">For Employers</a>
+            <a href="#doctrine" style="color:#AAB6C6" style-hover="color:#fff">For Clinicians</a>
+            <a href="#signal" style="color:#AAB6C6" style-hover="color:#fff">For Workers</a>
+            <a href="#cta" style="color:#AAB6C6" style-hover="color:#fff">Start a Pilot</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:16px">Contact &amp; legal</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
+            <a href="#cta" style="color:#AAB6C6" style-hover="color:#fff">Talk to Us</a>
+            <a href="#privacy" style="color:#AAB6C6" style-hover="color:#fff">Privacy Policy</a>
+            <a href="#privacy" style="color:#AAB6C6" style-hover="color:#fff">Terms of Service</a>
+            <span style="color:#5E6B7C">PIPEDA / PHIA compliance: documentation on request</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08);margin-top:56px;padding-top:26px;font-size:12.5px;color:#5E6B7C">
+        <span>© 2026 Continuum. Built in Canada.</span>
+        <span style="color:#C9963C;font-weight:600">Where care ends, Continuum begins.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { c1: 0, c2: 0, c3: 0, c4: 0, counted: false };
+
+  componentDidMount() {
+    // scroll reveal — re-scan continuously so nodes created after mount
+    // (streaming template, hot reloads) are still observed.
+    this._io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); this._io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    const scan = () => {
+      document.querySelectorAll('.rv').forEach(el => {
+        if (!el.dataset.rvObs) { el.dataset.rvObs = '1'; this._io.observe(el); }
+      });
+    };
+    scan();
+    this._rvTimer = setInterval(scan, 400);
+    // safety net: after 6s, reveal anything still hidden
+    this._rvSafety = setTimeout(() => {
+      document.querySelectorAll('.rv:not(.in)').forEach(el => el.classList.add('in'));
+      clearInterval(this._rvTimer);
+    }, 6000);
+
+    // count-up when stat section enters view
+    const statEl = document.querySelectorAll('.rv')[2];
+    this._io2 = new IntersectionObserver(entries => {
+      if (entries.some(e => e.isIntersecting) && !this.state.counted) {
+        this.setState({ counted: true });
+        const start = performance.now(), dur = 1400;
+        const targets = { c1: 763326, c2: 274022, c3: 1056, c4: 63 };
+        const tick = now => {
+          const t = Math.min((now - start) / dur, 1);
+          const ease = 1 - Math.pow(1 - t, 3);
+          this.setState({
+            c1: Math.round(targets.c1 * ease), c2: Math.round(targets.c2 * ease),
+            c3: Math.round(targets.c3 * ease), c4: Math.round(targets.c4 * ease)
+          });
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        this._io2.disconnect();
+      }
+    }, { threshold: 0.2 });
+    if (statEl) this._io2.observe(statEl);
+  }
+
+  componentWillUnmount() {
+    this._io && this._io.disconnect();
+    this._io2 && this._io2.disconnect();
+    clearInterval(this._rvTimer);
+    clearTimeout(this._rvSafety);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const fmt = n => n.toLocaleString('en-CA');
+    return {
+      stats: [
+        { value: fmt(s.counted ? s.c1 : 763326), label: 'claims reported nationally (2023)' },
+        { value: fmt(s.counted ? s.c2 : 274022), label: 'lost-time claims' },
+        { value: fmt(s.counted ? s.c3 : 1056), label: 'lives lost' }
+      ],
+      days63: String(s.counted ? s.c4 : 63),
+      roleCards: [
+        { name: 'Worker', desc: 'Check-ins and clear next steps.', icon: 'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z' },
+        { name: 'Supervisor', desc: 'Active restrictions and safe duties.', icon: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11' },
+        { name: 'HSE advisor', desc: 'Hazard-checks each duty before placement.', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' },
+        { name: 'Employer', desc: 'Functional status, never diagnosis.', icon: 'M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1M9 13h1m4 0h1M9 17h1m4 0h1' },
+        { name: 'Disability and claims', desc: 'Continuity, documents, timeline.', icon: 'M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z' },
+        { name: 'WCB case manager', desc: 'Receives the WCB-ready reports we submit.', icon: 'M3 21h18M4 21V10l8-6 8 6v11M9 21v-6h6v6' },
+        { name: 'Physician', desc: 'The recovery signal, and only they decide.', icon: 'M4.8 2.3A.3.3 0 105 2H4a2 2 0 00-2 2v5a6 6 0 006 6v0a6 6 0 006-6V4a2 2 0 00-2-2h-1a.2.2 0 10.3.3M8 15v1a6 6 0 006 6v0a6 6 0 006-6v-4m0 0a2 2 0 100-4 2 2 0 000 4z' },
+        { name: 'Leadership', desc: 'Recovery performance across the workforce.', icon: 'M3 3v18h18M18 17V9M13 17V5M8 17v-3' }
+      ],
+      empSees: [
+        'What the worker can safely do',
+        'What they should avoid',
+        'Which light duties suit them',
+        'When the plan should be reviewed'
+      ],
+      clinicKeeps: [
+        'The diagnosis',
+        'Private medical notes',
+        'Test results and history',
+        'Anything the workplace doesn\u2019t need'
+      ],
+      safeDuties: ['Ground-level inspection', 'Tool inventory and prep', 'Permit and documentation support', 'Safety watch'],
+      aiDoes: [
+        'Tracks the daily recovery signal',
+        'Summarizes what changed and what matters',
+        'Flags red flags and early drift',
+        'Matches capacity to safe available work'
+      ],
+      aiNever: [
+        'Diagnoses the injury',
+        'Prescribes the treatment',
+        'Clears a worker for full duty',
+        'Makes the medical or legal call'
+      ],
+      platforms: ['SiteDocs', 'Salus', 'Cority', 'Intelex', 'BIS'],
+      payoffs: [
+        { title: 'Workers back sooner', desc: 'Light duty gets arranged instead of forgotten.', icon: 'M12 22a10 10 0 100-20 10 10 0 000 20zM12 6v6l4 2' },
+        { title: 'Fewer surprises', desc: 'A clear daily answer: can this worker work today?', icon: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11' },
+        { title: 'Lower claim drift', desc: 'Early warnings catch a stall before it gets costly.', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' }
+      ]
+    };
+  }
+}
+</script>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0E1B2E"/><rect x="30" y="30" width="40" height="40" rx="11" fill="#14243B"/><text x="50" y="63" text-anchor="middle" font-family="sans-serif" font-size="30" font-weight="700" fill="#C9963C">C</text></svg>
+</template>
+</body>
+</html>
