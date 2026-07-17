@@ -37,15 +37,15 @@
   .btn:hover{background:var(--gold2)}
   .btn.ghost{background:transparent;border:1px solid var(--hair);color:var(--ink)}
   .seg{display:flex;gap:8px;margin-bottom:14px}
-  .seg button{flex:1;min-height:44px;border:1px solid var(--hair);background:#fff;border-radius:11px;font-family:inherit;font-weight:600;font-size:13.5px;color:var(--slate);cursor:pointer}
+  .seg button{flex:1;min-height:48px;border:1px solid var(--hair);background:#fff;border-radius:11px;font-family:inherit;font-weight:600;font-size:13.5px;color:var(--slate);cursor:pointer}
   .seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
   .flag{background:rgba(200,151,47,.12);border:1px solid rgba(200,151,47,.35);border-radius:12px;padding:12px 13px;color:#8a6a22;font-size:13px;font-weight:500;margin-bottom:14px}
   .duty{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-bottom:1px solid var(--hair)}
   .duty:last-child{border-bottom:0}
   .check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(22,32,46,.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
   .check.done{background:var(--gold);border-color:var(--gold)}
-  .fb{display:flex;gap:6px;margin-top:8px}
-  .fb button{min-height:36px;padding:0 12px;border:1px solid var(--hair);background:#fff;border-radius:9px;font-family:inherit;font-size:12.5px;color:var(--slate);cursor:pointer}
+  .fb{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .fb button{min-height:48px;padding:0 14px;border:1px solid var(--hair);background:#fff;border-radius:10px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--slate);cursor:pointer}
   .hist{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair)}
   .hist:last-child{border-bottom:0}
   .bar{height:6px;border-radius:6px;background:#EEE9DF;position:relative;flex:1}
@@ -161,11 +161,11 @@
     if(!vm.duties.length) html+='<p class="muted">No duties assigned yet.</p>';
     vm.duties.forEach(function(d){
       var done=!!d.completed_date;
-      html+='<div class="duty"><div class="check '+(done?'done':'')+'" data-action="'+(done?'':'done')+'" data-id="'+d.id+'">'+(done?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>':'')+'</div>'+
+      html+='<div class="duty"><div class="check '+(done?'done':'')+'">'+(done?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>':'')+'</div>'+
         '<div style="flex:1"><div class="val" style="'+(done?'text-decoration:line-through;color:var(--slate)':'')+'">'+esc(d.task_description)+'</div>'+
         '<div class="muted" style="margin-top:2px">Within: '+esc(d.medical_restrictions)+'</div>'+
         (done?'<div class="muted" style="margin-top:4px">You said: '+esc(d.worker_feedback||'done')+'</div>':
-          '<div class="fb"><button data-fb="fine" data-id="'+d.id+'">Fine</button><button data-fb="manageable" data-id="'+d.id+'">Manageable</button><button data-fb="too much" data-id="'+d.id+'">Too much</button></div>')+
+          '<div class="fb"><button data-action="done" data-id="'+d.id+'">Mark done</button><button data-fb="fine" data-id="'+d.id+'">Fine</button><button data-fb="manageable" data-id="'+d.id+'">Manageable</button><button data-fb="too much" data-id="'+d.id+'">Too much</button></div>')+
         '</div></div>';
     });
     html+='</div>';

@@ -425,7 +425,9 @@
   function viewModel(role) {
     var s = load();
     var m = marcus(s);
-    var base = { role: role, day: s.day, case_status: s.case.status, restrictions: s.case.restrictions_published.slice(), wcb: s.wcb_notifications.slice() };
+    // WCB notifications are NOT in the shared base: only the WCB and Nexus
+    // view-models carry them, on a need-to-know basis.
+    var base = { role: role, day: s.day, case_status: s.case.status, restrictions: s.case.restrictions_published.slice() };
 
     if (role === 'worker') {
       return Object.assign(base, {
@@ -465,6 +467,7 @@
         check_ins: marcusLogs(s),
         escalations: s.escalations.slice(),
         ffw_form: s.case.ffw_form,
+        wcb: s.wcb_notifications.slice(),
         patients: s.workers.map(function (w) { return scoredWorker(w, s.recovery_logs); })
       });
     }
