@@ -1,6 +1,9 @@
-> ⛔ **SUPERSEDED / PARKED per [specs/CONTINUUM_PROMPT_05.md](CONTINUUM_PROMPT_05.md) (2026-07-17).**
-> Prompt 05 (governing) parks the internal static-demo track this prompt belongs to
-> (§3): the client MVP is now the mainline. Do NOT run the build steps below as-is.
+> ⛔ **RETIRED — superseded in full by [specs/CONTINUUM_PROMPT_06.md](CONTINUUM_PROMPT_06.md), governed by [specs/CONTINUUM_PROMPT_05_RECONCILIATION.md](CONTINUUM_PROMPT_05_RECONCILIATION.md) (2026-07-17).**
+> Prompt 06 rebuilds the connected demo against the CLIENT baseline (five roles,
+> visibility matrix, slider check-ins, the client wireframe as pixel source) and
+> explicitly retires this prompt and its TO-CONFIRM items (resolved by Prompt 05).
+> Prompt 05 (governing) also parked the internal static-demo track (§3). Do NOT run
+> the build steps below as-is.
 > If the demo resumes as a marketing asset, it must first re-baseline to Prompt 05 —
 > five roles (worker/hse/employer_admin/wcb_officer/nexus_physician; coordinator and
 > leadership retired), HSE sees pain/mobility scores, slider check-ins (no camera
