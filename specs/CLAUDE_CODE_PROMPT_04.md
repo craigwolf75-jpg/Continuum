@@ -1,3 +1,14 @@
+> ⛔ **SUPERSEDED / PARKED per [specs/CONTINUUM_PROMPT_05.md](CONTINUUM_PROMPT_05.md) (2026-07-17).**
+> Prompt 05 (governing) parks the internal static-demo track this prompt belongs to
+> (§3): the client MVP is now the mainline. Do NOT run the build steps below as-is.
+> If the demo resumes as a marketing asset, it must first re-baseline to Prompt 05 —
+> five roles (worker/hse/employer_admin/wcb_officer/nexus_physician; coordinator and
+> leadership retired), HSE sees pain/mobility scores, slider check-ins (no camera
+> session as a current feature), client hexes #0E1B2C / #C8972F, client cast
+> (Marcus Bedard / Worley / Dr. Owusu). The §0 missing-screens blocker is no longer
+> on the critical path. Retained for reference and for the gating/QA guidance, which
+> still applies to the static track if it continues.
+
 # CONTINUUM PROMPT 04 (revised 2026-07-17) — Claude Code prompt 2: the working app
 
 > This is the review-corrected version of the Prompt 04 draft. It folds in a
