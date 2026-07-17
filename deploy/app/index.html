@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="/">
+<title>Continuum worker app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="/store.js"></script>
+<style>
+  :root{--navy:#0E1B2C;--navy2:#0A1526;--card:#14243B;--gold:#C8972F;--gold2:#E3B968;--cream:#F7F4EE;--ink:#16202E;--slate:#5E6B7C;--mist:#AAB6C6;--hair:rgba(22,32,46,.10);--hairL:rgba(255,255,255,.08)}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--navy2)}
+  body{font-family:'Inter',sans-serif;color:var(--ink)}
+  .phone{max-width:420px;margin:0 auto;min-height:100vh;background:var(--cream);display:flex;flex-direction:column;position:relative}
+  .top{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:9px}
+  .cmark{width:26px;height:26px;border-radius:8px;background:#14243B;color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px}
+  .wordmark{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px}
+  .daybadge{background:rgba(200,151,47,.16);color:var(--gold2);font-size:12px;font-weight:600;padding:5px 11px;border-radius:20px}
+  .body{flex:1;padding:18px 18px 96px;overflow-y:auto}
+  .kick{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px}
+  h2{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;letter-spacing:-.01em;margin:0 0 4px;color:var(--ink)}
+  .sub{color:var(--slate);font-size:13px;margin:0 0 16px}
+  .card{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(22,32,46,.04)}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .label{font-size:12px;color:var(--slate)}
+  .val{font-size:14px;font-weight:600;color:var(--ink)}
+  .statuspill{display:inline-block;font-size:12px;font-weight:600;padding:4px 11px;border-radius:20px;background:rgba(200,151,47,.14);color:#8a6a22}
+  .slider{width:100%;margin:10px 0 2px;accent-color:var(--gold);height:28px}
+  .sliderhead{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--ink)}
+  .scale{display:flex;justify-content:space-between;font-size:10.5px;color:var(--slate)}
+  textarea{width:100%;border:1px solid var(--hair);border-radius:12px;padding:11px;font-family:inherit;font-size:13.5px;resize:vertical;min-height:60px}
+  .btn{display:block;width:100%;min-height:48px;border:0;border-radius:13px;background:var(--gold);color:var(--navy);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer}
+  .btn:hover{background:var(--gold2)}
+  .btn.ghost{background:transparent;border:1px solid var(--hair);color:var(--ink)}
+  .seg{display:flex;gap:8px;margin-bottom:14px}
+  .seg button{flex:1;min-height:44px;border:1px solid var(--hair);background:#fff;border-radius:11px;font-family:inherit;font-weight:600;font-size:13.5px;color:var(--slate);cursor:pointer}
+  .seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .flag{background:rgba(200,151,47,.12);border:1px solid rgba(200,151,47,.35);border-radius:12px;padding:12px 13px;color:#8a6a22;font-size:13px;font-weight:500;margin-bottom:14px}
+  .duty{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-bottom:1px solid var(--hair)}
+  .duty:last-child{border-bottom:0}
+  .check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(22,32,46,.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .check.done{background:var(--gold);border-color:var(--gold)}
+  .fb{display:flex;gap:6px;margin-top:8px}
+  .fb button{min-height:36px;padding:0 12px;border:1px solid var(--hair);background:#fff;border-radius:9px;font-family:inherit;font-size:12.5px;color:var(--slate);cursor:pointer}
+  .hist{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--hair)}
+  .hist:last-child{border-bottom:0}
+  .bar{height:6px;border-radius:6px;background:#EEE9DF;position:relative;flex:1}
+  .bar span{position:absolute;left:0;top:0;height:100%;border-radius:6px;background:var(--gold)}
+  .tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff;border-top:1px solid var(--hair);display:flex;z-index:6}
+  .tabs a{flex:1;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--slate);font-size:11px;font-weight:600;text-decoration:none}
+  .tabs a.on{color:var(--gold)}
+  .tabs svg{width:22px;height:22px}
+  .consent{position:absolute;inset:0;background:var(--navy);color:#fff;z-index:20;display:flex;flex-direction:column;justify-content:center;padding:32px 24px}
+  .consent h2{color:#fff}
+  .consent p{color:var(--mist);font-size:13.5px;line-height:1.6}
+  .muted{color:var(--slate);font-size:12px;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="phone" id="phone"></div>
+<script>
+(function(){
+  var S = window.ContinuumStore;
+  var draft = { pain:null, mobility:null, notes:'', period:null };
+  var justEscalated = false;
+
+  function route(){ var h=(location.hash||'#today').replace('#',''); return ['today','history','duties','more'].indexOf(h)>=0?h:'today'; }
+  function statusLabel(s){ return ({reported:'Reported',off_work:'Off work',light_duty:'Light duty',full_duty_pending:'Return pending',signed_off:'Signed off',escalated:'Care team reviewing'})[s]||s; }
+  function fmtDate(iso){ try{ var d=new Date(iso); return d.toLocaleDateString(undefined,{month:'short',day:'numeric'}); }catch(e){ return ''; } }
+  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function icon(name){
+    var p={today:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+      history:'<path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/>',
+      duties:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+      more:'<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>'};
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+p[name]+'</svg>';
+  }
+
+  function render(){
+    var vm = S.viewModel('worker');
+    var host = document.getElementById('phone');
+    if(!vm.consent.granted){ host.innerHTML = consentView(); return; }
+    var r = route();
+    var html = topBar(vm);
+    html += '<div class="body">';
+    if(r==='today') html += todayView(vm);
+    else if(r==='history') html += historyView(vm);
+    else if(r==='duties') html += dutiesView(vm);
+    else html += moreView(vm);
+    html += '</div>';
+    html += tabBar(r);
+    host.innerHTML = html;
+    // restore draft into check-in inputs if present
+    var p=document.getElementById('pain'), m=document.getElementById('mob'), n=document.getElementById('notes');
+    if(p&&draft.pain!=null) p.value=draft.pain; if(m&&draft.mobility!=null) m.value=draft.mobility; if(n) n.value=draft.notes||'';
+    syncSliderLabels();
+  }
+
+  function topBar(vm){
+    return '<div class="top"><div class="brand"><div class="cmark">C</div><div class="wordmark">Continuum</div></div>'+
+      '<div class="daybadge">Day '+vm.me.day+' of '+vm.me.of+'</div></div>';
+  }
+
+  function consentView(){
+    return '<div class="consent"><div class="cmark" style="width:44px;height:44px;font-size:22px;margin-bottom:20px">C</div>'+
+      '<div class="kick" style="color:var(--gold)">Before we start</div>'+
+      '<h2>Your privacy, in your hands.</h2>'+
+      '<p>Continuum records your recovery so your care team can help you get back to full duty. Your employer only ever sees whether you can work, never your pain scores, notes, or medical details.</p>'+
+      '<p>You can turn this off at any time in More. We save the date and time you agree.</p>'+
+      '<button class="btn" data-action="consent" style="margin-top:10px">I agree, continue</button>'+
+      '<p class="muted" style="margin-top:14px">Consent is timestamped and you can revoke it whenever you want.</p></div>';
+  }
+
+  function todayView(vm){
+    var m=vm.me;
+    var html='<div class="kick">Today</div><h2>Good morning, '+esc(m.name.split(' ')[0])+'</h2>'+
+      '<p class="sub">'+esc(m.body_part)+' &middot; recovery day '+m.day+'</p>';
+    // injury summary
+    html+='<div class="card"><div class="row"><span class="label">Status</span><span class="statuspill">'+statusLabel(m.status)+'</span></div>'+
+      '<div class="row" style="margin-top:10px"><span class="label">Estimated return</span><span class="val">'+fmtDate(m.estimated_return_date)+'</span></div>'+
+      (m.diagnosis_summary?'<div class="row" style="margin-top:10px"><span class="label">Summary</span><span class="val" style="text-align:right;max-width:60%">'+esc(m.diagnosis_summary)+'</span></div>':'')+'</div>';
+    if(justEscalated){ html+='<div class="flag">Thank you for logging this. We have let your care team know so they can check in with you.</div>'; }
+    // check-in card
+    var didAM = vm.check_ins.some(function(l){ return sameDay(l.logged_at) && l.period==='AM'; });
+    var didPM = vm.check_ins.some(function(l){ return sameDay(l.logged_at) && l.period==='PM'; });
+    var per = draft.period || (new Date().getHours()<12?'AM':'PM');
+    html+='<div class="card"><div class="kick" style="margin-bottom:10px">Check in</div>'+
+      '<div class="seg"><button data-period="AM" class="'+(per==='AM'?'on':'')+'">Morning'+(didAM?' (done)':'')+'</button>'+
+      '<button data-period="PM" class="'+(per==='PM'?'on':'')+'">Evening'+(didPM?' (done)':'')+'</button></div>'+
+      '<div class="sliderhead"><span>How is your pain?</span><span id="painv">'+(draft.pain!=null?draft.pain:5)+'</span></div>'+
+      '<input id="pain" class="slider" type="range" min="0" max="10" value="'+(draft.pain!=null?draft.pain:5)+'">'+
+      '<div class="scale"><span>None</span><span>Worst</span></div>'+
+      '<div class="sliderhead" style="margin-top:14px"><span>How well can you move it?</span><span id="mobv">'+(draft.mobility!=null?draft.mobility:5)+'</span></div>'+
+      '<input id="mob" class="slider" type="range" min="0" max="10" value="'+(draft.mobility!=null?draft.mobility:5)+'">'+
+      '<div class="scale"><span>Not at all</span><span>Fully</span></div>'+
+      '<textarea id="notes" placeholder="Anything you want your care team to know (optional)" style="margin-top:12px"></textarea>'+
+      '<button class="btn" data-action="submit" style="margin-top:12px">Submit check in</button></div>';
+    return html;
+  }
+
+  function historyView(vm){
+    var logs = vm.check_ins.slice().reverse();
+    var html='<div class="kick">History</div><h2>Your check ins</h2><p class="sub">Pain and movement over time. Lower pain and higher movement is progress.</p><div class="card">';
+    if(!logs.length) html+='<p class="muted">No check ins yet.</p>';
+    logs.forEach(function(l){
+      html+='<div class="hist"><div style="width:52px;font-size:12px;color:var(--slate)">'+fmtDate(l.logged_at)+'<br><span style="font-size:10.5px">'+l.period+'</span></div>'+
+        '<div style="flex:1"><div style="font-size:11px;color:var(--slate);margin-bottom:3px">Pain '+l.pain_score+' &middot; Movement '+l.mobility_score+'</div>'+
+        '<div class="bar"><span style="width:'+(l.pain_score*10)+'%"></span></div></div></div>';
+    });
+    html+='</div>';
+    return html;
+  }
+
+  function dutiesView(vm){
+    var html='<div class="kick">Light duties</div><h2>Your duties</h2><p class="sub">Tasks your team assigned within your restrictions. Tap to mark done.</p><div class="card">';
+    if(!vm.duties.length) html+='<p class="muted">No duties assigned yet.</p>';
+    vm.duties.forEach(function(d){
+      var done=!!d.completed_date;
+      html+='<div class="duty"><div class="check '+(done?'done':'')+'" data-action="'+(done?'':'done')+'" data-id="'+d.id+'">'+(done?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>':'')+'</div>'+
+        '<div style="flex:1"><div class="val" style="'+(done?'text-decoration:line-through;color:var(--slate)':'')+'">'+esc(d.task_description)+'</div>'+
+        '<div class="muted" style="margin-top:2px">Within: '+esc(d.medical_restrictions)+'</div>'+
+        (done?'<div class="muted" style="margin-top:4px">You said: '+esc(d.worker_feedback||'done')+'</div>':
+          '<div class="fb"><button data-fb="fine" data-id="'+d.id+'">Fine</button><button data-fb="manageable" data-id="'+d.id+'">Manageable</button><button data-fb="too much" data-id="'+d.id+'">Too much</button></div>')+
+        '</div></div>';
+    });
+    html+='</div>';
+    return html;
+  }
+
+  function moreView(vm){
+    var c=vm.consent;
+    return '<div class="kick">More</div><h2>Privacy and settings</h2>'+
+      '<div class="card"><div class="row"><span class="label">Consent</span><span class="val">'+(c.granted?'Granted':'Off')+'</span></div>'+
+      (c.timestamp?'<div class="muted" style="margin-top:6px">Agreed '+fmtDate(c.timestamp)+'.</div>':'')+
+      '<button class="btn ghost" data-action="revoke" style="margin-top:12px">Revoke consent</button></div>'+
+      '<div class="card"><div class="val">What your employer sees</div><p class="muted" style="margin-top:6px">Only whether you can work and your assigned duties. Never your pain, movement, notes, or diagnosis.</p></div>'+
+      '<div class="card"><div class="val">Demo</div><button class="btn ghost" data-action="reset" style="margin-top:10px">Reset demo data</button></div>';
+  }
+
+  function tabBar(r){
+    function t(id,label){ return '<a href="#'+id+'" class="'+(r===id?'on':'')+'">'+icon(id)+'<span>'+label+'</span></a>'; }
+    return '<div class="tabs">'+t('today','Today')+t('history','History')+t('duties','Duties')+t('more','More')+'</div>';
+  }
+
+  function sameDay(iso){ try{ var a=new Date(iso), b=new Date(); return a.toDateString()===b.toDateString(); }catch(e){ return false; } }
+  function syncSliderLabels(){
+    var p=document.getElementById('pain'), m=document.getElementById('mob');
+    if(p) p.oninput=function(){ draft.pain=+p.value; var pv=document.getElementById('painv'); if(pv) pv.textContent=p.value; };
+    if(m) m.oninput=function(){ draft.mobility=+m.value; var mv=document.getElementById('mobv'); if(mv) mv.textContent=m.value; };
+    var n=document.getElementById('notes'); if(n) n.oninput=function(){ draft.notes=n.value; };
+  }
+
+  document.addEventListener('click', function(ev){
+    var t=ev.target.closest('[data-action],[data-period],[data-fb]'); if(!t) return;
+    if(t.hasAttribute('data-period')){ draft.period=t.getAttribute('data-period'); render(); return; }
+    if(t.hasAttribute('data-fb')){ S.completeDuty(t.getAttribute('data-id'), t.getAttribute('data-fb')); render(); return; }
+    var a=t.getAttribute('data-action');
+    if(a==='consent'){ S.grantConsent(); render(); }
+    else if(a==='revoke'){ S.revokeConsent(); render(); }
+    else if(a==='reset'){ S.reset(); draft={pain:null,mobility:null,notes:'',period:null}; justEscalated=false; location.hash='#today'; render(); }
+    else if(a==='done'){ S.completeDuty(t.getAttribute('data-id'),'done'); render(); }
+    else if(a==='submit'){
+      var pain=draft.pain!=null?draft.pain:5, mob=draft.mobility!=null?draft.mobility:5;
+      var res=S.submitCheckIn({pain:pain, mobility:mob, notes:draft.notes||'', period:draft.period||(new Date().getHours()<12?'AM':'PM')});
+      justEscalated = !!(res && res.escalated);
+      draft={pain:null,mobility:null,notes:'',period:null};
+      render();
+    }
+  });
+
+  window.addEventListener('hashchange', render);
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) render(); });
+  S.subscribe(function(){ render(); });
+  render();
+})();
+</script>
+</body>
+</html>

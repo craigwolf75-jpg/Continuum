@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="/">
+<title>Continuum reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0E1B2C;--navy2:#0A1526;--card:#14243B;--gold:#C8972F;--gold2:#E3B968;--mist:#AAB6C6;--hair:rgba(255,255,255,.08)}
+  html,body{margin:0;padding:0;background:var(--navy)}
+  body{font-family:'Inter',sans-serif;color:#fff}
+  a{color:var(--gold);text-decoration:none}
+  a:hover{color:var(--gold2)}
+  .wrap{max-width:920px;margin:0 auto;padding:56px 28px 80px}
+  .kick{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-.02em;margin:14px 0 10px}
+  .lead{color:var(--mist);font-size:15.5px;line-height:1.6;max-width:640px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+  .card{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:20px}
+  .card h3{font-family:'Space Grotesk',sans-serif;font-size:17px;margin:0 0 6px}
+  .card p{color:var(--mist);font-size:13.5px;line-height:1.55;margin:0}
+  .tag{display:inline-block;font-size:11px;color:var(--gold);border:1px solid var(--hair);border-radius:20px;padding:3px 10px;margin-top:12px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kick">Design reference</div>
+  <h1>Continuum surface inventory</h1>
+  <p class="lead">The build reference for the connected demo, drawn from the client MVP wireframe reference (v2). Each surface reads live from one shared store. This gallery is gated and not indexed. It documents the build; it is not the product entry.</p>
+  <div class="grid">
+    <div class="card"><h3>Worker App</h3><p>Consent gate, injury summary, twice daily slider check-in, history, and a light duty checklist. One phone column.</p><span class="tag">/app</span></div>
+    <div class="card"><h3>Employer dashboard</h3><p>Functional status only. KPI row and worker table by recovery status. Never pain or mobility scores, diagnosis, photos, or free text.</p><span class="tag">/hub &middot; Employer</span></div>
+    <div class="card"><h3>Light Duties (HSE)</h3><p>Assign modified duties within published restrictions. Scores visible to HSE for operational need. Restrictions read only to HSE.</p><span class="tag">/hub &middot; HSE</span></div>
+    <div class="card"><h3>Nexus Health</h3><p>Clinical control center. Full medical detail, monitoring, escalation alerts, clearance actions, and the fitness for work form.</p><span class="tag">/hub &middot; Nexus</span></div>
+    <div class="card"><h3>WCB view</h3><p>Read only claims and the three milestone notifications. Document lifecycle tracking only. No live WCB connection.</p><span class="tag">/hub &middot; WCB</span></div>
+    <div class="card"><h3>Reference surfaces</h3><p>Status Flow, Roles and Access, and the Data Model live in specs/ in the repo as the governing law for this build.</p><span class="tag">specs/</span></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="/">
+<title>Continuum hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="/store.js"></script>
+<style>
+  :root{--navy:#0E1B2C;--navy2:#0A1526;--card:#14243B;--gold:#C8972F;--gold2:#E3B968;--ink:#16202E;--slate:#5E6B7C;--mist:#AAB6C6;--hair:rgba(255,255,255,.08);--panel:#F7F7F5}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--navy2);font-family:'Inter',sans-serif;color:#fff}
+  a{color:var(--gold);text-decoration:none}
+  .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+  .brand{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:20px}
+  .cmark{width:34px;height:34px;border-radius:9px;background:var(--card);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px}
+  .wordmark{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px}
+  .kick{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-.02em}
+  .loginbox{width:360px;max-width:100%;background:var(--card);border:1px solid var(--hair);border-radius:16px;padding:26px}
+  input.txt{width:100%;min-height:46px;border:1px solid var(--hair);border-radius:11px;background:#0E1B2C;color:#fff;padding:0 13px;font-family:inherit;font-size:14px;margin-top:10px}
+  .btn{display:block;width:100%;min-height:48px;border:0;border-radius:12px;background:var(--gold);color:var(--navy);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer}
+  .btn:hover{background:var(--gold2)}
+  .btn.sm{min-height:40px;font-size:13px;width:auto;padding:0 16px}
+  .btn.ghost{background:transparent;border:1px solid var(--hair);color:#fff}
+  .presenter{width:360px;max-width:100%;margin-top:16px;border:1px dashed rgba(200,151,47,.4);border-radius:12px;padding:14px}
+  .presenter .kick{color:var(--gold2)}
+  .presenter .prow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .roles{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:520px;max-width:100%}
+  .role{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:20px;cursor:pointer;text-align:left}
+  .role:hover{border-color:var(--gold)}
+  .role h3{font-family:'Space Grotesk',sans-serif;margin:0 0 4px;font-size:17px}
+  .role p{color:var(--mist);font-size:12.5px;margin:0;line-height:1.5}
+  .top{position:sticky;top:0;z-index:5;background:var(--navy);border-bottom:1px solid var(--hair);padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+  .wrap{max-width:1040px;margin:0 auto;padding:24px 22px 60px}
+  .panel{background:var(--panel);color:var(--ink);border-radius:14px;padding:18px;margin-bottom:16px}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .kpi{background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:11px;padding:12px}
+  .kpi .n{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--ink)}
+  .kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--slate);font-weight:600;margin-top:2px}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:11px;overflow:hidden}
+  th,td{text-align:left;padding:11px 12px;font-size:13px;border-bottom:1px solid rgba(22,32,46,.07)}
+  th{background:#F0EFEC;color:var(--slate);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+  .p-light{background:rgba(200,151,47,.16);color:#8a6a22}.p-off{background:rgba(94,107,124,.16);color:#4b5563}
+  .p-pending{background:rgba(60,120,90,.14);color:#2f6a4a}.p-signed{background:rgba(60,120,90,.2);color:#245b3d}.p-esc{background:rgba(200,120,40,.18);color:#a8621f}
+  .prog{height:6px;border-radius:6px;background:#EEE9DF;position:relative;width:90px}.prog span{position:absolute;left:0;top:0;height:100%;border-radius:6px;background:var(--gold)}
+  h2.sec{font-family:'Space Grotesk',sans-serif;font-size:18px;color:var(--ink);margin:0 0 12px}
+  .note{font-size:12px;color:var(--slate)}
+  .alert{background:rgba(200,120,40,.12);border:1px solid rgba(200,120,40,.35);border-radius:11px;padding:13px 14px;color:#8a4f1a;margin-bottom:12px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .chip{min-height:40px;padding:0 14px;border:1px solid rgba(22,32,46,.15);background:#fff;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
+  .chip.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+  .doc{background:#fff;border:1px solid rgba(22,32,46,.1);border-radius:11px;padding:16px;color:var(--ink)}
+  .doc h4{font-family:'Space Grotesk',sans-serif;margin:0 0 8px}
+</style>
+</head>
+<body>
+<div id="hub"></div>
+<script>
+(function(){
+  var S=window.ContinuumStore;
+  var ROLES={hse:'HSE',employer:'Employer',nexus:'Nexus Health',wcb:'WCB'};
+  var ROLEKEY={hse:'hse',employer:'employer_admin',nexus:'nexus_physician',wcb:'wcb_officer'};
+  var TASK_BANK=['Tool crib inventory (seated)','Site walk permit checks','Toolbox talk documentation','Materials receiving log'];
+
+  function view(){ return (location.hash||'#login').replace('#',''); }
+  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmtDate(iso){ try{return new Date(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'});}catch(e){return '';} }
+  function pillClass(s){ return {light_duty:'p-light',off_work:'p-off',full_duty_pending:'p-pending',signed_off:'p-signed',escalated:'p-esc',reported:'p-off'}[s]||'p-off'; }
+  function statusLabel(s){ return ({reported:'Reported',off_work:'Off work',light_duty:'Light duty',full_duty_pending:'Return pending',signed_off:'Signed off',escalated:'Escalated'})[s]||s; }
+
+  function render(){
+    var v=view(), host=document.getElementById('hub');
+    if(v==='login') return host.innerHTML=loginView();
+    if(v==='roles') return host.innerHTML=rolesView();
+    if(!ROLES[v]) { location.hash='#login'; return; }
+    host.innerHTML=workspace(v);
+  }
+
+  function loginView(){
+    return '<div class="center"><div><div class="brand"><div class="cmark">C</div><div class="wordmark">Continuum</div></div>'+
+      '<div class="loginbox"><div class="kick">Continuum Hub</div><h1 style="font-size:20px;margin:8px 0 4px">Sign in</h1>'+
+      '<p class="note" style="color:var(--mist)">Dashboard access for HSE, employer, Nexus Health, and WCB.</p>'+
+      '<input class="txt" placeholder="Work email"><input class="txt" placeholder="One time code"><button class="btn" data-action="signin" style="margin-top:12px">Sign in</button>'+
+      '<p class="note" style="color:var(--mist);margin-top:12px">Workers use the <a href="/app">worker app</a> with an SMS code.</p></div>'+
+      presenter()+'</div></div>';
+  }
+  function presenter(){
+    return '<div class="presenter"><div class="kick">Presenter controls</div>'+
+      '<div class="prow"><button class="btn ghost sm" data-action="seed9">Seed day 9 baseline</button>'+
+      '<button class="btn ghost sm" data-action="seedesc">Seed escalation ready history</button>'+
+      '<button class="btn ghost sm" data-action="advday">Advance day</button></div>'+
+      '<p class="note" style="color:var(--mist);margin-top:8px">These change the demo store only. Compressed time for a live walkthrough.</p></div>';
+  }
+  function rolesView(){
+    function card(k,desc){ return '<div class="role" data-role="'+k+'"><h3>'+ROLES[k]+'</h3><p>'+desc+'</p></div>'; }
+    return '<div class="center"><div><div class="brand"><div class="cmark">C</div><div class="wordmark">Continuum</div></div>'+
+      '<div class="roles">'+
+      card('hse','Light duties workspace. Assign tasks within restrictions. Recovery scores visible.')+
+      card('employer','Employer dashboard. Functional status only, never medical detail.')+
+      card('nexus','Clinical control center. Full detail, clearance, escalation.')+
+      card('wcb','Read only claims and milestone notifications.')+
+      '</div></div></div>';
+  }
+
+  function topBar(v){
+    return '<div class="top"><div class="brand" style="margin:0;gap:8px"><div class="cmark" style="width:26px;height:26px;font-size:14px">C</div><div class="wordmark" style="font-size:16px">Continuum</div>'+
+      '<span class="pill '+'p-off" style="margin-left:8px;background:rgba(200,151,47,.16);color:var(--gold2)">'+ROLES[v]+'</span></div>'+
+      '<div style="display:flex;gap:8px"><button class="btn ghost sm" data-action="switch">Switch role</button><button class="btn ghost sm" data-action="reset">Reset</button></div></div>';
+  }
+
+  function workspace(v){
+    var vm=S.viewModel(ROLEKEY[v]);
+    var inner = v==='employer'?employerWS(vm): v==='hse'?hseWS(vm): v==='nexus'?nexusWS(vm): wcbWS(vm);
+    return topBar(v)+'<div class="wrap">'+inner+'</div>';
+  }
+
+  function employerWS(vm){
+    var k=vm.kpis;
+    var html='<h2 class="sec">Employer dashboard</h2>'+
+      '<div class="panel"><div class="kpis">'+
+      kpi(k.active,'Active cases')+kpi(k.light_duty,'On light duty')+kpi(k.off_work,'Off work')+kpi(k.pending_return,'Return pending')+kpi(k.rtw_rate+'%','RTW rate')+
+      '</div></div>';
+    html+='<div class="panel"><h2 class="sec">Workers</h2><table><thead><tr><th>Worker</th><th>Trade</th><th>Body part</th><th>Status</th><th>Restriction</th><th>Days off</th><th>RTW</th></tr></thead><tbody>';
+    vm.workers.forEach(function(w){
+      html+='<tr><td>'+esc(w.name)+'</td><td>'+esc(w.job_title)+'</td><td>'+esc(w.body_part)+'</td><td><span class="pill '+pillClass(w.status)+'">'+statusLabel(w.status)+'</span></td><td>'+esc(w.restriction)+'</td><td>'+w.days_off+'</td><td><div class="prog"><span style="width:'+Math.round(w.rtw_progress*100)+'%"></span></div></td></tr>';
+    });
+    html+='</tbody></table><p class="note" style="margin-top:10px">This view is functional status only. It carries no pain or mobility scores, no diagnosis, no notes, and no photos.</p>';
+    if(vm.can_confirm_return) html+='<div class="actions"><button class="chip gold" data-action="confirm">Confirm return to full duty for Marcus Bedard</button></div>';
+    html+='</div>';
+    return html;
+  }
+  function kpi(n,l){ return '<div class="kpi"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
+
+  function hseWS(vm){
+    var html='<h2 class="sec">Light duties</h2>'+
+      '<div class="panel"><div class="note" style="margin-bottom:8px">Published medical restrictions (set by Nexus Health, read only):</div>'+
+      '<div>'+vm.restrictions_readonly.map(function(r){return '<span class="pill p-light" style="margin-right:6px">'+esc(r)+'</span>';}).join('')+'</div></div>';
+    html+='<div class="panel"><h2 class="sec">Recovery monitoring</h2><table><thead><tr><th>Worker</th><th>Body part</th><th>Status</th><th>Pain</th><th>Movement</th></tr></thead><tbody>';
+    vm.workers.forEach(function(w){
+      html+='<tr><td>'+esc(w.name)+'</td><td>'+esc(w.body_part)+'</td><td><span class="pill '+pillClass(w.status)+'">'+statusLabel(w.status)+'</span></td><td>'+(w.pain_score==null?'-':w.pain_score)+'</td><td>'+(w.mobility_score==null?'-':w.mobility_score)+'</td></tr>';
+    });
+    html+='</tbody></table><p class="note" style="margin-top:8px">HSE sees pain and mobility scores for operational need. No diagnosis notes, free text, or photos.</p></div>';
+    var esc0 = S.viewModel('nexus_physician'); // status guard: assignable only when case in light_duty
+    html+='<div class="panel"><h2 class="sec">Assign a duty (within restrictions)</h2><div class="actions">'+
+      TASK_BANK.map(function(t){return '<button class="chip" data-task="'+esc(t)+'">'+esc(t)+'</button>';}).join('')+'</div>'+
+      '<div style="margin-top:14px"><table><thead><tr><th>Task</th><th>Assigned</th><th>Status</th></tr></thead><tbody>'+
+      vm.duties.map(function(d){return '<tr><td>'+esc(d.task_description)+'</td><td>'+fmtDate(d.assigned_date)+'</td><td>'+(d.completed_date?'Done ('+esc(d.worker_feedback||'')+')':'Assigned')+'</td></tr>';}).join('')+
+      '</tbody></table></div></div>';
+    return html;
+  }
+
+  function nexusWS(vm){
+    var p=vm.patient, c=p.clinical||{};
+    var html='<h2 class="sec">Nexus Health workspace</h2>';
+    vm.escalations.filter(function(e){return e.open;}).forEach(function(e){
+      html+='<div class="alert"><strong>Escalation.</strong> '+esc(e.trigger)+'. <button class="chip" data-action="reassess" style="margin-left:8px">Reassess and return to prior status</button></div>';
+    });
+    html+='<div class="panel"><h2 class="sec">'+esc(p.name)+'</h2>'+
+      '<div class="note">'+esc(p.body_part)+' &middot; '+esc(p.injury_type)+' &middot; status <strong>'+statusLabel(p.status)+'</strong></div>'+
+      '<div class="doc" style="margin-top:12px"><div class="note">Diagnosis</div><div>'+esc(c.diagnosis_notes||c.diagnosis_summary||'')+'</div>'+
+      '<div class="note" style="margin-top:8px">Severity '+esc(c.severity||'')+' &middot; prognosis '+(c.prognosis_days||'')+' days &middot; physician '+esc(c.physician||'')+'</div></div>';
+    // recent scores
+    html+='<div style="margin-top:12px"><table><thead><tr><th>Date</th><th>Period</th><th>Pain</th><th>Movement</th><th>Notes</th></tr></thead><tbody>'+
+      vm.check_ins.slice(-5).reverse().map(function(l){return '<tr><td>'+fmtDate(l.logged_at)+'</td><td>'+l.period+'</td><td>'+l.pain_score+'</td><td>'+l.mobility_score+'</td><td>'+esc(l.notes)+'</td></tr>';}).join('')+
+      '</tbody></table></div>';
+    // clearance actions by current status
+    html+='<div class="actions">';
+    if(p.status==='off_work') html+='<button class="chip gold" data-action="clear-light">Clear for modified duty</button>';
+    if(p.status==='light_duty') html+='<button class="chip gold" data-action="clear-full">Clear for full duty</button>';
+    html+='</div></div>';
+    if(vm.ffw_form){ var f=vm.ffw_form; html+='<div class="panel"><h2 class="sec">Fitness for work form</h2><div class="doc"><h4>'+esc(f.title)+'</h4>'+
+      '<div class="note">Case '+esc(f.case_ref)+'</div><div style="margin-top:8px">Worker: '+esc(f.worker)+'<br>Employer: '+esc(f.employer)+'<br>Physician: '+esc(f.physician)+'<br>Determination: <strong>'+esc(f.determination)+'</strong></div>'+
+      '<p class="note" style="margin-top:10px">'+esc(f.note)+'</p></div></div>'; }
+    return html;
+  }
+
+  function wcbWS(vm){
+    var html='<h2 class="sec">WCB claims (read only)</h2>'+
+      '<div class="panel"><table><thead><tr><th>Claim</th><th>Worker</th><th>Body part</th><th>Status</th></tr></thead><tbody>'+
+      vm.claims.map(function(w){return '<tr><td>'+esc(w.nexus_case_ref)+'</td><td>'+esc(w.name)+'</td><td>'+esc(w.body_part)+'</td><td><span class="pill '+pillClass(w.status)+'">'+statusLabel(w.status)+'</span></td></tr>';}).join('')+
+      '</tbody></table></div>';
+    html+='<div class="panel"><h2 class="sec">Milestone notifications</h2><p class="note" style="margin-bottom:10px">Document lifecycle tracking only. Nothing transmits to WCB from here. Documents are filed through myWCB or health care provider online services.</p><table><thead><tr><th>Type</th><th>Claim</th><th>Status</th><th>Action</th></tr></thead><tbody>';
+    vm.notifications.forEach(function(n){
+      var next = n.status==='generated'?'<button class="chip" data-wcb="submitted" data-id="'+n.id+'">Mark submitted</button>': n.status==='submitted'?'<button class="chip" data-wcb="acknowledged" data-id="'+n.id+'">Mark acknowledged</button>':'<span class="note">Complete</span>';
+      html+='<tr><td>'+esc(n.type)+'</td><td>'+esc(n.wcb_claim_number)+'</td><td>'+esc(n.status)+'</td><td>'+next+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    return html;
+  }
+
+  var RESTR='No lifting above shoulder height';
+  document.addEventListener('click', function(ev){
+    var t=ev.target.closest('[data-action],[data-role],[data-task],[data-wcb]'); if(!t) return;
+    if(t.hasAttribute('data-role')){ location.hash='#'+t.getAttribute('data-role'); return; }
+    if(t.hasAttribute('data-task')){ S.assignDuty(t.getAttribute('data-task'),'hse'); render(); return; }
+    if(t.hasAttribute('data-wcb')){ S.markWcb(t.getAttribute('data-id'), t.getAttribute('data-wcb')); render(); return; }
+    var a=t.getAttribute('data-action');
+    if(a==='signin') location.hash='#roles';
+    else if(a==='switch') location.hash='#roles';
+    else if(a==='reset'){ S.reset(); render(); }
+    else if(a==='seed9'){ S.seedDay9(); render(); }
+    else if(a==='seedesc'){ S.seedEscalationReady(); render(); }
+    else if(a==='advday'){ S.advanceDay(); render(); }
+    else if(a==='confirm'){ S.confirmReturn('employer_admin'); render(); }
+    else if(a==='reassess'){ S.reassess('nexus_physician'); render(); }
+    else if(a==='clear-light'){ S.publishRestrictions([RESTR],'nexus_physician'); S.transition('light_duty','nexus_physician'); render(); }
+    else if(a==='clear-full'){ S.transition('full_duty_pending','nexus_physician'); render(); }
+  });
+
+  window.addEventListener('hashchange', render);
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) render(); });
+  S.subscribe(function(){ render(); });
+  render();
+})();
+</script>
+</body>
+</html>
