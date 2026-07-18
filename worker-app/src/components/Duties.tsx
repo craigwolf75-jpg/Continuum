@@ -2,10 +2,12 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSession } from '@/state/SessionProvider';
+import { useSync } from '@/state/SyncProvider';
 import type { LightDuty } from '@/lib/types';
 
 export default function Duties() {
   const { injury } = useSession();
+  const { enqueue } = useSync();
   const [duties, setDuties] = useState<LightDuty[]>([]);
   async function load() {
     if (!injury) return;
@@ -15,9 +17,10 @@ export default function Duties() {
   useEffect(() => { load(); }, [injury?.id]);
 
   async function toggle(d: LightDuty) {
-    const done = !d.completed_date;
-    await supabase.from('light_duties').update({ completed_date: done ? new Date().toISOString().slice(0, 10) : null }).eq('id', d.id);
-    await load();
+    const completed = !d.completed_date;
+    // optimistic local update, then queue for sync (works offline)
+    setDuties((ds) => ds.map((x) => (x.id === d.id ? { ...x, completed_date: completed ? new Date().toISOString().slice(0, 10) : null } : x)));
+    await enqueue({ kind: 'duty', id: d.id, completed });
   }
 
   if (injury && injury.status !== 'light_duty') return <p className="text-muted">No duties right now. Your site assigns these once your clinician clears you for light duty.</p>;
