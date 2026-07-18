@@ -165,7 +165,32 @@ async function handleCheck(
     value: count ?? 1,
   });
 
-  // TODO 07.10: notify the granted nexus physician by push and SMS.
+  // Notify the granted nexus physician and record the send (07.10). Push is a
+  // mock here; SMS lands behind the SmsProvider in 07.2. In-app is the row.
+  const { data: grants } = await sb
+    .from("access_grants")
+    .select("user_id")
+    .is("deleted_at", null)
+    .or(`injury_id.eq.${injury.id},tenant_id.eq.${injury.tenant_id}`);
+  const grantIds = (grants ?? []).map((g: { user_id: string }) => g.user_id);
+  if (grantIds.length > 0) {
+    const { data: nexus } = await sb
+      .from("users")
+      .select("id")
+      .eq("role", "nexus_physician")
+      .in("id", grantIds);
+    for (const u of nexus ?? []) {
+      await sb.from("notifications").insert({
+        tenant_id: injury.tenant_id,
+        user_id: u.id,
+        injury_id: injury.id,
+        channel: "push",
+        kind: "escalation",
+        body: verdict.reason,
+      });
+    }
+  }
+
   return true;
 }
 

@@ -1,0 +1,35 @@
+# Continuum exposure-proof gate (07.10). Runs the release-gate test that walks
+# every PHI surface as each role and fails on any leak. No em-dashes anywhere.
+#
+# Requires repo secret SUPABASE_DB_URL: a Postgres connection string to a
+# database that has the migrations applied and the demo seed loaded. ON_ERROR_STOP
+# makes psql exit non-zero on the first RAISE, so any leak fails the job.
+
+name: exposure-proof
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  exposure-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install psql
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Run exposure-proof suite
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "SUPABASE_DB_URL secret is not set; cannot run the exposure-proof gate."
+            exit 1
+          fi
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/exposure_proof.sql
