@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continuum: Section by Section Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0E1B2C; --panel:#16243B; --panel2:#1C2C47; --line:#27395A;
+  --ink:#E9EEF6; --muted:#9AA9BF; --gold:#C8972F; --gold-soft:#E3B85C;
+  --slate:#6E87AD; --good:#6FBF8F; --chipbg:#122036;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--navy);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:64px}
+h1,h2,h3,.disp{font-family:"Space Grotesk",Inter,sans-serif}
+button{font:inherit;cursor:pointer}
+a{color:var(--slate)}
+.kicker{color:var(--gold);font-family:"Space Grotesk";font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(14,27,44,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 20px;flex-wrap:wrap}
+.wordmark{font-family:"Space Grotesk";font-weight:700;font-size:18px;letter-spacing:.02em}
+.wordmark b{color:var(--gold)}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav button{background:none;border:1px solid transparent;color:var(--muted);padding:7px 12px;border-radius:8px;font-weight:500;font-size:13px}
+.nav button.active{color:var(--ink);background:var(--panel);border-color:var(--line)}
+.nav button:hover{color:var(--ink)}
+.presenter{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.presenter .day{font-family:"Space Grotesk";font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.presenter .day b{color:var(--gold);font-size:14px}
+.pbtn{background:var(--panel);border:1px solid var(--line);color:var(--muted);font-size:12px;padding:6px 10px;border-radius:8px}
+.pbtn:hover{color:var(--ink);border-color:var(--slate)}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 20px}
+section.view{display:none}
+section.view.active{display:block}
+.sechead{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.sechead h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
+.sechead .sub{color:var(--muted);font-size:14px;margin-top:4px;max-width:640px}
+.xref{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--chipbg);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:11.5px;color:var(--muted)}
+.chip b{color:var(--slate);font-weight:600}
+.chip.gold b{color:var(--gold)}
+.chip button{background:none;border:none;color:var(--slate);font-size:11.5px;padding:0;text-decoration:underline dotted}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:880px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.badge{display:inline-block;font-family:"Space Grotesk";font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:3px 9px;border:1px solid var(--line)}
+.st-reported{color:var(--muted)} .st-off_work{color:#D9A8A0;border-color:#5A3A44}
+.st-light_duty{color:var(--gold-soft);border-color:#5A4A26}
+.st-full_duty_pending{color:#A8C6E8;border-color:#33507A}
+.st-signed_off{color:var(--good);border-color:#2E5A40}
+.st-escalated{color:var(--gold);border-color:var(--gold);background:rgba(200,151,47,.08)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-family:"Space Grotesk";font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--line);padding:8px 10px}
+td{border-bottom:1px solid var(--line);padding:9px 10px;vertical-align:top}
+tr:last-child td{border-bottom:none}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi .n{font-family:"Space Grotesk";font-size:28px;font-weight:700;color:var(--gold)}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+.btn{background:var(--gold);color:#14100a;border:none;border-radius:10px;padding:10px 16px;font-weight:600;font-size:14px}
+.btn:hover{background:var(--gold-soft)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink);font-weight:500}
+.btn.ghost:hover{border-color:var(--slate)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.small{padding:6px 12px;font-size:12.5px;border-radius:8px}
+/* Worker phone column */
+.phone{max-width:420px;margin:0 auto}
+.phone .card{padding:18px}
+.slider-row{margin:14px 0}
+.slider-row label{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.slider-row label span{color:var(--gold);font-family:"Space Grotesk";font-size:18px}
+input[type=range]{width:100%;accent-color:var(--gold);height:32px}
+textarea{width:100%;background:var(--chipbg);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px;font:inherit;min-height:64px}
+input[type=text],select{width:100%;background:var(--chipbg);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px;font:inherit}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+.tabs button{background:none;border:none;color:var(--muted);padding:9px 14px;font-weight:600;font-size:13.5px;border-bottom:2px solid transparent}
+.tabs button.active{color:var(--gold);border-bottom-color:var(--gold)}
+.appts{display:flex;gap:8px;position:fixed;bottom:64px;left:0;right:0;max-width:420px;margin:0 auto;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:6px;z-index:10}
+.appts button{flex:1;background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;padding:8px 4px;border-radius:10px}
+.appts button.active{color:var(--gold);background:var(--chipbg)}
+.gap{height:90px}
+/* Workflow map */
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:start;margin:0 0 26px}
+.stage:not(:last-child):after{content:"";position:absolute;left:37px;bottom:-27px;height:28px;width:2px;background:var(--line)}
+.stage .node{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk";font-weight:700;color:var(--muted);background:var(--navy)}
+.stage.here .node{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px rgba(200,151,47,.15)}
+.stage.done .node{border-color:var(--good);color:var(--good)}
+.stage h3{font-size:16px}
+.stage p{color:var(--muted);font-size:13.5px;margin-top:4px}
+.flow{font-size:12px;color:var(--slate);margin-top:8px}
+/* wiring rail */
+.rail{position:fixed;left:0;right:0;bottom:0;background:#0A1524;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 18px;z-index:30;font-size:12.5px}
+.rail .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.rail .msg{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rail .msg b{color:var(--gold)}
+.rail .msg span{color:var(--muted)}
+.esc-banner{border:1px solid var(--gold);background:rgba(200,151,47,.08);border-radius:14px;padding:14px 18px;margin:14px 0}
+.esc-banner h3{color:var(--gold);font-size:15px}
+.doc{background:#F7F3E9;color:#1B2434;border-radius:12px;padding:20px 22px;font-size:13.5px}
+.doc h3{font-family:"Space Grotesk";color:#0E1B2C;margin-bottom:8px}
+.doc table td,.doc table th{border-bottom:1px solid #D8D2C2;color:#1B2434}
+.doc .kicker{color:#8a6a1e}
+.spark{width:100%;height:76px}
+.note{font-size:12.5px;color:var(--muted)}
+.role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:880px){.role-grid{grid-template-columns:1fr 1fr}}
+.role-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left;color:var(--ink)}
+.role-card:hover{border-color:var(--gold)}
+.role-card .r{font-family:"Space Grotesk";font-weight:700;font-size:15px}
+.role-card .d{font-size:12.5px;color:var(--muted);margin-top:4px}
+.consent-list{list-style:none;margin:12px 0}
+.consent-list li{padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.done-task{text-decoration:line-through;color:var(--muted)}
+.event-log{font-size:12.5px}
+.event-log .ev{padding:8px 10px;border-bottom:1px solid var(--line)}
+.event-log .ev b{color:var(--gold)}
+.event-log .ev .to{color:var(--slate)}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--gold-soft)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.rail .dot{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wordmark">CONTIN<b>UUM</b></div>
+  <nav class="nav" id="mainnav">
+    <button data-go="map" class="active">Workflow map</button>
+    <button data-go="worker">Worker app</button>
+    <button data-go="hub">Hub</button>
+    <button data-go="wiring">Wiring</button>
+    <button data-go="audit">Audit</button>
+  </nav>
+  <div class="presenter">
+    <div class="day">Day <b id="dayNum">9</b> of 21</div>
+    <button class="pbtn" onclick="advanceDay()">Advance day</button>
+    <button class="pbtn" onclick="loadSeed('new')">New case</button>
+    <button class="pbtn" onclick="loadSeed('day9')">Day 9 baseline</button>
+    <button class="pbtn" onclick="loadSeed('esc')">Escalation-ready</button>
+    <button class="pbtn" onclick="loadSeed('day9')">Reset</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ============ SECTION: WORKFLOW MAP ============ -->
+<section class="view active" id="view-map">
+  <div class="sechead">
+    <div>
+      <div class="kicker">Section 1 of 5: The loop, end to end</div>
+      <h1>One case, six connected sections</h1>
+      <div class="sub">Marcus Bedard, scaffolder at Worley, case NX-2026-00481. Each stage below is live: the gold node is where the case sits right now, and every stage opens the working section that runs it.</div>
+    </div>
+  </div>
+  <div id="mapStages"></div>
+</section>
+
+<!-- ============ SECTION: WORKER APP ============ -->
+<section class="view" id="view-worker">
+  <div class="phone" id="workerRoot"></div>
+  <div class="gap"></div>
+</section>
+
+<!-- ============ SECTION: HUB ============ -->
+<section class="view" id="view-hub">
+  <div id="hubRoot"></div>
+</section>
+
+<!-- ============ SECTION: WIRING ============ -->
+<section class="view" id="view-wiring">
+  <div class="sechead">
+    <div>
+      <div class="kicker">Section 4 of 5: How the sections connect</div>
+      <h1>Wiring and cross-references</h1>
+      <div class="sub">Every write lands in one shared store. This table names each record type, the section that produces it, and every section that consumes it. Below it, the live event feed shows the wiring in motion.</div>
+    </div>
+  </div>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Record</th><th>Produced by</th><th>Consumed by</th><th>Guard</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">injuries.status</td><td>Status machine only</td><td>Every section (badge, map node, gating of actions)</td><td>Transition table; only listed role advances; prior_status recorded on escalate</td></tr>
+        <tr><td class="mono">recovery_logs</td><td>Worker check-in</td><td>HSE scores, Nexus monitor, Escalation engine, Employer KPIs (counts only)</td><td>Employer projection strips pain, mobility, notes before render</td></tr>
+        <tr><td class="mono">restrictions</td><td>Nexus clearance</td><td>Employer table, HSE duty assignment (read-only), Worker duties header</td><td>Set by nexus_physician only; HSE has no write path</td></tr>
+        <tr><td class="mono">light_duties</td><td>HSE assignment</td><td>Worker duties list, Employer RTW progress, HSE confirmations</td><td>Valid only in light_duty status</td></tr>
+        <tr><td class="mono">escalations</td><td>Escalation engine (3 rules)</td><td>Nexus alert panel, Workflow map, Audit</td><td>Never advances medical status; Nexus reassess resolves</td></tr>
+        <tr><td class="mono">wcb_notifications</td><td>Status machine auto-actions</td><td>WCB view, Nexus (FFW), Employer (initial package)</td><td>Lifecycle pending, generated, submitted, acknowledged. Document tracking, not an API</td></tr>
+        <tr><td class="mono">consents</td><td>Worker consent gate</td><td>Worker app (blocks entry until granted)</td><td>Timestamped, revocable in More</td></tr>
+        <tr><td class="mono">audit_log</td><td>Every transition</td><td>Audit section</td><td>Append only</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="kicker">Visibility projections</div>
+      <h3 style="margin:6px 0 10px">What each role's view can even read</h3>
+      <table>
+        <thead><tr><th>Field</th><th>Worker</th><th>HSE</th><th>Employer</th><th>WCB</th><th>Nexus</th></tr></thead>
+        <tbody>
+          <tr><td>Diagnosis notes</td><td>summary</td><td>no</td><td>no</td><td>no</td><td>yes</td></tr>
+          <tr><td>Pain and mobility</td><td>own</td><td>yes</td><td>no</td><td>yes</td><td>yes</td></tr>
+          <tr><td>Check-in notes</td><td>own</td><td>no</td><td>no</td><td>no</td><td>yes</td></tr>
+          <tr><td>Restrictions, status, RTW</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td>sets</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:10px">Forbidden fields are stripped by the projection before render. Absent means absent, never grayed out.</p>
+    </div>
+    <div class="card">
+      <div class="kicker">Live event feed</div>
+      <h3 style="margin:6px 0 10px">Last writes and who they fed</h3>
+      <div class="event-log" id="eventLog"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION: AUDIT ============ -->
+<section class="view" id="view-audit">
+  <div class="sechead">
+    <div>
+      <div class="kicker">Section 5 of 5: The record of every transition</div>
+      <h1>Audit log</h1>
+      <div class="sub">Append only. Every status transition with actor role, from, to, and simulated day. In production this covers every read, edit, and export of health data.</div>
+    </div>
+  </div>
+  <div class="card" style="overflow-x:auto"><table id="auditTable"></table></div>
+</section>
+
+</div>
+
+<footer style="max-width:1180px;margin:0 auto;padding:18px 20px 26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)">
+  <div>&copy; 2026 Continuum. Synthetic demonstration data only; no real workers, no real claims.</div>
+  <div><a href="./privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="./terms.html">Terms of Service</a> &nbsp;&middot;&nbsp; <span>Drafts pending counsel review</span></div>
+</footer>
+
+<div class="rail"><div class="dot"></div><div class="msg" id="railMsg"><b>Wiring rail</b> <span>every data write is narrated here with the sections it feeds</span></div></div>
+
+<script>
+"use strict";
+/* ============================ STORE ============================ */
+const KEY = "continuum_demo_state_v2";
+const RESTRICTION_DEFAULT = "No lifting above shoulder height";
+const TASKS = [
+  {t:"Ground-level material staging", d:"Below waist height only"},
+  {t:"Tool crib inventory and tagging", d:"Seated or standing, no overhead reach"},
+  {t:"Toolbox talk delivery", d:"No physical demand"},
+  {t:"Site orientation walkthroughs", d:"Walking pace, no lifting"}
+];
+const OTHERS = [
+  {name:"J. Okafor", trade:"Pipefitter", ref:"NX-2026-00476", type:"Laceration", status:"light_duty", days:14, visits:3, rtw:70},
+  {name:"S. Tremblay", trade:"Electrician", ref:"NX-2026-00468", type:"Ankle sprain", status:"full_duty_pending", days:24, visits:4, rtw:92},
+  {name:"D. Whitecalf", trade:"Ironworker", ref:"NX-2026-00471", type:"Low back strain", status:"off_work", days:6, visits:2, rtw:20},
+  {name:"A. Fernandes", trade:"Labourer", ref:"NX-2026-00459", type:"Knee contusion", status:"light_duty", days:19, visits:3, rtw:78},
+  {name:"K. Nguyen", trade:"Welder", ref:"NX-2026-00463", type:"Wrist strain", status:"light_duty", days:11, visits:2, rtw:55},
+  {name:"R. MacLeod", trade:"Crane operator", ref:"NX-2026-00450", type:"Shoulder strain", status:"signed_off", days:31, visits:5, rtw:100},
+  {name:"P. Sandhu", trade:"Scaffolder", ref:"NX-2026-00481B", type:"Heat stress", status:"signed_off", days:9, visits:1, rtw:100}
+];
+const TRANSITIONS = [
+  {from:"reported", to:"off_work", role:"system", label:"First check-in received"},
+  {from:"off_work", to:"light_duty", role:"nexus_physician", label:"Cleared for modified duty"},
+  {from:"light_duty", to:"full_duty_pending", role:"nexus_physician", label:"Cleared for full duty"},
+  {from:"full_duty_pending", to:"signed_off", role:"employer_admin", label:"Employer confirmed return"},
+  {from:"*active*", to:"escalated", role:"system", label:"Escalation rule fired"},
+  {from:"escalated", to:"*prior*", role:"nexus_physician", label:"Reassessed and returned"}
+];
+const ACTIVE = ["off_work","light_duty","full_duty_pending"];
+const KEYWORDS = ["numb","tingling","sharp","worse at night","cannot sleep"];
+const STATUS_LABEL = {reported:"Reported", off_work:"Off work", light_duty:"Light duty", full_duty_pending:"Return pending", signed_off:"Signed off", escalated:"Escalated"};
+
+let S = null;
+
+function baseCheckins(){
+  /* days 1-8, AM and PM, a plausible improving arc */
+  const arc = [[7,3],[7,3],[6,4],[6,4],[5,5],[5,6],[4,6],[4,6]];
+  const out = [];
+  arc.forEach((v,i)=>{ out.push({day:i+1, period:"AM", pain:v[0], mobility:v[1], notes:""});
+                       out.push({day:i+1, period:"PM", pain:Math.max(1,v[0]-0), mobility:v[1], notes:""}); });
+  return out;
+}
+function seedCommon(){
+  return {
+    schema_version:2, activeSection:"map", workerTab:"today", hubRole:null,
+    consent:{granted_at:"2026-06-27T14:05:00Z"},
+    marcus:{name:"Marcus Bedard", trade:"Scaffolder", ref:"NX-2026-00481", body_part:"Right shoulder",
+      type:"Shoulder strain", diagnosis:"Grade 1 supraspinatus strain", prognosis:21, visits:2,
+      status:"light_duty", prior_status:null, restrictions:RESTRICTION_DEFAULT, injuryDay:0},
+    duties:[], escalations:[], wcb:[], audit:[], events:[], checkedIn:{}, ffw:false, closedNote:false
+  };
+}
+function seedDay9(){
+  const s = seedCommon();
+  s.day = 9; s.checkins = baseCheckins();
+  s.duties = [
+    {id:"d1", task:TASKS[0].t, restr:RESTRICTION_DEFAULT, day:8, done:true, feedback:"Manageable"},
+    {id:"d2", task:TASKS[1].t, restr:RESTRICTION_DEFAULT, day:9, done:false, feedback:""}
+  ];
+  s.wcb = [
+    {type:"initial", status:"acknowledged", day:0, note:"Employer report data package (C040 via myWCB, 72 hour window met)"},
+    {type:"light_duty", status:"submitted", day:5, note:"Modified duty start, duties description, restrictions"}
+  ];
+  s.audit = [
+    {day:0, actor:"system", from:"(intake)", to:"reported", label:"Case created from Nexus intake"},
+    {day:1, actor:"system", from:"reported", to:"off_work", label:"First check-in received"},
+    {day:5, actor:"nexus_physician", from:"off_work", to:"light_duty", label:"Cleared for modified duty"}
+  ];
+  return s;
+}
+function seedNew(){
+  const s = seedCommon();
+  s.day = 0; s.checkins = []; s.consent = {granted_at:null};
+  s.marcus.status = "reported"; s.marcus.restrictions = ""; s.duties = [];
+  s.wcb = []; s.audit = [{day:0, actor:"system", from:"(intake)", to:"reported", label:"Case created from Nexus intake"}];
+  return s;
+}
+function seedEsc(){
+  const s = seedDay9();
+  /* history one bad check-in away from rule 1: last two check-ins at pain 8 */
+  s.checkins.push({day:9, period:"AM", pain:8, mobility:4, notes:""});
+  s.checkedIn = {"9AM":true};
+  s.checkins[s.checkins.length-2] = {day:8, period:"PM", pain:8, mobility:4, notes:""};
+  return s;
+}
+function loadSeed(which){
+  S = which==="new" ? seedNew() : which==="esc" ? seedEsc() : seedDay9();
+  pushEvent("Seed loaded: "+which, ["All sections"]);
+  save();
+}
+function save(){
+  localStorage.setItem(KEY, JSON.stringify(S));
+  render();
+}
+function load(){
+  try{ const raw = localStorage.getItem(KEY); if(raw){ const parsed = JSON.parse(raw); if(parsed.schema_version===2){ S = parsed; return; } } }catch(e){}
+  S = seedDay9();
+}
+window.addEventListener("storage", e=>{ if(e.key===KEY){ load(); render(); }});
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden){ load(); render(); }});
+
+/* ============================ EVENTS / RAIL ============================ */
+function pushEvent(msg, feeds){
+  S.events.unshift({day:S.day, msg, feeds});
+  S.events = S.events.slice(0,20);
+  const rail = document.getElementById("railMsg");
+  rail.innerHTML = "<b>"+esc(msg)+"</b> <span>feeds: "+feeds.map(esc).join(", ")+"</span>";
+}
+function esc(t){ return String(t).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ============================ STATUS MACHINE ============================ */
+function transition(to, actorRole){
+  const m = S.marcus;
+  const rule = TRANSITIONS.find(r =>
+    (r.to===to || (to==="__prior" && r.to==="*prior*")) &&
+    (r.from===m.status || (r.from==="*active*" && ACTIVE.includes(m.status))));
+  if(!rule || rule.role!==actorRole){ pushEvent("Transition rejected: "+m.status+" to "+to+" by "+actorRole, ["Audit"]); save(); return false; }
+  const from = m.status;
+  let dest = to;
+  if(to==="escalated"){ m.prior_status = m.status; }
+  if(to==="__prior"){ dest = m.prior_status || "off_work"; m.prior_status = null; }
+  m.status = dest;
+  S.audit.push({day:S.day, actor:actorRole, from, to:dest, label:rule.label});
+  autoActions(dest);
+  pushEvent("Status: "+STATUS_LABEL[from]+" to "+STATUS_LABEL[dest]+" ("+actorRole+")", ["Map","Worker","Employer","HSE","Nexus","WCB","Audit"]);
+  save();
+  return true;
+}
+function autoActions(entered){
+  if(entered==="off_work" && !S.wcb.find(w=>w.type==="initial")){
+    S.wcb.push({type:"initial", status:"generated", day:S.day, note:"Employer report data package (C040 via myWCB). 72 hour window from injury."});
+  }
+  if(entered==="light_duty" && !S.wcb.find(w=>w.type==="light_duty")){
+    S.wcb.push({type:"light_duty", status:"generated", day:S.day, note:"Modified duty start, duties description, restrictions"});
+  }
+  if(entered==="full_duty_pending"){ S.ffw = true; }
+  if(entered==="signed_off" && !S.wcb.find(w=>w.type==="full_duty")){
+    S.wcb.push({type:"full_duty", status:"generated", day:S.day, note:"Return date, hours and pay confirmed, fitness for work form attached"});
+  }
+}
+
+/* ============================ CHECK-IN + ESCALATION ============================ */
+function currentPeriod(){ return S.checkedIn[S.day+"AM"] ? "PM" : "AM"; }
+function submitCheckin(pain, mobility, notes){
+  const period = currentPeriod();
+  if(S.checkedIn[S.day+period]) return;
+  S.checkins.push({day:S.day, period, pain, mobility, notes});
+  S.checkedIn[S.day+period] = true;
+  if(S.marcus.visits===2 && S.checkins.length%6===0) S.marcus.visits++;
+  pushEvent("Check-in "+period+" saved (day "+S.day+")", ["HSE scores","Nexus monitor","Escalation engine","Employer KPIs"]);
+  if(S.marcus.status==="reported"){ transition("off_work","system"); return; }
+  evaluateEscalation();
+  save();
+}
+function evaluateEscalation(){
+  const m = S.marcus;
+  if(!ACTIVE.includes(m.status)) return;
+  const c = S.checkins;
+  let trigger = null;
+  const last3 = c.slice(-3);
+  if(last3.length===3 && last3.every(x=>x.pain>=8)) trigger = "Pain 8 or higher for 3 check-ins in a row";
+  if(!trigger){
+    const byDay = {};
+    c.forEach(x=>{ (byDay[x.day]=byDay[x.day]||[]).push(x.mobility); });
+    const days = Object.keys(byDay).map(Number).sort((a,b)=>a-b).slice(-3);
+    if(days.length===3){
+      const avg = d=>byDay[d].reduce((a,b)=>a+b,0)/byDay[d].length;
+      if(avg(days[0])>avg(days[1]) && avg(days[1])>avg(days[2])) trigger = "Mobility declining across 2 days";
+    }
+  }
+  if(!trigger){
+    const lastNote = (c[c.length-1].notes||"").toLowerCase();
+    const hit = KEYWORDS.find(k=>lastNote.includes(k));
+    if(hit) trigger = "Red-flag wording in worker notes";
+  }
+  if(trigger){
+    S.escalations.push({day:S.day, trigger, resolved:false});
+    transition("escalated","system");
+    pushEvent("Escalation raised: "+trigger, ["Nexus alerts","Map","Audit"]);
+  }
+}
+
+/* ============================ DAY / DUTIES / WCB ============================ */
+function advanceDay(){ if(S.day<28){ S.day++; pushEvent("Day advanced to "+S.day, ["Worker","Employer KPIs","Map"]); save(); } }
+function assignDuty(idx){
+  if(S.marcus.status!=="light_duty"){ pushEvent("Duty assignment rejected: case is not on light duty", ["HSE"]); save(); return; }
+  const t = TASKS[idx];
+  S.duties.push({id:"d"+Date.now(), task:t.t, restr:S.marcus.restrictions, day:S.day, done:false, feedback:""});
+  pushEvent("Duty assigned: "+t.t, ["Worker duties","Employer RTW","HSE"]);
+  save();
+}
+function toggleDuty(id, fb){
+  const d = S.duties.find(x=>x.id===id); if(!d) return;
+  d.done = !d.done; if(fb!==undefined) d.feedback = fb;
+  pushEvent(d.done ? "Duty marked done: "+d.task : "Duty reopened: "+d.task, ["HSE confirmations","Employer RTW"]);
+  save();
+}
+function wcbAdvance(type){
+  const w = S.wcb.find(x=>x.type===type); if(!w) return;
+  if(w.status==="generated") w.status="submitted";
+  else if(w.status==="submitted") w.status="acknowledged";
+  pushEvent("WCB "+type+" notification marked "+w.status, ["WCB view","Audit"]);
+  save();
+}
+function grantConsent(){ S.consent.granted_at = new Date().toISOString(); pushEvent("Consent granted by worker", ["Worker app unlocked"]); save(); }
+function revokeConsent(){ S.consent.granted_at = null; pushEvent("Consent revoked: collection stops", ["Worker app"]); save(); }
+function publishRestrictions(v){
+  S.marcus.restrictions = v || RESTRICTION_DEFAULT;
+  pushEvent("Restrictions published: "+S.marcus.restrictions, ["Employer table","HSE assignment","Worker duties"]);
+  if(S.marcus.status==="off_work") transition("light_duty","nexus_physician"); else save();
+}
+function reassess(){
+  const e = S.escalations.find(x=>!x.resolved);
+  if(e){ e.resolved = true; }
+  transition("__prior","nexus_physician");
+}
+
+/* ============================ PROJECTIONS (the firewall) ============================ */
+function projEmployer(){
+  const m = S.marcus;
+  return { name:m.name, trade:m.trade, type:m.type, days:S.day, visits:m.visits,
+           status:m.status, restrictions:m.restrictions, rtw:rtwProgress() };
+  /* pain, mobility, diagnosis, notes never enter this object */
+}
+function projHSE(){
+  const m = S.marcus, last = S.checkins[S.checkins.length-1];
+  return Object.assign(projEmployer(), { pain:last?last.pain:null, mobility:last?last.mobility:null });
+}
+function projNexus(){
+  const m = S.marcus, last = S.checkins[S.checkins.length-1];
+  return { name:m.name, ref:m.ref, body_part:m.body_part, diagnosis:m.diagnosis, prognosis:m.prognosis,
+           status:m.status, prior:m.prior_status, restrictions:m.restrictions,
+           pain:last?last.pain:null, mobility:last?last.mobility:null, notes:last?last.notes:"", checkins:S.checkins };
+}
+function rtwProgress(){
+  const m = S.marcus;
+  if(m.status==="signed_off") return 100;
+  const base = {reported:5, off_work:20, light_duty:45, full_duty_pending:90, escalated:45}[m.status]||10;
+  const doneD = S.duties.filter(d=>d.done).length;
+  return Math.min(95, base + doneD*8 + Math.min(20, S.day));
+}
+
+/* ============================ RENDER ============================ */
+function go(section){ S.activeSection = section; save(); }
+document.getElementById("mainnav").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-go]"); if(b) go(b.dataset.go);
+});
+function statusBadge(st){ return '<span class="badge st-'+st+'">'+STATUS_LABEL[st]+'</span>'; }
+
+function render(){
+  document.getElementById("dayNum").textContent = S.day;
+  document.querySelectorAll("#mainnav button").forEach(b=>b.classList.toggle("active", b.dataset.go===S.activeSection));
+  document.querySelectorAll("section.view").forEach(v=>v.classList.toggle("active", v.id==="view-"+S.activeSection));
+  renderMap(); renderWorker(); renderHub(); renderWiring(); renderAudit();
+}
+
+/* ---- Map ---- */
+function renderMap(){
+  const m = S.marcus;
+  const stages = [
+    {id:"intake", n:"A", title:"Intake from Nexus Health", desc:"The physician's assessment posts the case. Minor injuries never engage Continuum; this one is moderate, so the case opens as Reported and the worker gets the app by SMS.",
+      here:m.status==="reported", done:m.status!=="reported", open:["worker","Open worker app"],
+      flow:"Feeds: Worker app, WCB initial package. Contract: POST /v1/cases"},
+    {id:"checkin", n:"B", title:"Worker check-ins, twice a day", desc:"Pain and mobility sliders plus notes. The first check-in moves the case to Off work automatically. Every check-in feeds four sections at once.",
+      here:["off_work"].includes(m.status), done:!["reported","off_work"].includes(m.status), open:["worker","Open check-in"],
+      flow:"Feeds: HSE scores, Nexus monitor, Escalation engine, Employer counts"},
+    {id:"employer", n:"C", title:"Employer dashboard, functional only", desc:"Status, restrictions, and return progress. Pain scores, diagnosis, and worker notes never reach this section: the projection strips them before render.",
+      here:false, done:true, open:["hub","Open employer view"],
+      flow:"Receives: status machine, restrictions, duty completions. Never receives: scores, diagnosis, notes"},
+    {id:"esc", n:"D", title:"Escalation engine", desc:"Three rules watch every check-in: pain 8 or higher three times in a row, mobility declining across two days, or red-flag wording in notes. A trigger routes the case to the clinician and never advances medical status.",
+      here:m.status==="escalated", done:S.escalations.some(e=>e.resolved), open:["hub","Open Nexus alerts"],
+      flow:"Feeds: Nexus alerts. Resolved only by reassess"},
+    {id:"duties", n:"E", title:"Clearance and light duties", desc:"The physician publishes restrictions; HSE assigns duties that fit them (restrictions are read-only to HSE); the worker checks duties off in the app.",
+      here:m.status==="light_duty", done:["full_duty_pending","signed_off"].includes(m.status), open:["hub","Open HSE view"],
+      flow:"Nexus sets restrictions, HSE assigns within them, Worker confirms, Employer sees progress"},
+    {id:"wcb", n:"F", title:"WCB documents and sign-off", desc:"Milestones generate the three WCB document packages for the responsible person to file through the existing channel. Full-duty clearance generates the fitness for work form; the employer confirms return and the case closes.",
+      here:m.status==="full_duty_pending", done:m.status==="signed_off", open:["hub","Open WCB view"],
+      flow:"Lifecycle: pending, generated, submitted, acknowledged. Document tracking, not an API"}
+  ];
+  document.getElementById("mapStages").innerHTML = stages.map(s=>
+    '<div class="stage'+(s.here?" here":s.done?" done":"")+'">'+
+      '<div class="node">'+s.n+'</div>'+
+      '<div><h3>'+s.title+'</h3><p>'+s.desc+'</p><div class="flow">'+s.flow+'</div></div>'+
+      '<div><button class="btn ghost small" onclick="go(\''+s.open[0]+'\')">'+s.open[1]+'</button></div>'+
+    '</div>').join("");
+}
+
+/* ---- Worker ---- */
+function renderWorker(){
+  const root = document.getElementById("workerRoot");
+  const m = S.marcus;
+  if(!S.consent.granted_at){
+    root.innerHTML =
+    '<div class="card"><div class="kicker">Before we start</div>'+
+    '<h2 style="margin:8px 0">Your privacy, in plain words</h2>'+
+    '<ul class="consent-list">'+
+    '<li><b>Your employer</b> sees what you can do at work. Never your medical details, pain scores, or notes.</li>'+
+    '<li><b>Your clinician</b> at Nexus Health sees everything, so they can help you recover.</li>'+
+    '<li><b>WCB</b> receives the required paperwork at three points in your claim.</li>'+
+    '<li><b>Continuum</b> manages this information for you. It is not your medical record.</li>'+
+    '</ul>'+
+    '<p class="note">You can change your mind any time in More. Saying no stops all collection. The full <a href="./privacy.html">Privacy Policy</a> and <a href="./terms.html">Terms of Service</a> are here whenever you want them.</p>'+
+    '<div style="margin-top:14px"><button class="btn" onclick="grantConsent()">I agree, let’s go</button></div></div>';
+    return;
+  }
+  const tab = S.workerTab;
+  const doneToday = S.checkedIn[S.day+"AM"] && S.checkedIn[S.day+"PM"];
+  let body = "";
+  if(tab==="today"){
+    body =
+    '<div class="card"><div class="kicker">Your recovery</div>'+
+    '<h2 style="margin:6px 0">'+esc(m.body_part)+' injury</h2>'+
+    '<div class="xref"><span class="chip">'+statusBadge(m.status)+'</span>'+
+    '<span class="chip"><b>Day '+S.day+'</b> of '+m.prognosis+'</span>'+
+    '<span class="chip">Back around <b>day '+m.prognosis+'</b></span></div>'+
+    (m.restrictions?'<p class="note" style="margin-top:10px">Work limit right now: '+esc(m.restrictions)+'</p>':'')+
+    (m.status==="escalated"?'<div class="esc-banner" style="margin-top:12px"><h3>Your care team is taking a closer look</h3><p class="note">Your recent check-ins asked for attention. Your clinician has been notified. Keep checking in as normal.</p></div>':'')+
+    (m.status==="signed_off"?'<div class="card" style="border-color:var(--good);margin-top:12px"><h3 style="color:var(--good)">You are back on full duty</h3><p class="note">This case is closed. Nice work.</p></div>':'')+
+    '</div>'+
+    (m.status!=="signed_off" ? (doneToday ?
+      '<div class="card"><h3>Both check-ins done today</h3><p class="note">See you tomorrow. Use Advance day up top to move time forward.</p></div>'
+      :
+      '<div class="card"><div class="kicker">'+currentPeriod()+' check-in, day '+S.day+'</div>'+
+      '<div class="slider-row"><label>How is your pain? <span id="painVal">3</span></label>'+
+      '<input type="range" min="0" max="10" value="3" id="painSlider" oninput="document.getElementById(\'painVal\').textContent=this.value"></div>'+
+      '<div class="slider-row"><label>How is your movement? <span id="mobVal">6</span></label>'+
+      '<input type="range" min="0" max="10" value="6" id="mobSlider" oninput="document.getElementById(\'mobVal\').textContent=this.value"></div>'+
+      '<textarea id="ciNotes" placeholder="Anything you want your clinician to know? (optional)"></textarea>'+
+      '<div style="margin-top:12px"><button class="btn" style="width:100%" onclick="submitCheckin(+painSlider.value, +mobSlider.value, ciNotes.value)">Save check-in</button></div>'+
+      '<p class="note" style="margin-top:8px">Only your clinician sees your scores and notes. Your employer sees your work status only.</p></div>') : '');
+  }
+  if(tab==="history"){
+    body = '<div class="card"><div class="kicker">Your trend</div><h3 style="margin:6px 0 10px">Pain (gold) and movement (light)</h3>'+sparkline()+
+    '<table style="margin-top:10px"><thead><tr><th>Day</th><th>When</th><th>Pain</th><th>Movement</th></tr></thead><tbody>'+
+    S.checkins.slice(-8).reverse().map(c=>'<tr><td>'+c.day+'</td><td>'+c.period+'</td><td>'+c.pain+'</td><td>'+c.mobility+'</td></tr>').join("")+
+    '</tbody></table></div>';
+  }
+  if(tab==="duties"){
+    body = '<div class="card"><div class="kicker">Light duties</div>'+
+    (m.restrictions?'<p class="note" style="margin:6px 0 10px">Your limit: '+esc(m.restrictions)+'</p>':'')+
+    (S.duties.length? S.duties.map(d=>
+      '<div style="padding:10px 0;border-bottom:1px solid var(--line)">'+
+      '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center">'+
+      '<div class="'+(d.done?'done-task':'')+'">'+esc(d.task)+'</div>'+
+      '<button class="btn ghost small" onclick="toggleDuty(\''+d.id+'\')">'+(d.done?'Undo':'Done')+'</button></div>'+
+      (d.done&&d.feedback?'<div class="note">You said: '+esc(d.feedback)+'</div>':'')+
+      '</div>').join("") : '<p class="note">No duties assigned yet. Your site HSE assigns these once your clinician clears you for light duty.</p>')+
+    '</div>';
+  }
+  if(tab==="more"){
+    body = '<div class="card"><div class="kicker">Privacy center</div>'+
+    '<p style="margin:8px 0">Consent given '+new Date(S.consent.granted_at).toLocaleDateString()+'. You can take it back any time; collection stops right away.</p>'+
+    '<button class="btn ghost small" onclick="revokeConsent()">Revoke consent</button>'+
+    '<p class="note" style="margin-top:14px">Continuum manages your recovery information. It is not your medical record; your clinic keeps that.</p></div>';
+  }
+  root.innerHTML =
+    '<div class="sechead"><div><div class="kicker">Section 2 of 5: The worker app</div><h1>Hi Marcus</h1>'+
+    '<div class="xref"><span class="chip"><b>Feeds</b> HSE, Nexus, Escalation, Employer counts</span><span class="chip"><b>Receives</b> restrictions, duties</span></div></div></div>'+
+    body+
+    '<div class="appts">'+["today","history","duties","more"].map(t=>'<button class="'+(tab===t?'active':'')+'" onclick="S.workerTab=\''+t+'\';save()">'+t[0].toUpperCase()+t.slice(1)+'</button>').join("")+'</div>';
+}
+function sparkline(){
+  const c = S.checkins.slice(-16);
+  if(!c.length) return '<p class="note">No check-ins yet.</p>';
+  const w=360,h=70,step=w/Math.max(1,c.length-1);
+  const y=v=>h-(v/10)*h;
+  const line=k=>c.map((p,i)=>(i?'L':'M')+(i*step).toFixed(1)+' '+y(p[k]).toFixed(1)).join(' ');
+  return '<svg class="spark" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Pain and movement trend">'+
+    '<path d="'+line("mobility")+'" fill="none" stroke="#9AA9BF" stroke-width="2"/>'+
+    '<path d="'+line("pain")+'" fill="none" stroke="#C8972F" stroke-width="2.5"/></svg>';
+}
+
+/* ---- Hub ---- */
+function renderHub(){
+  const root = document.getElementById("hubRoot");
+  const role = S.hubRole;
+  const head = (kick, h, xrefs)=>'<div class="sechead"><div><div class="kicker">'+kick+'</div><h1>'+h+'</h1>'+
+    '<div class="xref">'+xrefs.map(x=>'<span class="chip"><b>'+x[0]+'</b> '+x[1]+'</span>').join("")+
+    '<span class="chip"><button onclick="S.hubRole=null;save()">Switch role</button></span></div></div></div>';
+  if(!role){
+    root.innerHTML = '<div class="sechead"><div><div class="kicker">Section 3 of 5: The hub</div><h1>Pick your seat at the table</h1>'+
+    '<div class="sub">Four roles, four different projections of the same case. What is absent from a view is absent from its data, not hidden by the screen.</div></div></div>'+
+    '<div class="role-grid">'+
+    [["employer","Employer","Worley admin. Functional status only: no scores, no diagnosis, no notes."],
+     ["hse","HSE","Site safety. Sees scores for operational need; assigns duties within the clinician’s restrictions."],
+     ["nexus","Nexus Health","Dr. A. Owusu. Full clinical detail, clearances, escalation reassessment."],
+     ["wcb","WCB","Claims officer. Read-only claim view and the document lifecycle."]]
+    .map(r=>'<button class="role-card" onclick="S.hubRole=\''+r[0]+'\';save()"><div class="r">'+r[1]+'</div><div class="d">'+r[2]+'</div></button>').join("")+'</div>'+
+    '<p class="note" style="text-align:center;margin-top:18px">By continuing you agree to the <a href="./terms.html">Terms of Service</a> and <a href="./privacy.html">Privacy Policy</a>.</p>';
+    return;
+  }
+  if(role==="employer"){ root.innerHTML = head("Hub: Employer (Worley)","Injury and return overview",[["Receives","status, restrictions, duty progress"],["Never receives","scores, diagnosis, notes"]]) + employerView(); }
+  if(role==="hse"){ root.innerHTML = head("Hub: HSE (Worley site)","Light duty management",[["Receives","scores, restrictions (read-only)"],["Feeds","duty assignments to the worker app"]]) + hseView(); }
+  if(role==="nexus"){ root.innerHTML = head("Hub: Nexus Health, Dr. A. Owusu","Clinical monitoring and clearance",[["Sees","everything for assessed patients"],["Feeds","restrictions, clearances, reassessments"]]) + nexusView(); }
+  if(role==="wcb"){ root.innerHTML = head("Hub: WCB claims officer","Claim NX-2026-00481, read only",[["Receives","milestone documents, scores per matrix"],["Never receives","diagnosis, notes"]]) + wcbView(); }
+}
+function employerView(){
+  const p = projEmployer();
+  const all = [ {name:p.name, trade:p.trade, ref:S.marcus.ref, type:p.type, status:p.status, days:p.days, visits:p.visits, rtw:p.rtw, restr:p.restrictions, live:true} ]
+    .concat(OTHERS.map(o=>({name:o.name, trade:o.trade, ref:o.ref, type:o.type, status:o.status, days:o.days, visits:o.visits, rtw:o.rtw, restr:o.status==="light_duty"?"Per clearance":""})));
+  const active = all.filter(w=>w.status!=="signed_off");
+  const kpis = [
+    [active.length, "Active injuries"],
+    [all.filter(w=>w.status==="light_duty").length, "On light duty"],
+    [Math.round(active.reduce((a,w)=>a+w.days,0)/active.length), "Avg days injured"],
+    [Math.round(all.filter(w=>w.status==="signed_off").length/all.length*100)+"%", "Returned to full duty"]
+  ];
+  return '<div class="grid g4">'+kpis.map(k=>'<div class="kpi"><div class="n">'+k[0]+'</div><div class="l">'+k[1]+'</div></div>').join("")+'</div>'+
+  (S.marcus.status==="full_duty_pending" ? '<div class="card" style="border-color:var(--gold)"><div class="kicker">Action needed</div><h3 style="margin:6px 0">Confirm Marcus Bedard’s return to full duty</h3><p class="note">The clinician has cleared him. Confirming closes the case and generates the final WCB package.</p><div style="margin-top:10px"><button class="btn" onclick="transition(\'signed_off\',\'employer_admin\')">Confirm return</button></div></div>' : '')+
+  '<div class="card" style="overflow-x:auto"><table><thead><tr><th>Worker</th><th>Injury type</th><th>Days</th><th>Visits</th><th>Status</th><th>Restrictions</th><th>Return progress</th></tr></thead><tbody>'+
+  all.map(w=>'<tr'+(w.live?' style="background:rgba(200,151,47,.05)"':'')+'><td><b>'+esc(w.name)+'</b><div class="note">'+esc(w.trade)+'</div></td><td>'+esc(w.type)+'</td><td>'+w.days+'</td><td>'+w.visits+'</td><td>'+statusBadge(w.status)+'</td><td>'+esc(w.restr||"")+'</td><td>'+w.rtw+'%</td></tr>').join("")+
+  '</tbody></table><p class="note" style="margin-top:10px">This view carries no pain scores, no diagnosis, and no worker notes. The Alberta framing here is claim cost and premium impact; provinces with statutory duties would show compliance framing instead.</p></div>';
+}
+function hseView(){
+  const p = projHSE();
+  return '<div class="grid g3">'+
+  '<div class="kpi"><div class="n">'+(p.pain??"-")+'</div><div class="l">Latest pain (operational need)</div></div>'+
+  '<div class="kpi"><div class="n">'+(p.mobility??"-")+'</div><div class="l">Latest mobility</div></div>'+
+  '<div class="kpi"><div class="n">'+S.duties.filter(d=>d.done).length+'/'+S.duties.length+'</div><div class="l">Duties completed</div></div></div>'+
+  '<div class="card"><div class="kicker">Clinician’s restriction (read only)</div><h3 style="margin:6px 0">'+esc(p.restrictions||"Not yet published")+'</h3>'+
+  '<p class="note">Set by Nexus Health. HSE cannot edit this line, only assign work that fits inside it.</p></div>'+
+  '<div class="card"><div class="kicker">Assign a duty'+(S.marcus.status!=="light_duty"?" (unavailable: case is "+STATUS_LABEL[S.marcus.status]+")":"")+'</div>'+
+  '<div class="grid g2" style="margin-top:10px">'+TASKS.map((t,i)=>'<div style="border:1px solid var(--line);border-radius:10px;padding:12px"><b>'+esc(t.t)+'</b><div class="note">'+esc(t.d)+'</div><div style="margin-top:8px"><button class="btn ghost small" '+(S.marcus.status!=="light_duty"?"disabled":"")+' onclick="assignDuty('+i+')">Assign to Marcus</button></div></div>').join("")+'</div></div>'+
+  '<div class="card"><div class="kicker">Worker confirmations</div>'+(S.duties.length? '<table><thead><tr><th>Duty</th><th>Assigned day</th><th>Status</th><th>Worker feedback</th></tr></thead><tbody>'+S.duties.map(d=>'<tr><td>'+esc(d.task)+'</td><td>'+d.day+'</td><td>'+(d.done?'<span style="color:var(--good)">Done</span>':'Pending')+'</td><td>'+esc(d.feedback||"")+'</td></tr>').join("")+'</tbody></table>':'<p class="note">Nothing assigned yet.</p>')+'</div>';
+}
+function nexusView(){
+  const p = projNexus();
+  const openEsc = S.escalations.find(e=>!e.resolved);
+  return (openEsc? '<div class="esc-banner"><h3>Escalation: '+esc(openEsc.trigger)+'</h3><p class="note">Raised day '+openEsc.day+'. This is trend information for your review, not a diagnosis. Reassess to return the case to '+STATUS_LABEL[p.prior||"off_work"]+'.</p><div style="margin-top:10px"><button class="btn" onclick="reassess()">Reassess and return</button></div></div>' : '')+
+  '<div class="grid g3">'+
+  '<div class="kpi"><div class="n">'+(p.pain??"-")+'</div><div class="l">Latest pain</div></div>'+
+  '<div class="kpi"><div class="n">'+(p.mobility??"-")+'</div><div class="l">Latest mobility</div></div>'+
+  '<div class="kpi"><div class="n">Day '+S.day+'</div><div class="l">of '+p.prognosis+' day prognosis</div></div></div>'+
+  '<div class="card"><div class="kicker">Patient</div><h3 style="margin:6px 0">'+esc(p.name)+' · '+esc(p.ref)+'</h3>'+
+  '<p>'+esc(p.body_part)+': '+esc(p.diagnosis)+'</p>'+
+  '<div class="xref"><span class="chip">'+statusBadge(p.status)+'</span><span class="chip">Restrictions: <b>'+esc(p.restrictions||"none published")+'</b></span></div>'+
+  (p.notes?'<p class="note" style="margin-top:8px">Latest worker note: “'+esc(p.notes)+'”</p>':'')+
+  '</div>'+
+  '<div class="card"><div class="kicker">Clearance actions (physician only)</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'+
+  (p.status==="off_work"? '<div style="flex:1;min-width:260px"><input type="text" id="restrIn" value="'+esc(RESTRICTION_DEFAULT)+'"><div style="margin-top:8px"><button class="btn" onclick="publishRestrictions(restrIn.value)">Publish restrictions and clear for light duty</button></div></div>' : '')+
+  (p.status==="light_duty"? '<div style="flex:1;min-width:260px"><input type="text" id="restrIn" value="'+esc(p.restrictions)+'"><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost small" onclick="publishRestrictions(restrIn.value)">Update restrictions</button><button class="btn" onclick="transition(\'full_duty_pending\',\'nexus_physician\')">Clear for full duty</button></div></div>' : '')+
+  (p.status==="full_duty_pending"? '<p class="note">Cleared. Fitness for work form generated below; the employer confirms the return.</p>' : '')+
+  (p.status==="signed_off"? '<p class="note">Case closed at day '+S.day+'.</p>' : '')+
+  (p.status==="escalated"? '<p class="note">Resolve the escalation above before clearance actions.</p>' : '')+
+  (p.status==="reported"? '<p class="note">Waiting on the worker’s first check-in. It moves the case to Off work automatically.</p>' : '')+
+  '</div></div>'+
+  (S.ffw? '<div class="card"><div class="kicker">Generated document</div><div class="doc"><div class="kicker">Fitness for work</div><h3>'+esc(p.name)+' · '+esc(p.ref)+'</h3><table><tbody><tr><td>Assessed by</td><td>Dr. A. Owusu, Nexus Health</td></tr><tr><td>Compensable injury</td><td>'+esc(p.body_part)+' strain</td></tr><tr><td>Fit for regular duties from</td><td>Day '+Math.max(S.day, 20)+'</td></tr><tr><td>Residual restrictions</td><td>None</td></tr></tbody></table><p class="note" style="color:#5a5342;margin-top:8px">Filed by the physician through WCB health care provider online services. Continuum tracks the handoff; it does not transmit.</p></div></div>' : '');
+}
+function wcbView(){
+  const labels = {initial:"Initial notification", light_duty:"Light duty notification", full_duty:"Full duty notification"};
+  return '<div class="card" style="overflow-x:auto"><table><thead><tr><th>Claim</th><th>Worker</th><th>Employer</th><th>Injury</th><th>Status</th><th>Days</th></tr></thead><tbody>'+
+  '<tr><td class="mono">'+esc(S.marcus.ref)+'</td><td>'+esc(S.marcus.name)+'</td><td>Worley</td><td>'+esc(S.marcus.type)+'</td><td>'+statusBadge(S.marcus.status)+'</td><td>'+S.day+'</td></tr>'+
+  '</tbody></table><p class="note" style="margin-top:8px">Read only. No diagnosis notes, no worker free text.</p></div>'+
+  '<div class="card"><div class="kicker">Document lifecycle (no live WCB API exists; humans file through myWCB and provider services)</div>'+
+  (S.wcb.length? '<table style="margin-top:8px"><thead><tr><th>Package</th><th>Generated day</th><th>Contents</th><th>Status</th><th></th></tr></thead><tbody>'+
+    S.wcb.map(w=>'<tr><td><b>'+labels[w.type]+'</b></td><td>'+w.day+'</td><td class="note">'+esc(w.note)+'</td><td><span class="badge" style="color:var(--gold-soft)">'+w.status+'</span></td><td>'+(w.status!=="acknowledged"?'<button class="btn ghost small" onclick="wcbAdvance(\''+w.type+'\')">Mark '+(w.status==="generated"?"submitted":"acknowledged")+'</button>':'')+'</td></tr>').join("")+
+    '</tbody></table>' : '<p class="note" style="margin-top:8px">No documents yet. The first check-in generates the initial package inside the 72 hour employer window.</p>')+
+  '</div>';
+}
+
+/* ---- Wiring + Audit ---- */
+function renderWiring(){
+  document.getElementById("eventLog").innerHTML = S.events.length ?
+    S.events.map(e=>'<div class="ev"><b>Day '+e.day+'</b> '+esc(e.msg)+' <span class="to">→ '+e.feeds.map(esc).join(", ")+'</span></div>').join("")
+    : '<p class="note">No events yet this session. Do anything in the app and it appears here.</p>';
+}
+function renderAudit(){
+  document.getElementById("auditTable").innerHTML =
+  '<thead><tr><th>Day</th><th>Actor role</th><th>From</th><th>To</th><th>Trigger</th></tr></thead><tbody>'+
+  S.audit.map(a=>'<tr><td>'+a.day+'</td><td class="mono">'+esc(a.actor)+'</td><td>'+esc(a.from)+'</td><td>'+esc(a.to)+'</td><td>'+esc(a.label)+'</td></tr>').join("")+'</tbody>';
+}
+
+/* arrow char used only in JS strings for the event feed, not copy dashes */
+load();
+render();
+</script>
+</body>
+</html>
