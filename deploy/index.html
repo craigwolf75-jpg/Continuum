@@ -416,8 +416,8 @@
           <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:16px">Contact &amp; legal</div>
           <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
             <a href="#cta" style="color:#AAB6C6" style-hover="color:#fff">Talk to Us</a>
-            <a href="#privacy" style="color:#AAB6C6" style-hover="color:#fff">Privacy Policy</a>
-            <a href="#privacy" style="color:#AAB6C6" style-hover="color:#fff">Terms of Service</a>
+            <a href="/privacy" style="color:#AAB6C6" style-hover="color:#fff">Privacy Policy</a>
+            <a href="/terms" style="color:#AAB6C6" style-hover="color:#fff">Terms of Service</a>
             <span style="color:#5E6B7C">PIPEDA / PHIA compliance: documentation on request</span>
           </div>
         </div>
@@ -436,7 +436,7 @@ class Component extends DCLogic {
   state = { c1: 0, c2: 0, c3: 0, c4: 0, counted: false };
 
   componentDidMount() {
-    // scroll reveal — re-scan continuously so nodes created after mount
+    // scroll reveal: re-scan continuously so nodes created after mount
     // (streaming template, hot reloads) are still observed.
     this._io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); this._io.unobserve(e.target); } });
