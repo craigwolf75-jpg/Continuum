@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+:root { color-scheme: dark; }
+html, body { background: #0E1B2C; color: #E9EEF6; margin: 0; font-family: Inter, sans-serif; }
+button { font: inherit; }
+/* every interactive control is at least 48px tall */
+button, input, a[role="button"] { min-height: 48px; }
