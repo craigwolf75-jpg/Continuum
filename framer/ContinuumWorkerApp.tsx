@@ -2,10 +2,12 @@ import { addPropertyControls, ControlType } from "framer"
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 
-// Continuum Worker App, a self-contained Framer code component. Presentational
-// only: no backend, no storage, no network SDKs. Production auth, RLS, and data
-// live in the mainline (Prompt 07); this demo shares its copy, mechanics, and
-// thresholds so it never lies about the product. No em-dashes or en-dashes.
+// Continuum Worker App v2 (Prompt 12a). Self-contained Framer code component
+// with an optional live data mode. Demo mode is identical to Prompt 12. Live
+// mode connects EXCLUSIVELY to a synthetic demo service (framer-demo); it never
+// breaks when the service is down, it silently falls back to internal state.
+// No storage, no SDKs; fetch is a browser global behind typeof window guards.
+// Imports limited to react, framer, framer-motion. No em-dashes or en-dashes.
 
 interface Props {
     workerName: string
@@ -17,6 +19,10 @@ interface Props {
     phoneFrame: boolean
     startAtConsent: boolean
     autoplay: boolean
+    dataSource: "demo" | "live"
+    serviceUrl: string
+    demoToken: string
+    pollSeconds: number
     style?: CSSProperties
 }
 
@@ -32,7 +38,6 @@ const SPRING = { type: "spring", stiffness: 480, damping: 30 } as const
 const FONT_CSS =
     "@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');"
 
-// pain heats from the accent toward a warm red-gold as the score climbs
 function painColor(v: number, accent: string): string {
     const hex = accent.replace("#", "")
     const a = [
@@ -66,9 +71,13 @@ export default function ContinuumWorkerApp(props: Props) {
         phoneFrame = true,
         startAtConsent = false,
         autoplay = false,
+        dataSource = "demo",
+        serviceUrl = "",
+        demoToken = "",
+        pollSeconds = 12,
     } = props
 
-    const firstName = (workerName || "there").split(" ")[0]
+    const live = dataSource === "live" && serviceUrl.trim().length > 0
 
     const [consented, setConsented] = useState(!startAtConsent)
     const [tab, setTab] = useState<"today" | "trend" | "duties">("today")
@@ -79,9 +88,10 @@ export default function ContinuumWorkerApp(props: Props) {
     const [saved, setSaved] = useState(false)
     const [burst, setBurst] = useState(false)
     const [escalated, setEscalated] = useState(false)
-    const [checkins, setCheckins] = useState<
-        { day: number; pain: number; mobility: number }[]
-    >([
+    const [liveName, setLiveName] = useState<string | null>(null)
+    const [liveBody, setLiveBody] = useState<string | null>(null)
+    const [linkState, setLinkState] = useState<"linking" | "live" | "demo">("demo")
+    const [checkins, setCheckins] = useState<{ day: number; pain: number; mobility: number }[]>([
         { day: startDay - 4, pain: 7, mobility: 3 },
         { day: startDay - 3, pain: 6, mobility: 4 },
         { day: startDay - 2, pain: 6, mobility: 5 },
@@ -94,7 +104,6 @@ export default function ContinuumWorkerApp(props: Props) {
         { id: "d3", task: "Toolbox talk delivery", done: false },
     ])
 
-    // reset when the author changes the starting props on the canvas
     useEffect(() => {
         setConsented(!startAtConsent)
         setDay(startDay)
@@ -102,7 +111,6 @@ export default function ContinuumWorkerApp(props: Props) {
         setEscalated(false)
     }, [startAtConsent, startDay])
 
-    // one timeout registry, cleared on unmount (SSR safe, no timers at module load)
     const timers = useRef<number[]>([])
     function later(fn: () => void, ms: number) {
         if (typeof window === "undefined") return
@@ -115,6 +123,78 @@ export default function ContinuumWorkerApp(props: Props) {
             timers.current = []
         }
     }, [])
+
+    // ---- live data mode ----
+    function endpoint(path: string): string {
+        return serviceUrl.replace(/\/+$/, "") + path
+    }
+    function headers(): Record<string, string> {
+        const h: Record<string, string> = { "Content-Type": "application/json" }
+        if (demoToken) h["Authorization"] = "Bearer " + demoToken
+        return h
+    }
+    // optimistic, fire and forget; a failure only drops the chip to fallback
+    function post(path: string, body: Record<string, unknown>) {
+        if (!live || typeof window === "undefined") return
+        try {
+            fetch(endpoint(path), { method: "POST", headers: headers(), body: JSON.stringify(body) }).catch(() =>
+                setLinkState("demo")
+            )
+        } catch {
+            setLinkState("demo")
+        }
+    }
+    function applyState(s: any) {
+        if (!s || typeof s !== "object") return
+        if (typeof s.workerName === "string") setLiveName(s.workerName)
+        if (typeof s.bodyPart === "string") setLiveBody(s.bodyPart)
+        if (typeof s.day === "number") setDay(s.day)
+        if (typeof s.checkedInToday === "boolean") setDone(s.checkedInToday)
+        if (typeof s.escalated === "boolean") setEscalated(s.escalated)
+        if (Array.isArray(s.trend)) {
+            const d = typeof s.day === "number" ? s.day : startDay
+            setCheckins(
+                s.trend.map((t: any, i: number) => ({
+                    day: d - (s.trend.length - 1 - i),
+                    pain: Number(t.pain) || 0,
+                    mobility: Number(t.mob) || 0,
+                }))
+            )
+        }
+        if (Array.isArray(s.duties)) {
+            setDuties(s.duties.map((x: any) => ({ id: String(x.id), task: String(x.t ?? ""), done: !!x.done })))
+        }
+    }
+    useEffect(() => {
+        if (!live || typeof window === "undefined") {
+            setLinkState("demo")
+            return
+        }
+        let cancelled = false
+        const ctrl = new AbortController()
+        setLinkState("linking")
+        async function pull() {
+            try {
+                const r = await fetch(endpoint("/state"), { headers: headers(), signal: ctrl.signal })
+                if (!r.ok) throw new Error("bad")
+                const s = await r.json()
+                if (cancelled) return
+                applyState(s)
+                setLinkState("live")
+            } catch {
+                if (!cancelled) setLinkState("demo")
+            }
+        }
+        pull()
+        const secs = Math.min(60, Math.max(5, pollSeconds || 12))
+        const iv = window.setInterval(pull, secs * 1000)
+        return () => {
+            cancelled = true
+            ctrl.abort()
+            window.clearInterval(iv)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [live, serviceUrl, demoToken, pollSeconds])
 
     function submit() {
         if (done) return
@@ -129,6 +209,7 @@ export default function ContinuumWorkerApp(props: Props) {
             setDone(true)
             if (p >= 8) setEscalated(true)
         }, 1050)
+        post("/checkins", { pain: p, mob: m })
     }
     function nextDay() {
         setDay((d) => d + 1)
@@ -136,18 +217,18 @@ export default function ContinuumWorkerApp(props: Props) {
         setEscalated(false)
         setPain(3)
         setMobility(6)
+        post("/advance-day", {})
+    }
+    function completeDuty(id: string) {
+        setDuties((ds) => ds.map((d) => (d.id === id ? { ...d, done: true } : d)))
+        const numeric = Number(id)
+        post("/duties/toggle", { id: Number.isNaN(numeric) ? id : numeric, done: true })
     }
     function completeFirstDuty() {
-        setDuties((ds) => {
-            const i = ds.findIndex((d) => !d.done)
-            if (i < 0) return ds
-            const copy = ds.slice()
-            copy[i] = { ...copy[i], done: true }
-            return copy
-        })
+        const first = duties.find((d) => !d.done)
+        if (first) completeDuty(first.id)
     }
 
-    // autoplay: a scripted, self-cleaning loop for hero sections
     const api = useRef({ setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented })
     api.current = { setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented }
     useEffect(() => {
@@ -202,8 +283,9 @@ export default function ContinuumWorkerApp(props: Props) {
         }
     }, [autoplay])
 
+    const firstName = (liveName || workerName || "there").split(" ")[0]
+    const shownBody = liveBody || bodyPart
     const ringProgress = Math.min(1, day / Math.max(1, prognosisDays))
-    const dutiesDone = duties.filter((d) => d.done).length
 
     const content = (
         <div
@@ -222,32 +304,22 @@ export default function ContinuumWorkerApp(props: Props) {
             <Orbs accent={accent} />
             <AnimatePresence mode="wait">
                 {!consented ? (
-                    <Consent
-                        key="consent"
-                        accent={accent}
-                        onAgree={() => setConsented(true)}
-                    />
+                    <Consent key="consent" accent={accent} onAgree={() => setConsented(true)} />
                 ) : (
                     <motion.div
                         key="app"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        style={{
-                            position: "relative",
-                            zIndex: 1,
-                            flex: 1,
-                            display: "flex",
-                            flexDirection: "column",
-                            minHeight: 0,
-                        }}
+                        style={{ position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}
                     >
                         <div style={{ padding: "20px 20px 8px" }}>
-                            <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 17 }}>
-                                Contin<span style={{ color: accent }}>uum</span>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 17 }}>
+                                    Contin<span style={{ color: accent }}>uum</span>
+                                </div>
+                                {dataSource === "live" && <LinkChip state={linkState} accent={accent} />}
                             </div>
-                            <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 24, marginTop: 6 }}>
-                                Hi {firstName}
-                            </div>
+                            <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 24, marginTop: 6 }}>Hi {firstName}</div>
                         </div>
 
                         <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
@@ -263,7 +335,7 @@ export default function ContinuumWorkerApp(props: Props) {
                                     {tab === "today" && (
                                         <Today
                                             accent={accent}
-                                            bodyPart={bodyPart}
+                                            bodyPart={shownBody}
                                             day={day}
                                             prognosis={prognosisDays}
                                             ringProgress={ringProgress}
@@ -279,16 +351,9 @@ export default function ContinuumWorkerApp(props: Props) {
                                             onNextDay={nextDay}
                                         />
                                     )}
-                                    {tab === "trend" && (
-                                        <Trend accent={accent} checkins={checkins} />
-                                    )}
+                                    {tab === "trend" && <Trend accent={accent} checkins={checkins} />}
                                     {tab === "duties" && (
-                                        <Duties
-                                            accent={accent}
-                                            duties={duties}
-                                            done={dutiesDone}
-                                            onComplete={completeFirstDuty}
-                                        />
+                                        <Duties accent={accent} duties={duties} done={duties.filter((d) => d.done).length} onComplete={completeDuty} />
                                     )}
                                 </motion.div>
                             </AnimatePresence>
@@ -315,15 +380,7 @@ export default function ContinuumWorkerApp(props: Props) {
         >
             <style>{FONT_CSS}</style>
             {phoneFrame ? (
-                <div
-                    style={{
-                        position: "relative",
-                        width: "100%",
-                        height: "100%",
-                        padding: 12,
-                        boxSizing: "border-box",
-                    }}
-                >
+                <div style={{ position: "relative", width: "100%", height: "100%", padding: 12, boxSizing: "border-box" }}>
                     <div
                         style={{
                             position: "relative",
@@ -345,9 +402,24 @@ export default function ContinuumWorkerApp(props: Props) {
     )
 }
 
-// ---------- ambient background ----------
+function LinkChip({ state, accent }: { state: "linking" | "live" | "demo"; accent: string }) {
+    if (state === "linking") return <span style={{ fontSize: 11, color: MUTED }}>Linking</span>
+    if (state === "live")
+        return (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, color: accent }}>
+                <motion.span
+                    animate={{ opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ width: 7, height: 7, borderRadius: "50%", background: accent }}
+                />
+                Live
+            </span>
+        )
+    return <span style={{ fontSize: 11, color: MUTED }}>Link unavailable</span>
+}
+
 function Orbs({ accent }: { accent: string }) {
-    const orb = (c: string, x: number, y: number, s: number, d: number): CSSProperties => ({
+    const orb = (c: string, x: number, y: number, s: number): CSSProperties => ({
         position: "absolute",
         left: x,
         top: y,
@@ -362,12 +434,12 @@ function Orbs({ accent }: { accent: string }) {
     return (
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
             <motion.div
-                style={orb(accent, -40, 60, 260, 0)}
+                style={orb(accent, -40, 60, 260)}
                 animate={{ x: [0, 40, -10, 0], y: [0, 30, -20, 0] }}
                 transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
-                style={orb("#2E5A8C", 180, 520, 240, 1)}
+                style={orb("#2E5A8C", 180, 520, 240)}
                 animate={{ x: [0, -30, 20, 0], y: [0, -25, 15, 0] }}
                 transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -375,7 +447,6 @@ function Orbs({ accent }: { accent: string }) {
     )
 }
 
-// ---------- consent ----------
 function Consent({ accent, onAgree }: { accent: string; onAgree: () => void }) {
     const lines = [
         "Your employer sees what you can do at work. Never your pain scores or notes.",
@@ -393,9 +464,7 @@ function Consent({ accent, onAgree }: { accent: string; onAgree: () => void }) {
             <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase" }}>
                 Before we start
             </div>
-            <div style={{ fontFamily: HEAD, fontSize: 26, fontWeight: 700, margin: "8px 0 18px" }}>
-                Your privacy, in plain words
-            </div>
+            <div style={{ fontFamily: HEAD, fontSize: 26, fontWeight: 700, margin: "8px 0 18px" }}>Your privacy, in plain words</div>
             {lines.map((l, i) => (
                 <motion.div
                     key={i}
@@ -429,7 +498,6 @@ function Consent({ accent, onAgree }: { accent: string; onAgree: () => void }) {
     )
 }
 
-// ---------- today ----------
 function Today(props: {
     accent: string
     bodyPart: string
@@ -463,9 +531,7 @@ function Today(props: {
                             transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
                             style={{ border: "1px solid " + accent, borderRadius: 14, padding: "12px 14px", background: "rgba(200,151,47,0.08)" }}
                         >
-                            <div style={{ color: accent, fontFamily: HEAD, fontWeight: 600, fontSize: 14 }}>
-                                Your care team is taking a closer look
-                            </div>
+                            <div style={{ color: accent, fontFamily: HEAD, fontWeight: 600, fontSize: 14 }}>Your care team is taking a closer look</div>
                             <div style={{ color: MUTED, fontSize: 12.5, marginTop: 4 }}>
                                 Your recent check-ins asked for attention. Your clinician has been told. Keep checking in as normal.
                             </div>
@@ -475,12 +541,8 @@ function Today(props: {
             </AnimatePresence>
 
             <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18, marginBottom: 14 }}>
-                <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                    Your recovery
-                </div>
-                <div style={{ fontFamily: HEAD, fontSize: 18, fontWeight: 700, margin: "4px 0 12px" }}>
-                    {bodyPart} injury
-                </div>
+                <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>Your recovery</div>
+                <div style={{ fontFamily: HEAD, fontSize: 18, fontWeight: 700, margin: "4px 0 12px" }}>{bodyPart} injury</div>
                 <Ring progress={ringProgress} day={day} prognosis={prognosis} accent={accent} />
             </div>
 
@@ -491,9 +553,7 @@ function Today(props: {
                     style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18 }}
                 >
                     <div style={{ fontFamily: HEAD, fontWeight: 600 }}>Check-in saved</div>
-                    <div style={{ color: MUTED, fontSize: 12.5, marginTop: 4 }}>
-                        Nice work. Move time forward to check in again.
-                    </div>
+                    <div style={{ color: MUTED, fontSize: 12.5, marginTop: 4 }}>Nice work. Move time forward to check in again.</div>
                     <button
                         onClick={onNextDay}
                         style={{ marginTop: 12, minHeight: 44, width: "100%", border: "1px solid " + LINE, borderRadius: 12, background: "transparent", color: INK, cursor: "pointer", fontFamily: BODY }}
@@ -503,9 +563,7 @@ function Today(props: {
                 </motion.div>
             ) : (
                 <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18 }}>
-                    <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                        Check-in
-                    </div>
+                    <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>Check-in</div>
                     <Slider label="How is your pain?" value={pain} onChange={setPain} accent={accent} fill={painColor(pain, accent)} />
                     <Slider label="How is your movement?" value={mobility} onChange={setMobility} accent={accent} fill={accent} />
                     <div style={{ position: "relative", marginTop: 8 }}>
@@ -529,9 +587,7 @@ function Today(props: {
                         </motion.button>
                         {burst && <Burst accent={accent} />}
                     </div>
-                    <div style={{ color: MUTED, fontSize: 11.5, marginTop: 8 }}>
-                        Only your clinician sees your scores and notes.
-                    </div>
+                    <div style={{ color: MUTED, fontSize: 11.5, marginTop: 8 }}>Only your clinician sees your scores and notes.</div>
                 </div>
             )}
         </div>
@@ -579,7 +635,7 @@ function Slider({ label, value, onChange, accent, fill }: { label: string; value
     const pct = (value / 10) * 100
     function fromX(clientX: number) {
         const el = trackRef.current
-        if (!el) return value
+        if (!el) return
         const r = el.getBoundingClientRect()
         const p = Math.min(1, Math.max(0, (clientX - r.left) / r.width))
         onChange(Math.round(p * 10))
@@ -637,7 +693,6 @@ function Burst({ accent }: { accent: string }) {
     )
 }
 
-// ---------- trend ----------
 function Trend({ accent, checkins }: { accent: string; checkins: { day: number; pain: number; mobility: number }[] }) {
     const w = 320
     const h = 120
@@ -648,12 +703,8 @@ function Trend({ accent, checkins }: { accent: string; checkins: { day: number; 
         checkins.map((p, i) => (i ? "L" : "M") + (i * step).toFixed(1) + " " + y(p[key]).toFixed(1)).join(" ")
     return (
         <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18 }}>
-            <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                Your trend
-            </div>
-            <div style={{ fontFamily: HEAD, fontWeight: 600, margin: "4px 0 12px" }}>
-                Pain and movement over time
-            </div>
+            <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>Your trend</div>
+            <div style={{ fontFamily: HEAD, fontWeight: 600, margin: "4px 0 12px" }}>Pain and movement over time</div>
             <svg width="100%" viewBox={"0 0 " + w + " " + h} preserveAspectRatio="none" style={{ height: 120 }}>
                 <motion.path d={path("mobility")} fill="none" stroke={MUTED} strokeWidth={2.5} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: "easeInOut" }} />
                 <motion.path d={path("pain")} fill="none" stroke={accent} strokeWidth={3} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: "easeInOut", delay: 0.15 }} />
@@ -666,15 +717,12 @@ function Trend({ accent, checkins }: { accent: string; checkins: { day: number; 
     )
 }
 
-// ---------- duties ----------
-function Duties({ accent, duties, done, onComplete }: { accent: string; duties: { id: string; task: string; done: boolean }[]; done: number; onComplete: () => void }) {
+function Duties({ accent, duties, done, onComplete }: { accent: string; duties: { id: string; task: string; done: boolean }[]; done: number; onComplete: (id: string) => void }) {
     const pct = duties.length ? (done / duties.length) * 100 : 0
     return (
         <div>
             <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 16, padding: 16, marginBottom: 12 }}>
-                <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-                    Your limit
-                </div>
+                <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>Your limit</div>
                 <div style={{ marginTop: 4 }}>No lifting above shoulder height</div>
             </div>
             <div style={{ height: 8, borderRadius: 6, background: PANEL2, overflow: "hidden", marginBottom: 12 }}>
@@ -687,7 +735,7 @@ function Duties({ accent, duties, done, onComplete }: { accent: string; duties: 
                     </motion.span>
                     <motion.button
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => !d.done && onComplete()}
+                        onClick={() => !d.done && onComplete(d.id)}
                         style={{ minHeight: 44, minWidth: 64, border: "1px solid " + LINE, borderRadius: 10, background: d.done ? "transparent" : accent, color: d.done ? MUTED : "#14100a", fontWeight: 600, cursor: "pointer", fontFamily: BODY }}
                     >
                         {d.done ? "Done" : "Mark"}
@@ -698,7 +746,6 @@ function Duties({ accent, duties, done, onComplete }: { accent: string; duties: 
     )
 }
 
-// ---------- tab bar ----------
 function TabBar({ tab, setTab, accent }: { tab: string; setTab: (t: "today" | "trend" | "duties") => void; accent: string }) {
     const tabs: { id: "today" | "trend" | "duties"; label: string }[] = [
         { id: "today", label: "Today" },
@@ -733,4 +780,15 @@ addPropertyControls(ContinuumWorkerApp, {
     phoneFrame: { type: ControlType.Boolean, title: "Phone frame", defaultValue: true },
     startAtConsent: { type: ControlType.Boolean, title: "Start at consent", defaultValue: false },
     autoplay: { type: ControlType.Boolean, title: "Autoplay demo", defaultValue: false },
+    dataSource: {
+        type: ControlType.Enum,
+        title: "Data source",
+        options: ["demo", "live"],
+        optionTitles: ["Demo", "Live"],
+        defaultValue: "demo",
+        displaySegmentedControl: true,
+    },
+    serviceUrl: { type: ControlType.String, title: "Service URL", defaultValue: "", placeholder: "https://...functions/v1/framer-demo", hidden: (p: Props) => p.dataSource !== "live" },
+    demoToken: { type: ControlType.String, title: "Demo token", defaultValue: "", obscured: true, hidden: (p: Props) => p.dataSource !== "live" },
+    pollSeconds: { type: ControlType.Number, title: "Poll seconds", defaultValue: 12, min: 5, max: 60, step: 1, hidden: (p: Props) => p.dataSource !== "live" },
 })
