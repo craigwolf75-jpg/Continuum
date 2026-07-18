@@ -23,6 +23,8 @@ interface Props {
     serviceUrl: string
     demoToken: string
     pollSeconds: number
+    signInGate: boolean
+    demoCode: string
     style?: CSSProperties
 }
 
@@ -51,6 +53,14 @@ function painColor(v: number, accent: string): string {
     return "rgb(" + m[0] + "," + m[1] + "," + m[2] + ")"
 }
 
+function formatPhone(d: string): string {
+    const p = d.slice(0, 10)
+    if (p.length === 0) return ""
+    if (p.length <= 3) return "(" + p
+    if (p.length <= 6) return "(" + p.slice(0, 3) + ") " + p.slice(3)
+    return "(" + p.slice(0, 3) + ") " + p.slice(3, 6) + "-" + p.slice(6)
+}
+
 /**
  * Continuum Worker App
  *
@@ -75,11 +85,14 @@ export default function ContinuumWorkerApp(props: Props) {
         serviceUrl = "",
         demoToken = "",
         pollSeconds = 12,
+        signInGate = true,
+        demoCode = "",
     } = props
 
     const live = dataSource === "live" && serviceUrl.trim().length > 0
 
     const [consented, setConsented] = useState(!startAtConsent)
+    const [signedIn, setSignedIn] = useState(false)
     const [tab, setTab] = useState<"today" | "trend" | "duties">("today")
     const [day, setDay] = useState(startDay)
     const [pain, setPain] = useState(3)
@@ -229,8 +242,8 @@ export default function ContinuumWorkerApp(props: Props) {
         if (first) completeDuty(first.id)
     }
 
-    const api = useRef({ setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented })
-    api.current = { setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented }
+    const api = useRef({ setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented, setSignedIn })
+    api.current = { setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented, setSignedIn }
     useEffect(() => {
         if (!autoplay || typeof window === "undefined") return
         let cancelled = false
@@ -243,6 +256,7 @@ export default function ContinuumWorkerApp(props: Props) {
         ;(async () => {
             while (!cancelled) {
                 const a = api.current
+                a.setSignedIn(true)
                 a.setConsented(true)
                 a.setTab("today")
                 a.setPain(5)
@@ -303,7 +317,9 @@ export default function ContinuumWorkerApp(props: Props) {
         >
             <Orbs accent={accent} />
             <AnimatePresence mode="wait">
-                {!consented ? (
+                {signInGate && !signedIn && !autoplay ? (
+                    <SignIn key="signin" accent={accent} demoCode={demoCode} onDone={() => setSignedIn(true)} />
+                ) : !consented ? (
                     <Consent key="consent" accent={accent} onAgree={() => setConsented(true)} />
                 ) : (
                     <motion.div
@@ -494,6 +510,163 @@ function Consent({ accent, onAgree }: { accent: string; onAgree: () => void }) {
             >
                 I agree, let us go
             </motion.button>
+        </motion.div>
+    )
+}
+
+const gInput: CSSProperties = { width: "100%", minHeight: 48, background: PANEL2, border: "1px solid " + LINE, borderRadius: 12, color: INK, fontFamily: BODY, fontSize: 17, padding: "0 14px", outline: "none", boxSizing: "border-box" }
+const gBox: CSSProperties = { width: 44, height: 54, textAlign: "center", fontFamily: HEAD, fontSize: 22, fontWeight: 700, background: PANEL2, border: "1px solid " + LINE, borderRadius: 12, outline: "none" }
+const gGhost: CSSProperties = { width: "100%", minHeight: 48, border: "1px solid " + LINE, borderRadius: 12, background: "transparent", color: INK, fontFamily: BODY, fontSize: 14, cursor: "pointer" }
+function gBtn(accent: string): CSSProperties {
+    return { width: "100%", minHeight: 48, border: "none", borderRadius: 12, background: accent, color: "#14100a", fontFamily: HEAD, fontWeight: 600, fontSize: 15 }
+}
+
+function Rule({ ok, label, accent }: { ok: boolean; label: string; accent: string }) {
+    return (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: ok ? accent : MUTED, margin: "6px 0" }}>
+            <motion.span
+                animate={{ background: ok ? accent : "transparent", borderColor: ok ? accent : LINE }}
+                style={{ width: 14, height: 14, borderRadius: "50%", border: "1px solid " + LINE, flex: "none" }}
+            />
+            {label}
+        </div>
+    )
+}
+
+function SignIn({ accent, demoCode, onDone }: { accent: string; demoCode: string; onDone: () => void }) {
+    const [gstep, setGstep] = useState<"phone" | "code" | "password">("phone")
+    const [digits, setDigits] = useState("")
+    const [code, setCode] = useState<string[]>(["", "", "", "", "", ""])
+    const [shaking, setShaking] = useState(false)
+    const [pw, setPw] = useState("")
+    const [burst, setBurst] = useState(false)
+    const boxes = useRef<(HTMLInputElement | null)[]>([])
+
+    function focusBox(i: number) {
+        const el = boxes.current[i]
+        if (el) el.focus()
+    }
+    function checkFull(next: string[]) {
+        if (next.some((c) => c === "")) return
+        const entered = next.join("")
+        const req = demoCode.trim()
+        if (req.length > 0 && entered !== req) {
+            setShaking(true)
+            if (typeof window !== "undefined") window.setTimeout(() => setShaking(false), 450)
+            setCode(["", "", "", "", "", ""])
+            focusBox(0)
+            return
+        }
+        setGstep("password")
+    }
+    function onBoxChange(i: number, raw: string) {
+        const only = raw.replace(/\D/g, "")
+        if (only.length > 1) {
+            const next = ["", "", "", "", "", ""]
+            for (let j = 0; j < 6; j++) next[j] = only[j] ?? ""
+            setCode(next)
+            focusBox(Math.min(5, only.length - 1))
+            checkFull(next)
+            return
+        }
+        const next = code.slice()
+        next[i] = only
+        setCode(next)
+        if (only && i < 5) focusBox(i + 1)
+        checkFull(next)
+    }
+    function onBoxKey(i: number, key: string) {
+        if (key === "Backspace" && code[i] === "" && i > 0) focusBox(i - 1)
+    }
+
+    const rLen = pw.length === 6
+    const rCons = /[bcdfghjklmnpqrstvwxyz]/i.test(pw)
+    const rSpec = /[^a-zA-Z0-9]/.test(pw)
+    const allPass = rLen && rCons && rSpec
+    function finish() {
+        if (!allPass) return
+        setBurst(true)
+        if (typeof window !== "undefined") window.setTimeout(onDone, 850)
+    }
+
+    return (
+        <motion.div
+            key="signin"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ position: "relative", zIndex: 1, flex: 1, padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}
+        >
+            <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 17, marginBottom: 6 }}>
+                Contin<span style={{ color: accent }}>uum</span>
+            </div>
+            <AnimatePresence mode="wait" initial={false}>
+                {gstep === "phone" && (
+                    <motion.div key="p" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ type: "spring", stiffness: 320, damping: 32 }}>
+                        <h1 style={{ fontFamily: HEAD, fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Sign in to your recovery</h1>
+                        <p style={{ color: MUTED, fontSize: 13.5, marginBottom: 14 }}>Enter your mobile number to get a code.</p>
+                        <input
+                            type="tel"
+                            autoComplete="tel"
+                            inputMode="numeric"
+                            placeholder="(555) 555 5555"
+                            value={formatPhone(digits)}
+                            onChange={(e) => setDigits(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                            style={gInput}
+                        />
+                        <button
+                            disabled={digits.length < 10}
+                            onClick={() => setGstep("code")}
+                            style={{ ...gBtn(accent), opacity: digits.length < 10 ? 0.4 : 1, cursor: digits.length < 10 ? "not-allowed" : "pointer", marginTop: 14 }}
+                        >
+                            Text me a code
+                        </button>
+                        <p style={{ color: MUTED, fontSize: 11.5, marginTop: 14 }}>Demo sign-in. Nothing is sent or stored. Your number stays on this screen.</p>
+                    </motion.div>
+                )}
+                {gstep === "code" && (
+                    <motion.div key="c" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ type: "spring", stiffness: 320, damping: 32 }}>
+                        <h1 style={{ fontFamily: HEAD, fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Enter your code</h1>
+                        <p style={{ color: MUTED, fontSize: 13.5, marginBottom: 14 }}>We sent a 6 digit code to {formatPhone(digits)}.</p>
+                        <motion.div animate={shaking ? { x: [0, -8, 8, -6, 6, 0] } : { x: 0 }} transition={{ duration: 0.45 }} style={{ display: "flex", gap: 7, justifyContent: "space-between" }}>
+                            {code.map((c, i) => (
+                                <motion.input
+                                    key={i}
+                                    ref={(el) => {
+                                        boxes.current[i] = el
+                                    }}
+                                    value={c}
+                                    onChange={(e) => onBoxChange(i, e.target.value)}
+                                    onKeyDown={(e) => onBoxKey(i, e.key)}
+                                    inputMode="numeric"
+                                    maxLength={i === 0 ? 6 : 1}
+                                    autoComplete={i === 0 ? "one-time-code" : "off"}
+                                    animate={{ borderColor: c ? accent : LINE, color: c ? accent : INK, scale: c ? 1.04 : 1 }}
+                                    transition={SPRING}
+                                    style={gBox}
+                                />
+                            ))}
+                        </motion.div>
+                        <button onClick={() => setGstep("phone")} style={{ ...gGhost, marginTop: 14 }}>Use a different number</button>
+                    </motion.div>
+                )}
+                {gstep === "password" && (
+                    <motion.div key="w" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ type: "spring", stiffness: 320, damping: 32 }}>
+                        <h1 style={{ fontFamily: HEAD, fontSize: 22, fontWeight: 700, margin: "6px 0" }}>Create your 6 character password</h1>
+                        <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="6 characters" style={gInput} />
+                        <div style={{ margin: "12px 0 4px" }}>
+                            <Rule ok={rLen} label="Exactly 6 characters" accent={accent} />
+                            <Rule ok={rCons} label="At least one consonant" accent={accent} />
+                            <Rule ok={rSpec} label="At least one special character" accent={accent} />
+                        </div>
+                        <div style={{ position: "relative" }}>
+                            <button disabled={!allPass} onClick={finish} style={{ ...gBtn(accent), opacity: allPass ? 1 : 0.4, cursor: allPass ? "pointer" : "not-allowed", marginTop: 8 }}>Enter the app</button>
+                            {burst && <Burst accent={accent} />}
+                        </div>
+                        <p style={{ color: MUTED, fontSize: 11.5, marginTop: 12 }}>Demo only. This password is never stored or sent.</p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
     )
 }
@@ -780,6 +953,8 @@ addPropertyControls(ContinuumWorkerApp, {
     phoneFrame: { type: ControlType.Boolean, title: "Phone frame", defaultValue: true },
     startAtConsent: { type: ControlType.Boolean, title: "Start at consent", defaultValue: false },
     autoplay: { type: ControlType.Boolean, title: "Autoplay demo", defaultValue: false },
+    signInGate: { type: ControlType.Boolean, title: "Sign-in gate", defaultValue: true },
+    demoCode: { type: ControlType.String, title: "Demo code", defaultValue: "", placeholder: "blank accepts any code" },
     dataSource: {
         type: ControlType.Enum,
         title: "Data source",
