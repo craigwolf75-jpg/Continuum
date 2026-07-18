@@ -1,0 +1,48 @@
+<!-- Continuum: drop-in "Try the app" section (Prompt 12d). Paste as a raw static
+     block (framework escape hatch such as v-pre) after the "Between visits"
+     check-in narrative and before the Privacy section. No script; all
+     interactivity lives inside the iframe. Styles are scoped to #try-app so
+     nothing collides with the host stylesheet. The iframe points at
+     /worker-embed.html (deploy worker-embed.html at the site root). -->
+<section id="try-app">
+  <style>
+    #try-app{background:#0E1B2C;color:#E9EEF6;padding:88px 24px;font-family:Inter,system-ui,sans-serif}
+    #try-app .ta-wrap{max-width:1120px;margin:0 auto;display:flex;gap:56px;align-items:center;flex-wrap:wrap}
+    #try-app .ta-left{flex:1 1 380px;min-width:300px}
+    #try-app .ta-right{flex:0 0 auto;margin:0 auto}
+    #try-app .ta-kicker{color:#C8972F;font-family:"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+    #try-app h2{font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:34px;line-height:1.15;letter-spacing:-.01em;margin:12px 0 16px}
+    #try-app p{color:#AAB6C6;font-size:16px;line-height:1.6;margin:0 0 14px;max-width:480px}
+    #try-app .ta-disc{color:#6E87AD;font-size:13px;border-left:2px solid #27395A;padding-left:12px;margin:18px 0 22px}
+    #try-app .ta-btns{display:flex;gap:12px;flex-wrap:wrap}
+    #try-app .ta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:12px;font-family:"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer}
+    #try-app .ta-primary{background:#C8972F;color:#14100a}
+    #try-app .ta-primary:hover{background:#E3B85C}
+    #try-app .ta-ghost{background:transparent;color:#E9EEF6;border:1px solid #27395A}
+    #try-app .ta-ghost:hover{border-color:#6E87AD}
+    #try-app .ta-bezel{position:relative;width:390px;max-width:88vw;height:760px;max-height:78vh;border-radius:44px;border:2px solid #27395A;background:#0E1B2C;box-shadow:0 30px 70px rgba(0,0,0,.55);overflow:hidden}
+    #try-app .ta-bezel iframe{width:100%;height:100%;border:0;display:block}
+    #try-app .ta-full{display:block;text-align:center;margin-top:12px;color:#AAB6C6;font-size:13px;text-decoration:none}
+    #try-app .ta-full:hover{color:#E9EEF6}
+    @media(max-width:900px){#try-app{padding:56px 20px}#try-app .ta-wrap{flex-direction:column;gap:36px}#try-app h2{font-size:28px}#try-app .ta-left{text-align:center}#try-app p,#try-app .ta-disc{margin-left:auto;margin-right:auto}#try-app .ta-btns{justify-content:center}#try-app .ta-disc{text-align:left}}
+  </style>
+  <div class="ta-wrap">
+    <div class="ta-left">
+      <div class="ta-kicker">Try it yourself</div>
+      <h2>This is the whole ask of an injured worker</h2>
+      <p>Two sliders, twice a day. That thirty-second check-in is the signal that keeps a recovery on track, tells the clinician when something needs a closer look, and shows the employer only what the worker can do at work.</p>
+      <p>Slide pain to 8 and save to see the escalation your care team would get.</p>
+      <div class="ta-disc">Synthetic demo. A made-up case, no real worker. Nothing you enter is sent or stored.</div>
+      <div class="ta-btns">
+        <a class="ta-btn ta-primary" href="/hub">Open the full demo</a>
+        <a class="ta-btn ta-ghost" href="#cta">Start a Pilot</a>
+      </div>
+    </div>
+    <div class="ta-right">
+      <div class="ta-bezel">
+        <iframe src="/worker-embed.html" title="Continuum worker app demo" loading="lazy"></iframe>
+      </div>
+      <a class="ta-full" href="/worker-embed.html" target="_blank" rel="noopener">Open full screen</a>
+    </div>
+  </div>
+</section>

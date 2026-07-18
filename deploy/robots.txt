@@ -4,3 +4,4 @@ Disallow: /app
 Disallow: /hub
 Disallow: /screens
 Disallow: /demo
+Disallow: /worker-embed.html
