@@ -89,5 +89,18 @@ begin
     then raise exception 'LEAK foreign employer: another tenant row'; end if;
 end $$;
 
+-- OPS ADMIN (site admin): reads the operational views across tenants, but must
+-- never reach raw PHI at the base tables or the clinical role views.
+select set_config('request.jwt.claims',
+  '{"role":"authenticated","user_role":"ops_admin","user_id":"a0000000-0000-0000-0000-0000000000ad","tenant_id":null}', false);
+do $$
+begin
+  if (select count(*) from public.injuries) > 0 then raise exception 'LEAK ops_admin: base injuries (diagnosis)'; end if;
+  if (select count(*) from public.recovery_logs) > 0 then raise exception 'LEAK ops_admin: base recovery_logs (scores and notes)'; end if;
+  if (select count(*) from public.wcb_notifications) > 0 then raise exception 'LEAK ops_admin: base wcb_notifications (payload)'; end if;
+  if (select count(*) from public.employer_case_view) > 0 then raise exception 'LEAK ops_admin: employer_case_view'; end if;
+  if (select count(*) from public.hse_case_view) > 0 then raise exception 'LEAK ops_admin: hse_case_view'; end if;
+end $$;
+
 reset role;
 select 'EXPOSURE-PROOF PASS' as result;
