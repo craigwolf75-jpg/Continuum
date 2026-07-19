@@ -1,5 +1,9 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/app", "destination": "/worker-dashboard", "permanent": false },
+    { "source": "/app/(.*)", "destination": "/worker-dashboard", "permanent": false }
+  ],
   "headers": [
     { "source": "/app", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
     { "source": "/app/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
