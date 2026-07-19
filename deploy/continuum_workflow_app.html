@@ -127,6 +127,13 @@ input[type=text],select{width:100%;background:var(--chipbg);border:1px solid var
 .grdot{width:13px;height:13px;border-radius:50%;border:1px solid var(--line);flex:none}
 .gr.ok .grdot{background:var(--gold);border-color:var(--gold)}
 @media(prefers-reduced-motion:reduce){.rail .dot{animation:none}}
+/* 12g responsive synchronism: the worker section fills the frame at 881+; the phone column is unchanged below 881. Sign-in and consent stay single 560 cards; the app view flows into two columns and the tab bar widens to 720. */
+@media(min-width:881px){
+  #workerRoot.w-gate,#workerRoot.w-consent{max-width:560px}
+  #workerRoot.w-app{max-width:1040px;display:grid;grid-template-columns:1fr 1fr;column-gap:16px;row-gap:0;align-content:start}
+  #workerRoot.w-app>.sechead,#workerRoot.w-app>.esc-banner{grid-column:1 / -1}
+  .appts{max-width:720px}
+}
 </style>
 </head>
 <body>
@@ -584,8 +591,9 @@ function renderMap(){
 function renderWorker(){
   const root = document.getElementById("workerRoot");
   const m = S.marcus;
-  if(!S.signedIn){ renderGate(root); return; }
+  if(!S.signedIn){ root.className="phone w-gate"; renderGate(root); return; }
   if(!S.consent.granted_at){
+    root.className="phone w-consent";
     root.innerHTML =
     '<div class="card"><div class="kicker">Before we start</div>'+
     '<h2 style="margin:8px 0">Your privacy, in plain words</h2>'+
@@ -649,6 +657,7 @@ function renderWorker(){
     '<button class="btn ghost small" onclick="revokeConsent()">Revoke consent</button>'+
     '<p class="note" style="margin-top:14px">Continuum manages your recovery information. It is not your medical record; your clinic keeps that.</p></div>';
   }
+  root.className="phone w-app";
   root.innerHTML =
     '<div class="sechead"><div><div class="kicker">Section 2 of 5: The worker app</div><h1>Hi Marcus</h1>'+
     '<div class="xref"><span class="chip"><b>Feeds</b> HSE, Nexus, Escalation, Employer counts</span><span class="chip"><b>Receives</b> restrictions, duties</span></div></div></div>'+

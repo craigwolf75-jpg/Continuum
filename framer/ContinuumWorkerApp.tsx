@@ -20,6 +20,7 @@ interface Props {
     accent: string
     background: string
     phoneFrame: boolean
+    layout: "phone" | "responsive"
     startAtConsent: boolean
     autoplay: boolean
     dataSource: "demo" | "live"
@@ -112,6 +113,7 @@ export default function ContinuumWorkerApp(props: Props) {
         accent = "#C8972F",
         background = "#0E1B2C",
         phoneFrame = true,
+        layout = "phone",
         startAtConsent = false,
         autoplay = false,
         dataSource = "demo",
@@ -426,6 +428,28 @@ export default function ContinuumWorkerApp(props: Props) {
         }
     }, [autoplay])
 
+    // Responsive layout: measure our own container and switch at 760. SSR guarded
+    // (no window or ResizeObserver at build time) and disconnected on unmount.
+    const containerRef = useRef<HTMLDivElement | null>(null)
+    const [containerWidth, setContainerWidth] = useState(0)
+    const responsive = layout === "responsive"
+    useEffect(() => {
+        if (!responsive) return
+        if (typeof window === "undefined" || typeof ResizeObserver === "undefined") return
+        const el = containerRef.current
+        if (!el) return
+        const ro = new ResizeObserver((entries) => {
+            for (const e of entries) setContainerWidth(e.contentRect.width)
+        })
+        ro.observe(el)
+        setContainerWidth(el.getBoundingClientRect().width)
+        return () => ro.disconnect()
+    }, [responsive])
+    const wide = responsive && containerWidth >= 760
+    const atSignIn = signInGate && !signedIn && !autoplay
+    const atConsent = !atSignIn && !consented
+    const contentMax = wide ? (atSignIn || atConsent ? 560 : 1040) : undefined
+
     const firstName = (liveName || workerName || "there").split(" ")[0]
     const shownBody = liveBody || bodyPart
     const periodsCredit = (amDone ? 0.5 : 0) + (pmDone ? 0.5 : 0)
@@ -438,6 +462,9 @@ export default function ContinuumWorkerApp(props: Props) {
                 position: "relative",
                 width: "100%",
                 height: "100%",
+                maxWidth: contentMax,
+                marginLeft: wide ? "auto" : undefined,
+                marginRight: wide ? "auto" : undefined,
                 display: "flex",
                 flexDirection: "column",
                 overflow: "hidden",
@@ -505,19 +532,24 @@ export default function ContinuumWorkerApp(props: Props) {
                                             onSubmit={submit}
                                             onRevealPM={revealPM}
                                             onNextDay={nextDay}
+                                            wide={wide}
                                         />
                                     )}
-                                    {tab === "trend" && <Trend accent={accent} checkins={checkins} />}
-                                    {tab === "duties" && (
-                                        <Duties
-                                            accent={accent}
-                                            duties={duties}
-                                            done={duties.filter((d) => d.done).length}
-                                            onComplete={completeDuty}
-                                            onFeedback={setDutyFeedback}
-                                        />
+                                    {tab !== "today" && (
+                                        <div style={{ width: "100%", maxWidth: wide ? 560 : undefined, marginLeft: wide ? "auto" : undefined, marginRight: wide ? "auto" : undefined }}>
+                                            {tab === "trend" && <Trend accent={accent} checkins={checkins} />}
+                                            {tab === "duties" && (
+                                                <Duties
+                                                    accent={accent}
+                                                    duties={duties}
+                                                    done={duties.filter((d) => d.done).length}
+                                                    onComplete={completeDuty}
+                                                    onFeedback={setDutyFeedback}
+                                                />
+                                            )}
+                                            {tab === "more" && <More accent={accent} onRevoke={revoke} onReset={resetDemo} />}
+                                        </div>
                                     )}
-                                    {tab === "more" && <More accent={accent} onRevoke={revoke} onReset={resetDemo} />}
                                 </motion.div>
                             </AnimatePresence>
                         </div>
@@ -531,18 +563,31 @@ export default function ContinuumWorkerApp(props: Props) {
 
     return (
         <div
-            style={{
-                position: "relative",
-                width: 400,
-                height: 820,
-                ...props.style,
-                overflow: "hidden",
-                background: background,
-                fontFamily: BODY,
-            }}
+            ref={containerRef}
+            style={
+                responsive
+                    ? {
+                          position: "relative",
+                          ...props.style,
+                          width: "100%",
+                          height: "100%",
+                          overflow: "hidden",
+                          background: background,
+                          fontFamily: BODY,
+                      }
+                    : {
+                          position: "relative",
+                          width: 400,
+                          height: 820,
+                          ...props.style,
+                          overflow: "hidden",
+                          background: background,
+                          fontFamily: BODY,
+                      }
+            }
         >
             <style>{FONT_CSS}</style>
-            {phoneFrame ? (
+            {!responsive && phoneFrame ? (
                 <div style={{ position: "relative", width: "100%", height: "100%", padding: 12, boxSizing: "border-box" }}>
                     <div
                         style={{
@@ -862,6 +907,7 @@ function Today(props: {
     onSubmit: () => void
     onRevealPM: () => void
     onNextDay: () => void
+    wide?: boolean
 }) {
     const {
         accent,
@@ -885,19 +931,20 @@ function Today(props: {
         onSubmit,
         onRevealPM,
         onNextDay,
+        wide,
     } = props
     const showForm = !justSaved && period !== null
     const bothDone = amDone && pmDone
     const periodLabel = period === "am" ? "AM check-in" : "PM check-in"
     return (
-        <div>
+        <div style={wide ? { display: "grid", gridTemplateColumns: "380px 1fr", columnGap: 16, alignItems: "start" } : undefined}>
             <AnimatePresence>
                 {escalated && (
                     <motion.div
                         initial={{ opacity: 0, y: -10, height: 0 }}
                         animate={{ opacity: 1, y: 0, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        style={{ overflow: "hidden", marginBottom: 12 }}
+                        style={{ overflow: "hidden", marginBottom: 12, gridColumn: wide ? "1 / -1" : undefined }}
                     >
                         <motion.div
                             animate={{ boxShadow: ["0 0 0 rgba(200,151,47,0.0)", "0 0 22px rgba(200,151,47,0.45)", "0 0 0 rgba(200,151,47,0.0)"] }}
@@ -1228,7 +1275,15 @@ addPropertyControls(ContinuumWorkerApp, {
     prognosisDays: { type: ControlType.Number, title: "Prognosis days", defaultValue: 21, min: 1, max: 90, step: 1, displayStepper: true },
     accent: { type: ControlType.Color, title: "Accent", defaultValue: "#C8972F" },
     background: { type: ControlType.Color, title: "Background", defaultValue: "#0E1B2C" },
-    phoneFrame: { type: ControlType.Boolean, title: "Phone frame", defaultValue: true },
+    phoneFrame: { type: ControlType.Boolean, title: "Phone frame", defaultValue: true, hidden: (p: Props) => p.layout === "responsive" },
+    layout: {
+        type: ControlType.Enum,
+        title: "Layout",
+        options: ["phone", "responsive"],
+        optionTitles: ["Phone demo", "Responsive"],
+        defaultValue: "phone",
+        displaySegmentedControl: true,
+    },
     startAtConsent: { type: ControlType.Boolean, title: "Start at consent", defaultValue: false },
     autoplay: { type: ControlType.Boolean, title: "Autoplay demo", defaultValue: false },
     signInGate: { type: ControlType.Boolean, title: "Sign-in gate", defaultValue: true },

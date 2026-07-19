@@ -51,6 +51,13 @@ footer a{color:var(--muted)}
 .tools button{background:none;border:none;color:var(--muted);font-size:12px;text-decoration:underline dotted;cursor:pointer}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){.orb,.esc{animation:none}}
+/* 12g responsive synchronism: at 880+ the app view becomes a 1024 two column layout; below 880 the phone column is unchanged (keeps the 12d iframe pixel identical). Consent stays centered. */
+@media(min-width:880px){
+  .phone.v-app{max-width:1024px;display:grid;grid-template-columns:400px 1fr;column-gap:18px;row-gap:0;align-content:start}
+  .phone.v-app .c-head,.phone.v-app .c-hi,.phone.v-app .esc,.phone.v-app .c-foot{grid-column:1 / -1}
+  .phone.v-app .c-status{grid-column:1;align-self:start}
+  .phone.v-app .c-checkin,.phone.v-app .c-duties{grid-column:2}
+}
 </style>
 </head>
 <body>
@@ -106,6 +113,7 @@ function ring(){
 
 function render(){
   var app=document.getElementById("app");
+  app.className = "phone " + (S.view==="consent" ? "v-consent" : "v-app");
   if(S.view==="consent"){
     app.innerHTML =
       '<div class="kick">Before we start</div>'+
@@ -122,24 +130,24 @@ function render(){
   }
   var doneToday = slot()==="done";
   app.innerHTML =
-    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
+    '<div class="c-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
       '<div style="font-family:\'Space Grotesk\';font-weight:700;font-size:17px">Contin<span style="color:var(--gold)">uum</span></div>'+
       '<span class="badge">Light duty</span>'+
     '</div>'+
-    '<h2 style="font-size:24px;margin:4px 0 12px">Hi Marcus</h2>'+
+    '<h2 class="c-hi" style="font-size:24px;margin:4px 0 12px">Hi Marcus</h2>'+
     (S.escalated ?
       '<div class="esc"><h3>Your care team is taking a closer look</h3><p class="note" style="margin-top:4px">Your recent check-in asked for attention. Your clinician has been told. Keep checking in as normal.</p></div>' : '')+
-    '<div class="card">'+
+    '<div class="card c-status">'+
       '<div class="kick">Your recovery</div>'+
       '<h3 style="font-size:18px;margin:4px 0 12px">Right shoulder injury</h3>'+
       ring()+
       '<p class="note" style="text-align:center;margin-top:10px">Work limit right now: '+esc(RESTRICTION)+'</p>'+
     '</div>'+
     (doneToday ?
-      '<div class="card"><h3 style="font-size:16px">Both check-ins done today</h3><p class="note" style="margin-top:4px">Nice work. Move time forward to check in again.</p>'+
+      '<div class="card c-checkin"><h3 style="font-size:16px">Both check-ins done today</h3><p class="note" style="margin-top:4px">Nice work. Move time forward to check in again.</p>'+
       '<button class="btn ghost" id="nextday" style="margin-top:12px">Next day</button></div>'
       :
-      '<div class="card">'+
+      '<div class="card c-checkin">'+
         '<div class="kick">'+slot()+' check-in</div>'+
         '<label class="sl">How is your pain? <b id="pv">'+S.pain+'</b></label>'+
         '<input type="range" min="0" max="10" value="'+S.pain+'" id="pain">'+
@@ -149,12 +157,12 @@ function render(){
         '<button class="btn" id="save" style="margin-top:12px">Save check-in</button>'+
         '<p class="hint">Try sliding pain to 8 and saving, then watch what your care team sees.</p>'+
       '</div>')+
-    '<div class="card">'+
+    '<div class="card c-duties">'+
       '<div class="kick">Light duties</div>'+
       '<p class="note" style="margin:6px 0 8px">Your limit: '+esc(RESTRICTION)+'</p>'+
       S.duties.map(function(d){return '<div class="duty'+(d.done?" done":"")+'"><span>'+esc(d.task)+'</span><button data-duty="'+d.id+'">'+(d.done?"Undo":"Done")+'</button></div>';}).join("")+
     '</div>'+
-    '<p class="note">Only your clinician sees your scores and notes. Your employer sees your work status only.</p>';
+    '<p class="note c-foot">Only your clinician sees your scores and notes. Your employer sees your work status only.</p>';
 
   requestAnimationFrame(function(){
     var c=app.querySelector(".ring-c");
