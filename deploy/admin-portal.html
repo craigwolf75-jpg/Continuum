@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: Platform Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+<style>
+:root{--navy:#16273D;--gold:#E0B658;--goldbg:#fdf3dd;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;
+--card:#FFFFFF;--bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--red:#ba1a1a;--alert:#C0453B;--redbg:#ffdad6;--teal:#508c9c;--tealbg:#dce9ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
+.msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
+header.top{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.brandline{display:flex;align-items:center;gap:12px}
+.brandline b{font-size:19px}
+.tagchip{background:var(--goldbg);color:#735200;border:1px solid var(--gold);border-radius:5px;padding:3px 9px;font-size:10.5px;font-weight:700;letter-spacing:.08em}
+.who{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--low);font-size:12.5px;font-weight:700;color:#3b475a}
+aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);padding-top:82px;display:flex;flex-direction:column}
+.side .brand{padding:0 24px 14px}
+.side .brand b{color:#fff;font-size:16px;display:block}
+.side .brand span{color:#78859a;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+.side nav{flex:1}
+.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:12px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
+.side nav button:hover{color:#fff;background:#3b475a}
+.side nav button.on{color:#fff;background:#3b475a;border-left-color:var(--gold)}
+.side .foot{border-top:1px solid #3b475a;padding:14px 24px;color:#9fb0c6;font-size:12px}
+main{margin-left:240px;padding:88px 24px 60px;min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:29px;color:var(--navy)}
+h2{font-size:20px;color:var(--navy)}
+.sub{color:var(--muted);font-size:13.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(14,27,44,.08)}
+.btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px 16px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s}
+.btn:hover{background:#3b475a}
+.btn.gold{background:var(--gold);color:#0f1c2d}
+.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.btn.danger{background:var(--card);border:1px solid var(--alert);color:var(--alert)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.kpi{background:var(--card);border-radius:12px;padding:16px;border-left:4px solid var(--navy);box-shadow:0 2px 8px rgba(14,27,44,.06)}
+.kpi.gold{border-left-color:var(--gold)}.kpi.teal{border-left-color:var(--teal)}.kpi.red{border-left-color:var(--alert)}
+.kpi .lbl{font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--muted);text-transform:uppercase}
+.kpi .n{font-size:27px;font-weight:700;margin-top:4px}
+.kpi .tag{font-size:11px;color:var(--muted);margin-left:6px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--low);font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:12px 16px}
+td{padding:12px 16px;border-top:1px solid var(--line);font-size:13px;vertical-align:middle}
+tr.rl:hover td{background:var(--bright)}
+.pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700}
+.pillst.ok{background:#e4efe8;color:#2c6e46}.pillst.off{background:var(--cont);color:#3b475a}
+.pillst.gold{background:var(--goldbg);color:#735200}.pillst.red{background:var(--redbg);color:#93000a}
+.rolechip{font-size:10.5px;font-weight:700;border-radius:5px;padding:3px 8px;background:var(--cont);color:#3b475a}
+.adminrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.adminrow:last-child{border-bottom:none}
+.toggle{width:44px;height:24px;border-radius:999px;background:#c5c6cd;position:relative;cursor:pointer;border:none;transition:background .2s;flex-shrink:0}
+.toggle i{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle.on{background:var(--teal)}
+.toggle.on i{left:23px}
+.toggle.warn.on{background:var(--gold)}
+label.fl{font-size:11px;letter-spacing:.08em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+select,input[type=text]{width:100%;height:44px;border:1px solid var(--line);border-radius:10px;padding:0 12px;font:inherit;font-size:13.5px;background:var(--card);outline:none}
+select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
+.searchbox{position:relative}
+.searchbox input{padding-left:36px}
+.searchbox .msym{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--soft)}
+.fchip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 13px;font-size:12px;cursor:pointer;display:inline-block;margin:0 6px 6px 0}
+.fchip.on{border-color:var(--gold);background:var(--goldbg);color:#735200;font-weight:700}
+.mscrim{position:fixed;inset:0;background:rgba(11,28,48,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:70}
+.mscrim.on{opacity:1;pointer-events:auto}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%) scale(.96);opacity:0;pointer-events:none;transition:all .25s;z-index:80;background:var(--card);border-radius:14px;box-shadow:0 20px 60px rgba(11,28,48,.35);padding:24px;width:min(460px,92vw);max-height:84vh;overflow-y:auto}
+.modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:90;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast b{color:var(--gold)}
+.bars .brow{margin:10px 0}
+.bars .bl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--muted)}
+.bars .bt{height:8px;border-radius:4px;background:var(--cont);overflow:hidden}
+.bars .bt i{display:block;height:8px;border-radius:4px}
+.bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--card);border-top:1px solid var(--line);justify-content:space-around;padding:8px 10px}
+.bottomnav button{background:none;border:none;font:inherit;font-size:10px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 8px}
+.bottomnav button.on{color:#735200}
+.bottomnav button.on .msym{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:1080px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr !important}}
+@media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:84px 12px 96px}.kpis{grid-template-columns:1fr}.bottomnav{display:flex}}
+@media print{aside.side,header.top,.toast,.mscrim,.modal,.bottomnav{display:none !important}main{margin:0;padding:0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brandline"><b>Continuum</b><span class="tagchip">PLATFORM ADMIN</span></div>
+  <div class="who"><span class="msym" style="font-size:19px">shield_person</span> T. Admin &middot; Continuum</div>
+</header>
+<aside class="side">
+  <div class="brand"><b>CONTINUUM</b><span>Internal Admin</span></div>
+  <nav id="sidenav"></nav>
+  <div class="foot"><a href="#" onclick="resetAll();return false" style="color:#9fb0c6">Reset demo</a></div>
+</aside>
+<main><div class="wrap" id="main"></div></main>
+<nav class="bottomnav" id="bottomnav"></nav>
+<div class="mscrim" id="mscrim" onclick="closeModal()"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+var TENANTS=[{"id": "worley", "name": "Worley Industrial", "board": "WCB Alberta", "paused": false, "pose": false, "committee": "", "active": 7, "completion": 78, "onboarded": 1, "weeks": 21, "pilot": false, "sandbox": false}, {"id": "garda", "name": "GardaWorld", "board": "WSIB Ontario", "paused": false, "pose": false, "committee": "jhsc@gardaworld.example", "active": 12, "completion": 74, "onboarded": 3, "weeks": 47, "pilot": true, "sandbox": false}, {"id": "ledcor", "name": "Ledcor Group", "board": "WCB Alberta", "paused": false, "pose": false, "committee": "", "active": 5, "completion": 75, "onboarded": 1, "weeks": 18, "pilot": false, "sandbox": false}, {"id": "sample", "name": "Sample Employer Co.", "board": "WCB Alberta", "paused": false, "pose": false, "committee": "", "active": 28, "completion": 71, "onboarded": 0, "weeks": 0, "pilot": false, "sandbox": true}];
+var USERS=[{"id": "u1", "name": "Dr. A. Owusu", "role": "physician", "org": "Nexus Health", "status": "active", "last": "2m ago"}, {"id": "u2", "name": "K. Morgan", "role": "hse", "org": "Worley Industrial", "status": "active", "last": "8m ago"}, {"id": "u3", "name": "C. Officer", "role": "board_officer", "org": "WSIB Ontario", "status": "active", "last": "1h ago"}, {"id": "u4", "name": "Marcus Bedard", "role": "worker", "org": "Worley Industrial", "status": "active", "last": "12m ago"}, {"id": "u5", "name": "Tyler Cardinal", "role": "worker", "org": "Worley Industrial", "status": "active", "last": "3d ago"}, {"id": "u6", "name": "J. Whitford", "role": "worker", "org": "Ledcor Group", "status": "active", "last": "1h ago"}, {"id": "u7", "name": "S. Littlechild", "role": "worker", "org": "GardaWorld", "status": "active", "last": "4h ago"}, {"id": "u8", "name": "R. Fontaine", "role": "hse", "org": "GardaWorld", "status": "active", "last": "22m ago"}, {"id": "u9", "name": "M. Delacroix", "role": "hse", "org": "Ledcor Group", "status": "active", "last": "2h ago"}, {"id": "u10", "name": "D. Okonkwo", "role": "physician", "org": "Nexus Health", "status": "active", "last": "1d ago"}, {"id": "u11", "name": "B. Officer", "role": "board_officer", "org": "WCB Alberta", "status": "active", "last": "2d ago"}, {"id": "u12", "name": "J. Okafor", "role": "worker", "org": "Worley Industrial", "status": "active", "last": "6h ago"}, {"id": "u13", "name": "A. Osei", "role": "worker", "org": "GardaWorld", "status": "active", "last": "3h ago"}, {"id": "u14", "name": "H. Nguyen", "role": "worker", "org": "Ledcor Group", "status": "inactive", "last": "21d ago"}, {"id": "u15", "name": "T. Admin", "role": "continuum_admin", "org": "Continuum", "status": "active", "last": "now"}, {"id": "u16", "name": "S. Reader", "role": "employer_admin", "org": "Sample Employer Co.", "status": "active", "last": "30m ago"}, {"id": "u17", "name": "P. Girard", "role": "employer_admin", "org": "GardaWorld", "status": "active", "last": "5h ago"}, {"id": "u18", "name": "L. Chen", "role": "employer_admin", "org": "Worley Industrial", "status": "inactive", "last": "34d ago"}];
+var GRANTS=[{"id": 1, "grantee": "Nexus Health (clinical)", "subject": "Worley Industrial", "scope": "all cases"}, {"id": 2, "grantee": "Nexus Health (clinical)", "subject": "Ledcor Group", "scope": "all cases"}, {"id": 3, "grantee": "Nexus Health (clinical)", "subject": "GardaWorld", "scope": "all cases"}, {"id": 4, "grantee": "WSIB Ontario (board)", "subject": "GardaWorld", "scope": "submitted filings"}, {"id": 5, "grantee": "WCB Alberta (board)", "subject": "Worley Industrial", "scope": "submitted filings"}, {"id": 6, "grantee": "WCB Alberta (board)", "subject": "Ledcor Group", "scope": "submitted filings"}];
+
+var LSKEY="continuum_admin_v1";
+var NAV=[["dashboard","dashboard","Dashboard"],["tenants","apartment","Tenants"],["users","group","Users"],["grants","key","Grants"],["billing","payments","Billing"],["audit","history","Audit"],["settings","settings","Settings"]];
+var ROLES=["worker","hse","employer_admin","physician","board_officer","continuum_admin"];
+var WEEKLY=350, ONBOARD=400, PILOT_DISCOUNT=0.4;
+var S;
+function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.parse(JSON.stringify(USERS)),grants:JSON.parse(JSON.stringify(GRANTS)),
+ section:"dashboard",search:"",roleFilter:null,nextId:100,
+ audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
+ form:{name:"",role:"worker",org:"Worley Industrial"}};}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;return;}}}catch(e){}S=fresh();}
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
+function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function toast(h){var el=document.getElementById("toast");el.innerHTML=h;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2800);}
+function audit(line){S.audit.unshift(new Date().toLocaleTimeString()+" "+line);S.audit=S.audit.slice(0,60);}
+function openModal(html){document.getElementById("modal").innerHTML=html;document.getElementById("modal").classList.add("on");document.getElementById("mscrim").classList.add("on");}
+function closeModal(){document.getElementById("modal").classList.remove("on");document.getElementById("mscrim").classList.remove("on");}
+function T(id){return S.tenants.find(function(t){return t.id===id;});}
+function realT(){return S.tenants.filter(function(t){return !t.sandbox;});}
+function activeCases(){return realT().reduce(function(a,t){return a+t.active;},0);}
+function activeUsers(){return S.users.filter(function(u){return u.status==="active";});}
+function completion(){var a=activeCases();return a?Math.round(realT().reduce(function(s,t){return s+t.active*t.completion;},0)/a):0;}
+function pausedCount(){return S.tenants.filter(function(t){return t.paused;}).length;}
+function go(sec){S.section=sec;save();window.scrollTo(0,0);}
+function renderNav(){
+ var mk=function(n){return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';};
+ document.getElementById("sidenav").innerHTML=NAV.map(mk).join("");
+ document.getElementById("bottomnav").innerHTML=NAV.filter(function(n){return ["dashboard","tenants","users","billing"].indexOf(n[0])>=0;}).map(mk).join("");}
+function pagehead(title,sub,extra){
+ return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:12px"><div><h1>'+title+'</h1><p class="sub">'+sub+'</p></div>'+(extra||"")+'</div>';}
+/* ---------- dashboard ---------- */
+function renderDashboard(){
+ var h=pagehead("Platform Overview","Operational metadata and aggregates only. This seat never sees clinical content.",
+  '<button class="btn ghost" onclick="window.print()"><span class="msym" style="font-size:18px">file_download</span> Export</button>');
+ h+='<div class="kpis">'+
+ '<div class="kpi"><div class="lbl">Tenants</div><div class="n">'+realT().length+'<span class="tag">+ 1 sandbox</span></div></div>'+
+ '<div class="kpi teal"><div class="lbl">Active users</div><div class="n">'+activeUsers().length+'<span class="tag">of '+S.users.length+' provisioned</span></div></div>'+
+ '<div class="kpi gold"><div class="lbl">Active cases</div><div class="n">'+activeCases()+'<span class="tag">across production tenants</span></div></div>'+
+ '<div class="kpi'+(pausedCount()?" red":"")+'"><div class="lbl">Check-in completion</div><div class="n">'+completion()+'%'+(pausedCount()?'<span class="tag" style="color:var(--alert)">'+pausedCount()+' tenant paused</span>':'<span class="tag">platform weighted</span>')+'</div></div>'+
+ '</div>';
+ if(pausedCount())h+='<div class="card" style="padding:14px 16px;margin-bottom:14px;border-left:5px solid var(--alert)"><b style="color:var(--alert);font-size:13px">Program paused: '+S.tenants.filter(function(t){return t.paused;}).map(function(t){return esc(t.name);}).join(", ")+'.</b> <span class="sub">Worker-facing capture and nudges are stopped tenant-wide. Case management continues.</span></div>';
+ h+='<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+ h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Active cases by tenant</h2>'+
+ realT().map(function(t){var p=Math.round(t.active/activeCases()*100);
+  return '<div class="brow"><div class="bl"><span>'+esc(t.name)+(t.pilot?' <span class="pillst gold">pilot</span>':'')+'</span><span>'+t.active+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(t.pilot?"var(--gold)":"var(--navy)")+'"></i></div></div>';}).join("")+
+ '<p class="sub" style="font-size:11.5px;margin-top:8px">These per-tenant counts equal each tenant\'s own portal: Worley\'s 7 is the HSE queue, and the 24 total is the clinical census.</p></div>';
+ h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Users by role</h2>'+
+ ROLES.map(function(r){var v=S.users.filter(function(u){return u.role===r&&u.status==="active";}).length;var p=Math.round(v/activeUsers().length*100);
+  return '<div class="brow"><div class="bl"><span>'+r+'</span><span>'+v+'</span></div><div class="bt"><i style="width:'+p+'%;background:var(--teal)"></i></div></div>';}).join("")+
+ '<p class="sub" style="font-size:11.5px;margin-top:8px">Role is a data value; adding supervisor or leadership as real logins is an insert, not a refactor.</p></div>';
+ h+='</div>';
+ h+='<div class="card" style="padding:16px;margin-top:14px"><h2 style="margin-bottom:8px">Compliance switchboard</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">'+
+ S.tenants.map(function(t){return '<div style="border:1px solid var(--line);border-radius:10px;padding:12px"><b style="font-size:13px">'+esc(t.name)+'</b>'+(t.sandbox?' <span class="pillst off">sandbox</span>':'')+
+ '<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px"><span>Program</span><span class="pillst '+(t.paused?"red":"ok")+'">'+(t.paused?"paused":"running")+'</span></div>'+
+ '<div style="display:flex;justify-content:space-between;margin-top:4px;font-size:12px"><span>Pose module</span><span class="pillst '+(t.pose?"gold":"off")+'">'+(t.pose?"ON (flagged)":"off")+'</span></div></div>';}).join("")+
+ '</div></div>';
+ return h;}
+/* ---------- tenants ---------- */
+function renderTenants(){
+ var h=pagehead("Tenants","Provisioning, boards, committee recipients, and the two compliance flags.",
+  '<button class="btn gold" onclick="newTenantModal()"><span class="msym" style="font-size:18px">add</span> New tenant</button>');
+ h+=S.tenants.map(function(t){
+  return '<div class="card" style="padding:18px;margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div><h2>'+esc(t.name)+(t.pilot?' <span class="pillst gold">pilot</span>':'')+(t.sandbox?' <span class="pillst off">sandbox: synthetic seed, no real workers</span>':'')+'</h2><p class="sub" style="font-size:12px">Board: '+esc(t.board)+' &middot; '+t.active+' active cases &middot; committee: '+(t.committee?esc(t.committee):"not configured")+'</p></div></div>'+
+  '<div class="adminrow" style="margin-top:6px"><div><b>Program paused</b><div class="sub" style="font-size:11.5px">The joint committee switch: stops worker-facing capture and nudges tenant-wide, leaves case management running. Built before the crisis that needs it.</div></div>'+
+  '<button class="toggle'+(t.paused?" on":"")+'" role="switch" aria-checked="'+t.paused+'" onclick="togglePause(\''+t.id+'\')"><i></i></button></div>'+
+  '<div class="adminrow"><div><b>Pose analysis module</b><div class="sub" style="font-size:11.5px">Built, ships dark. Off for the entire pilot: enabling changes the regulatory posture.</div></div>'+
+  '<button class="toggle warn'+(t.pose?" on":"")+'" role="switch" aria-checked="'+t.pose+'" onclick="posePrompt(\''+t.id+'\')"><i></i></button></div>'+
+  '</div>';}).join("");
+ return h;}
+function togglePause(id){
+ var t=T(id);t.paused=!t.paused;
+ audit((t.paused?"PROGRAM PAUSED":"Program resumed")+" for "+t.name);
+ toast(t.paused?"<b>"+esc(t.name)+" paused.</b> Capture and nudges stopped; cases continue.":"<b>"+esc(t.name)+"</b> resumed.");
+ save();}
+function posePrompt(id){
+ var t=T(id);
+ if(t.pose){t.pose=false;audit("Pose analysis flag OFF for "+t.name);toast("Pose module <b>off</b> for "+esc(t.name));save();return;}
+ openModal('<h2 style="margin-bottom:8px">Enable pose analysis for '+esc(t.name)+'?</h2>'+
+ '<p class="sub" style="font-size:12.5px">This module is deliberately dark for the pilot. Camera-based movement analysis is likely a regulated medical device; enabling it changes the venture\'s regulatory posture and requires counsel sign-off first.</p>'+
+ '<button class="btn ghost" style="width:100%;margin-top:14px" onclick="closeModal()">Keep it off (recommended)</button>'+
+ '<button class="btn danger" style="width:100%;margin-top:8px" onclick="poseEnable(\''+id+'\')">Enable anyway (demo)</button>');}
+function poseEnable(id){
+ var t=T(id);t.pose=true;closeModal();
+ audit("POSE ANALYSIS FLAG ON for "+t.name+" (demo action; counsel gate applies in production)");
+ toast("Pose module <b>flagged on</b> for "+esc(t.name)+". Gold-flagged on the switchboard.");
+ save();}
+function newTenantModal(){
+ openModal('<h2 style="margin-bottom:8px">New tenant</h2><p class="sub" style="font-size:12px;margin-bottom:10px">Provisioning creates the tenant row, RLS scope, and default flags (paused off, pose off).</p>'+
+ '<label class="fl">Name</label><input type="text" id="ntname" placeholder="Employer name">'+
+ '<div style="height:10px"></div><label class="fl">Board</label><select id="ntboard"><option>WSIB Ontario</option><option>WCB Alberta</option></select>'+
+ '<button class="btn gold" style="width:100%;margin-top:14px" onclick="createTenant()">Create tenant</button>'+
+ '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>');}
+function createTenant(){
+ var name=(document.getElementById("ntname")||{}).value||"";
+ var board=(document.getElementById("ntboard")||{}).value||"WCB Alberta";
+ if(!name.trim()){toast("A tenant needs a <b>name</b>.");return;}
+ S.tenants.push({id:"t"+(S.nextId++),name:name.trim(),board:board,paused:false,pose:false,committee:"",active:0,completion:0,onboarded:0,weeks:0,pilot:false,sandbox:false});
+ audit("Tenant created: "+name.trim()+" ("+board+")");
+ closeModal();toast("Tenant <b>"+esc(name.trim())+"</b> created.");save();}
+/* ---------- users ---------- */
+function renderUsers(){
+ var list=S.users.slice();
+ if(S.roleFilter)list=list.filter(function(u){return u.role===S.roleFilter;});
+ if(S.search)list=list.filter(function(u){return (u.name+" "+u.org+" "+u.role).toLowerCase().indexOf(S.search.toLowerCase())>=0;});
+ var h=pagehead("Users","Provision, assign role and tenant, deactivate. Roles are data rows, not code.",
+  '<button class="btn gold" onclick="addUserModal()"><span class="msym" style="font-size:18px">person_add</span> Provision user</button>');
+ h+='<div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center"><div class="searchbox" style="min-width:240px"><span class="msym">search</span><input type="search" placeholder="Search name, org, role" value="'+esc(S.search)+'" oninput="S.search=this.value;save()"></div>'+
+ '<span class="fchip'+(S.roleFilter===null?" on":"")+'" onclick="S.roleFilter=null;save()">All</span>'+
+ ROLES.map(function(r){return '<span class="fchip'+(S.roleFilter===r?" on":"")+'" onclick="S.roleFilter=\''+r+'\';save()">'+r+'</span>';}).join("")+'</div>';
+ h+='<div class="card" style="overflow:hidden"><table><thead><tr><th>User</th><th>Role</th><th>Tenant / org</th><th>Status</th><th>Last active</th><th></th></tr></thead><tbody>'+
+ list.map(function(u){
+  return '<tr class="rl"><td><b>'+esc(u.name)+'</b></td><td><span class="rolechip">'+u.role+'</span></td><td>'+esc(u.org)+'</td>'+
+  '<td><span class="pillst '+(u.status==="active"?"ok":"off")+'">'+u.status+'</span></td><td class="sub" style="font-size:12px">'+esc(u.last)+'</td>'+
+  '<td>'+(u.role==="continuum_admin"?'<span class="sub" style="font-size:11px">this seat</span>':'<button class="btn ghost" style="padding:7px 12px;font-size:11.5px" onclick="toggleUser(\''+u.id+'\')">'+(u.status==="active"?"Deactivate":"Reactivate")+'</button>')+'</td></tr>';}).join("")+
+ '</tbody></table><div style="padding:11px 16px;font-size:11.5px;color:var(--muted);background:var(--bright);border-top:1px solid var(--line)">Deactivation revokes sessions immediately. Worker deactivation never touches the case: the coordinator path continues.</div></div>';
+ return h;}
+function toggleUser(id){
+ var u=S.users.find(function(x){return x.id===id;});if(!u)return;
+ u.status=u.status==="active"?"inactive":"active";
+ if(u.status==="inactive"){audit("User deactivated: "+u.name+" ("+u.role+"). Sessions revoked.");toast("<b>"+esc(u.name)+"</b> deactivated. Sessions revoked.");}
+ else{audit("User reactivated: "+u.name);toast("<b>"+esc(u.name)+"</b> reactivated.");}
+ save();}
+function addUserModal(){
+ var f=S.form;
+ openModal('<h2 style="margin-bottom:8px">Provision user</h2>'+
+ '<label class="fl">Name</label><input type="text" id="nuname" placeholder="Full name" value="'+esc(f.name)+'">'+
+ '<div style="height:10px"></div><label class="fl">Role</label><select id="nurole">'+ROLES.filter(function(r){return r!=="continuum_admin";}).map(function(r){return '<option'+(f.role===r?" selected":"")+'>'+r+'</option>';}).join("")+'</select>'+
+ '<div style="height:10px"></div><label class="fl">Tenant / org</label><select id="nuorg">'+S.tenants.map(function(t){return '<option>'+esc(t.name)+'</option>';}).join("")+'<option>Nexus Health</option><option>WSIB Ontario</option><option>WCB Alberta</option></select>'+
+ '<button class="btn gold" style="width:100%;margin-top:14px" onclick="createUser()">Provision</button>'+
+ '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>');}
+function createUser(){
+ var name=(document.getElementById("nuname")||{}).value||"";
+ var role=(document.getElementById("nurole")||{}).value||"worker";
+ var org=(document.getElementById("nuorg")||{}).value||"Worley Industrial";
+ if(!name.trim()){toast("A user needs a <b>name</b>.");return;}
+ S.users.push({id:"u"+(S.nextId++),name:name.trim(),role:role,org:org,status:"active",last:"just provisioned"});
+ audit("User provisioned: "+name.trim()+" as "+role+" at "+org);
+ closeModal();toast("<b>"+esc(name.trim())+"</b> provisioned as "+role+".");save();}
+/* ---------- grants ---------- */
+function renderGrants(){
+ var h=pagehead("Access Grants","Cross-tenant reach is granted here, never by relaxing isolation. RLS still applies underneath.",
+  '<button class="btn gold" onclick="addGrantModal()"><span class="msym" style="font-size:18px">add</span> New grant</button>');
+ h+='<div class="card" style="overflow:hidden"><table><thead><tr><th>Grantee</th><th>Subject tenant</th><th>Scope</th><th></th></tr></thead><tbody>'+
+ S.grants.map(function(g){
+  return '<tr class="rl"><td><b>'+esc(g.grantee)+'</b></td><td>'+esc(g.subject)+'</td><td><span class="pillst off">'+esc(g.scope)+'</span></td>'+
+  '<td><button class="btn danger" style="padding:7px 12px;font-size:11.5px" onclick="revokeGrant('+g.id+')">Revoke</button></td></tr>';}).join("")+
+ '</tbody></table></div>';
+ return h;}
+function revokeGrant(id){
+ var g=S.grants.find(function(x){return x.id===id;});if(!g)return;
+ S.grants=S.grants.filter(function(x){return x.id!==id;});
+ audit("Grant revoked: "+g.grantee+" to "+g.subject);
+ toast("Grant <b>revoked</b>. The grantee\'s reach narrows immediately.");save();}
+function addGrantModal(){
+ openModal('<h2 style="margin-bottom:8px">New access grant</h2>'+
+ '<label class="fl">Grantee</label><select id="nggrantee"><option>Nexus Health (clinical)</option><option>WSIB Ontario (board)</option><option>WCB Alberta (board)</option></select>'+
+ '<div style="height:10px"></div><label class="fl">Subject tenant</label><select id="ngsubject">'+S.tenants.filter(function(t){return !t.sandbox;}).map(function(t){return '<option>'+esc(t.name)+'</option>';}).join("")+'</select>'+
+ '<div style="height:10px"></div><label class="fl">Scope</label><select id="ngscope"><option>all cases</option><option>submitted filings</option></select>'+
+ '<button class="btn gold" style="width:100%;margin-top:14px" onclick="createGrant()">Grant</button>'+
+ '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>');}
+function createGrant(){
+ var g=(document.getElementById("nggrantee")||{}).value, s=(document.getElementById("ngsubject")||{}).value, sc=(document.getElementById("ngscope")||{}).value;
+ S.grants.push({id:S.nextId++,grantee:g,subject:s,scope:sc});
+ audit("Grant created: "+g+" to "+s+" ("+sc+")");
+ closeModal();toast("Grant <b>created</b>.");save();}
+/* ---------- billing ---------- */
+function invoice(t){
+ var onboarding=t.onboarded*ONBOARD;
+ var weekly=t.weeks*WEEKLY*(t.pilot?(1-PILOT_DISCOUNT):1);
+ return {onboarding:onboarding,weekly:Math.round(weekly),total:Math.round(onboarding+weekly)};}
+function renderBilling(){
+ var h=pagehead("Billing Meter","Gen 3 pricing: $400 onboarding per claim plus a weekly rate while on program. The meter is automatic; invoicing is manual in MVP. Continuum admin only.");
+ h+='<div class="card" style="overflow:hidden"><table><thead><tr><th>Tenant</th><th>On program</th><th>Onboarded this period</th><th>Claim weeks</th><th>Onboarding</th><th>Weekly accrual</th><th>Period total</th></tr></thead><tbody>'+
+ realT().map(function(t){var inv=invoice(t);
+  return '<tr class="rl"><td><b>'+esc(t.name)+'</b>'+(t.pilot?' <span class="pillst gold">pilot, 40% off</span>':'')+'</td><td>'+t.active+'</td><td>'+t.onboarded+'</td><td>'+t.weeks+'</td>'+
+  '<td>$'+inv.onboarding.toLocaleString()+'</td><td>$'+inv.weekly.toLocaleString()+'</td><td><b>$'+inv.total.toLocaleString()+'</b></td></tr>';}).join("")+
+ '</tbody></table><div style="padding:11px 16px;font-size:11.5px;color:var(--muted);background:var(--bright);border-top:1px solid var(--line)">program_started_at and program_ended_at stamp the meter per case; sign-off stops accrual the same day. Without this table, revenue depends on somebody\'s memory.</div></div>';
+ return h;}
+/* ---------- audit ---------- */
+function renderAudit(){
+ var h=pagehead("Audit","Platform actions this session, newest first. In production every row lands in audit_log with who, what, when.");
+ h+='<div class="card" style="padding:16px">'+
+ S.audit.map(function(a){return '<div class="adminrow" style="font-size:12.5px">'+esc(a)+'</div>';}).join("")+'</div>';
+ return h;}
+/* ---------- settings ---------- */
+function renderSettings(){
+ var h=pagehead("Platform Settings","The operational posture, read from configuration.");
+ h+='<div class="card" style="padding:18px">'+
+ '<div class="adminrow"><div><b>Data residency</b><div class="sub" style="font-size:11.5px">All storage and processing in the Canadian region. No US processing of identifiable worker data.</div></div><span class="pillst ok">ca-central-1</span></div>'+
+ '<div class="adminrow"><div><b>Environments</b><div class="sub" style="font-size:11.5px">Staging carries the synthetic tenant (Sample Employer Co.); demos never touch real worker data.</div></div><span class="pillst ok">staging + production</span></div>'+
+ '<div class="adminrow"><div><b>Backups</b><div class="sub" style="font-size:11.5px">Automated, encrypted, in region. Restore tested before the first live case.</div></div><span class="pillst ok">tested</span></div>'+
+ '<div class="adminrow"><div><b>SMS content rule</b><div class="sub" style="font-size:11.5px">OTP and neutral nudges only; no health content ever transits US SMS infrastructure. STOP honored, quiet hours 8am to 9pm.</div></div><span class="pillst ok">enforced</span></div>'+
+ '<div class="adminrow"><div><b>Employer serialization test</b><div class="sub" style="font-size:11.5px">CI gate: the employer payload carries zero clinical fields, zero video references, zero consent state, on REST and channels both.</div></div><span class="pillst ok">green</span></div>'+
+ '<div class="adminrow"><div><b>Retention</b><div class="sub" style="font-size:11.5px">Per-table configuration: video shortest, audit longest, per the statutory minimums counsel sets. Deletion is a job with its own audit trail.</div></div><span class="pillst gold">counsel to confirm</span></div>'+
+ '</div>';
+ return h;}
+function render(){
+ renderNav();
+ var views={dashboard:renderDashboard,tenants:renderTenants,users:renderUsers,grants:renderGrants,billing:renderBilling,audit:renderAudit,settings:renderSettings};
+ document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
+}
+load();render();
+</script>
+</body>
+</html>
