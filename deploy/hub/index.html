@@ -81,6 +81,7 @@
     var v=view(), host=document.getElementById('hub');
     if(v==='login') return host.innerHTML=loginView();
     if(v==='roles') return host.innerHTML=rolesView();
+    if(v==='employer'){ location.href='/employer-dashboard.html'; return; }
     if(!ROLES[v]) { location.hash='#login'; return; }
     host.innerHTML=workspace(v);
   }
