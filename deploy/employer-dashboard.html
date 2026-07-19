@@ -222,7 +222,7 @@ function donut(segs,total,size,hole,center){
   paths+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.c+'" stroke-width="'+hole+'" stroke-dasharray="'+(frac*C)+' '+(C-frac*C)+'" stroke-dashoffset="'+(-acc*C+C/4)+'" style="transition:stroke-dasharray .7s"/>';
   acc+=frac;});
  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img">'+paths+
- (center?'<text x="'+cx+'" y="'+(cy-2)+'" text-anchor="middle" font-family="Space Grotesk" font-size="21" font-weight="700" fill="#16202E">'+center[0]+'</text><text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" font-size="10" fill="#5E6B7C">'+center[1]+'</text>':"")+'</svg>';}
+ (center?(center[1]?'<text x="'+cx+'" y="'+(cy-2)+'" text-anchor="middle" font-family="Space Grotesk" font-size="21" font-weight="700" fill="#16202E">'+center[0]+'</text><text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" font-size="10" fill="#5E6B7C">'+center[1]+'</text>':'<text x="'+cx+'" y="'+cy+'" text-anchor="middle" dominant-baseline="central" font-family="Space Grotesk" font-size="'+(size<80?13:21)+'" font-weight="700" fill="#16202E">'+center[0]+'</text>'):"")+'</svg>';}
 function spark(vals,w,h,color,fill){
  var mx=Math.max.apply(null,vals),mn=Math.min.apply(null,vals),rg=mx-mn||1;
  var pts=vals.map(function(v,i){return (i*(w/(vals.length-1))).toFixed(1)+","+(h-4-((v-mn)/rg)*(h-8)).toFixed(1);});
