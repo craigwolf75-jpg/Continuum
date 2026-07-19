@@ -84,6 +84,7 @@
     if(v==='employer'){ location.href='/employer-dashboard.html'; return; }
     if(v==='wcb'){ location.href='/wcb-portal.html'; return; }
     if(v==='hse'){ location.href='/hse-portal.html'; return; }
+    if(v==='nexus'){ location.href='/clinical-dashboard.html'; return; }
     if(!ROLES[v]) { location.hash='#login'; return; }
     host.innerHTML=workspace(v);
   }
@@ -110,12 +111,13 @@
     var employer='<button type="button" class="role" data-nav="/employer-dashboard.html"><h3>Employer</h3><p>Employer dashboard. Functional status only, never medical detail.</p></button>';
     var wcb='<button type="button" class="role" data-nav="/wcb-portal.html"><h3>WCB</h3><p>Compensation board portal. Read only claims and milestone notifications.</p></button>';
     var hse='<button type="button" class="role" data-nav="/hse-portal.html"><h3>HSE</h3><p>Light duties workspace. Assign tasks within restrictions. Recovery scores visible.</p></button>';
+    var nexus='<button type="button" class="role" data-nav="/clinical-dashboard.html"><h3>Nexus Health</h3><p>Clinical control center. Full detail, clearance, escalation.</p></button>';
     return '<div class="center"><div><div class="brand"><div class="cmark">C</div><div class="wordmark">Continuum</div></div>'+
       '<div class="roles">'+
       worker+
       hse+
       employer+
-      card('nexus','Clinical control center. Full detail, clearance, escalation.')+
+      nexus+
       wcb+
       '</div>'+
       '<p class="note" style="text-align:center;color:var(--mist);margin-top:16px">Looking for the worker app? <a href="/app">Open the worker app</a>.</p>'+
