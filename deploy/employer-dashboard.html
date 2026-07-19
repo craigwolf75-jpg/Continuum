@@ -243,7 +243,7 @@ var MONTHS=["May 25","Jun 1","Jun 8","Jun 15","Jun 22","Jun 29"];
 /* ---------- navigation ---------- */
 function go(sec){S.section=sec==="dashboards"?"overview":sec;S.filter=null;save();window.scrollTo(0,0);}
 function renderSide(){
- var h='<div class="logo"><div class="mark"><span></span></div><div class="lt"><b>CONTINUUM</b><i>Injury Recovery Platform</i></div></div>';
+ var h='<div class="logo"><div class="mark"><span></span></div><div class="lt"><b>CONTINUUM</b><i>Injury Recovery Platform</i><i style="display:block;margin-top:5px;color:#8b97a9;font-size:10.5px">What work is safe today</i></div></div>';
  NAV.forEach(function(n){
   if(n[0].charAt(0)==="_"){h+='<div class="grp">'+n[1]+'</div>';return;}
   var on=(S.section===n[0]||(n[0]==="dashboards"&&S.section==="overview_"))?" on":(S.section===n[0]?" on":"");

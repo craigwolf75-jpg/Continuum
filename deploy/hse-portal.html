@@ -187,7 +187,7 @@ function pagehead(title,sub,extra){
  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px"><div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+(extra||"")+'</div>';}
 /* ---------- dashboard ---------- */
 function renderDashboard(){
- var h=pagehead("RTW Coordination","The operational hub: every open case, sorted by attention needed.",
+ var h=pagehead("RTW Coordination","Who needs my attention today. Every open case, sorted by attention needed.",
   '<button class="btn navy" onclick="window.print()"><span class="msym" style="font-size:18px">download</span> Export</button>');
  h+='<div class="kpis">'+
  '<div class="kpi"><div class="ic" style="background:var(--navy)"><span class="msym">medical_services</span></div><div><div class="n">'+openCases().length+'</div><div class="t">Open cases</div></div></div>'+
