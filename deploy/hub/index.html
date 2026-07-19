@@ -82,6 +82,7 @@
     if(v==='login') return host.innerHTML=loginView();
     if(v==='roles') return host.innerHTML=rolesView();
     if(v==='employer'){ location.href='/employer-dashboard.html'; return; }
+    if(v==='wcb'){ location.href='/wcb-portal.html'; return; }
     if(!ROLES[v]) { location.hash='#login'; return; }
     host.innerHTML=workspace(v);
   }
@@ -106,13 +107,14 @@
     function card(k,desc){ return '<div class="role" data-role="'+k+'"><h3>'+ROLES[k]+'</h3><p>'+desc+'</p></div>'; }
     var worker='<button type="button" class="role role-worker" data-nav="/app"><h3>Worker</h3><p>Your recovery space. Check-ins, duties, and your plan, in plain words.</p></button>';
     var employer='<button type="button" class="role" data-nav="/employer-dashboard.html"><h3>Employer</h3><p>Employer dashboard. Functional status only, never medical detail.</p></button>';
+    var wcb='<button type="button" class="role" data-nav="/wcb-portal.html"><h3>WCB</h3><p>Compensation board portal. Read only claims and milestone notifications.</p></button>';
     return '<div class="center"><div><div class="brand"><div class="cmark">C</div><div class="wordmark">Continuum</div></div>'+
       '<div class="roles">'+
       worker+
       card('hse','Light duties workspace. Assign tasks within restrictions. Recovery scores visible.')+
       employer+
       card('nexus','Clinical control center. Full detail, clearance, escalation.')+
-      card('wcb','Read only claims and milestone notifications.')+
+      wcb+
       '</div>'+
       '<p class="note" style="text-align:center;color:var(--mist);margin-top:16px">Looking for the worker app? <a href="/app">Open the worker app</a>.</p>'+
       '</div></div>';
