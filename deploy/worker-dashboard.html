@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: Your Recovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#16273D;--gold:#E0B658;--goldbg:#fdf3dd;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;
+--card:#FFFFFF;--bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--teal:#508c9c;--tealbg:#dce9ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
+.msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
+aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);display:flex;flex-direction:column;box-shadow:0 2px 12px rgba(14,27,44,.2)}
+.side .head{padding:24px}
+.side .head h1{color:#fff;font-size:22px}
+.side .head p{color:#78859a;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.side nav{flex:1;margin-top:10px}
+.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:14px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left;transition:transform .15s}
+.side nav button:hover{color:#fff;background:#3b475a;transform:translateX(3px)}
+.side nav button.on{color:#fff;background:#3b475a;border-left-color:var(--gold);transform:translateX(3px)}
+.side .foot{border-top:1px solid #3b475a;padding:16px 24px;color:#9fb0c6;font-size:12px}
+main{margin-left:240px;padding:26px;min-height:100vh}
+.wrap{max-width:1180px}
+h2.pg{font-size:29px;color:var(--navy)}
+.sub{color:var(--muted);font-size:13.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 18px rgba(14,27,44,.10)}
+.btn{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:13px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 18px rgba(14,27,44,.12);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink);box-shadow:none}
+.btn.navy{background:var(--navy);color:#fff}
+.hero{display:flex;gap:22px;align-items:center;padding:22px;position:relative;overflow:hidden}
+.hero .deco{position:absolute;top:-10px;right:6px;opacity:.08;font-size:120px}
+.ring{width:104px;height:104px;border-radius:50%;background:var(--low);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring b{font-size:22px;color:#a97f1f;z-index:1}
+.statch{display:flex;gap:26px;flex-wrap:wrap;margin-top:12px}
+.statch .ic{width:34px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;margin-right:8px}
+.statch .lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--muted)}
+.statch .val{font-size:22px;font-weight:700}
+.trendtag{font-size:11px;font-weight:700}
+.chartcard{padding:22px;height:400px;display:flex;flex-direction:column}
+.chart{flex:1;display:flex;align-items:flex-end;gap:6px;border-bottom:1px solid var(--line);padding:14px 0 10px 30px;position:relative}
+.chart .yax{position:absolute;left:0;top:8px;bottom:26px;display:flex;flex-direction:column;justify-content:space-between;font-size:10.5px;color:var(--soft);opacity:.6}
+.chart .day{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.chart .pair{display:flex;gap:4px;align-items:flex-end;height:100%;width:100%;justify-content:center}
+.chart .bar{width:12px;border-radius:4px 4px 0 0;opacity:.75;transition:height 1s cubic-bezier(.175,.885,.32,1.275)}
+.chart .bar:hover{opacity:1}
+.chart .bar.pain{background:var(--navy)}
+.chart .bar.mob{background:var(--teal)}
+.chart .dl{font-size:10.5px;font-weight:700;color:var(--muted)}
+.legend{display:flex;gap:16px}
+.legend span{display:inline-flex;gap:6px;align-items:center;font-size:11px;font-weight:700}
+.legend i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.log{background:var(--bg);border-radius:10px;padding:13px 14px;margin-bottom:10px;cursor:default;transition:background .2s}
+.log:hover{background:var(--low)}
+.log.l-teal{border-left:5px solid var(--teal)}
+.log.l-gold{border-left:5px solid var(--gold)}
+.log .lt{font-size:10.5px;font-weight:700;color:var(--soft)}
+.log b{font-size:13.5px;color:var(--navy);display:block;margin:2px 0}
+.log .lx{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{font-size:10px;font-weight:700;text-transform:uppercase;border-radius:4px;padding:2px 7px}
+.chip.stable{background:var(--teal);color:#fff}
+.chip.optimal{background:var(--gold);color:var(--navy)}
+.chip.notified{background:var(--goldbg);color:#735200;border:1px solid var(--gold)}
+.milestone{background:var(--navy);color:#fff;border-radius:10px;padding:18px;margin-top:14px}
+.milestone .mb{height:5px;background:#3b475a;border-radius:3px;overflow:hidden;margin-top:10px}
+.milestone .mb i{display:block;height:5px;background:var(--gold);border-radius:3px;transition:width 1s}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+.tile:hover{border-color:var(--gold)}
+.tile .ic{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.tile b{font-size:13px;display:block}
+.tile span{font-size:11.5px;color:var(--muted)}
+.duty{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card)}
+.duty.l-teal{border-left:5px solid var(--teal)}
+.duty.l-gold{border-left:5px solid var(--gold)}
+.duty b{font-size:13px;display:block}
+.duty .m{font-size:11.5px;color:var(--muted)}
+.slider-row{margin:16px 0}
+.slider-row label{font-size:12px;font-weight:700;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:8px}
+.slider-row output{color:var(--navy);font-size:15px}
+input[type=range]{width:100%;accent-color:var(--gold);height:34px;cursor:pointer}
+textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:13.5px;min-height:74px;resize:vertical;outline:none}
+textarea:focus{box-shadow:0 0 0 2px var(--gold)}
+.consent{max-width:560px;margin:40px auto;padding:26px}
+.consent h2{font-size:22px;color:var(--navy);margin-bottom:8px}
+.consent p{font-size:13.5px;color:var(--muted);margin-bottom:12px}
+.consent .crow{display:flex;gap:10px;align-items:flex-start;background:var(--low);border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer}
+.consent .cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;margin-top:1px}
+.consent .crow.on .cb{background:var(--teal);border-color:var(--teal)}
+.adminrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.adminrow:last-child{border-bottom:none}
+.pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700}
+.pillst.ok{background:#e4efe8;color:#2c6e46}.pillst.off{background:var(--cont);color:#3b475a}.pillst.gold{background:var(--goldbg);color:#735200}
+.msg{border-radius:12px;padding:12px 14px;margin-bottom:10px;max-width:78%;font-size:13px}
+.msg.them{background:var(--low);border:1px solid var(--line)}
+.msg.me{background:var(--goldbg);border:1px solid var(--gold);margin-left:auto}
+.msg .mt{font-size:10.5px;color:var(--soft);margin-top:4px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast b{color:var(--gold)}
+.burst{position:fixed;pointer-events:none;z-index:90;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+section.view{display:none}section.view.on{display:block}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:1080px){.grid2{grid-template-columns:1fr !important}.tiles{grid-template-columns:1fr}}
+@media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:16px 12px 80px}}
+</style>
+</head>
+<body>
+<aside class="side">
+  <div class="head"><h1>Continuum</h1><p>Your Recovery</p></div>
+  <nav id="sidenav"></nav>
+  <div class="foot">Help Center &nbsp;&middot;&nbsp; Logout<br><a href="#" onclick="resetAll();return false" style="color:#9fb0c6">Reset demo</a></div>
+</aside>
+<main><div class="wrap" id="main"></div></main>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+
+var LSKEY="continuum_worker_dash_v1";
+var BRIDGE_KEY="continuum_worker_bridge_v1";
+var NAV=[["dashboard","dashboard","Dashboard"],["trend","insights","Recovery Trend"],["duties","assignment_turned_in","My Duties"],["chat","forum","Chat"],["settings","settings","Settings"]];
+var FLAGS=["numb","tingling","sharp","worse at night","cannot sleep"];
+var PROG=21;
+var S;
+function fresh(){return {
+ consented:true, videoConsent:false, section:"dashboard", day:9, status:"light_duty", escalated:false, checkedInToday:false,
+ pain:[7,7,6,6,5,5,4], mob:[3,3,4,4,5,6,6],
+ form:{pain:4,mob:6,note:""},
+ logs:[
+  {t:"Today, 9:15 AM",title:"Morning mobility session",x:"Fifteen minutes of guided shoulder movement.",tag:"stable"},
+  {t:"Yesterday, 4:30 PM",title:"Physical therapy check-in",x:"Full range achieved without sharp pain.",tag:"optimal"},
+  {t:"Jul 16, 8:00 AM",title:"Flare-up report",x:"Stiffness after the morning walk. Your clinician was notified.",tag:"notified"},
+  {t:"Jul 15, 11:15 AM",title:"Standard check-in",x:"Continuing modified duties as planned.",tag:"stable"}],
+ duties:[
+  {id:1,task:"Tool crib, inventory management",hours:4,status:"completed"},
+  {id:2,task:"Safety paperwork, weekly incident logs",hours:3,status:"accepted"},
+  {id:3,task:"Toolbox talk preparation",hours:2,status:"assigned"}],
+ msgs:[{who:"them",x:"Morning Marcus. Your new duty list is ready when you are.",t:"K. Morgan, 8:02 AM"}],
+ unread:1, present:false
+};}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;return;}}}catch(e){}S=fresh();}
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}writeBridge();render();}
+function resetAll(){S=fresh();S.checkedInToday=false;toast("Demo <b>reset</b>");save();}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function toast(h){var el=document.getElementById("toast");el.innerHTML=h;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2600);}
+function burst(x,y){for(var i=0;i<14;i++){var p=document.createElement("div");p.className="burst";p.style.left=x+"px";p.style.top=y+"px";document.body.appendChild(p);
+ (function(p,a,d){var t0=null;function step(ts){if(!t0)t0=ts;var k=(ts-t0)/700;if(k>=1){p.remove();return;}
+ p.style.transform="translate("+(Math.cos(a)*d*k)+"px,"+(Math.sin(a)*d*k+30*k*k)+"px) scale("+(1-k)+")";p.style.opacity=1-k;requestAnimationFrame(step);}requestAnimationFrame(step);})(p,Math.random()*6.283,60+Math.random()*70);}}
+/* bridge write (13b schema): functional fields only, projection at the write side */
+function writeBridge(){
+ try{
+  var b={source:"worker-dashboard",name:"Marcus Bedard",trade:"Scaffolder",
+   injury:"Right shoulder strain",restr:"No lifting above shoulder height",
+   day:S.day,prognosisDays:PROG,status:S.status,escalated:!!S.escalated,
+   checkedInToday:!!S.checkedInToday,
+   dutiesDone:S.duties.filter(function(d){return d.status==="completed";}).length,
+   dutiesTotal:S.duties.length,consented:!!S.consented,ts:Date.now()};
+  localStorage.setItem(BRIDGE_KEY,JSON.stringify(b));
+ }catch(e){}}
+function pct(){return Math.min(100,Math.round(S.day/PROG*100));}
+function curPain(){return S.pain[S.pain.length-1];}
+function curMob(){return S.mob[S.mob.length-1];}
+function delta(arr){var a=arr[0],b=arr[arr.length-1];if(!a)return 0;return Math.round((b-a)/a*100);}
+function go(sec){S.section=sec;if(sec==="chat"){S.unread=0;}save();window.scrollTo(0,0);}
+function renderNav(){
+ document.getElementById("sidenav").innerHTML=NAV.map(function(n){
+  var badge=(n[0]==="chat"&&S.unread)?' <span style="background:var(--gold);color:var(--navy);border-radius:999px;padding:1px 7px;font-size:10px">'+S.unread+'</span>':"";
+  return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+badge+'</button>';}).join("");}
+function ringSVG(p){
+ var r=48,c=2*Math.PI*r;
+ return '<svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="'+r+'" fill="none" stroke="#e6eeff" stroke-width="7"/>'+
+ '<circle cx="52" cy="52" r="'+r+'" fill="none" stroke="var(--gold)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-p/100))+'" style="transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)"/></svg>';}
+function chipFor(tag){return tag==="stable"?'<span class="chip stable">Stable</span>':tag==="optimal"?'<span class="chip optimal">Optimal</span>':'<span class="chip notified">Clinician notified</span>';}
+function chart(){
+ var days=["MON","TUE","WED","THU","FRI","SAT","SUN"];
+ var h='<div class="chart"><div class="yax"><span>10</span><span>8</span><span>6</span><span>4</span><span>2</span><span>0</span></div>';
+ for(var i=0;i<7;i++){
+  h+='<div class="day"><div class="pair">'+
+  '<div class="bar pain" style="height:'+(S.pain[i]*10)+'%" title="Pain '+S.pain[i]+'"></div>'+
+  '<div class="bar mob" style="height:'+(S.mob[i]*10)+'%" title="Mobility '+S.mob[i]+'"></div>'+
+  '</div><span class="dl">'+days[i]+'</span></div>';}
+ return h+'</div>';}
+/* ---------- views ---------- */
+function renderDashboard(){
+ var h='<header style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px"><div>'+
+ '<h2 class="pg">Your Recovery: Last 7 Days</h2><p class="sub">Worker ID: 99283-WB &middot; Coordinator: K. Morgan &middot; Day '+S.day+' of '+PROG+'</p></div>'+
+ '<div style="display:flex;gap:10px"><button class="btn ghost" onclick="presentStep(event)"><span class="msym" style="font-size:18px">play_arrow</span> Present</button>'+
+ '<button class="btn" onclick="go(\'trend\')"><span class="msym" style="font-size:19px">add_circle</span> New Recovery Log</button></div></header>';
+ var trend=S.escalated?"Your clinician is taking a look":"Trending well";
+ h+='<div style="display:grid;grid-template-columns:2fr 1fr;gap:14px" class="grid2"><div>';
+ h+='<div class="card hero"><span class="msym deco">trending_up</span>'+
+ '<div class="ring">'+ringSVG(pct())+'<b>'+pct()+'%</b></div>'+
+ '<div style="flex:1"><h3 style="font-size:22px;color:var(--navy)">Progress check: '+trend+'</h3>'+
+ '<p class="sub" style="margin:4px 0 8px">'+(S.escalated?"Your last check-in asked for attention, so your care team has it. Nothing is wrong with saying so.":"Your pain is easing and your movement is coming back, week over week. Keep to your plan.")+'</p>'+
+ '<div class="statch">'+
+ '<div style="display:flex;align-items:center"><span class="ic" style="background:var(--cont);color:var(--navy)"><span class="msym" style="font-size:19px">speed</span></span><div><div class="lbl">Pain today</div><div><span class="val">'+curPain()+'</span> <span class="trendtag" style="color:var(--teal)">&#8595; '+Math.abs(delta(S.pain))+'%</span></div></div></div>'+
+ '<div style="display:flex;align-items:center"><span class="ic" style="background:var(--tealbg);color:var(--teal)"><span class="msym" style="font-size:19px">directions_walk</span></span><div><div class="lbl">Mobility today</div><div><span class="val">'+curMob()+'</span> <span class="trendtag" style="color:var(--teal)">&#8593; '+Math.abs(delta(S.mob))+'%</span></div></div></div>'+
+ '</div></div></div>';
+ h+='<div class="card chartcard" style="margin-top:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div><h3 style="font-size:22px;color:var(--navy)">Your week</h3><p class="sub" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">Pain and mobility, day by day</p></div>'+
+ '<div class="legend"><span><i style="background:var(--navy)"></i> Pain</span><span><i style="background:var(--teal)"></i> Mobility</span></div></div>'+chart()+'</div>';
+ h+='</div><div>';
+ h+='<div class="card" style="padding:20px;height:100%"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><h3 style="font-size:22px;color:var(--navy)">Recent logs</h3><a href="#" onclick="go(\'trend\');return false" style="font-size:11px;font-weight:700;color:var(--teal)">View all</a></div>'+
+ S.logs.slice(0,4).map(function(l){return '<div class="log '+(l.tag==="notified"?"l-gold":"l-teal")+'"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span class="lt">'+esc(l.t).toUpperCase()+'</span>'+chipFor(l.tag)+'</div><b>'+esc(l.title)+'</b><div class="lx">'+esc(l.x)+'</div></div>';}).join("")+
+ '<div class="milestone"><b style="font-size:13.5px">Recovery milestone</b><p style="font-size:11.5px;opacity:.85;margin-top:4px">'+(PROG-S.day>0?("You are "+(PROG-S.day)+" days from the end of this recovery phase."):"Phase complete. Your clinician confirms the next step.")+'</p><div class="mb"><i style="width:'+pct()+'%"></i></div></div>'+
+ '</div></div></div>';
+ h+='<section class="tiles">'+
+ '<div class="tile"><span class="ic" style="background:var(--navy)"><span class="msym">event</span></span><div><b>Next appointment</b><span>Jul 21 &middot; Dr. A. Owusu</span></div></div>'+
+ '<div class="tile"><span class="ic" style="background:var(--teal)"><span class="msym">assignment_turned_in</span></span><div><b>Active duty plan</b><span>Light duties. No lifting above shoulder height.</span></div></div>'+
+ '<div class="tile" style="cursor:pointer" onclick="go(\'chat\')"><span class="ic" style="background:var(--gold);color:var(--navy)"><span class="msym">forum</span></span><div><b>Support message</b><span>'+(S.unread?S.unread+" unread from K. Morgan":"You are all caught up")+'</span></div></div>'+
+ '</section>';
+ return h;}
+function renderTrend(){
+ var f=S.form;
+ var h='<h2 class="pg" style="margin-bottom:4px">Recovery Trend</h2><p class="sub" style="margin-bottom:18px">Log how today feels. Short and honest beats long and perfect.</p>';
+ h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="grid2">';
+ h+='<div class="card" style="padding:22px"><h3 style="font-size:18px;color:var(--navy);margin-bottom:6px">New recovery log</h3>'+
+ (S.checkedInToday?'<p class="sub" style="margin-bottom:10px">You already logged today. Another one is fine if something changed.</p>':"")+
+ '<div class="slider-row"><label>Pain right now <output>'+f.pain+'</output></label><input type="range" min="0" max="10" value="'+f.pain+'" oninput="S.form.pain=+this.value;save()"></div>'+
+ '<div class="slider-row"><label>How well you can move <output>'+f.mob+'</output></label><input type="range" min="0" max="10" value="'+f.mob+'" oninput="S.form.mob=+this.value;save()"></div>'+
+ '<label style="font-size:12px;font-weight:700;color:var(--muted)">Anything to add (only your care team sees this)</label>'+
+ '<textarea placeholder="A few words is plenty" oninput="S.form.note=this.value">'+esc(f.note)+'</textarea>'+
+ '<button class="btn" style="width:100%;margin-top:12px" onclick="saveLog(event)">Save log</button>'+
+ '<p class="sub" style="font-size:11.5px;margin-top:10px">Your employer sees your duty status, never these numbers or words.</p></div>';
+ h+='<div class="card" style="padding:22px"><h3 style="font-size:18px;color:var(--navy);margin-bottom:10px">All logs</h3>'+
+ S.logs.map(function(l){return '<div class="log '+(l.tag==="notified"?"l-gold":"l-teal")+'"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span class="lt">'+esc(l.t).toUpperCase()+'</span>'+chipFor(l.tag)+'</div><b>'+esc(l.title)+'</b><div class="lx" style="white-space:normal">'+esc(l.x)+'</div></div>';}).join("")+'</div>';
+ h+='</div>';
+ return h;}
+function saveLog(ev){
+ if(!S.consented){toast("Check-ins are <b>paused</b> until you turn them back on in Settings.");return;}
+ var f=S.form, noteL=(f.note||"").toLowerCase();
+ var flagged=f.pain>=8||FLAGS.some(function(k){return noteL.indexOf(k)>=0;});
+ S.pain=S.pain.slice(1).concat([f.pain]);
+ S.mob=S.mob.slice(1).concat([f.mob]);
+ S.checkedInToday=true;
+ if(flagged){S.escalated=true;
+  S.logs.unshift({t:"Today",title:"Check-in shared with your clinician",x:"Thanks for being honest about a hard day. Your care team has been notified and will look the same day.",tag:"notified"});
+  toast("Saved. Your <b>clinician was notified</b>. That is the system working.");}
+ else{S.escalated=false;
+  S.logs.unshift({t:"Today",title:"Standard check-in",x:(f.note?f.note:"Pain "+f.pain+", mobility "+f.mob+"."),tag:f.mob>=7?"optimal":"stable"});
+  toast("Log <b>saved</b>. Small steps count.");
+  if(ev)burst(ev.clientX||innerWidth/2,ev.clientY||innerHeight/2);}
+ S.form={pain:f.pain,mob:f.mob,note:""};
+ save();}
+function renderDuties(){
+ var h='<h2 class="pg" style="margin-bottom:4px">My Duties</h2><p class="sub" style="margin-bottom:18px">Only duties your clinician\'s restrictions allow ever reach this list. You accept them; nobody accepts for you.</p>';
+ h+='<div class="card" style="padding:20px;max-width:640px">'+
+ S.duties.map(function(d){
+  var act=d.status==="assigned"?'<button class="btn" style="padding:8px 14px;font-size:12px" onclick="acceptDuty('+d.id+')">Accept</button>'
+   :d.status==="accepted"?'<button class="btn ghost" style="padding:8px 14px;font-size:12px" onclick="doneDuty('+d.id+',event)">Mark done</button>'
+   :'<span class="pillst ok">done</span>';
+  return '<div class="duty '+(d.status==="completed"?"l-teal":"l-gold")+'"><div><b>'+esc(d.task)+'</b><div class="m">'+d.hours+' hours &middot; '+(d.status==="assigned"?"New: waiting for you":d.status==="accepted"?"Accepted, in your day":"Completed")+'</div></div>'+act+'</div>';}).join("")+
+ '<p class="sub" style="font-size:11.5px;margin-top:8px">Every duty here was hazard checked before it was assigned. If one feels wrong, say so in Chat; it goes to your coordinator, not your employer.</p></div>';
+ return h;}
+function acceptDuty(id){var d=S.duties.find(function(x){return x.id===id;});if(d&&d.status==="assigned"){d.status="accepted";toast("Duty <b>accepted</b>. It is on your list.");save();}}
+function doneDuty(id,ev){var d=S.duties.find(function(x){return x.id===id;});if(d&&d.status==="accepted"){d.status="completed";toast("Nice work. Duty <b>completed</b>.");if(ev)burst(ev.clientX,ev.clientY);save();}}
+function renderChat(){
+ var h='<h2 class="pg" style="margin-bottom:4px">Chat</h2><p class="sub" style="margin-bottom:18px">A private line to your coordinator. Text alerts only ever say you have an update; the content stays here, behind your login.</p>';
+ h+='<div class="card" style="padding:20px;max-width:640px">'+
+ S.msgs.map(function(m){return '<div class="msg '+(m.who==="me"?"me":"them")+'">'+esc(m.x)+'<div class="mt">'+esc(m.t)+'</div></div>';}).join("")+
+ '<div style="display:flex;gap:10px;margin-top:12px"><input type="text" id="chatline" placeholder="Write a message" style="flex:1;height:46px;border:1px solid var(--line);border-radius:10px;padding:0 14px;font:inherit" onkeydown="if(event.key===\'Enter\')sendMsg()"><button class="btn" onclick="sendMsg()">Send</button></div></div>';
+ return h;}
+function sendMsg(){
+ var el=document.getElementById("chatline");if(!el||!el.value.trim())return;
+ S.msgs.push({who:"me",x:el.value.trim(),t:"You, just now"});
+ S.msgs.push({who:"them",x:"Got it, thanks Marcus. I will follow up today.",t:"K. Morgan, just now"});
+ toast("Message <b>sent</b>");save();}
+function renderSettings(){
+ var h='<h2 class="pg" style="margin-bottom:4px">Settings</h2><p class="sub" style="margin-bottom:18px">Your data, your choices. Changing these never affects your care or your job.</p>';
+ h+='<div class="card" style="padding:20px;max-width:640px">'+
+ '<div class="adminrow"><div><b>Daily check-ins</b><div class="sub" style="font-size:11.5px">Pain, movement, and your words. Seen by your care team, never your employer.</div></div>'+
+ '<button class="btn ghost" style="padding:8px 14px;font-size:12px" onclick="toggleConsent()">'+(S.consented?"Turn off":"Turn on")+'</button></div>'+
+ '<div class="adminrow"><div><b>Movement video</b><div class="sub" style="font-size:11.5px">Optional, separate consent. Only your clinician can view it. Off by default.</div></div><span class="pillst '+(S.videoConsent?"ok":"off")+'">'+(S.videoConsent?"on":"off")+'</span></div>'+
+ '<div class="adminrow"><div><b>Withdraw completely</b><div class="sub" style="font-size:11.5px">Tell your coordinator any time. Your case continues exactly the same without the app.</div></div><span class="pillst gold">any time</span></div>'+
+ '<div class="adminrow"><div><b>What is held about you</b><div class="sub" style="font-size:11.5px">Ask your coordinator and receive a plain-language export.</div></div><span class="pillst ok">your right</span></div>'+
+ '</div>';
+ return h;}
+function toggleConsent(){
+ S.consented=!S.consented;
+ toast(S.consented?"Check-ins are <b>back on</b>.":"Check-ins <b>paused</b>. Your recovery plan continues unchanged.");
+ save();}
+/* ---------- presentation mode ---------- */
+function presentStep(ev){
+ if(S.day>=PROG){toast("Recovery arc <b>complete</b>. Reset to run it again.");return;}
+ S.day++;
+ var np=Math.max(0,curPain()-(Math.random()<.7?1:0));
+ var nm=Math.min(10,curMob()+(Math.random()<.7?1:0));
+ S.pain=S.pain.slice(1).concat([np]);
+ S.mob=S.mob.slice(1).concat([nm]);
+ S.checkedInToday=true;S.escalated=false;
+ S.logs.unshift({t:"Day "+S.day,title:"Standard check-in",x:"Pain "+np+", mobility "+nm+".",tag:nm>=7?"optimal":"stable"});
+ if(S.day>=PROG){S.status="signed_off";
+  S.logs.unshift({t:"Day "+S.day,title:"Cleared for full duty",x:"Dr. A. Owusu signed off your return. Welcome back.",tag:"optimal"});
+  toast("<b>Signed off.</b> Full duty, day "+S.day+".");if(ev)burst(ev.clientX||innerWidth/2,ev.clientY||120);}
+ else toast("Day <b>"+S.day+"</b>: pain "+String.fromCharCode(8595)+" mobility "+String.fromCharCode(8593));
+ save();}
+function render(){
+ renderNav();
+ var views={dashboard:renderDashboard,trend:renderTrend,duties:renderDuties,chat:renderChat,settings:renderSettings};
+ document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
+}
+load();writeBridge();render();
+</script>
+</body>
+</html>
