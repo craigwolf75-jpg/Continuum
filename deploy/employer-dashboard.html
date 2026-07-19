@@ -217,11 +217,11 @@ function costEst(){return 142680-S.returned.length*4980;}
 function timeLoss(){return 624-S.returned.length*22;}
 /* ---------- svg helpers ---------- */
 function donut(segs,total,size,hole,center){
- var r=(size-14)/2,cx=size/2,cy=size/2,C=2*Math.PI*r,acc=0,paths="";
+ var r=(size-hole)/2-2,cx=size/2,cy=size/2,C=2*Math.PI*r,acc=0,paths="";
  segs.forEach(function(s){var frac=total?s.v/total:0;
   paths+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.c+'" stroke-width="'+hole+'" stroke-dasharray="'+(frac*C)+' '+(C-frac*C)+'" stroke-dashoffset="'+(-acc*C+C/4)+'" style="transition:stroke-dasharray .7s"/>';
   acc+=frac;});
- return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img">'+paths+
+ return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img" shape-rendering="geometricPrecision">'+paths+
  (center?(center[1]?'<text x="'+cx+'" y="'+(cy-2)+'" text-anchor="middle" font-family="Space Grotesk" font-size="21" font-weight="700" fill="#16202E">'+center[0]+'</text><text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" font-size="10" fill="#5E6B7C">'+center[1]+'</text>':'<text x="'+cx+'" y="'+cy+'" text-anchor="middle" dominant-baseline="central" font-family="Space Grotesk" font-size="'+(size<80?13:21)+'" font-weight="700" fill="#16202E">'+center[0]+'</text>'):"")+'</svg>';}
 function spark(vals,w,h,color,fill){
  var mx=Math.max.apply(null,vals),mn=Math.min.apply(null,vals),rg=mx-mn||1;
