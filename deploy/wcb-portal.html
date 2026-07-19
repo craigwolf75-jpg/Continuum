@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: Compensation Board Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+<style>
+:root{--navy:#16273D;--gold:#E0B658;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;--card:#FFFFFF;
+--bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--red:#C0453B;--redbg:#ffdad6;--teal:#508c9c;--tealbg:#dce9ff;--good:#508c9c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 "Public Sans",system-ui,sans-serif}
+.msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;display:inline-block;vertical-align:middle}
+header.top{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.wordmark{display:flex;align-items:center;gap:10px}
+.wm-c{width:32px;height:32px;border-radius:8px;background:var(--navy);color:var(--gold);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:16px}
+.wm-t{font-weight:700;font-size:16px;letter-spacing:.02em}
+.who{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--low);font-size:12.5px;font-weight:700;color:#3b475a}
+aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);padding-top:84px;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(11,28,48,.15)}
+.side .brand{padding:0 24px 18px}
+.side .brand b{color:#fff;font-size:17px;display:block}
+.side .brand span{color:#78859a;font-size:11px}
+.side nav{flex:1}
+.side button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:13px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
+.side button:hover{color:#fff;background:#3b475a}
+.side button.on{color:#fff;background:#3b475a;border-left-color:var(--gold)}
+.side .foot{border-top:1px solid #3b475a;padding:16px 24px;color:#9fb0c6;font-size:12px}
+main{margin-left:240px;padding:92px 32px 60px;min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto}
+.eyebrow{font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);text-transform:uppercase}
+h1{font-size:29px;line-height:36px}
+.sub{color:var(--muted);font-size:14px;margin-top:2px}
+.pill{background:var(--cont);border:1px solid #c5c6cd;border-radius:6px;padding:3px 8px;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+.btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px 18px;font:inherit;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 4px 14px rgba(11,28,48,.15);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0}
+.kpi{background:var(--card);border-radius:12px;padding:20px;border-left:4px solid var(--navy);box-shadow:0 1px 4px rgba(11,28,48,.06)}
+.kpi.gold{border-left-color:var(--gold)}.kpi.teal{border-left-color:#93d0e0}.kpi.gray{border-left-color:var(--soft)}
+.kpi .n{font-size:29px;font-weight:700}
+.kpi .tag{font-size:11px;color:var(--muted)}
+.kpi .urgent{background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px}
+.cols{display:grid;grid-template-columns:1fr 2fr;gap:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 4px rgba(11,28,48,.06)}
+.alerthead{background:var(--redbg);padding:14px 16px;border-radius:12px 12px 0 0;display:flex;gap:8px;align-items:center;color:#93000a;font-size:12.5px;font-weight:700}
+.alert{display:flex;gap:12px;background:var(--bright);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:10px 14px}
+.alert .dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.alert b{font-size:13px;display:block}
+.alert .m{font-size:11px;color:var(--muted)}
+.payload{background:var(--navy);border-radius:12px;color:#fff;padding:14px;position:relative;overflow:hidden;margin-bottom:12px}
+.payload .bar{position:absolute;top:0;left:0;width:4px;height:100%}
+.payload .ph{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-bottom:8px}
+.payload pre{background:#0f1c2d;border-radius:6px;padding:10px;font:10px/1.7 ui-monospace,Consolas,monospace;color:#d6e3fb;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{background:var(--low);font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:12px 18px}
+td{padding:16px 18px;border-top:1px solid var(--line);font-size:13px;vertical-align:middle}
+tr.rl{cursor:pointer}
+tr.rl:hover td{background:var(--bright)}
+.avatar{width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:#bac7de;color:#0f1c2d;margin-right:12px;flex-shrink:0}
+.stchip{display:inline-block;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:700}
+.st-reported{background:var(--cont);color:#3b475a}
+.st-light_duty{background:#fdf3dd;color:#735200}
+.st-return_pending{background:var(--tealbg);color:#004e5c}
+.st-closed{background:#e4efe8;color:#2c6e46}
+.prog{height:8px;background:var(--cont);border-radius:4px;overflow:hidden;min-width:110px}
+.prog i{display:block;height:8px;border-radius:4px;background:var(--gold);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.prog.full i{background:var(--good)}
+.searchbox{position:relative}
+.searchbox input{border:1px solid var(--line);border-radius:10px;padding:9px 12px 9px 36px;font:inherit;font-size:13px;background:var(--card);outline:none;min-width:220px}
+.searchbox input:focus{box-shadow:0 0 0 2px var(--gold)}
+.searchbox .msym{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--soft)}
+.fchip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 13px;font-size:12px;cursor:pointer;display:inline-block;margin-right:6px}
+.fchip.on{border-color:var(--gold);background:#fdf3dd;color:#735200;font-weight:700}
+.docrow{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:8px}
+.docrow:hover{background:var(--bright)}
+.ok{color:var(--good)}.pend{color:var(--red)}
+.scrim{position:fixed;inset:0;background:rgba(11,28,48,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:-480px;width:460px;max-width:95vw;height:100vh;background:var(--card);z-index:70;transition:right .3s cubic-bezier(.2,.8,.2,1);overflow-y:auto;padding:26px;border-left:1px solid var(--line)}
+.drawer.on{right:0}
+.pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700}
+.pillst.ok{background:#e4efe8;color:#2c6e46}.pillst.filed{background:#fdf3dd;color:#735200}.pillst.pending{background:var(--redbg);color:#93000a}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast b{color:var(--gold)}
+.bars .brow{margin:10px 0}
+.bars .bl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--muted)}
+.bars .bt{height:8px;border-radius:4px;background:var(--cont);overflow:hidden}
+.bars .bt i{display:block;height:8px;border-radius:4px}
+.adminrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.adminrow:last-child{border-bottom:none}
+section.view{display:none}section.view.on{display:block}
+.tfoot{color:var(--muted);font-size:11.5px;padding:12px 18px;border-top:1px solid var(--line);background:var(--bright);border-radius:0 0 12px 12px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:1100px){.cols{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:88px 14px 40px}.kpis{grid-template-columns:1fr}}
+@media print{aside.side,header.top,.scrim,.drawer,.toast{display:none !important}main{margin:0;padding:0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wordmark"><div class="wm-c">C</div><div><div class="wm-t">Continuum</div></div></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="msym" style="color:var(--muted)">notifications</span>
+    <div class="who"><span class="msym" style="font-size:19px">account_circle</span> C. Officer &middot; Board</div>
+  </div>
+</header>
+<aside class="side">
+  <div class="brand"><b>CONTINUUM</b><span>Compensation Board Portal</span></div>
+  <nav id="sidenav"></nav>
+  <div class="foot">Help &nbsp;&middot;&nbsp; Logout<br><a href="#" onclick="resetAll();return false" style="color:#9fb0c6">Reset demo</a></div>
+</aside>
+<main><div class="wrap" id="main"></div></main>
+<div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-label="Claim detail"></aside>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+var CLAIMS=[
+{"name": "Marcus Bedard", "emp": "Worley Industrial", "ref": "WCB-29402", "status": "light_duty", "days": 9, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "filed"], ["Medical update", "pending"]], "ack_pending": 1},
+{"name": "Tyler Cardinal", "emp": "Worley Industrial", "ref": "WCB-30118", "status": "light_duty", "days": 14, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "Jasmine Whitford", "emp": "Ledcor Group", "ref": "WCB-31005", "status": "reported", "days": 3, "board": "WCB Alberta", "docs": [["Initial notification", "filed"]], "ack_pending": 1},
+{"name": "A. Osei", "emp": "GardaWorld", "ref": "WSIB-88102", "status": "light_duty", "days": 11, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "filed"]], "ack_pending": 1},
+{"name": "M. Chartrand", "emp": "GardaWorld", "ref": "WSIB-88117", "status": "light_duty", "days": 17, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "R. Dubois", "emp": "GardaWorld", "ref": "WSIB-88123", "status": "light_duty", "days": 21, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "K. Patel", "emp": "GardaWorld", "ref": "WSIB-88131", "status": "reported", "days": 2, "board": "WSIB Ontario", "docs": [["Initial notification", "filed"]], "ack_pending": 1},
+{"name": "S. Ivanova", "emp": "GardaWorld", "ref": "WSIB-88140", "status": "light_duty", "days": 8, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "D. Morin", "emp": "Ledcor Group", "ref": "WCB-31022", "status": "light_duty", "days": 26, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "E. Toews", "emp": "Ledcor Group", "ref": "WCB-31036", "status": "reported", "days": 4, "board": "WCB Alberta", "docs": [["Initial notification", "filed"]], "ack_pending": 1},
+{"name": "N. Ahmed", "emp": "Worley Industrial", "ref": "WCB-29455", "status": "light_duty", "days": 19, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "P. Giroux", "emp": "GardaWorld", "ref": "WSIB-88146", "status": "return_pending", "days": 31, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "filed"], ["Full duty package", "filed"]], "ack_pending": 1},
+{"name": "L. Yellowbird", "emp": "Worley Industrial", "ref": "WCB-29470", "status": "light_duty", "days": 12, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "H. Nguyen", "emp": "Ledcor Group", "ref": "WCB-31048", "status": "light_duty", "days": 15, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "F. Kaur", "emp": "GardaWorld", "ref": "WSIB-88151", "status": "reported", "days": 1, "board": "WSIB Ontario", "docs": [["Initial notification", "filed"]], "ack_pending": 1},
+{"name": "G. Marchand", "emp": "GardaWorld", "ref": "WSIB-88155", "status": "return_pending", "days": 28, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "T. O'Neill", "emp": "Worley Industrial", "ref": "WCB-29481", "status": "light_duty", "days": 23, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "V. Sidhu", "emp": "Ledcor Group", "ref": "WCB-31050", "status": "reported", "days": 5, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"]], "ack_pending": 0},
+{"name": "W. Lafleur", "emp": "GardaWorld", "ref": "WSIB-88160", "status": "return_pending", "days": 35, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "B. Semenov", "emp": "Worley Industrial", "ref": "WCB-29390", "status": "closed", "days": 41, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "C. Littlechild", "emp": "Ledcor Group", "ref": "WCB-30977", "status": "closed", "days": 29, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "J. Fortin", "emp": "GardaWorld", "ref": "WSIB-88090", "status": "closed", "days": 33, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "Y. Chen", "emp": "GardaWorld", "ref": "WSIB-88095", "status": "closed", "days": 27, "board": "WSIB Ontario", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "O. Adeyemi", "emp": "Worley Industrial", "ref": "WCB-29401", "status": "closed", "days": 38, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0},
+{"name": "M. Roy", "emp": "Ledcor Group", "ref": "WCB-30990", "status": "closed", "days": 24, "board": "WCB Alberta", "docs": [["Initial notification", "acknowledged"], ["Light duty package", "acknowledged"], ["Full duty package", "acknowledged"]], "ack_pending": 0}
+];
+
+var LSKEY="continuum_board_portal_v1";
+var NAV=[["dashboard","dashboard","Dashboard"],["claims","description","Claims"],["providers","group","Providers"],["analytics","monitoring","Analytics"],["settings","settings","Settings"]];
+var ST={reported:["REPORTED",20],light_duty:["LIGHT DUTY",60],return_pending:["RETURN PENDING",85],closed:["CLOSED",100]};
+var S;
+function fresh(){return {claims:JSON.parse(JSON.stringify(CLAIMS)),section:"dashboard",filter:null,search:""};}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.claims){S=s;return;}}}catch(e){}S=fresh();}
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
+function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function toast(h){var el=document.getElementById("toast");el.innerHTML=h;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2600);}
+function initials(n){return n.split(" ").map(function(x){return x[0];}).join("").replace(/[^A-Za-z]/g,"").slice(0,2).toUpperCase();}
+function openClaims(){return S.claims.filter(function(c){return c.status!=="closed";});}
+function unack(){return S.claims.reduce(function(a,c){return a+c.ack_pending;},0);}
+function counts(){var o={reported:0,light_duty:0,return_pending:0,closed:0};S.claims.forEach(function(c){o[c.status]++;});return o;}
+function go(sec){S.section=sec;S.filter=null;save();window.scrollTo(0,0);}
+function renderNav(){
+ document.getElementById("sidenav").innerHTML=NAV.map(function(n){
+  return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';}).join("");}
+function stchip(st){return '<span class="stchip st-'+st+'">'+ST[st][0]+'</span>';}
+function phase(st){var p=ST[st][1];return '<div style="display:flex;flex-direction:column;gap:4px"><div class="prog'+(p===100?" full":"")+'"><i style="width:'+p+'%"></i></div><span style="font-size:11px;color:var(--muted)">Claim phase '+p+'%</span></div>';}
+function docPill(s){return '<span class="pillst '+(s==="acknowledged"?"ok":s==="filed"?"filed":"pending")+'">'+s+'</span>';}
+function pagehead(title,sub,extra){
+ return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px"><div><div style="display:flex;align-items:center;gap:10px"><h1>'+title+'</h1><span class="pill">READ AND FILE TRACKING</span></div><div class="sub">'+sub+'</div></div>'+(extra||"")+'</div>';}
+function claimTable(list,limit){
+ var rows=(limit?list.slice(0,limit):list).map(function(c){
+  var i=S.claims.indexOf(c);
+  return '<tr class="rl" onclick="openDrawer('+i+')"><td><div style="display:flex;align-items:center"><span class="avatar">'+initials(c.name)+'</span><div><b style="text-transform:uppercase">'+esc(c.name)+'</b><div style="font-size:11px;color:var(--muted)">'+esc(c.emp)+'</div></div></div></td>'+
+  '<td><span style="font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)">#'+esc(c.ref)+'</span><div style="font-size:10.5px;color:var(--soft)">'+esc(c.board)+'</div></td>'+
+  '<td>'+stchip(c.status)+(c.ack_pending?'<div style="font-size:10.5px;color:#735200;margin-top:4px">'+c.ack_pending+' filing to acknowledge</div>':"")+'</td>'+
+  '<td style="width:180px">'+phase(c.status)+'</td>'+
+  '<td><span class="msym" style="color:#3b475a">visibility</span></td></tr>';}).join("");
+ return '<table><thead><tr><th>Worker and employer</th><th>Claim ID</th><th>Status</th><th>Claim phase</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';}
+/* ---------- dashboard ---------- */
+function renderDashboard(){
+ var o=openClaims(),c=counts();
+ var h=pagehead("Claims Overview","Audit and tracking terminal for submissions Continuum filed to this board.",
+  '<button class="btn" onclick="window.print()"><span class="msym" style="font-size:19px">download</span> Export Case Audit</button>');
+ h+='<div class="kpis">'+
+ '<div class="kpi"><div class="eyebrow">Open claims</div><div style="display:flex;justify-content:space-between;align-items:flex-end"><span class="n">'+o.length+'</span><span class="tag" style="color:var(--red)">&#8593; +2%</span></div></div>'+
+ '<div class="kpi gold"><div class="eyebrow">New filings to acknowledge</div><div style="display:flex;justify-content:space-between;align-items:flex-end"><span class="n">'+unack()+'</span>'+(unack()?'<span class="urgent">URGENT</span>':'<span class="tag">Clear</span>')+'</div></div>'+
+ '<div class="kpi teal"><div class="eyebrow">Light duty returns</div><div style="display:flex;justify-content:space-between;align-items:flex-end"><span class="n">'+c.light_duty+'</span><span class="tag" style="color:var(--good)">Target met</span></div></div>'+
+ '<div class="kpi gray"><div class="eyebrow">Full duty returns</div><div style="display:flex;justify-content:space-between;align-items:flex-end"><span class="n">'+c.closed+'</span><span class="tag">This period</span></div></div>'+
+ '</div>';
+ h+='<div class="cols"><div>';
+ h+='<div class="card" style="overflow:hidden;margin-bottom:20px"><div class="alerthead"><span class="msym">warning</span> DEADLINE ALERTS</div>'+
+ '<div class="alert"><span class="dot" style="background:var(--red)"></span><div><b>Medical update pending</b><span class="m">Claim #WCB-29402 &middot; M. Bedard</span><div style="font-size:11px;color:var(--red);font-weight:700;margin-top:2px">48 hours past due</div></div></div>'+
+ '<div class="alert"><span class="dot" style="background:var(--gold)"></span><div><b>RTW milestone approaching</b><span class="m">Claim #WCB-31005 &middot; J. Whitford</span><div style="font-size:11px;color:#735200;font-weight:700;margin-top:2px">Due in 24 hours</div></div></div>'+
+ '<div style="padding:4px 14px 14px;font-size:11px;color:var(--muted)">Deadlines are per-board configuration; the Ontario employer report (Form 7) is filed by the employer in the pilot, not by Continuum.</div></div>';
+ h+='<div class="eyebrow" style="margin-bottom:10px">Recent submission payloads</div>';
+ h+='<div class="payload"><span class="bar" style="background:#93d0e0"></span><div class="ph"><span style="color:#93d0e0">Initial injury notification</span><span style="opacity:.6;font-weight:400">10:42 AM</span></div><pre>{\n  "claim_ref": "WSIB-88151",\n  "board": "WSIB Ontario",\n  "type": "initial_notification",\n  "status": "filed"\n}</pre></div>';
+ h+='<div class="payload"><span class="bar" style="background:var(--gold)"></span><div class="ph"><span style="color:var(--gold)">Light duty package</span><span style="opacity:.6;font-weight:400">Yesterday</span></div><pre>{\n  "claim_ref": "WCB-29402",\n  "type": "light_duty_package",\n  "restrictions": [\n    "No lifting above shoulder height"\n  ],\n  "status": "filed"\n}</pre></div>';
+ h+='<div class="payload"><span class="bar" style="background:#dce9ff"></span><div class="ph"><span style="color:#dce9ff">Full duty package</span><span style="opacity:.6;font-weight:400">Jul 15</span></div><pre>{\n  "claim_ref": "WSIB-88090",\n  "type": "full_duty_package",\n  "physician": "Dr. A. Owusu",\n  "effective": "2026-07-14"\n}</pre></div>';
+ h+='</div><div>';
+ h+='<div class="card" style="overflow:hidden"><div style="padding:18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--bright);flex-wrap:wrap;gap:10px"><h2 style="font-size:22px">Active Claims Terminal</h2>'+
+ '<div class="searchbox"><span class="msym">search</span><input type="search" placeholder="Search workers..." value="'+esc(S.search)+'" oninput="S.search=this.value;S.section=\'claims\';save()"></div></div>'+
+ claimTable(openClaims(),3)+
+ '<div style="padding:12px;display:flex;justify-content:center;border-top:1px solid var(--line);background:var(--bright)"><button class="btn ghost" onclick="go(\'claims\')">View All Active Cases ('+openClaims().length+')</button></div></div>';
+ var b=S.claims.find(function(c){return c.ref==="WCB-29402";});var bi=S.claims.indexOf(b);
+ h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px">'+
+ '<div class="card" style="padding:18px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><span class="msym" style="color:var(--navy)">folder_zip</span><b style="font-size:12.5px">Claim Document Audit &middot; #WCB-29402</b></div>'+
+ b.docs.map(function(d){return '<div class="docrow"><span style="font-size:13px">'+esc(d[0])+'</span>'+docPill(d[1])+'</div>';}).join("")+
+ '<div style="margin-top:8px"><button class="btn ghost" style="width:100%" onclick="openDrawer('+bi+')">Open claim</button></div></div>'+
+ '<div class="card" style="padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><span class="msym" style="font-size:46px;color:var(--gold)">task</span><b style="font-size:12.5px;margin-top:8px">Acknowledgement queue</b><p style="font-size:11px;color:var(--muted);margin:4px 0 12px">'+unack()+' filings awaiting board acknowledgement</p><div style="width:100%" class="prog"><i style="width:'+Math.round((1-unack()/7)*100)+'%"></i></div><span class="eyebrow" style="margin-top:8px">'+Math.round((1-unack()/7)*100)+'% processed this period</span></div>'+
+ '</div>';
+ h+='</div></div>';
+ h+='<p style="font-size:11.5px;color:var(--muted);margin-top:18px">This portal shows submissions Continuum filed to the board and their acknowledgement status. There is no live board integration; nothing here reads from any board system, and clinical detail stays within the submitted documents themselves.</p>';
+ return h;}
+/* ---------- claims ---------- */
+function renderClaims(){
+ var list=S.claims.filter(function(c){
+  if(S.filter&&c.status!==S.filter)return false;
+  if(S.search&&(c.name+" "+c.emp+" "+c.ref+" "+c.board).toLowerCase().indexOf(S.search.toLowerCase())<0)return false;
+  return true;});
+ var c=counts();
+ var h=pagehead("Claims","Every claim with a Continuum submission addressed to this board.",
+  '<button class="btn" onclick="window.print()"><span class="msym" style="font-size:19px">download</span> Export</button>');
+ h+='<div style="margin:14px 0;display:flex;align-items:center;flex-wrap:wrap;gap:8px"><div class="searchbox"><span class="msym">search</span><input type="search" placeholder="Search worker, employer, claim, board" value="'+esc(S.search)+'" oninput="S.search=this.value;save()"></div>'+
+ '<span class="fchip'+(S.filter===null?" on":"")+'" onclick="S.filter=null;save()">All ('+S.claims.length+')</span>'+
+ Object.keys(ST).map(function(k){return '<span class="fchip'+(S.filter===k?" on":"")+'" onclick="S.filter=\''+k+'\';save()">'+ST[k][0]+' ('+c[k]+')</span>';}).join("")+'</div>';
+ h+='<div class="card" style="overflow:hidden">'+claimTable(list)+
+ '<div class="tfoot">Showing '+list.length+' of '+S.claims.length+' claims &middot; Board-scoped fields only: submissions, documents, and acknowledgement status.</div></div>';
+ return h;}
+/* ---------- drawer ---------- */
+function openDrawer(i){
+ var c=S.claims[i];if(!c)return;
+ var h='<div class="eyebrow">Board view &middot; '+esc(c.board)+'</div><h1 style="font-size:22px;margin:4px 0">'+esc(c.name)+'</h1>'+
+ '<div class="sub">'+esc(c.emp)+' &middot; <span style="font-family:ui-monospace,monospace">#'+esc(c.ref)+'</span></div>'+
+ '<div style="margin:12px 0">'+stchip(c.status)+'</div>'+
+ '<div class="card" style="padding:16px;margin-bottom:12px"><div class="eyebrow" style="margin-bottom:8px">Claim</div>'+
+ '<div class="adminrow"><span>Days since report</span><b>'+c.days+'</b></div>'+
+ '<div class="adminrow"><span>Claim phase</span><div style="min-width:150px">'+phase(c.status)+'</div></div></div>'+
+ '<div class="card" style="padding:16px;margin-bottom:12px"><div class="eyebrow" style="margin-bottom:8px">Submissions from Continuum</div>'+
+ c.docs.map(function(d,di){return '<div class="adminrow"><span>'+esc(d[0])+'</span><span style="display:flex;gap:8px;align-items:center">'+docPill(d[1])+
+  (d[1]==="filed"?'<button class="btn ghost" style="padding:7px 12px" onclick="ackDoc('+i+','+di+')">Acknowledge</button>':"")+'</span></div>';}).join("")+
+ '<p style="font-size:11px;color:var(--muted);margin-top:8px">Documents open by signed URL and every access is audited. Acknowledgement updates the submission status Continuum tracks.</p></div>'+
+ '<div class="card" style="padding:16px;margin-bottom:12px"><div class="eyebrow" style="margin-bottom:8px">Scope of this view</div>'+
+ '<p style="font-size:12.5px;color:var(--muted)">Board-submitted fields only. No pain or mobility scores, no clinical notes, no video, and no consent-state information exist in this portal\'s data.</p></div>'+
+ '<button class="btn ghost" onclick="closeDrawer()">Close</button>';
+ document.getElementById("drawer").innerHTML=h;
+ document.getElementById("drawer").classList.add("on");
+ document.getElementById("scrim").classList.add("on");}
+function closeDrawer(){document.getElementById("drawer").classList.remove("on");document.getElementById("scrim").classList.remove("on");}
+function ackDoc(i,di){
+ var c=S.claims[i];if(!c||!c.docs[di]||c.docs[di][1]!=="filed")return;
+ c.docs[di][1]="acknowledged";
+ c.ack_pending=Math.max(0,c.ack_pending-1);
+ toast("<b>"+esc(c.docs[di][0])+"</b> acknowledged on #"+esc(c.ref));
+ save();openDrawer(i);}
+/* ---------- providers ---------- */
+function renderProviders(){
+ var h=pagehead("Providers","Clinical providers submitting through Continuum. Provider-agnostic by design.");
+ h+='<div class="card" style="padding:18px;margin-top:14px">'+
+ '<div class="adminrow"><div><b>Nexus Health</b><div style="font-size:11.5px;color:var(--muted)">Pilot clinical provider &middot; clearances and restrictions</div></div><span class="pillst ok">active</span></div>'+
+ '<div class="adminrow"><div><b>Employer designated provider</b><div style="font-size:11.5px;color:var(--muted)">Supported per tenant; same submission pipeline</div></div><span class="pillst filed">available</span></div>'+
+ '</div>';
+ h+='<div class="card" style="padding:18px;margin-top:14px"><div class="eyebrow" style="margin-bottom:8px">Posture</div><p style="font-size:12.5px;color:var(--muted)">Continuum generates and submits board-ready reports through a per-board adapter. The physician decides every clearance; this portal only sees the resulting documents.</p></div>';
+ return h;}
+/* ---------- analytics ---------- */
+function renderAnalytics(){
+ var c=counts(),tot=S.claims.length;
+ var boards={};S.claims.forEach(function(x){boards[x.board]=(boards[x.board]||0)+1;});
+ var h=pagehead("Analytics","Submission and claim movement this period.");
+ h+='<div class="cols" style="margin-top:14px"><div class="card bars" style="padding:18px"><div class="eyebrow" style="margin-bottom:6px">Claims by status</div>'+
+ Object.keys(ST).map(function(k){var v=c[k],p=Math.round(v/tot*100);
+  return '<div class="brow"><div class="bl"><span>'+ST[k][0]+'</span><span>'+v+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(k==="light_duty"?"var(--gold)":k==="closed"?"var(--good)":"var(--navy)")+'"></i></div></div>';}).join("")+'</div>';
+ h+='<div class="card bars" style="padding:18px"><div class="eyebrow" style="margin-bottom:6px">Claims by board</div>'+
+ Object.keys(boards).map(function(k){var v=boards[k],p=Math.round(v/tot*100);
+  return '<div class="brow"><div class="bl"><span>'+esc(k)+'</span><span>'+v+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(k.indexOf("WSIB")===0?"#93d0e0":"var(--navy)")+'"></i></div></div>';}).join("")+
+ '<p style="font-size:11.5px;color:var(--muted);margin-top:10px">Two boards, one adapter interface: draft, file, track. Deadline configuration differs per board.</p></div></div>';
+ h+='<div class="card" style="padding:18px;margin-top:20px"><div class="eyebrow" style="margin-bottom:6px">Average days open, active claims</div><div style="font-size:29px;font-weight:700">'+Math.round(openClaims().reduce(function(a,x){return a+x.days;},0)/Math.max(1,openClaims().length))+' days</div><p style="font-size:11.5px;color:var(--muted)">Against the 63 day lost-time baseline the deck cites.</p></div>';
+ return h;}
+/* ---------- settings ---------- */
+function renderSettings(){
+ var h=pagehead("Settings","This seat's configuration.");
+ h+='<div class="card" style="padding:18px;margin-top:14px">'+
+ '<div class="adminrow"><div><b>Acknowledgement notifications</b><div style="font-size:11.5px;color:var(--muted)">Email when a new filing arrives</div></div><span class="pillst ok">on</span></div>'+
+ '<div class="adminrow"><div><b>Deadline reminders</b><div style="font-size:11.5px;color:var(--muted)">Per-board deadline engine</div></div><span class="pillst ok">on</span></div>'+
+ '<div class="adminrow"><div><b>Access scope</b><div style="font-size:11.5px;color:var(--muted)">Granted via access controls; this seat sees only claims with submissions addressed to its board</div></div><span class="pillst filed">grant-scoped</span></div>'+
+ '</div>';
+ return h;}
+function render(){
+ renderNav();
+ var views={dashboard:renderDashboard,claims:renderClaims,providers:renderProviders,analytics:renderAnalytics,settings:renderSettings};
+ document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
+ var si=document.querySelector('input[type=search]');
+ if(si&&S.section==="claims"){si.focus();si.setSelectionRange(si.value.length,si.value.length);}
+}
+load();render();
+</script>
+</body>
+</html>
