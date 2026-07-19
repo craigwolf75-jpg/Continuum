@@ -60,6 +60,18 @@
   .consent h2{color:#fff}
   .consent p{color:var(--mist);font-size:13.5px;line-height:1.6}
   .muted{color:var(--slate);font-size:12px;line-height:1.55}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .gwrap{position:absolute;inset:0;background:var(--navy);color:#fff;z-index:25;display:flex;flex-direction:column;justify-content:center;padding:32px 24px}
+  .gwrap h2{color:#fff}
+  .ginput{width:100%;min-height:48px;background:#14243B;border:1px solid var(--hairL);border-radius:12px;color:#fff;font-family:inherit;font-size:16px;padding:0 14px;outline:none}
+  .gboxes{display:flex;gap:7px;justify-content:space-between;margin:6px 0}
+  .gbox{width:44px;height:54px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;background:#14243B;border:1px solid var(--hairL);border-radius:12px;color:var(--gold2);outline:none}
+  .grules{margin:12px 0}
+  .grule{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mist);margin:6px 0}
+  .grule.ok{color:var(--gold2)}
+  .gdot{width:14px;height:14px;border-radius:50%;border:1px solid var(--hairL);flex-shrink:0}
+  .grule.ok .gdot{background:var(--gold2);border-color:var(--gold2)}
+  .glink{background:transparent;border:1px solid var(--hairL);color:#fff;min-height:48px;width:100%;border-radius:12px;font-family:inherit;font-size:14px;cursor:pointer;margin-top:12px}
 </style>
 </head>
 <body>
@@ -75,6 +87,74 @@
   function fmtDate(iso){ try{ var d=new Date(iso); return d.toLocaleDateString(undefined,{month:'short',day:'numeric'}); }catch(e){ return ''; } }
   function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+  // ---- three-step sign-in gate (Prompt 12b/12c ported to the served app) ----
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+  var signedIn = lsGet('cx_signed_in')==='1';
+  var G = null;
+  function gateInit(){ if(!G) G={step:'phone',digits:'',code:['','','','','',''],pw:''}; }
+  function fmtPhone(d){ var p=(d||'').slice(0,10); if(!p.length) return ''; if(p.length<=3) return '('+p; if(p.length<=6) return '('+p.slice(0,3)+') '+p.slice(3); return '('+p.slice(0,3)+') '+p.slice(3,6)+'-'+p.slice(6); }
+  function pwRules(pw){ return {len:pw.length===6, cons:/[bcdfghjklmnpqrstvwxyz]/i.test(pw), spec:/[^a-zA-Z0-9]/.test(pw)}; }
+  function pwValid(pw){ var r=pwRules(pw); return r.len&&r.cons&&r.spec; }
+  function setRule(id,ok){ var el=document.getElementById(id); if(el) el.className='grule'+(ok?' ok':''); }
+  function gateRender(){ document.getElementById('phone').innerHTML=signInView(); wireSignIn(); }
+  function gateCodeCheck(){ if(G.code.every(function(c){ return c!==''; })){ G.step='password'; gateRender(); } }
+  function gateCodeInput(i,val){
+    var only=String(val).replace(/\D/g,'');
+    if(only.length>1){ for(var j=0;j<6;j++){ G.code[j]=only[j]||''; var bx=document.getElementById('gc'+j); if(bx) bx.value=G.code[j]; } var last=Math.min(5,only.length-1); var f=document.getElementById('gc'+last); if(f) f.focus(); gateCodeCheck(); return; }
+    G.code[i]=only; var box=document.getElementById('gc'+i); if(box) box.value=only;
+    if(only && i<5){ var n=document.getElementById('gc'+(i+1)); if(n) n.focus(); }
+    gateCodeCheck();
+  }
+  function signInView(){
+    gateInit();
+    var h='<div class="gwrap"><div class="cmark" style="width:44px;height:44px;font-size:22px;margin-bottom:20px">C</div>';
+    if(G.step==='phone'){
+      h+='<div class="kick" style="color:var(--gold)">Sign in</div>'+
+        '<h2>Sign in to your recovery</h2>'+
+        '<p class="muted" style="color:var(--mist);margin:8px 0 16px">Enter your mobile number to get a code. Demo only, nothing is sent.</p>'+
+        '<input id="gphone" class="ginput" inputmode="numeric" placeholder="(555) 555 5555" value="'+fmtPhone(G.digits)+'">'+
+        '<button id="gsend" class="btn" style="margin-top:14px" data-action="g-send"'+(G.digits.length<10?' disabled':'')+'>Text me a code</button>'+
+        '<p class="muted" style="color:var(--mist);margin-top:14px">Your number stays on this screen.</p>';
+    } else if(G.step==='code'){
+      var boxes=''; for(var i=0;i<6;i++){ boxes+='<input id="gc'+i+'" class="gbox" inputmode="numeric" maxlength="'+(i===0?6:1)+'"'+(i===0?' autocomplete="one-time-code"':'')+' value="'+(G.code[i]||'')+'">'; }
+      h+='<div class="kick" style="color:var(--gold)">Verify</div>'+
+        '<h2>Enter your code</h2>'+
+        '<p class="muted" style="color:var(--mist);margin:8px 0 16px">We sent a 6 digit code to '+fmtPhone(G.digits)+'.</p>'+
+        '<div class="gboxes">'+boxes+'</div>'+
+        '<button class="glink" data-action="g-tophone">Use a different number</button>';
+    } else {
+      var r=pwRules(G.pw);
+      h+='<div class="kick" style="color:var(--gold)">Secure your account</div>'+
+        '<h2>Create your 6 character password</h2>'+
+        '<input id="gpw" class="ginput" type="password" placeholder="6 characters" value="'+esc(G.pw)+'" style="margin-top:10px">'+
+        '<div class="grules">'+
+          '<div id="gr_len" class="grule'+(r.len?' ok':'')+'"><span class="gdot"></span>Exactly 6 characters</div>'+
+          '<div id="gr_cons" class="grule'+(r.cons?' ok':'')+'"><span class="gdot"></span>At least one consonant</div>'+
+          '<div id="gr_spec" class="grule'+(r.spec?' ok':'')+'"><span class="gdot"></span>At least one special character</div>'+
+        '</div>'+
+        '<button id="gdone" class="btn" data-action="g-finish"'+(pwValid(G.pw)?'':' disabled')+'>Enter the app</button>'+
+        '<p class="muted" style="color:var(--mist);margin-top:12px">Demo only. This password is never stored or sent.</p>';
+    }
+    return h+'</div>';
+  }
+  function wireSignIn(){
+    if(G.step==='phone'){
+      var ph=document.getElementById('gphone');
+      if(ph) ph.oninput=function(){ G.digits=ph.value.replace(/\D/g,'').slice(0,10); ph.value=fmtPhone(G.digits); var b=document.getElementById('gsend'); if(b) b.disabled=G.digits.length<10; };
+    } else if(G.step==='code'){
+      for(var i=0;i<6;i++){ (function(i){
+        var bx=document.getElementById('gc'+i); if(!bx) return;
+        bx.oninput=function(){ gateCodeInput(i,bx.value); };
+        bx.onkeydown=function(e){ if(e.key==='Backspace' && G.code[i]==='' && i>0){ var p=document.getElementById('gc'+(i-1)); if(p) p.focus(); } };
+      })(i); }
+    } else {
+      var pw=document.getElementById('gpw');
+      if(pw) pw.oninput=function(){ G.pw=pw.value; var r=pwRules(G.pw); setRule('gr_len',r.len); setRule('gr_cons',r.cons); setRule('gr_spec',r.spec); var b=document.getElementById('gdone'); if(b) b.disabled=!pwValid(G.pw); };
+    }
+  }
+
   function icon(name){
     var p={today:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
       history:'<path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/>',
@@ -84,8 +164,9 @@
   }
 
   function render(){
-    var vm = S.viewModel('worker');
     var host = document.getElementById('phone');
+    if(!signedIn){ host.innerHTML = signInView(); wireSignIn(); return; }
+    var vm = S.viewModel('worker');
     if(!vm.consent.granted){ host.innerHTML = consentView(); return; }
     var r = route();
     var html = topBar(vm);
@@ -202,9 +283,12 @@
     if(t.hasAttribute('data-period')){ draft.period=t.getAttribute('data-period'); render(); return; }
     if(t.hasAttribute('data-fb')){ S.completeDuty(t.getAttribute('data-id'), t.getAttribute('data-fb')); render(); return; }
     var a=t.getAttribute('data-action');
+    if(a==='g-send'){ if(G.digits.length>=10){ G.step='code'; gateRender(); } return; }
+    if(a==='g-tophone'){ G.step='phone'; gateRender(); return; }
+    if(a==='g-finish'){ if(pwValid(G.pw)){ signedIn=true; lsSet('cx_signed_in','1'); G=null; render(); } return; }
     if(a==='consent'){ S.grantConsent(); render(); }
     else if(a==='revoke'){ S.revokeConsent(); render(); }
-    else if(a==='reset'){ S.reset(); draft={pain:null,mobility:null,notes:'',period:null}; justEscalated=false; location.hash='#today'; render(); }
+    else if(a==='reset'){ S.reset(); draft={pain:null,mobility:null,notes:'',period:null}; justEscalated=false; signedIn=false; lsDel('cx_signed_in'); G=null; location.hash='#today'; render(); }
     else if(a==='done'){ S.completeDuty(t.getAttribute('data-id'),'done'); render(); }
     else if(a==='submit'){
       var pain=draft.pain!=null?draft.pain:5, mob=draft.mobility!=null?draft.mobility:5;
