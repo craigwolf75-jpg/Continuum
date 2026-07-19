@@ -119,6 +119,13 @@ input[type=text],select{width:100%;background:var(--chipbg);border:1px solid var
 .event-log .ev .to{color:var(--slate)}
 .mono{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--gold-soft)}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.txt{width:100%;background:var(--chipbg);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:12px;font:inherit;box-sizing:border-box}
+.gboxes{display:flex;gap:7px;justify-content:space-between}
+.gbox{width:44px;height:52px;text-align:center;font-family:"Space Grotesk";font-size:20px;font-weight:700;background:var(--chipbg);border:1px solid var(--line);border-radius:10px;color:var(--gold);outline:none}
+.gr{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin:6px 0}
+.gr.ok{color:var(--gold)}
+.grdot{width:13px;height:13px;border-radius:50%;border:1px solid var(--line);flex:none}
+.gr.ok .grdot{background:var(--gold);border-color:var(--gold)}
 @media(prefers-reduced-motion:reduce){.rail .dot{animation:none}}
 </style>
 </head>
@@ -280,7 +287,7 @@ function baseCheckins(){
 }
 function seedCommon(){
   return {
-    schema_version:2, activeSection:"map", workerTab:"today", hubRole:null,
+    schema_version:3, signedIn:true, activeSection:"map", workerTab:"today", hubRole:null,
     consent:{granted_at:"2026-06-27T14:05:00Z"},
     marcus:{name:"Marcus Bedard", trade:"Scaffolder", ref:"NX-2026-00481", body_part:"Right shoulder",
       type:"Shoulder strain", diagnosis:"Grade 1 supraspinatus strain", prognosis:21, visits:2,
@@ -308,6 +315,7 @@ function seedDay9(){
 }
 function seedNew(){
   const s = seedCommon();
+  s.signedIn = false;
   s.day = 0; s.checkins = []; s.consent = {granted_at:null};
   s.marcus.status = "reported"; s.marcus.restrictions = ""; s.duties = [];
   s.wcb = []; s.audit = [{day:0, actor:"system", from:"(intake)", to:"reported", label:"Case created from Nexus intake"}];
@@ -331,7 +339,7 @@ function save(){
   render();
 }
 function load(){
-  try{ const raw = localStorage.getItem(KEY); if(raw){ const parsed = JSON.parse(raw); if(parsed.schema_version===2){ S = parsed; return; } } }catch(e){}
+  try{ const raw = localStorage.getItem(KEY); if(raw){ const parsed = JSON.parse(raw); if(parsed.schema_version===3){ S = parsed; return; } } }catch(e){}
   S = seedDay9();
 }
 window.addEventListener("storage", e=>{ if(e.key===KEY){ load(); render(); }});
@@ -442,6 +450,55 @@ function wcbAdvance(type){
 }
 function grantConsent(){ S.consent.granted_at = new Date().toISOString(); pushEvent("Consent granted by worker", ["Worker app unlocked"]); save(); }
 function revokeConsent(){ S.consent.granted_at = null; pushEvent("Consent revoked: collection stops", ["Worker app"]); save(); }
+/* ---- sign-in gate (Prompt 12c/12e) ---- */
+var G = null;
+function gateInit(){ if(!G) G = {step:"phone", digits:"", code:["","","","","",""], pw:""}; }
+function fmtPhone(d){ var p=d.slice(0,10); if(!p.length) return ""; if(p.length<=3) return "("+p; if(p.length<=6) return "("+p.slice(0,3)+") "+p.slice(3); return "("+p.slice(0,3)+") "+p.slice(3,6)+"-"+p.slice(6); }
+function pwRules(pw){ return {len:pw.length===6, cons:/[bcdfghjklmnpqrstvwxyz]/i.test(pw), spec:/[^a-zA-Z0-9]/.test(pw)}; }
+function pwValid(pw){ var r=pwRules(pw); return r.len&&r.cons&&r.spec; }
+function gateSetDigits(v){ G.digits = String(v).replace(/\D/g,"").slice(0,10); var el=document.getElementById("gphone"); if(el&&el.value!==fmtPhone(G.digits)) el.value=fmtPhone(G.digits); var b=document.getElementById("gsend"); if(b) b.disabled = G.digits.length<10; }
+function gateToCode(){ if(G.digits.length<10) return; G.step="code"; renderGate(document.getElementById("workerRoot")); }
+function gateToPhone(){ G.step="phone"; renderGate(document.getElementById("workerRoot")); }
+function gateCodeInput(i, val){
+  var only = String(val).replace(/\D/g,"");
+  if(only.length>1){ for(var j=0;j<6;j++){ G.code[j]=only[j]||""; var bx=document.getElementById("gc"+j); if(bx) bx.value=G.code[j]; } var last=Math.min(5,only.length-1); var f=document.getElementById("gc"+last); if(f) f.focus(); gateCodeCheck(); return; }
+  G.code[i]=only; var box=document.getElementById("gc"+i); if(box) box.value=only;
+  if(only && i<5){ var n=document.getElementById("gc"+(i+1)); if(n) n.focus(); }
+  gateCodeCheck();
+}
+function gateCodeKey(i, key){ if(key==="Backspace" && G.code[i]==="" && i>0){ var p=document.getElementById("gc"+(i-1)); if(p) p.focus(); } }
+function gateCodeCheck(){ if(G.code.every(function(c){return c!=="";})){ G.step="password"; renderGate(document.getElementById("workerRoot")); } }
+function gatePw(v){ G.pw=String(v); var r=pwRules(G.pw); ["len","cons","spec"].forEach(function(k){ var el=document.getElementById("gr_"+k); if(el) el.className="gr"+(r[k]?" ok":""); }); var b=document.getElementById("gdone"); if(b) b.disabled=!pwValid(G.pw); }
+function gateFinish(){ if(!pwValid(G.pw)) return; S.signedIn=true; G=null; pushEvent("Signed in (demo)", ["Worker app unlocked"]); save(); }
+function renderGate(root){
+  gateInit();
+  var head='<div class="sechead"><div><div class="kicker">Section 2 of 5: The worker app</div><h1>Sign in</h1></div></div>';
+  var body="";
+  if(G.step==="phone"){
+    body='<div class="card"><div class="kicker">Sign in to your recovery</div>'+
+      '<p class="note" style="margin:8px 0">Enter your mobile number to get a code. Demo only; nothing is sent.</p>'+
+      '<input id="gphone" class="txt" inputmode="numeric" placeholder="(555) 555 5555" value="'+fmtPhone(G.digits)+'" oninput="gateSetDigits(this.value)">'+
+      '<div style="margin-top:12px"><button id="gsend" class="btn" '+(G.digits.length<10?'disabled':'')+' onclick="gateToCode()">Text me a code</button></div></div>';
+  } else if(G.step==="code"){
+    var boxes=""; for(var i=0;i<6;i++){ boxes+='<input id="gc'+i+'" class="gbox" inputmode="numeric" maxlength="'+(i===0?6:1)+'" '+(i===0?'autocomplete="one-time-code"':'')+' value="'+(G.code[i]||"")+'" oninput="gateCodeInput('+i+',this.value)" onkeydown="gateCodeKey('+i+',event.key)">'; }
+    body='<div class="card"><div class="kicker">Enter your code</div>'+
+      '<p class="note" style="margin:8px 0">We sent a 6 digit code to '+fmtPhone(G.digits)+'.</p>'+
+      '<div class="gboxes">'+boxes+'</div>'+
+      '<div style="margin-top:12px"><button class="btn ghost small" onclick="gateToPhone()">Use a different number</button></div></div>';
+  } else {
+    var r=pwRules(G.pw);
+    body='<div class="card"><div class="kicker">Create your 6 character password</div>'+
+      '<input id="gpw" class="txt" type="password" placeholder="6 characters" value="'+esc(G.pw)+'" oninput="gatePw(this.value)" style="margin-top:8px">'+
+      '<div style="margin:12px 0">'+
+        '<div id="gr_len" class="gr'+(r.len?" ok":"")+'"><span class="grdot"></span>Exactly 6 characters</div>'+
+        '<div id="gr_cons" class="gr'+(r.cons?" ok":"")+'"><span class="grdot"></span>At least one consonant</div>'+
+        '<div id="gr_spec" class="gr'+(r.spec?" ok":"")+'"><span class="grdot"></span>At least one special character</div>'+
+      '</div>'+
+      '<button id="gdone" class="btn" style="width:100%" '+(pwValid(G.pw)?'':'disabled')+' onclick="gateFinish()">Enter the app</button>'+
+      '<p class="note" style="margin-top:10px">Demo only. Nothing is sent or stored.</p></div>';
+  }
+  root.innerHTML = head + body;
+}
 function publishRestrictions(v){
   S.marcus.restrictions = v || RESTRICTION_DEFAULT;
   pushEvent("Restrictions published: "+S.marcus.restrictions, ["Employer table","HSE assignment","Worker duties"]);
@@ -527,6 +584,7 @@ function renderMap(){
 function renderWorker(){
   const root = document.getElementById("workerRoot");
   const m = S.marcus;
+  if(!S.signedIn){ renderGate(root); return; }
   if(!S.consent.granted_at){
     root.innerHTML =
     '<div class="card"><div class="kicker">Before we start</div>'+

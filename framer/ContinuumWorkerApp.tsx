@@ -2,8 +2,11 @@ import { addPropertyControls, ControlType } from "framer"
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 
-// Continuum Worker App v2 (Prompt 12a). Self-contained Framer code component
-// with an optional live data mode. Demo mode is identical to Prompt 12. Live
+// Continuum Worker App v4 (Prompt 12e). Self-contained Framer code component
+// with an optional live data mode. Product-true behavior: twice-daily AM and
+// PM check-ins, an optional note on every check-in, the full three-rule
+// escalation engine (identical thresholds to the Prompt 08 app), duty feedback
+// chips, and a More tab privacy center with consent revocation and reset. Live
 // mode connects EXCLUSIVELY to a synthetic demo service (framer-demo); it never
 // breaks when the service is down, it silently falls back to internal state.
 // No storage, no SDKs; fetch is a browser global behind typeof window guards.
@@ -39,6 +42,36 @@ const BODY = 'Inter, system-ui, sans-serif'
 const SPRING = { type: "spring", stiffness: 480, damping: 30 } as const
 const FONT_CSS =
     "@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');"
+
+// Red-flag note keywords. Identical set to the Prompt 08 app and mainline spec.
+const KEYWORDS = ["numb", "tingling", "sharp", "worse at night", "cannot sleep"]
+
+type Checkin = { day: number; period: "am" | "pm"; pain: number; mobility: number; note: string }
+
+// The full three-rule escalation engine, evaluated on the check-in history.
+// Rule 1: pain 8 or higher for three consecutive check-ins.
+// Rule 2: mobility daily average declining across two or more days.
+// Rule 3: a red-flag keyword in the latest note.
+function evaluateEscalation(cs: Checkin[]): boolean {
+    if (cs.length === 0) return false
+    const last3 = cs.slice(-3)
+    if (last3.length === 3 && last3.every((x) => x.pain >= 8)) return true
+    const byDay: Record<number, number[]> = {}
+    cs.forEach((x) => {
+        ;(byDay[x.day] = byDay[x.day] || []).push(x.mobility)
+    })
+    const days = Object.keys(byDay)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .slice(-3)
+    if (days.length === 3) {
+        const avg = (d: number) => byDay[d].reduce((a, b) => a + b, 0) / byDay[d].length
+        if (avg(days[0]) > avg(days[1]) && avg(days[1]) > avg(days[2])) return true
+    }
+    const lastNote = (cs[cs.length - 1].note || "").toLowerCase()
+    if (KEYWORDS.some((k) => lastNote.includes(k))) return true
+    return false
+}
 
 function painColor(v: number, accent: string): string {
     const hex = accent.replace("#", "")
@@ -93,34 +126,39 @@ export default function ContinuumWorkerApp(props: Props) {
 
     const [consented, setConsented] = useState(!startAtConsent)
     const [signedIn, setSignedIn] = useState(false)
-    const [tab, setTab] = useState<"today" | "trend" | "duties">("today")
+    const [tab, setTab] = useState<"today" | "trend" | "duties" | "more">("today")
     const [day, setDay] = useState(startDay)
     const [pain, setPain] = useState(3)
     const [mobility, setMobility] = useState(6)
-    const [done, setDone] = useState(false)
+    const [note, setNote] = useState("")
+    const [amDone, setAmDone] = useState(false)
+    const [pmDone, setPmDone] = useState(false)
+    const [justSaved, setJustSaved] = useState(false)
     const [saved, setSaved] = useState(false)
     const [burst, setBurst] = useState(false)
     const [escalated, setEscalated] = useState(false)
     const [liveName, setLiveName] = useState<string | null>(null)
     const [liveBody, setLiveBody] = useState<string | null>(null)
     const [linkState, setLinkState] = useState<"linking" | "live" | "demo">("demo")
-    const [checkins, setCheckins] = useState<{ day: number; pain: number; mobility: number }[]>([
-        { day: startDay - 4, pain: 7, mobility: 3 },
-        { day: startDay - 3, pain: 6, mobility: 4 },
-        { day: startDay - 2, pain: 6, mobility: 5 },
-        { day: startDay - 1, pain: 5, mobility: 5 },
-        { day: startDay, pain: 4, mobility: 6 },
+    const [checkins, setCheckins] = useState<Checkin[]>([
+        { day: startDay - 4, period: "pm", pain: 7, mobility: 3, note: "" },
+        { day: startDay - 3, period: "pm", pain: 6, mobility: 4, note: "" },
+        { day: startDay - 2, period: "pm", pain: 6, mobility: 5, note: "" },
+        { day: startDay - 1, period: "pm", pain: 5, mobility: 5, note: "" },
+        { day: startDay, period: "am", pain: 4, mobility: 6, note: "" },
     ])
-    const [duties, setDuties] = useState([
-        { id: "d1", task: "Ground-level material staging", done: true },
-        { id: "d2", task: "Tool crib inventory and tagging", done: false },
-        { id: "d3", task: "Toolbox talk delivery", done: false },
+    const [duties, setDuties] = useState<{ id: string; task: string; done: boolean; feedback: string | null }[]>([
+        { id: "d1", task: "Ground-level material staging", done: true, feedback: null },
+        { id: "d2", task: "Tool crib inventory and tagging", done: false, feedback: null },
+        { id: "d3", task: "Toolbox talk delivery", done: false, feedback: null },
     ])
 
     useEffect(() => {
         setConsented(!startAtConsent)
         setDay(startDay)
-        setDone(false)
+        setAmDone(false)
+        setPmDone(false)
+        setJustSaved(false)
         setEscalated(false)
     }, [startAtConsent, startDay])
 
@@ -162,20 +200,33 @@ export default function ContinuumWorkerApp(props: Props) {
         if (typeof s.workerName === "string") setLiveName(s.workerName)
         if (typeof s.bodyPart === "string") setLiveBody(s.bodyPart)
         if (typeof s.day === "number") setDay(s.day)
-        if (typeof s.checkedInToday === "boolean") setDone(s.checkedInToday)
+        // checkedInToday maps to the AM window; forward-compatible AM and PM
+        // fields are honored if the service ever sends them.
+        if (typeof s.checkedInToday === "boolean") setAmDone(s.checkedInToday)
+        if (typeof s.checkedInAM === "boolean") setAmDone(s.checkedInAM)
+        if (typeof s.checkedInPM === "boolean") setPmDone(s.checkedInPM)
         if (typeof s.escalated === "boolean") setEscalated(s.escalated)
         if (Array.isArray(s.trend)) {
             const d = typeof s.day === "number" ? s.day : startDay
             setCheckins(
                 s.trend.map((t: any, i: number) => ({
-                    day: d - (s.trend.length - 1 - i),
+                    day: typeof t.day === "number" ? t.day : d - (s.trend.length - 1 - i),
+                    period: t.period === "am" || t.period === "pm" ? t.period : "pm",
                     pain: Number(t.pain) || 0,
                     mobility: Number(t.mob) || 0,
+                    note: typeof t.note === "string" ? t.note : "",
                 }))
             )
         }
         if (Array.isArray(s.duties)) {
-            setDuties(s.duties.map((x: any) => ({ id: String(x.id), task: String(x.t ?? ""), done: !!x.done })))
+            setDuties(
+                s.duties.map((x: any) => ({
+                    id: String(x.id),
+                    task: String(x.t ?? ""),
+                    done: !!x.done,
+                    feedback: typeof x.feedback === "string" ? x.feedback : null,
+                }))
+            )
         }
     }
     useEffect(() => {
@@ -209,27 +260,43 @@ export default function ContinuumWorkerApp(props: Props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [live, serviceUrl, demoToken, pollSeconds])
 
+    const period: "am" | "pm" | null = !amDone ? "am" : !pmDone ? "pm" : null
+
     function submit() {
-        if (done) return
+        if (!period) return
         const p = pain
         const m = mobility
+        const n = note
+        const entry: Checkin = { day, period, pain: p, mobility: m, note: n }
+        const nextC = [...checkins, entry].slice(-16)
         setSaved(true)
         setBurst(true)
-        setCheckins((cs) => [...cs, { day, pain: p, mobility: m }].slice(-16))
+        setCheckins(nextC)
         later(() => {
             setSaved(false)
             setBurst(false)
-            setDone(true)
-            if (p >= 8) setEscalated(true)
+            if (period === "am") setAmDone(true)
+            else setPmDone(true)
+            setJustSaved(true)
+            setNote("")
+            setPain(3)
+            setMobility(6)
+            if (evaluateEscalation(nextC)) setEscalated(true)
         }, 1050)
-        post("/checkins", { pain: p, mob: m })
+        post("/checkins", { pain: p, mob: m, note: n, period })
+    }
+    function revealPM() {
+        setJustSaved(false)
     }
     function nextDay() {
         setDay((d) => d + 1)
-        setDone(false)
+        setAmDone(false)
+        setPmDone(false)
+        setJustSaved(false)
         setEscalated(false)
         setPain(3)
         setMobility(6)
+        setNote("")
         post("/advance-day", {})
     }
     function completeDuty(id: string) {
@@ -237,13 +304,73 @@ export default function ContinuumWorkerApp(props: Props) {
         const numeric = Number(id)
         post("/duties/toggle", { id: Number.isNaN(numeric) ? id : numeric, done: true })
     }
+    function setDutyFeedback(id: string, value: string) {
+        setDuties((ds) => ds.map((d) => (d.id === id ? { ...d, feedback: value } : d)))
+        const numeric = Number(id)
+        post("/duties/feedback", { id: Number.isNaN(numeric) ? id : numeric, feedback: value })
+    }
     function completeFirstDuty() {
         const first = duties.find((d) => !d.done)
         if (first) completeDuty(first.id)
     }
+    function feedbackFirst(value: string) {
+        const first = duties.find((d) => d.done && !d.feedback)
+        if (first) setDutyFeedback(first.id, value)
+    }
+    function revoke() {
+        setConsented(false)
+        post("/consent", { granted: false })
+    }
+    function resetDemo() {
+        setDay(startDay)
+        setAmDone(false)
+        setPmDone(false)
+        setJustSaved(false)
+        setEscalated(false)
+        setPain(3)
+        setMobility(6)
+        setNote("")
+        setTab("today")
+        setCheckins([
+            { day: startDay - 4, period: "pm", pain: 7, mobility: 3, note: "" },
+            { day: startDay - 3, period: "pm", pain: 6, mobility: 4, note: "" },
+            { day: startDay - 2, period: "pm", pain: 6, mobility: 5, note: "" },
+            { day: startDay - 1, period: "pm", pain: 5, mobility: 5, note: "" },
+            { day: startDay, period: "am", pain: 4, mobility: 6, note: "" },
+        ])
+        setDuties([
+            { id: "d1", task: "Ground-level material staging", done: true, feedback: null },
+            { id: "d2", task: "Tool crib inventory and tagging", done: false, feedback: null },
+            { id: "d3", task: "Toolbox talk delivery", done: false, feedback: null },
+        ])
+    }
 
-    const api = useRef({ setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented, setSignedIn })
-    api.current = { setPain, setMobility, submit, setTab, completeFirstDuty, nextDay, setConsented, setSignedIn }
+    const api = useRef({
+        setPain,
+        setMobility,
+        setNote,
+        submit,
+        revealPM,
+        setTab,
+        completeFirstDuty,
+        feedbackFirst,
+        nextDay,
+        setConsented,
+        setSignedIn,
+    })
+    api.current = {
+        setPain,
+        setMobility,
+        setNote,
+        submit,
+        revealPM,
+        setTab,
+        completeFirstDuty,
+        feedbackFirst,
+        nextDay,
+        setConsented,
+        setSignedIn,
+    }
     useEffect(() => {
         if (!autoplay || typeof window === "undefined") return
         let cancelled = false
@@ -266,25 +393,27 @@ export default function ContinuumWorkerApp(props: Props) {
                 a.submit()
                 await wait(1700)
                 if (cancelled) break
+                a.revealPM()
+                a.setPain(6)
+                a.setMobility(6)
+                a.setNote("felt sharp when reaching overhead")
+                await wait(1100)
+                if (cancelled) break
+                a.submit()
+                await wait(2200)
+                if (cancelled) break
                 a.setTab("trend")
-                await wait(1600)
+                await wait(1500)
                 if (cancelled) break
                 a.setTab("duties")
                 await wait(700)
                 a.completeFirstDuty()
+                await wait(900)
+                a.feedbackFirst("Manageable")
+                await wait(1400)
+                if (cancelled) break
+                a.setTab("more")
                 await wait(1500)
-                if (cancelled) break
-                a.setTab("today")
-                await wait(900)
-                a.nextDay()
-                await wait(1100)
-                if (cancelled) break
-                a.setPain(9)
-                a.setMobility(4)
-                await wait(900)
-                if (cancelled) break
-                a.submit()
-                await wait(2400)
                 if (cancelled) break
                 a.setTab("today")
                 a.nextDay()
@@ -299,7 +428,9 @@ export default function ContinuumWorkerApp(props: Props) {
 
     const firstName = (liveName || workerName || "there").split(" ")[0]
     const shownBody = liveBody || bodyPart
-    const ringProgress = Math.min(1, day / Math.max(1, prognosisDays))
+    const periodsCredit = (amDone ? 0.5 : 0) + (pmDone ? 0.5 : 0)
+    const ringProgress = Math.min(1, (day - 1 + periodsCredit) / Math.max(1, prognosisDays))
+    const statusChip = !amDone ? "AM check-in due" : !pmDone ? "PM check-in due" : "Checked in"
 
     const content = (
         <div
@@ -333,7 +464,10 @@ export default function ContinuumWorkerApp(props: Props) {
                                 <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 17 }}>
                                     Contin<span style={{ color: accent }}>uum</span>
                                 </div>
-                                {dataSource === "live" && <LinkChip state={linkState} accent={accent} />}
+                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                    <StatusChip label={statusChip} done={statusChip === "Checked in"} accent={accent} />
+                                    {dataSource === "live" && <LinkChip state={linkState} accent={accent} />}
+                                </div>
                             </div>
                             <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 24, marginTop: 6 }}>Hi {firstName}</div>
                         </div>
@@ -355,22 +489,35 @@ export default function ContinuumWorkerApp(props: Props) {
                                             day={day}
                                             prognosis={prognosisDays}
                                             ringProgress={ringProgress}
+                                            period={period}
+                                            amDone={amDone}
+                                            pmDone={pmDone}
+                                            justSaved={justSaved}
                                             pain={pain}
                                             mobility={mobility}
+                                            note={note}
                                             setPain={setPain}
                                             setMobility={setMobility}
-                                            done={done}
+                                            setNote={setNote}
                                             saved={saved}
                                             burst={burst}
                                             escalated={escalated}
                                             onSubmit={submit}
+                                            onRevealPM={revealPM}
                                             onNextDay={nextDay}
                                         />
                                     )}
                                     {tab === "trend" && <Trend accent={accent} checkins={checkins} />}
                                     {tab === "duties" && (
-                                        <Duties accent={accent} duties={duties} done={duties.filter((d) => d.done).length} onComplete={completeDuty} />
+                                        <Duties
+                                            accent={accent}
+                                            duties={duties}
+                                            done={duties.filter((d) => d.done).length}
+                                            onComplete={completeDuty}
+                                            onFeedback={setDutyFeedback}
+                                        />
                                     )}
+                                    {tab === "more" && <More accent={accent} onRevoke={revoke} onReset={resetDemo} />}
                                 </motion.div>
                             </AnimatePresence>
                         </div>
@@ -415,6 +562,28 @@ export default function ContinuumWorkerApp(props: Props) {
                 content
             )}
         </div>
+    )
+}
+
+function StatusChip({ label, done, accent }: { label: string; done: boolean; accent: string }) {
+    return (
+        <span
+            style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: 11,
+                fontFamily: HEAD,
+                fontWeight: 600,
+                color: done ? accent : MUTED,
+                border: "1px solid " + (done ? accent : LINE),
+                borderRadius: 999,
+                padding: "3px 9px",
+            }}
+        >
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: done ? accent : MUTED }} />
+            {label}
+        </span>
     )
 }
 
@@ -677,18 +846,49 @@ function Today(props: {
     day: number
     prognosis: number
     ringProgress: number
+    period: "am" | "pm" | null
+    amDone: boolean
+    pmDone: boolean
+    justSaved: boolean
     pain: number
     mobility: number
+    note: string
     setPain: (v: number) => void
     setMobility: (v: number) => void
-    done: boolean
+    setNote: (v: string) => void
     saved: boolean
     burst: boolean
     escalated: boolean
     onSubmit: () => void
+    onRevealPM: () => void
     onNextDay: () => void
 }) {
-    const { accent, bodyPart, day, prognosis, ringProgress, pain, mobility, setPain, setMobility, done, saved, burst, escalated, onSubmit, onNextDay } = props
+    const {
+        accent,
+        bodyPart,
+        day,
+        prognosis,
+        ringProgress,
+        period,
+        amDone,
+        pmDone,
+        justSaved,
+        pain,
+        mobility,
+        note,
+        setPain,
+        setMobility,
+        setNote,
+        saved,
+        burst,
+        escalated,
+        onSubmit,
+        onRevealPM,
+        onNextDay,
+    } = props
+    const showForm = !justSaved && period !== null
+    const bothDone = amDone && pmDone
+    const periodLabel = period === "am" ? "AM check-in" : "PM check-in"
     return (
         <div>
             <AnimatePresence>
@@ -716,30 +916,23 @@ function Today(props: {
             <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18, marginBottom: 14 }}>
                 <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>Your recovery</div>
                 <div style={{ fontFamily: HEAD, fontSize: 18, fontWeight: 700, margin: "4px 0 12px" }}>{bodyPart} injury</div>
-                <Ring progress={ringProgress} day={day} prognosis={prognosis} accent={accent} />
+                <Ring progress={ringProgress} day={day} prognosis={prognosis} accent={accent} amDone={amDone} pmDone={pmDone} />
             </div>
 
-            {done ? (
-                <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18 }}
-                >
-                    <div style={{ fontFamily: HEAD, fontWeight: 600 }}>Check-in saved</div>
-                    <div style={{ color: MUTED, fontSize: 12.5, marginTop: 4 }}>Nice work. Move time forward to check in again.</div>
-                    <button
-                        onClick={onNextDay}
-                        style={{ marginTop: 12, minHeight: 44, width: "100%", border: "1px solid " + LINE, borderRadius: 12, background: "transparent", color: INK, cursor: "pointer", fontFamily: BODY }}
-                    >
-                        Next day
-                    </button>
-                </motion.div>
-            ) : (
+            {showForm ? (
                 <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18 }}>
-                    <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>Check-in</div>
+                    <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>{periodLabel}</div>
                     <Slider label="How is your pain?" value={pain} onChange={setPain} accent={accent} fill={painColor(pain, accent)} />
                     <Slider label="How is your movement?" value={mobility} onChange={setMobility} accent={accent} fill={accent} />
-                    <div style={{ position: "relative", marginTop: 8 }}>
+                    <div style={{ margin: "14px 0 4px", fontWeight: 600, fontSize: 14 }}>Anything you want your clinician to know?</div>
+                    <textarea
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        placeholder="Optional. A word or two is plenty."
+                        rows={2}
+                        style={{ width: "100%", background: PANEL2, border: "1px solid " + LINE, borderRadius: 12, color: INK, fontFamily: BODY, fontSize: 14, padding: 12, outline: "none", boxSizing: "border-box", resize: "none" }}
+                    />
+                    <div style={{ position: "relative", marginTop: 10 }}>
                         <motion.button
                             whileTap={{ scale: 0.97 }}
                             onClick={onSubmit}
@@ -753,7 +946,7 @@ function Today(props: {
                                     </motion.svg>
                                 ) : (
                                     <motion.span key="save" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                                        Save check-in
+                                        Save {periodLabel}
                                     </motion.span>
                                 )}
                             </AnimatePresence>
@@ -762,12 +955,38 @@ function Today(props: {
                     </div>
                     <div style={{ color: MUTED, fontSize: 11.5, marginTop: 8 }}>Only your clinician sees your scores and notes.</div>
                 </div>
+            ) : (
+                <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18 }}
+                >
+                    <div style={{ fontFamily: HEAD, fontWeight: 600 }}>{bothDone ? "All checked in today" : "AM check-in saved"}</div>
+                    <div style={{ color: MUTED, fontSize: 12.5, marginTop: 4 }}>
+                        {bothDone ? "Nice work. Move time forward to check in again." : "Nice work. Your evening check-in opens when you are ready."}
+                    </div>
+                    {bothDone ? (
+                        <button
+                            onClick={onNextDay}
+                            style={{ marginTop: 12, minHeight: 44, width: "100%", border: "1px solid " + LINE, borderRadius: 12, background: "transparent", color: INK, cursor: "pointer", fontFamily: BODY }}
+                        >
+                            Next day
+                        </button>
+                    ) : (
+                        <button
+                            onClick={onRevealPM}
+                            style={{ marginTop: 12, minHeight: 44, width: "100%", border: "none", borderRadius: 12, background: accent, color: "#14100a", cursor: "pointer", fontFamily: HEAD, fontWeight: 600 }}
+                        >
+                            PM check-in
+                        </button>
+                    )}
+                </motion.div>
             )}
         </div>
     )
 }
 
-function Ring({ progress, day, prognosis, accent }: { progress: number; day: number; prognosis: number; accent: string }) {
+function Ring({ progress, day, prognosis, accent, amDone, pmDone }: { progress: number; day: number; prognosis: number; accent: string; amDone: boolean; pmDone: boolean }) {
     const R = 50
     const C = 2 * Math.PI * R
     return (
@@ -789,7 +1008,7 @@ function Ring({ progress, day, prognosis, accent }: { progress: number; day: num
                 />
             </svg>
             <motion.div
-                key={day}
+                key={day + "" + amDone + pmDone}
                 initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={SPRING}
@@ -866,7 +1085,7 @@ function Burst({ accent }: { accent: string }) {
     )
 }
 
-function Trend({ accent, checkins }: { accent: string; checkins: { day: number; pain: number; mobility: number }[] }) {
+function Trend({ accent, checkins }: { accent: string; checkins: Checkin[] }) {
     const w = 320
     const h = 120
     const n = Math.max(1, checkins.length - 1)
@@ -890,8 +1109,9 @@ function Trend({ accent, checkins }: { accent: string; checkins: { day: number; 
     )
 }
 
-function Duties({ accent, duties, done, onComplete }: { accent: string; duties: { id: string; task: string; done: boolean }[]; done: number; onComplete: (id: string) => void }) {
+function Duties({ accent, duties, done, onComplete, onFeedback }: { accent: string; duties: { id: string; task: string; done: boolean; feedback: string | null }[]; done: number; onComplete: (id: string) => void; onFeedback: (id: string, v: string) => void }) {
     const pct = duties.length ? (done / duties.length) * 100 : 0
+    const chips = ["Fine", "Manageable", "Too much"]
     return (
         <div>
             <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 16, padding: 16, marginBottom: 12 }}>
@@ -902,28 +1122,86 @@ function Duties({ accent, duties, done, onComplete }: { accent: string; duties: 
                 <motion.div animate={{ width: pct + "%" }} transition={SPRING} style={{ height: "100%", background: accent }} />
             </div>
             {duties.map((d) => (
-                <motion.div key={d.id} layout style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, background: PANEL, border: "1px solid " + LINE, borderRadius: 14, padding: "12px 14px", marginBottom: 10 }}>
-                    <motion.span animate={{ opacity: d.done ? 0.5 : 1 }} style={{ textDecoration: d.done ? "line-through" : "none" }}>
-                        {d.task}
-                    </motion.span>
-                    <motion.button
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => !d.done && onComplete(d.id)}
-                        style={{ minHeight: 44, minWidth: 64, border: "1px solid " + LINE, borderRadius: 10, background: d.done ? "transparent" : accent, color: d.done ? MUTED : "#14100a", fontWeight: 600, cursor: "pointer", fontFamily: BODY }}
-                    >
-                        {d.done ? "Done" : "Mark"}
-                    </motion.button>
+                <motion.div key={d.id} layout style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 14, padding: "12px 14px", marginBottom: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                        <motion.span animate={{ opacity: d.done ? 0.6 : 1 }} style={{ textDecoration: d.done ? "line-through" : "none" }}>
+                            {d.task}
+                        </motion.span>
+                        <motion.button
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => !d.done && onComplete(d.id)}
+                            style={{ minHeight: 44, minWidth: 64, border: "1px solid " + LINE, borderRadius: 10, background: d.done ? "transparent" : accent, color: d.done ? MUTED : "#14100a", fontWeight: 600, cursor: d.done ? "default" : "pointer", fontFamily: BODY }}
+                        >
+                            {d.done ? "Done" : "Mark"}
+                        </motion.button>
+                    </div>
+                    {d.done && !d.feedback && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} style={{ overflow: "hidden" }}>
+                            <div style={{ color: MUTED, fontSize: 12, margin: "10px 0 6px" }}>How did it feel?</div>
+                            <div style={{ display: "flex", gap: 8 }}>
+                                {chips.map((c) => (
+                                    <button
+                                        key={c}
+                                        onClick={() => onFeedback(d.id, c)}
+                                        style={{ flex: 1, minHeight: 40, border: "1px solid " + LINE, borderRadius: 10, background: "transparent", color: INK, fontFamily: BODY, fontSize: 13, cursor: "pointer" }}
+                                    >
+                                        {c}
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                    {d.done && d.feedback && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: accent, fontFamily: HEAD, fontSize: 12.5, marginTop: 10 }}>
+                            You said {d.feedback}
+                        </motion.div>
+                    )}
                 </motion.div>
             ))}
         </div>
     )
 }
 
-function TabBar({ tab, setTab, accent }: { tab: string; setTab: (t: "today" | "trend" | "duties") => void; accent: string }) {
-    const tabs: { id: "today" | "trend" | "duties"; label: string }[] = [
+function More({ accent, onRevoke, onReset }: { accent: string; onRevoke: () => void; onReset: () => void }) {
+    return (
+        <div>
+            <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 18, padding: 18, marginBottom: 12 }}>
+                <div style={{ color: accent, fontFamily: HEAD, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>Privacy center</div>
+                <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: 18, margin: "4px 0 8px" }}>You are in control</div>
+                <div style={{ color: MUTED, fontSize: 13.5, lineHeight: 1.5 }}>
+                    Continuum manages your return to work. It is not your medical record. Your employer only ever sees what you can do at work, never your pain scores or notes.
+                </div>
+            </div>
+            <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 16, padding: 16, marginBottom: 12 }}>
+                <div style={{ fontWeight: 600, marginBottom: 4 }}>Revoke consent</div>
+                <div style={{ color: MUTED, fontSize: 12.5, marginBottom: 12 }}>Stop all collection now. The app returns to the consent screen and nothing new is recorded.</div>
+                <button
+                    onClick={onRevoke}
+                    style={{ width: "100%", minHeight: 46, border: "1px solid " + accent, borderRadius: 12, background: "transparent", color: accent, fontFamily: HEAD, fontWeight: 600, cursor: "pointer" }}
+                >
+                    Revoke consent
+                </button>
+            </div>
+            <div style={{ background: PANEL, border: "1px solid " + LINE, borderRadius: 16, padding: 16 }}>
+                <div style={{ fontWeight: 600, marginBottom: 4 }}>Reset demo</div>
+                <div style={{ color: MUTED, fontSize: 12.5, marginBottom: 12 }}>Return this demo to its starting point.</div>
+                <button
+                    onClick={onReset}
+                    style={{ width: "100%", minHeight: 46, border: "1px solid " + LINE, borderRadius: 12, background: "transparent", color: INK, fontFamily: BODY, fontSize: 14, cursor: "pointer" }}
+                >
+                    Reset demo
+                </button>
+            </div>
+        </div>
+    )
+}
+
+function TabBar({ tab, setTab, accent }: { tab: string; setTab: (t: "today" | "trend" | "duties" | "more") => void; accent: string }) {
+    const tabs: { id: "today" | "trend" | "duties" | "more"; label: string }[] = [
         { id: "today", label: "Today" },
         { id: "trend", label: "Trend" },
         { id: "duties", label: "Duties" },
+        { id: "more", label: "More" },
     ]
     return (
         <div style={{ position: "relative", zIndex: 1, display: "flex", borderTop: "1px solid " + LINE, background: PANEL2 }}>
