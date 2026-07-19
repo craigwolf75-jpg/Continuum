@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: Nexus Health Clinical Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+<style>
+:root{--navy:#16273D;--gold:#E0B658;--goldbg:#fdf3dd;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;
+--card:#FFFFFF;--bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--red:#ba1a1a;--alert:#C0453B;--redbg:#ffdad6;--teal:#508c9c;--tealbg:#dce9ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
+.msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
+header.top{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:0 24px}
+.searchbox{position:relative;width:340px;max-width:44vw}
+.searchbox input{width:100%;border:none;border-radius:10px;padding:10px 12px 10px 38px;font:inherit;font-size:13px;background:var(--low);outline:none}
+.searchbox input:focus{box-shadow:0 0 0 2px var(--gold)}
+.searchbox .msym{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:19px;color:var(--soft)}
+.who{display:flex;align-items:center;gap:10px;cursor:default}
+.who .wt{text-align:right}
+.who .wt b{font-size:12.5px;display:block}
+.who .wt span{font-size:11px;color:var(--muted)}
+.bell{position:relative}
+.bell i{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--alert)}
+aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);display:flex;flex-direction:column}
+.side .brand{padding:22px 24px 8px}
+.side .brand b{color:#fff;font-size:18px;display:block}
+.side .brand span{color:#78859a;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase}
+.side nav{flex:1;margin-top:14px}
+.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:12px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
+.side nav button:hover{color:#fff;background:#3b475a}
+.side nav button.on{color:#fff;background:#3b475a;border-left-color:var(--gold)}
+.side .foot{padding:18px 24px}
+.newcase{width:100%;background:var(--gold);color:#0f1c2d;border:none;border-radius:10px;padding:12px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:14px;transition:transform .15s}
+.newcase:hover{transform:scale(1.02)}
+.side .foot a{display:flex;gap:12px;align-items:center;color:#9fb0c6;font-size:12px;font-weight:700;text-decoration:none;padding:6px 0}
+.side .foot a:hover{color:#fff}
+main{margin-left:240px;padding:88px 24px 60px;min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:29px;color:var(--navy)}
+h2{font-size:22px;color:var(--navy)}
+.sub{color:var(--muted);font-size:13.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(14,27,44,.08)}
+.btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
+.btn:hover{background:#3b475a}
+.btn.gold{background:var(--gold);color:#0f1c2d}
+.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.btn.line{background:var(--card);border:1px solid var(--navy);color:var(--navy)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.kpi{background:var(--card);border-radius:12px;padding:16px;border-left:4px solid var(--navy);box-shadow:0 2px 8px rgba(14,27,44,.06)}
+.kpi.red{border-left-color:var(--alert)}.kpi.gold{border-left-color:var(--gold)}.kpi.teal{border-left-color:var(--teal)}
+.kpi .lbl{font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--muted);text-transform:uppercase}
+.kpi .n{font-size:29px;font-weight:700;margin-top:4px}
+.kpi .tag{font-size:11px;color:var(--muted);margin-left:6px}
+.esccard{border-radius:12px;padding:16px;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow .2s}
+.esccard:hover{box-shadow:0 8px 22px rgba(14,27,44,.14)}
+.esccard.urgent{background:rgba(255,218,214,.35);border:1px solid var(--redbg)}
+.esccard.stagnant{background:var(--card);border:1px solid var(--line)}
+.esccard .deco{position:absolute;top:0;right:8px;opacity:.09;font-size:64px}
+.badge{font-size:10px;font-weight:700;text-transform:uppercase;border-radius:999px;padding:2px 9px}
+.badge.urgent{background:var(--alert);color:#fff}
+.badge.stagnant{background:#fdc65a;color:#5d4200}
+.mini{background:rgba(255,255,255,.65);border-radius:8px;padding:8px 10px}
+.mini .l{font-size:10.5px;color:var(--muted)}
+.mini b{font-size:19px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--low);font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:13px 16px}
+td{padding:13px 16px;border-top:1px solid var(--line);font-size:13px;vertical-align:middle}
+tr.rl{cursor:pointer}tr.rl:hover td{background:var(--bright)}
+.avatar{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#fff;background:var(--navy);margin-right:10px;flex-shrink:0}
+.mobbar{width:80px;height:8px;background:var(--cont);border-radius:4px;overflow:hidden;margin:0 auto}
+.mobbar i{display:block;height:8px;border-radius:4px;background:var(--teal)}
+.stchip{display:inline-block;border-radius:5px;padding:3px 8px;font-size:11px;font-weight:700}
+.s-off_work{background:var(--redbg);color:#93000a}.s-light_duty{background:var(--tealbg);color:#3b475a}
+.s-full_duty_pending{background:var(--goldbg);color:#735200}.s-signed_off{background:#e4efe8;color:#2c6e46}
+.s-esc{background:var(--redbg);color:var(--red)}
+label.fl{font-size:11px;letter-spacing:.08em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+select,input[type=text]{width:100%;height:44px;border:1px solid var(--line);border-radius:10px;padding:0 12px;font:inherit;font-size:13.5px;background:var(--card);outline:none}
+textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:13.5px;min-height:72px;resize:vertical;outline:none}
+select:focus,input:focus,textarea:focus{box-shadow:0 0 0 2px var(--gold)}
+input[type=range]{width:100%;accent-color:var(--gold)}
+.guideline{background:var(--tealbg);border:1px solid #c5d9f0;border-radius:12px;padding:16px;margin-top:16px}
+.guideline p{font-size:13px;font-style:italic;color:var(--muted)}
+.adminrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.adminrow:last-child{border-bottom:none}
+.pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700}
+.pillst.ok{background:#e4efe8;color:#2c6e46}.pillst.gold{background:var(--goldbg);color:#735200}.pillst.off{background:var(--cont);color:#3b475a}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast b{color:var(--gold)}
+.bars .brow{margin:10px 0}
+.bars .bl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--muted)}
+.bars .bt{height:8px;border-radius:4px;background:var(--cont);overflow:hidden}
+.bars .bt i{display:block;height:8px;border-radius:4px}
+.statebar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.statebar .st{font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 10px;background:var(--cont);color:var(--muted)}
+.statebar .st.here{background:var(--gold);color:#0f1c2d}
+.statebar .st.past{background:#e4efe8;color:#2c6e46}
+.statebar .arrow{color:#c5c6cd;font-size:12px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--card);border-top:1px solid var(--line);justify-content:space-around;padding:8px 10px}
+.bottomnav button{background:none;border:none;font:inherit;font-size:10px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 8px}
+.bottomnav button.on{color:#735200}
+.bottomnav button.on .msym{color:var(--gold)}
+@media(max-width:1080px){.kpis{grid-template-columns:1fr 1fr}.two,.grid2{grid-template-columns:1fr !important}}
+@media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:84px 12px 96px}.kpis{grid-template-columns:1fr}.searchbox{width:52vw}.bottomnav{display:flex}}
+@media print{aside.side,header.top,.toast{display:none !important}main{margin:0;padding:0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="searchbox"><span class="msym">search</span><input type="search" id="topsearch" placeholder="Search patients or medical records..." oninput="S.search=this.value;if(S.section!=='workers'){S.section='workers';}S.detail=null;save()"></div>
+  <a href="#" onclick="go('dashboard');return false" style="text-decoration:none"><span class="msym bell" style="color:var(--muted)">notifications<i></i></span></a>
+  <div class="who"><div class="wt"><b>Dr. A. Owusu</b><span>Nexus Health Clinical</span></div><span class="msym" style="font-size:32px;color:var(--soft)">account_circle</span></div>
+</header>
+<aside class="side">
+  <div class="brand"><b>Continuum</b><span>Clinical Recovery</span></div>
+  <nav id="sidenav"></nav>
+  <div class="foot">
+    <button class="newcase" onclick="toast('New cases arrive from worker reports or first-aid conversion. Intake is not a clinical action in the pilot.')">New Case</button>
+    <a href="#" onclick="toast('The physician decides every clearance. This portal is where that happens.');return false"><span class="msym">help</span> Help</a>
+    <a href="#" onclick="resetAll();return false"><span class="msym">logout</span> Reset demo</a>
+  </div>
+</aside>
+<main><div class="wrap" id="main"></div></main>
+<nav class="bottomnav" id="bottomnav"></nav>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+var PATIENTS=[{"id": "m", "name": "Marcus Bedard", "tenant": "Worley Industrial", "dx": "Right shoulder, grade 1 supraspinatus strain", "status": "light_duty", "day": 9, "progn": 21, "pain": 4, "mob": 6, "prog": 75, "esc": null, "video": false, "restr": "No lifting above shoulder height; max 4 hours standing", "note": "Progressing ahead of the window. Review Jul 21."}, {"id": "tc", "name": "Tyler Cardinal", "tenant": "Worley Industrial", "dx": "L4-L5 lumbar disc", "status": "off_work", "day": 18, "progn": 42, "pain": 8, "mob": 3, "prog": 30, "esc": {"level": "urgent", "reason": "Pain 8 of 10 on three consecutive check-ins; trend stalled."}, "video": false, "restr": "Off work; no lifting; reassess urgently", "note": "Stalled at week 3. Consider imaging and barrier screen."}, {"id": "jw", "name": "Jasmine Whitford", "tenant": "Ledcor Group", "dx": "Left hand metacarpal fracture", "status": "light_duty", "day": 26, "progn": 35, "pain": 2, "mob": 9, "prog": 90, "esc": null, "video": true, "restr": "No gripping with left hand; cast protection", "note": "Union healing well on film. Clearance scan requested."}, {"id": "sl", "name": "S. Littlechild", "tenant": "GardaWorld", "dx": "Knee, post arthroscopy", "status": "light_duty", "day": 31, "progn": 45, "pain": 5, "mob": 5, "prog": 55, "esc": {"level": "stagnant", "reason": "Mobility plateaued for 8 days against the expected curve."}, "video": false, "restr": "Seated duties; no stairs; no kneeling", "note": "Plateau. Adjust program; add graded loading."}, {"id": "g0", "name": "A. Osei", "tenant": "GardaWorld", "dx": "Wrist strain", "status": "light_duty", "day": 10, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g1", "name": "M. Chartrand", "tenant": "GardaWorld", "dx": "Ankle sprain", "status": "light_duty", "day": 11, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g2", "name": "R. Dubois", "tenant": "GardaWorld", "dx": "Shoulder impingement", "status": "light_duty", "day": 12, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g3", "name": "K. Patel", "tenant": "GardaWorld", "dx": "Low back strain", "status": "off_work", "day": 13, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": true, "restr": "Per current assessment", "note": ""}, {"id": "g4", "name": "S. Ivanova", "tenant": "GardaWorld", "dx": "Elbow tendinitis", "status": "light_duty", "day": 14, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g5", "name": "D. Morin", "tenant": "Ledcor Group", "dx": "Knee contusion", "status": "light_duty", "day": 15, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g6", "name": "E. Toews", "tenant": "Ledcor Group", "dx": "Low back strain", "status": "off_work", "day": 16, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g7", "name": "N. Ahmed", "tenant": "Worley Industrial", "dx": "Rotator cuff strain", "status": "light_duty", "day": 17, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": true, "restr": "Per current assessment", "note": ""}, {"id": "g8", "name": "P. Giroux", "tenant": "GardaWorld", "dx": "Hamstring strain", "status": "full_duty_pending", "day": 18, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g9", "name": "L. Yellowbird", "tenant": "Worley Industrial", "dx": "Wrist fracture", "status": "light_duty", "day": 19, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g10", "name": "H. Nguyen", "tenant": "Ledcor Group", "dx": "Shoulder strain", "status": "light_duty", "day": 20, "progn": 35, "pain": 2, "mob": 7.4, "prog": 74, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g11", "name": "F. Kaur", "tenant": "GardaWorld", "dx": "Neck strain", "status": "off_work", "day": 21, "progn": 35, "pain": 4, "mob": 6.6, "prog": 66, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g12", "name": "G. Marchand", "tenant": "GardaWorld", "dx": "Ankle fracture", "status": "full_duty_pending", "day": 22, "progn": 35, "pain": 4, "mob": 6.6, "prog": 66, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g13", "name": "T. ONeill", "tenant": "Worley Industrial", "dx": "Finger crush", "status": "light_duty", "day": 23, "progn": 35, "pain": 4, "mob": 6.6, "prog": 66, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g14", "name": "V. Sidhu", "tenant": "Ledcor Group", "dx": "Low back strain", "status": "off_work", "day": 24, "progn": 35, "pain": 4, "mob": 6.6, "prog": 66, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g15", "name": "W. Lafleur", "tenant": "GardaWorld", "dx": "Knee strain", "status": "full_duty_pending", "day": 25, "progn": 35, "pain": 4, "mob": 6.6, "prog": 66, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g16", "name": "B. Semenov", "tenant": "Worley Industrial", "dx": "Calf strain", "status": "light_duty", "day": 26, "progn": 35, "pain": 6, "mob": 5.9, "prog": 59, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g17", "name": "J. Fortin", "tenant": "GardaWorld", "dx": "Wrist strain", "status": "light_duty", "day": 27, "progn": 35, "pain": 6, "mob": 5.9, "prog": 59, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g18", "name": "Y. Chen", "tenant": "GardaWorld", "dx": "Shoulder strain", "status": "light_duty", "day": 28, "progn": 35, "pain": 6, "mob": 5.9, "prog": 59, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "g19", "name": "O. Adeyemi", "tenant": "Worley Industrial", "dx": "Hip contusion", "status": "off_work", "day": 29, "progn": 35, "pain": 4, "mob": 6.1, "prog": 61, "esc": null, "video": false, "restr": "Per current assessment", "note": ""}, {"id": "x1", "name": "R. MacLeod", "tenant": "Worley Industrial", "dx": "Shoulder strain", "status": "signed_off", "day": 31, "progn": 31, "pain": 0, "mob": 10, "prog": 100, "esc": null, "video": false, "restr": "", "note": ""}, {"id": "x2", "name": "P. Sandhu", "tenant": "Worley Industrial", "dx": "Heat stress", "status": "signed_off", "day": 9, "progn": 9, "pain": 0, "mob": 10, "prog": 100, "esc": null, "video": false, "restr": "", "note": ""}];
+
+var LSKEY="continuum_clinical_v1";
+var BRIDGE_KEY="continuum_worker_bridge_v1";
+var NAV=[["dashboard","dashboard","Dashboard"],["claims","description","Claims"],["workers","group","Workers"],["analytics","monitoring","Analytics"],["settings","settings","Settings"]];
+var ST={reported:"Reported",off_work:"Off work",light_duty:"Light duty",full_duty_pending:"Full duty pending",signed_off:"Signed off"};
+var CHAIN=["reported","off_work","light_duty","full_duty_pending","signed_off"];
+/* the transition table: from -> [legal to states], physician-only in the product; this portal IS the physician */
+var TRANSITIONS={reported:["off_work","light_duty"],off_work:["light_duty"],light_duty:["off_work","full_duty_pending"],full_duty_pending:["light_duty","signed_off"],signed_off:[]};
+var S, LIVE=null;
+function fresh(){return {patients:JSON.parse(JSON.stringify(PATIENTS)),section:"dashboard",detail:null,search:"",escTsSeen:0,
+ form:{pid:"",injury:"",prog:50,restr:""},audit:[]};}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.patients){S=s;return;}}}catch(e){}S=fresh();}
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
+function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function toast(h){var el=document.getElementById("toast");el.innerHTML=h;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2800);}
+function initials(n){return n.split(" ").map(function(x){return x[0];}).join("").replace(/[^A-Za-z]/g,"").slice(0,2).toUpperCase();}
+function Pt(id){return S.patients.find(function(p){return p.id===id;});}
+function activeP(){return S.patients.filter(function(p){return p.status!=="signed_off";});}
+function escP(){return S.patients.filter(function(p){return p.esc;});}
+function fdpP(){return activeP().filter(function(p){return p.status==="full_duty_pending";});}
+function score(){var a=activeP();return a.length?Math.round(a.reduce(function(s,p){return s+p.prog;},0)/a.length):0;}
+function videosPending(){return S.patients.filter(function(p){return p.video;});}
+function audit(line){S.audit.unshift(new Date().toLocaleTimeString()+" "+line);S.audit=S.audit.slice(0,40);}
+/* ---------- the state machine: physician-only in product, legality enforced here ---------- */
+function transition(pid,to){
+ var p=Pt(pid);if(!p)return false;
+ var legal=TRANSITIONS[p.status]||[];
+ if(legal.indexOf(to)<0){toast("Illegal transition: <b>"+ST[p.status]+" to "+ST[to]+"</b>. The server would reject this too.");return false;}
+ var from=p.status;p.status=to;
+ if(to==="signed_off"){p.prog=100;p.esc=null;}
+ audit("Dr. A. Owusu: "+p.name+" "+ST[from]+" to "+ST[to]);
+ toast("<b>"+esc(p.name)+"</b>: "+ST[from]+" to <b>"+ST[to]+"</b>. Audited.");
+ save();return true;}
+/* ---------- bridge at clinical grade (one signal, one escalation) ---------- */
+function readBridge(){
+ try{
+  var raw=localStorage.getItem(BRIDGE_KEY);if(!raw){LIVE=null;return;}
+  var b=JSON.parse(raw);if(!b||!b.ts||Date.now()-b.ts>86400000||b.consented===false){LIVE=null;return;}
+  LIVE=b;
+  var m=Pt("m");if(!m)return;
+  if(typeof b.day==="number")m.day=b.day;
+  if(b.escalated && b.ts>(S.escTsSeen||0)){
+   S.escTsSeen=b.ts;
+   if(!m.esc){m.esc={level:"urgent",reason:"Live worker signal from the check-in stream. Review the underlying data."};}
+  }
+  if(b.status==="signed_off"&&m.status!=="signed_off"){m.status="signed_off";m.prog=100;m.esc=null;}
+ }catch(e){LIVE=null;}}
+/* ---------- shells ---------- */
+function go(sec){S.section=sec;S.detail=null;save();window.scrollTo(0,0);}
+function openP(id){S.section="workers";S.detail=id;save();window.scrollTo(0,0);}
+function renderNav(){
+ document.getElementById("sidenav").innerHTML=NAV.map(function(n){
+  return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';}).join("");
+ document.getElementById("bottomnav").innerHTML=NAV.filter(function(n){return n[0]!=="settings";}).map(function(n){
+  return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';}).join("");}
+function stchip(p){
+ if(p.esc)return '<span class="stchip s-esc">Escalated</span>';
+ return '<span class="stchip s-'+p.status+'">'+ST[p.status]+'</span>';}
+function painCell(p){var c=p.pain>=8?"var(--alert)":p.pain>=5?"#735200":"var(--teal)";return '<b style="color:'+c+'">'+p.pain+'/10</b>';}
+function census(list){
+ return '<table><thead><tr><th>Worker / Diagnosis</th><th style="text-align:center">Pain</th><th style="text-align:center">Mobility</th><th>Duty status</th><th>Tenant</th></tr></thead><tbody>'+
+ list.map(function(p){
+  return '<tr class="rl" onclick="openP(\''+p.id+'\')"><td'+(p.esc&&p.esc.level==="urgent"?' style="border-left:4px solid var(--alert)"':"")+'>'+
+  '<span class="avatar" style="background:'+(p.esc?"var(--red)":"var(--navy)")+'">'+initials(p.name)+'</span><b>'+esc(p.name)+'</b>'+(p.id==="m"&&LIVE?' <span style="color:#735200;font-size:10px;font-weight:700">LIVE</span>':'')+'<div class="sub" style="font-size:11px;margin-left:42px">'+esc(p.dx)+'</div></td>'+
+  '<td style="text-align:center">'+painCell(p)+'</td>'+
+  '<td><div class="mobbar"><i style="width:'+(p.mob*10)+'%;background:'+(p.pain>=8?"var(--alert)":"var(--teal)")+'"></i></div></td>'+
+  '<td>'+stchip(p)+'</td><td class="sub" style="font-size:11.5px">'+esc(p.tenant)+'</td></tr>';}).join("")+'</tbody></table>';}
+/* ---------- dashboard ---------- */
+function renderDashboard(){
+ var h='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px"><div><h1>Clinical Performance Overview</h1><p class="sub">Real-time recovery monitoring and patient triage across granted tenants.</p></div>'+
+ '<div style="display:flex;gap:8px"><button class="btn ghost" onclick="go(\'workers\')"><span class="msym" style="font-size:18px">filter_list</span> Filters</button><button class="btn ghost" onclick="window.print()"><span class="msym" style="font-size:18px">file_download</span> Export</button></div></div>';
+ h+='<div class="kpis">'+
+ '<div class="kpi"><div class="lbl">Active patients</div><div class="n">'+activeP().length+'<span class="tag" style="color:var(--teal)">across 3 tenants</span></div></div>'+
+ '<div class="kpi red"><div class="lbl">Open escalations</div><div class="n" style="color:var(--alert)">'+escP().length+'<span class="tag" style="color:var(--alert)">'+(escP().length?"urgent action":"clear")+'</span></div></div>'+
+ '<div class="kpi gold"><div class="lbl">Recovery score</div><div class="n">'+score()+'%<span class="tag">vs prognosis</span></div></div>'+
+ '<div class="kpi teal"><div class="lbl">Pending clearances</div><div class="n">'+fdpP().length+'<span class="tag">RTW authorizations</span></div></div>'+
+ '</div>';
+ h+='<div class="grid2" style="display:grid;grid-template-columns:2fr 1fr;gap:14px"><div>';
+ h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><span class="msym" style="color:var(--alert)">report</span><h2>Priority Escalations</h2></div>';
+ var e=escP();
+ if(!e.length)h+='<div class="card" style="padding:16px" class="sub">No open escalations.</div>';
+ else h+='<div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+e.map(function(p){
+  var u=p.esc.level==="urgent";
+  return '<div class="esccard '+p.esc.level+'" onclick="openP(\''+p.id+'\')"><span class="msym deco">warning</span>'+
+  '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><b style="color:var(--navy)">'+esc(p.name).toUpperCase()+'</b><div class="sub" style="font-size:11px">'+esc(p.dx)+'</div></div><span class="badge '+p.esc.level+'">'+p.esc.level+'</span></div>'+
+  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="mini"><div class="l">Pain score</div><b style="color:'+(u?"var(--alert)":"var(--navy)")+'">'+p.pain+'/10</b></div><div class="mini"><div class="l">Status</div><b style="font-size:13px">'+(u?"Stalled":"Plateaued")+'</b></div></div>'+
+  '<button class="btn'+(u?"":" line")+'" style="width:100%" onclick="event.stopPropagation();openP(\''+p.id+'\')">'+(u?"Initiate Review":"Adjust Program")+'</button></div>';}).join("")+'</div>';
+ h+='<div class="card" style="overflow:hidden;margin-top:14px"><div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center"><h2>Current Patient Census</h2><span class="sub" style="font-size:11px">Clinical view: scores visible</span></div>'+
+ census(activeP().slice(0,8))+
+ '<div style="padding:10px;display:flex;justify-content:center;border-top:1px solid var(--line)"><button class="btn ghost" onclick="go(\'workers\')">View all '+activeP().length+' patients</button></div></div>';
+ h+='</div><div>';
+ var f=S.form;
+ h+='<div class="card" style="overflow:hidden;position:sticky;top:88px"><div style="background:var(--navy);border-radius:12px 12px 0 0;padding:14px 16px"><h2 style="color:#fff">New Assessment</h2><p style="color:#78859a;font-size:11px">Quick entry clinical record</p></div>'+
+ '<div style="padding:16px">'+
+ '<label class="fl">Worker name</label><select onchange="S.form.pid=this.value;save()"><option value="">Select patient...</option>'+
+ activeP().map(function(p){return '<option value="'+p.id+'"'+(f.pid===p.id?" selected":"")+'>'+esc(p.name)+'</option>';}).join("")+'</select>'+
+ '<div style="height:10px"></div><label class="fl">Injury type</label><input type="text" placeholder="e.g. Tendinitis, fracture" value="'+esc(f.injury)+'" oninput="S.form.injury=this.value">'+
+ '<div style="height:10px"></div><label class="fl">Recovery prognosis</label><div style="display:flex;gap:10px;align-items:center"><input type="range" min="0" max="100" value="'+f.prog+'" oninput="S.form.prog=+this.value;this.nextElementSibling.textContent=this.value+\'%\'" style="flex:1"><b style="width:44px">'+f.prog+'%</b></div>'+
+ '<div style="height:10px"></div><label class="fl">Work restrictions</label><textarea placeholder="Weight limits, overhead reach, hours..." oninput="S.form.restr=this.value">'+esc(f.restr)+'</textarea>'+
+ '<button class="btn" style="width:100%;margin-top:12px" onclick="submitAssessment()"><span class="msym" style="font-size:18px">save</span> Submit Findings</button>'+
+ '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="toast(\'Clearance decisions happen on the patient record, from the recovery data. Open the patient to clear or reassess.\')">Request Clearance Scan</button>'+
+ '</div></div>';
+ h+='<div class="guideline"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;color:var(--teal)"><span class="msym">menu_book</span><b style="font-size:12px;letter-spacing:.06em">CLINICAL GUIDELINE</b></div><p>"For soft tissue lumbar cases stalled at week 6, Nexus protocol suggests a psychological barrier screen alongside graded loading."</p></div>';
+ h+='</div></div>';
+ h+='<p class="sub" style="font-size:11.5px;margin-top:16px">This seat holds the full clinical view for granted cases only, across employer tenants. Every medical status transition in Continuum is made here and nowhere else; HSE coordinates inside the states this portal sets, and the employer sees functional status only.</p>';
+ return h;}
+function submitAssessment(){
+ var f=S.form;
+ if(!f.pid){toast("Select a <b>patient</b> first.");return;}
+ var p=Pt(f.pid);
+ if(f.restr.trim()){p.restr=f.restr.trim();}
+ if(f.injury.trim()){p.dx=f.injury.trim();}
+ p.prog=f.prog;
+ p.note="Assessment recorded "+new Date().toLocaleDateString()+". Restrictions current.";
+ audit("Assessment recorded for "+p.name+" (restrictions updated, received_at stamped)");
+ toast("Findings <b>submitted</b> for "+esc(p.name)+". Restrictions timestamped; HSE sees the new duty envelope now.");
+ S.form={pid:"",injury:"",prog:50,restr:""};
+ save();}
+/* ---------- workers (census + detail with the state machine) ---------- */
+function renderWorkers(){
+ if(S.detail)return renderDetail(Pt(S.detail));
+ var list=S.patients.slice();
+ if(S.search)list=list.filter(function(p){return (p.name+" "+p.dx+" "+p.tenant).toLowerCase().indexOf(S.search.toLowerCase())>=0;});
+ var h='<h1 style="margin-bottom:4px">Workers</h1><p class="sub" style="margin-bottom:14px">The full caseload, cross tenant via access grants. '+list.length+' shown.</p>';
+ h+='<div class="card" style="overflow:hidden">'+census(list)+'</div>';
+ return h;}
+function statebar(p){
+ var idx=CHAIN.indexOf(p.status);
+ return '<div class="statebar">'+CHAIN.map(function(s,i){
+  return '<span class="st'+(i<idx?" past":i===idx?" here":"")+'">'+ST[s]+'</span>'+(i<CHAIN.length-1?'<span class="arrow">&#8594;</span>':"");}).join("")+'</div>';}
+function renderDetail(p){
+ if(!p)return renderWorkers();
+ var legal=TRANSITIONS[p.status]||[];
+ var h='<div style="margin-bottom:10px"><a href="#" onclick="S.detail=null;save();return false" style="color:var(--teal);font-size:12.5px;font-weight:700">&#8592; All workers</a></div>';
+ h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap"><div><h1>'+esc(p.name)+(p.id==="m"&&LIVE?' <span style="color:#735200;font-size:12px">LIVE</span>':'')+'</h1><p class="sub">'+esc(p.dx)+' &middot; '+esc(p.tenant)+' &middot; Day '+p.day+' of '+p.progn+'</p></div>'+stchip(p)+'</div>';
+ h+=statebar(p);
+ if(p.esc){
+  h+='<div class="card" style="padding:16px;margin:12px 0;border-left:5px solid var(--alert)"><b style="color:var(--alert);font-size:13px">'+(p.esc.level==="urgent"?"URGENT ESCALATION":"STAGNANT RECOVERY")+'</b>'+
+  '<p class="sub" style="margin:6px 0 10px">'+esc(p.esc.reason)+'</p>'+
+  '<button class="btn" onclick="reviewEsc(\''+p.id+'\')">Mark reviewed and resolve</button></div>';}
+ h+='<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">';
+ h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:8px">Recovery signal</h2>'+
+ '<div class="adminrow"><span>Pain today</span>'+painCell(p)+'</div>'+
+ '<div class="adminrow"><span>Mobility</span><b>'+p.mob+' / 10</b></div>'+
+ '<div class="adminrow"><span>Progress vs prognosis</span><b>'+p.prog+'%</b></div>'+
+ '<div class="adminrow"><span>Current restrictions</span><b style="max-width:56%;text-align:right;font-size:12px">'+esc(p.restr||"None set")+'</b></div>'+
+ (p.note?'<p class="sub" style="font-size:12px;margin-top:10px;font-style:italic">"'+esc(p.note)+'"</p>':"")+'</div>';
+ h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:8px">Clinical decision</h2>'+
+ '<p class="sub" style="font-size:12px;margin-bottom:10px">Only this seat moves medical status. Legal moves from '+ST[p.status]+':</p>'+
+ (legal.length?legal.map(function(to){
+   var lbl=to==="signed_off"?"Clearance: sign off, full duty":(CHAIN.indexOf(to)>CHAIN.indexOf(p.status)?"Reassess forward to "+ST[to]:"Reassess back to "+ST[to]);
+   return '<button class="btn'+(to==="signed_off"?" gold":"")+'" style="width:100%;margin-bottom:8px" onclick="transition(\''+p.id+'\',\''+to+'\')">'+lbl+'</button>';}).join("")
+  :'<p class="sub">Case is signed off. No further transitions.</p>')+
+ '<p class="sub" style="font-size:11px;margin-top:6px">Any other jump is rejected by the transition table, here and on the server.</p></div>';
+ h+='</div>';
+ if(p.video){
+  h+='<div class="card" style="padding:18px;margin-top:14px"><h2 style="margin-bottom:6px">Movement video, awaiting review</h2><p class="sub" style="font-size:12px;margin-bottom:10px">Consented check-in video. Visible to this seat and the worker only; never the employer, never the board. Every view is audited.</p>'+
+  '<button class="btn line" onclick="reviewVideo(\''+p.id+'\')"><span class="msym" style="font-size:18px">play_circle</span> Review and mark reviewed</button></div>';}
+ return h;}
+function reviewEsc(pid){
+ var p=Pt(pid);if(!p||!p.esc)return;
+ p.esc=null;
+ audit("Escalation reviewed and resolved for "+p.name);
+ toast("Escalation <b>resolved</b> after review. The coordinator sees it clear.");
+ save();}
+function reviewVideo(pid){
+ var p=Pt(pid);if(!p||!p.video)return;
+ p.video=false;
+ audit("Video reviewed for "+p.name+" (view audited)");
+ toast("Video <b>marked reviewed</b>. The access was audited.");
+ save();}
+/* ---------- claims ---------- */
+function renderClaims(){
+ var h='<h1 style="margin-bottom:4px">Claims and Reports</h1><p class="sub" style="margin-bottom:14px">Clinical documents this seat produces: assessments, restriction sets, and clearance letters. Board filing belongs to the coordinator; the clinical record feeds it.</p>';
+ h+='<div class="card" style="overflow:hidden"><table><thead><tr><th>Worker</th><th>Assessment</th><th>Restrictions on file</th><th>Clearance letter</th></tr></thead><tbody>'+
+ activeP().map(function(p){
+  return '<tr class="rl" onclick="openP(\''+p.id+'\')"><td><b>'+esc(p.name)+'</b><div class="sub" style="font-size:11px">'+esc(p.dx)+'</div></td>'+
+  '<td><span class="pillst ok">current</span></td>'+
+  '<td><span class="pillst '+(p.restr?"ok":"off")+'">'+(p.restr?"on file":"none")+'</span></td>'+
+  '<td><span class="pillst '+(p.status==="full_duty_pending"?"gold":"off")+'">'+(p.status==="full_duty_pending"?"ready to issue":"not yet")+'</span></td></tr>';}).join("")+
+ '</tbody></table></div>';
+ h+='<div class="card" style="padding:16px;margin-top:14px"><h2 style="margin-bottom:8px">Audit trail, this session</h2>'+
+ (S.audit.length?S.audit.map(function(a){return '<div class="adminrow" style="font-size:12px">'+esc(a)+'</div>';}).join(""):'<p class="sub">No clinical actions yet this session.</p>')+'</div>';
+ return h;}
+/* ---------- analytics ---------- */
+function renderAnalytics(){
+ var a=activeP();
+ var buckets={"Ahead (80%+)":0,"On track (60-79%)":0,"Behind (40-59%)":0,"Stalled (under 40%)":0};
+ a.forEach(function(p){if(p.prog>=80)buckets["Ahead (80%+)"]++;else if(p.prog>=60)buckets["On track (60-79%)"]++;else if(p.prog>=40)buckets["Behind (40-59%)"]++;else buckets["Stalled (under 40%)"]++;});
+ var h='<h1 style="margin-bottom:4px">Analytics</h1><p class="sub" style="margin-bottom:14px">The recovery signal across the caseload.</p>';
+ h+='<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
+ h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Progress vs prognosis</h2>'+
+ Object.keys(buckets).map(function(k){var v=buckets[k],pcnt=Math.round(v/a.length*100);
+  return '<div class="brow"><div class="bl"><span>'+k+'</span><span>'+v+' ('+pcnt+'%)</span></div><div class="bt"><i style="width:'+pcnt+'%;background:'+(k.indexOf("Stalled")===0?"var(--alert)":k.indexOf("Behind")===0?"var(--gold)":"var(--teal)")+'"></i></div></div>';}).join("")+'</div>';
+ h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:6px">Caseload</h2>'+
+ '<div class="adminrow"><span>Average recovery score</span><b>'+score()+'%</b></div>'+
+ '<div class="adminrow"><span>Open escalations</span><b>'+escP().length+'</b></div>'+
+ '<div class="adminrow"><span>Pending clearances</span><b>'+fdpP().length+'</b></div>'+
+ '<div class="adminrow"><span>Videos awaiting review</span><b>'+videosPending().length+'</b></div>'+
+ '<p class="sub" style="font-size:11.5px;margin-top:10px">Everything here is tracking and visualization with independent clinician review: no scoring, no prediction, no treatment-altering alerts. That line is what keeps this outside device regulation.</p></div>';
+ h+='</div>';
+ return h;}
+/* ---------- settings ---------- */
+function renderSettings(){
+ var h='<h1 style="margin-bottom:4px">Settings</h1><p class="sub" style="margin-bottom:14px">This seat and its reach.</p>';
+ h+='<div class="card" style="padding:18px">'+
+ '<div class="adminrow"><div><b>Access grants</b><div class="sub" style="font-size:11.5px">Worley Industrial, Ledcor Group, GardaWorld. Cross tenant reach is granted per case, never by relaxing isolation.</div></div><span class="pillst ok">3 tenants</span></div>'+
+ '<div class="adminrow"><div><b>Video access</b><div class="sub" style="font-size:11.5px">Clinician and worker only. Every view writes the audit log.</div></div><span class="pillst ok">audited</span></div>'+
+ '<div class="adminrow"><div><b>Pose analysis module</b><div class="sub" style="font-size:11.5px">Built, dark, off for the pilot behind a per-tenant flag. Clinician review only in v1.</div></div><span class="pillst off">flag off</span></div>'+
+ '<div class="adminrow"><div><b>Notifications</b><div class="sub" style="font-size:11.5px">Escalations and clearance requests, in dashboard and by neutral nudge.</div></div><span class="pillst ok">on</span></div>'+
+ '</div>';
+ return h;}
+function render(){
+ readBridge();
+ renderNav();
+ var views={dashboard:renderDashboard,claims:renderClaims,workers:renderWorkers,analytics:renderAnalytics,settings:renderSettings};
+ document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
+}
+window.addEventListener("storage",function(e){if(e.key===BRIDGE_KEY){readBridge();render();
+ if(LIVE&&LIVE.escalated)toast("<b>Live worker signal</b>: check-in stream escalated. Case pinned.");}});
+document.addEventListener("visibilitychange",function(){if(!document.hidden){render();}});
+load();render();
+</script>
+</body>
+</html>
