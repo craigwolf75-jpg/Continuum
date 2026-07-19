@@ -72,6 +72,15 @@
   .gdot{width:14px;height:14px;border-radius:50%;border:1px solid var(--hairL);flex-shrink:0}
   .grule.ok .gdot{background:var(--gold2);border-color:var(--gold2)}
   .glink{background:transparent;border:1px solid var(--hairL);color:#fff;min-height:48px;width:100%;border-radius:12px;font-family:inherit;font-size:14px;cursor:pointer;margin-top:12px}
+  /* 12g responsive synchronism: the served worker app fills the frame at 880+; the phone column is unchanged below 880. Today flows into two columns; sign-in and consent stay centered; other tabs center at a reading width. */
+  @media(min-width:880px){
+    .phone.v-gate,.phone.v-consent{max-width:560px}
+    .phone.v-app{max-width:1040px}
+    .phone.v-app.t-today .body{display:grid;grid-template-columns:1fr 1fr;column-gap:18px;row-gap:0;align-content:start}
+    .phone.v-app.t-today .body>.kick,.phone.v-app.t-today .body>h2,.phone.v-app.t-today .body>.sub,.phone.v-app.t-today .body>.flag{grid-column:1 / -1}
+    .phone.v-app:not(.t-today) .body{max-width:620px;margin-left:auto;margin-right:auto}
+    .phone.v-app .tabs{max-width:720px}
+  }
 </style>
 </head>
 <body>
@@ -98,7 +107,7 @@
   function pwRules(pw){ return {len:pw.length===6, cons:/[bcdfghjklmnpqrstvwxyz]/i.test(pw), spec:/[^a-zA-Z0-9]/.test(pw)}; }
   function pwValid(pw){ var r=pwRules(pw); return r.len&&r.cons&&r.spec; }
   function setRule(id,ok){ var el=document.getElementById(id); if(el) el.className='grule'+(ok?' ok':''); }
-  function gateRender(){ document.getElementById('phone').innerHTML=signInView(); wireSignIn(); }
+  function gateRender(){ var host=document.getElementById('phone'); host.className='phone v-gate'; host.innerHTML=signInView(); wireSignIn(); }
   function gateCodeCheck(){ if(G.code.every(function(c){ return c!==''; })){ G.step='password'; gateRender(); } }
   function gateCodeInput(i,val){
     var only=String(val).replace(/\D/g,'');
@@ -165,10 +174,11 @@
 
   function render(){
     var host = document.getElementById('phone');
-    if(!signedIn){ host.innerHTML = signInView(); wireSignIn(); return; }
+    if(!signedIn){ host.className='phone v-gate'; host.innerHTML = signInView(); wireSignIn(); return; }
     var vm = S.viewModel('worker');
-    if(!vm.consent.granted){ host.innerHTML = consentView(); return; }
+    if(!vm.consent.granted){ host.className='phone v-consent'; host.innerHTML = consentView(); return; }
     var r = route();
+    host.className = 'phone v-app t-'+r;
     var html = topBar(vm);
     html += '<div class="body">';
     if(r==='today') html += todayView(vm);
