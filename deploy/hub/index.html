@@ -105,7 +105,7 @@
   }
   function rolesView(){
     function card(k,desc){ return '<div class="role" data-role="'+k+'"><h3>'+ROLES[k]+'</h3><p>'+desc+'</p></div>'; }
-    var worker='<button type="button" class="role role-worker" data-nav="/app"><h3>Worker</h3><p>Your recovery space. Check-ins, duties, and your plan, in plain words.</p></button>';
+    var worker='<button type="button" class="role role-worker" data-nav="/worker-dashboard.html"><h3>Worker</h3><p>Your recovery space. Check-ins, duties, and your plan, in plain words.</p></button>';
     var employer='<button type="button" class="role" data-nav="/employer-dashboard.html"><h3>Employer</h3><p>Employer dashboard. Functional status only, never medical detail.</p></button>';
     var wcb='<button type="button" class="role" data-nav="/wcb-portal.html"><h3>WCB</h3><p>Compensation board portal. Read only claims and milestone notifications.</p></button>';
     return '<div class="center"><div><div class="brand"><div class="cmark">C</div><div class="wordmark">Continuum</div></div>'+
