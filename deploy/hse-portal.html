@@ -204,7 +204,7 @@ function renderDashboard(){
  var sorted=openCases().slice().sort(function(a,b){
   var ea=S.escalations.some(function(e){return e.w===a.id&&!e.resolved;})?-1:0;
   var eb=S.escalations.some(function(e){return e.w===b.id&&!e.resolved;})?-1:0;
-  if(ea!==eb)return ea-eb;return (order[a.status]||9)-(order[b.status]||9);});
+  if(ea!==eb)return ea-eb;var oa=(a.status in order)?order[a.status]:9,ob=(b.status in order)?order[b.status]:9;return oa-ob;});
  h+='<table><thead><tr><th>Worker</th><th>Injury</th><th>Day</th><th>Status</th><th>Pain trend</th><th>Mobility</th><th>Next review</th></tr></thead><tbody>'+
  sorted.map(function(w){return '<tr class="rl" onclick="openWorker(\''+w.id+'\')"><td><b>'+esc(w.name)+'</b><div class="sub" style="font-size:11px">'+esc(w.trade)+(w.live&&LIVE?' &middot; <span style="color:#735200;font-weight:700">Live</span>':'')+'</div></td>'+
   '<td style="max-width:220px">'+esc(w.injury)+'</td><td>'+w.day+'</td><td>'+stchip(w)+'</td>'+
