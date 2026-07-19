@@ -108,6 +108,12 @@ section.view{display:none}section.view.on{display:block}
 .pill.off{background:rgba(154,165,180,.2);color:var(--muted)}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media print{.side,.htools,.scrim,.drawer,.toast{display:none !important}.main{padding:0}.card{break-inside:avoid}}
+/* 13b live worker feed */
+.livechip{display:inline-block;font-family:"Space Grotesk";font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#8a6414;background:rgba(200,151,47,.16);border:1px solid rgba(200,151,47,.4);border-radius:999px;padding:4px 11px;margin-bottom:6px;animation:feedbreathe 2.4s ease-in-out infinite}
+@keyframes feedbreathe{0%,100%{box-shadow:0 0 0 rgba(200,151,47,0)}50%{box-shadow:0 0 14px rgba(200,151,47,.5)}}
+.live-badge{display:inline-block;font-family:"Space Grotesk";font-size:9.5px;font-weight:700;letter-spacing:.06em;color:#8a6414;background:rgba(200,151,47,.18);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.rev-tag{display:inline-block;font-size:10.5px;color:var(--muted);margin-left:4px}
+@media(prefers-reduced-motion:reduce){.livechip{animation:none}}
 </style>
 </head>
 <body>
@@ -171,8 +177,33 @@ function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}ren
 function resetAll(){S=freshState();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function toast(html){var el=document.getElementById("toast");el.innerHTML=html;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2600);}
-/* ---------- aggregations (single source: S.workers) ---------- */
-function actives(){return S.workers;}
+/* ---------- 13b: live worker feed read across the functional-only bridge ---------- */
+var LIVE=null, prevCheckedIn=false, prevTs=null;
+function mapStatus(s){return {reported:"awaiting",off_work:"treating",light_duty:"light_duty",full_duty_pending:"modified",signed_off:"returned",escalated:"awaiting"}[s]||"treating";}
+function liveRtw(b){
+ if(b.status==="signed_off") return 100;
+ var base={reported:5,off_work:20,light_duty:55,full_duty_pending:88,escalated:45}[b.status]||40;
+ var duty=b.dutiesTotal>0?Math.round(b.dutiesDone/b.dutiesTotal*20):0;
+ return Math.min(95,base+duty);
+}
+function readBridge(){
+ var raw=null; try{raw=localStorage.getItem("continuum_worker_bridge_v1");}catch(e){}
+ var b=null; if(raw){ try{b=JSON.parse(raw);}catch(e){} }
+ if(!b || !b.consented){ var had=LIVE; LIVE=null; prevCheckedIn=false; prevTs=null; if(had) render(); return; }
+ var mapped=mapStatus(b.status);
+ var nl={name:b.name||"Marcus Bedard", role:b.trade||"Scaffolder", injury:b.injury||"Shoulder strain",
+   cat:"shoulder", days:b.day||0, status:mapped, restr:b.restr||"", review:"Live",
+   rtw:liveRtw(b), visits:0, loc:"Field Crew", live:true,
+   clinicianReviewing:(b.status==="escalated"||!!b.escalated)};
+ if(b.checkedInToday && !prevCheckedIn && prevTs!==null){
+   var nm=b.name||"Marcus Bedard"; var parts=nm.split(" ");
+   toast("<b>"+esc(parts[0]+" "+((parts[1]||"")[0]||""))+"</b> completed a check-in, live from the worker app");
+ }
+ prevCheckedIn=!!b.checkedInToday; prevTs=b.ts; LIVE=nl; render();
+}
+function returnedList(){ return (LIVE&&LIVE.status==="returned") ? S.returned.concat([LIVE]) : S.returned; }
+/* ---------- aggregations (single source: S.workers plus the live feed) ---------- */
+function actives(){ return (LIVE && LIVE.status!=="returned") ? S.workers.concat([LIVE]) : S.workers; }
 function counts(){var c={light_duty:0,treating:0,modified:0,awaiting:0};actives().forEach(function(w){c[w.status]++;});return c;}
 function catCounts(){var c={};actives().forEach(function(w){c[w.cat]=(c[w.cat]||0)+1;});return c;}
 function bucketCounts(){var b={"0 to 7 days":0,"8 to 14 days":0,"15 to 30 days":0,"31 to 60 days":0,"60+ days":0};
@@ -181,7 +212,7 @@ function locCounts(){var c={};actives().forEach(function(w){c[w.loc]=(c[w.loc]||
 function totalVisits(){return actives().reduce(function(a,w){return a+w.visits;},0)+S.returned.reduce(function(a,w){return a+w.visits;},0);}
 function avgDays(){var a=actives();return a.length?Math.round(a.reduce(function(x,w){return x+w.days;},0)/a.length):0;}
 function newThisWeek(){return actives().filter(function(w){return w.days<=5;}).length;}
-function rtwRate(){var base=76,bump=S.returned.length;return Math.min(99,base+bump);}
+function rtwRate(){var base=76,bump=S.returned.length+((LIVE&&LIVE.status==="returned")?1:0);return Math.min(99,base+bump);}
 function costEst(){return 142680-S.returned.length*4980;}
 function timeLoss(){return 624-S.returned.length*22;}
 /* ---------- svg helpers ---------- */
@@ -224,7 +255,7 @@ function renderSide(){
 /* ---------- shared header ---------- */
 function pagehead(kick,title,sub,tools){
  return '<div class="pagehead"><div><div class="kicker">'+kick+'</div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+
- '<div class="htools"><div class="range">Jun 22 to Jun 29, 2026</div><div class="who">K. Morgan &middot; Sample Employer Co.</div>'+(tools||"")+'</div></div>';}
+ '<div class="htools">'+(LIVE?'<div class="livechip">Worker feed: Live</div>':'')+'<div class="range">Jun 22 to Jun 29, 2026</div><div class="who">K. Morgan &middot; Sample Employer Co.</div>'+(tools||"")+'</div></div>';}
 function chipFor(st){return '<span class="chip c-'+st+'">'+STATUS_META[st][0]+'</span>';}
 function rtwBar(v){return '<div style="display:flex;align-items:center;gap:8px"><div class="pbar'+(v>=100?" full":"")+'" style="flex:1"><i style="width:'+v+'%"></i></div><span style="font-size:11px;color:var(--muted);width:32px">'+v+'%</span></div>';}
 /* ---------- overview ---------- */
@@ -287,9 +318,9 @@ function renderOverview(){
 function workerTable(list,preview){
  var h='<div class="cardhead">Active injured workers &middot; '+actives().length+'</div>';
  h+='<table><thead><tr><th>Worker</th><th>Injury</th><th>Days</th><th>Status</th><th>Light duty / restrictions</th><th>Next review</th><th>RTW</th></tr></thead><tbody>';
- list.forEach(function(w){var idx=S.workers.indexOf(w);
-  h+='<tr class="rowlink" onclick="openDrawer('+idx+')"><td><b>'+esc(w.name)+'</b><div style="color:var(--muted);font-size:11px">'+esc(w.role)+'</div></td>'+
-  '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+'</td>'+
+ list.forEach(function(w){var idx=S.workers.indexOf(w);var lv=w.live;
+  h+='<tr class="rowlink"'+(lv?' style="background:rgba(200,151,47,.07)"':'')+' onclick="'+(lv?'openLiveDrawer()':'openDrawer('+idx+')')+'"><td><b>'+esc(w.name)+'</b>'+(lv?'<span class="live-badge">Live</span>':'')+'<div style="color:var(--muted);font-size:11px">'+esc(w.role)+'</div></td>'+
+  '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Clinician reviewing</span>':'')+'</td>'+
   '<td style="max-width:230px;color:var(--muted)">'+esc(w.restr)+'</td><td>'+esc(w.review)+'</td><td style="min-width:110px">'+rtwBar(w.rtw)+'</td></tr>';});
  h+='</tbody></table>';
  h+='<div class="tfoot">'+(preview?'Showing '+list.length+' of '+actives().length+' injured workers &middot; ':"")+'Functional status only, never medical detail &nbsp; <a href="#" onclick="peekFirewall();return false">What this view cannot see</a></div>';
@@ -308,8 +339,8 @@ function renderWorkers(){
   '<span class="fchip'+(S.filter===null?" on":"")+'" onclick="S.filter=null;save()">All ('+actives().length+')</span>'+
   Object.keys(c).map(function(k){return '<span class="fchip'+(S.filter===k?" on":"")+'" onclick="S.filter=\''+k+'\';save()">'+STATUS_META[k][0]+' ('+c[k]+')</span>';}).join("")+'</div>';
  h+='<div class="card">'+workerTable(list,false)+'</div>';
- if(S.returned.length){h+='<div class="card" style="margin-top:12px"><div class="cardhead">Returned to full duty this period &middot; '+S.returned.length+'</div>'+
-  S.returned.map(function(w){return '<div class="admin-row"><div><b>'+esc(w.name)+'</b> <span style="color:var(--muted);font-size:12px">'+esc(w.injury)+' &middot; '+w.days+' days</span></div><span class="chip c-returned">Returned</span></div>';}).join("")+'</div>';}
+ var rlist=returnedList(); if(rlist.length){h+='<div class="card" style="margin-top:12px"><div class="cardhead">Returned to full duty this period &middot; '+rlist.length+'</div>'+
+  rlist.map(function(w){return '<div class="admin-row"><div><b>'+esc(w.name)+'</b>'+(w.live?'<span class="live-badge">Live</span>':'')+' <span style="color:var(--muted);font-size:12px">'+esc(w.injury)+' &middot; '+w.days+' days</span></div><span class="chip c-returned">Returned</span></div>';}).join("")+'</div>';}
  return h;}
 /* ---------- drawer ---------- */
 function openDrawer(idx){
@@ -344,6 +375,28 @@ function confirmReturn(idx){
  var w=S.workers.splice(idx,1)[0];if(!w)return;
  w.rtw=100;S.returned.push(w);closeDrawer();
  toast("<b>"+esc(w.name)+"</b> confirmed back on full duty. Every figure on screen just updated.");save();}
+/* 13b: the live worker's drawer. Read only reflection of the bridge; never
+   persisted into this dashboard's store and never offered confirm return. */
+function openLiveDrawer(){
+ if(!LIVE)return; var w=LIVE;
+ var h='<div class="kicker">Live from the worker app</div><h1 style="font-size:21px">'+esc(w.name)+'<span class="live-badge">Live</span></h1>'+
+ '<div class="sub">'+esc(w.role)+' &middot; '+esc(w.loc)+'</div>'+
+ '<div style="margin:12px 0">'+chipFor(w.status)+(w.clinicianReviewing?'<span class="rev-tag">Clinician reviewing</span>':'')+'</div>'+
+ '<div class="card" style="margin-bottom:10px"><div class="cardhead">Case (functional only)</div>'+
+ '<table><tbody><tr><td>Injury</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
+ '<tr><td>Days injured</td><td><b>'+w.days+'</b></td></tr>'+
+ '<tr><td>Restrictions</td><td>'+esc(w.restr||"none")+'</td></tr>'+
+ '<tr><td>Return progress</td><td>'+rtwBar(w.rtw)+'</td></tr></tbody></table></div>'+
+ '<div class="card" style="margin-bottom:10px;border-color:var(--gold)"><div class="cardhead">The seam</div>'+
+ '<p style="font-size:12.5px">This row is a live reflection of the worker app, read through a functional only bridge. The bridge has no field for pain, mobility, or notes, so this dashboard never receives them, even in memory. The projection happens in the worker app, where the data is born.</p></div>'+
+ '<div class="card" style="margin-bottom:10px"><div class="cardhead">Not in this view</div>'+
+ ["Pain scores","Mobility scores","Diagnosis","Worker notes","Photos"].map(function(g){return '<span class="ghost">'+g+'</span>';}).join("")+
+ '<p class="tfoot">Not hidden. Not present in this feed at all.</p></div>'+
+ '<div style="margin-top:14px"><button class="btn" onclick="closeDrawer()">Close</button></div>';
+ document.getElementById("drawer").innerHTML=h;
+ document.getElementById("drawer").classList.add("on");
+ document.getElementById("scrim").classList.add("on");
+}
 /* ---------- other sections ---------- */
 function renderClaims(){
  var h=pagehead("Injury management","Claims &amp; Documentation","WCB document lifecycle across all active cases");
@@ -375,8 +428,8 @@ function renderRtw(){
  if(ready.length){h+='<div class="card" style="margin-top:12px;border-color:var(--gold)"><div class="cardhead">Awaiting employer confirmation &middot; '+ready.length+'</div>'+
   ready.map(function(w){var i=S.workers.indexOf(w);
    return '<div class="admin-row"><div><b>'+esc(w.name)+'</b> <span style="color:var(--muted);font-size:12px">'+esc(w.injury)+' &middot; RTW '+w.rtw+'%</span></div><button class="btn gold" onclick="confirmReturn('+i+')">Confirm return</button></div>';}).join("")+'</div>';}
- if(S.returned.length){h+='<div class="card" style="margin-top:12px"><div class="cardhead">Returned this period &middot; '+S.returned.length+'</div>'+
-  S.returned.map(function(w){return '<div class="admin-row"><b>'+esc(w.name)+'</b><span class="chip c-returned">Returned</span></div>';}).join("")+'</div>';}
+ var rl2=returnedList(); if(rl2.length){h+='<div class="card" style="margin-top:12px"><div class="cardhead">Returned this period &middot; '+rl2.length+'</div>'+
+  rl2.map(function(w){return '<div class="admin-row"><b>'+esc(w.name)+'</b>'+(w.live?'<span class="live-badge">Live</span>':'')+'<span class="chip c-returned">Returned</span></div>';}).join("")+'</div>';}
  return h;}
 function renderVisits(){
  var h=pagehead("Injury management","Doctor Visits","Visit counts this period, no clinical content");
@@ -449,6 +502,10 @@ function render(){
  if(si&&S.section==="workers"){si.focus();si.setSelectionRange(si.value.length,si.value.length);}
 }
 load();render();
+readBridge();
+window.addEventListener("storage",function(e){ if(e.key==="continuum_worker_bridge_v1") readBridge(); });
+window.addEventListener("focus",readBridge);
+document.addEventListener("visibilitychange",function(){ if(!document.hidden) readBridge(); });
 </script>
 </body>
 </html>

@@ -111,9 +111,24 @@ function ring(){
   '</div>';
 }
 
+/* 13b: functional-only bridge writer. No pain, mobility, or notes field, so the
+   employer dashboard never ingests clinical detail even in memory. */
+function writeBridge(){
+  var bridge = {
+    source:"embed", name:"Marcus Bedard", trade:"Scaffolder", injury:"Right shoulder strain",
+    restr:RESTRICTION, day:S.day, prognosisDays:S.prognosis,
+    status: S.escalated ? "escalated" : "light_duty", escalated: !!S.escalated,
+    checkedInToday: S.count>=1,
+    dutiesDone: S.duties.filter(function(d){return d.done;}).length,
+    dutiesTotal: S.duties.length,
+    consented: S.view==="app", ts: Date.now()
+  };
+  try{ localStorage.setItem("continuum_worker_bridge_v1", JSON.stringify(bridge)); }catch(e){}
+}
 function render(){
   var app=document.getElementById("app");
   app.className = "phone " + (S.view==="consent" ? "v-consent" : "v-app");
+  writeBridge();
   if(S.view==="consent"){
     app.innerHTML =
       '<div class="kick">Before we start</div>'+
