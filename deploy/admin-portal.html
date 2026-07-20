@@ -88,6 +88,9 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
 @media(max-width:1080px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr !important}}
 @media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:84px 12px 96px}.kpis{grid-template-columns:1fr}.bottomnav{display:flex}}
 @media print{aside.side,header.top,.toast,.mscrim,.modal,.bottomnav{display:none !important}main{margin:0;padding:0}}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
 </style>
 </head>
 <body>

@@ -99,19 +99,21 @@ folds in.
 ## DESIGN-1 backlog (from Apollo's baseline pass)
 
 ### S-DESIGN-A: Employer inference-channel ruling and fix
-- Status: PARTIAL. D1-F01 resolved and shipped; D1-F02 still BLOCKED on a ruling.
+- Status: DONE. Both findings resolved and shipped.
 - Lead: apollo, with argus and calliope co-sign; athena for the wiring
 - D1-F01 RESOLVED (Gary ruled 2026-07-20): the employer tag "Clinician reviewing"
   is replaced with the Prompt 19 canon phrase "Awaiting clinical review"
-  (employer-dashboard.html 327 and 388). Shipped.
-- D1-F02 BLOCKED on Gary's ruling: liveRtw() line 187 gives escalated a base of
-  45, below light_duty 55, so an escalated worker reads as lower readiness than a
-  light-duty one, quantifying a setback. Options: hold the last functional value
-  across an escalation, or leave the dip as legitimate functional readiness.
-  Zeus will not guess a privacy-law call. No fix until Gary decides.
+  (employer-dashboard.html). Shipped PR #41.
+- D1-F02 RESOLVED (Gary ruled 2026-07-20, hold last functional value): liveRtw()
+  escalated base raised 45 to 55, and readBridge now holds the worker's last
+  functional rtw across an escalation (prevRtw), reset when the bridge clears. An
+  escalated worker never reads below functional readiness on the employer surface.
 
 ### S-DESIGN-B: prefers-reduced-motion guards
-- Status: QUEUED
+- Status: DONE. Universal reduced-motion block added to worker-dashboard,
+  hse-portal, clinical-dashboard, wcb-portal, admin-portal; employer's narrow
+  block widened to universal; worker-dashboard burst() confetti short-circuits
+  under reduced motion.
 - Lead: apollo
 - Note: add a reduced-motion block to worker-dashboard, hse-portal,
   clinical-dashboard, wcb-portal, admin-portal; extend the partial one in
@@ -119,7 +121,9 @@ folds in.
   worker-embed.html and continuum_workflow_app.html.
 
 ### S-DESIGN-C: Worker-app accessibility
-- Status: QUEUED
+- Status: DONE. app/index.html focus ring restored (outline:none removed, gold
+  :focus-visible added); worker-dashboard action buttons raised to 44px via the
+  shared .btn class.
 - Lead: athena, apollo co-sign
 - Note: restore a designed gold focus ring on the served worker app
   (app/index.html strips outline at ~66) and raise worker action buttons to a
@@ -133,7 +137,9 @@ folds in.
   load support.js, so no background-tab throttle. Enhancement, no finding.
 
 ### S-DESIGN-E: Register and polish sweep
-- Status: QUEUED
+- Status: DONE. HSE pain sparkline recolored red to muted amber #B87A2E; gold
+  :focus-visible rings added to hub and marketing; hub secondary-button touch
+  targets nudged to 44px; dead fadeUp keyframe deleted from index.html.
 - Lead: apollo
 - Note: HSE red pain sparkline to desaturated amber (D1-F08), hub and marketing
   :focus-visible rings (D1-F10), secondary-button touch targets (D1-F11), delete
