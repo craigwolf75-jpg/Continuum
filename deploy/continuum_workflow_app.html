@@ -411,10 +411,10 @@ function autoActions(entered){
 
 /* ============================ CHECK-IN + ESCALATION ============================ */
 function currentPeriod(){ return S.checkedIn[S.day+"AM"] ? "PM" : "AM"; }
-function submitCheckin(pain, mobility, notes){
+function submitCheckin(pain, mobility, fatigue, confidence, notes){
   const period = currentPeriod();
   if(S.checkedIn[S.day+period]) return;
-  S.checkins.push({day:S.day, period, pain, mobility, notes});
+  S.checkins.push({day:S.day, period, pain, mobility, fatigue, confidence, notes});
   S.checkedIn[S.day+period] = true;
   if(S.marcus.visits===2 && S.checkins.length%6===0) S.marcus.visits++;
   pushEvent("Check-in "+period+" saved (day "+S.day+")", ["HSE scores","Nexus monitor","Escalation engine","Employer KPIs"]);
@@ -646,8 +646,12 @@ function renderWorker(){
       '<input type="range" min="0" max="10" value="3" id="painSlider" oninput="document.getElementById(\'painVal\').textContent=this.value"></div>'+
       '<div class="slider-row"><label>How is your movement? <span id="mobVal">6</span></label>'+
       '<input type="range" min="0" max="10" value="6" id="mobSlider" oninput="document.getElementById(\'mobVal\').textContent=this.value"></div>'+
+      '<div class="slider-row"><label>How is your fatigue? <span id="fatVal">3</span></label>'+
+      '<input type="range" min="0" max="10" value="3" id="fatSlider" oninput="document.getElementById(\'fatVal\').textContent=this.value"></div>'+
+      '<div class="slider-row"><label>How confident are you using it? <span id="confVal">7</span></label>'+
+      '<input type="range" min="0" max="10" value="7" id="confSlider" oninput="document.getElementById(\'confVal\').textContent=this.value"></div>'+
       '<textarea id="ciNotes" placeholder="Anything you want your clinician to know? (optional)"></textarea>'+
-      '<div style="margin-top:12px"><button class="btn" style="width:100%" onclick="submitCheckin(+painSlider.value, +mobSlider.value, ciNotes.value)">Save check-in</button></div>'+
+      '<div style="margin-top:12px"><button class="btn" style="width:100%" onclick="submitCheckin(+painSlider.value, +mobSlider.value, +fatSlider.value, +confSlider.value, ciNotes.value)">Save check-in</button></div>'+
       '<p class="note" style="margin-top:8px">Only your clinician sees your scores and notes. Your employer sees your work status only.</p></div>') : '');
   }
   if(tab==="history"){

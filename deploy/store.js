@@ -307,6 +307,7 @@
     var log = {
       injury_id: marcus(state).id, logged_at: iso(), period: entry.period || 'AM',
       pain_score: clampScore(entry.pain), mobility_score: clampScore(entry.mobility),
+      fatigue_score: clampScore(entry.fatigue), confidence_score: clampScore(entry.confidence),
       notes: (entry.notes || ''), source: 'app'
     };
     state.recovery_logs.push(log);

@@ -73,7 +73,7 @@ footer a{color:var(--muted)}
 var RESTRICTION = "No lifting above shoulder height";
 function seed(){
   return {
-    view:"consent", day:9, prognosis:21, count:0, pain:3, mobility:6,
+    view:"consent", day:9, prognosis:21, count:0, pain:3, mobility:6, fatigue:3, confidence:7,
     escalated:false, notes:"",
     duties:[
       {id:1, task:"Ground-level material staging", done:true},
@@ -94,7 +94,7 @@ function saveCheckin(){
   S.notes="";
   render();
 }
-function nextDay(){ if(S.day<S.prognosis) S.day++; S.count=0; S.escalated=false; S.pain=3; S.mobility=6; render(); }
+function nextDay(){ if(S.day<S.prognosis) S.day++; S.count=0; S.escalated=false; S.pain=3; S.mobility=6; S.fatigue=3; S.confidence=7; render(); }
 function toggleDuty(id){ var d=S.duties.find(function(x){return x.id===id;}); if(d) d.done=!d.done; render(); }
 function reset(){ S=seed(); render(); }
 function revokeConsent(){ S.view="consent"; render(); }
@@ -168,6 +168,10 @@ function render(){
         '<input type="range" min="0" max="10" value="'+S.pain+'" id="pain">'+
         '<label class="sl">How is your movement? <b id="mv">'+S.mobility+'</b></label>'+
         '<input type="range" min="0" max="10" value="'+S.mobility+'" id="mob">'+
+        '<label class="sl">How is your fatigue? <b id="fv">'+S.fatigue+'</b></label>'+
+        '<input type="range" min="0" max="10" value="'+S.fatigue+'" id="fat">'+
+        '<label class="sl">How confident are you using it? <b id="cv">'+S.confidence+'</b></label>'+
+        '<input type="range" min="0" max="10" value="'+S.confidence+'" id="conf">'+
         '<textarea id="notes" placeholder="Anything you want your clinician to know? (optional)">'+esc(S.notes)+'</textarea>'+
         '<button class="btn" id="save" style="margin-top:12px">Save check-in</button>'+
         '<p class="hint">Try sliding pain to 8 and saving, then watch what your care team sees.</p>'+
@@ -197,6 +201,8 @@ document.addEventListener("click", function(e){
 document.addEventListener("input", function(e){
   if(e.target.id==="pain"){ S.pain=+e.target.value; var pv=document.getElementById("pv"); if(pv) pv.textContent=S.pain; }
   else if(e.target.id==="mob"){ S.mobility=+e.target.value; var mv=document.getElementById("mv"); if(mv) mv.textContent=S.mobility; }
+  else if(e.target.id==="fat"){ S.fatigue=+e.target.value; var fv=document.getElementById("fv"); if(fv) fv.textContent=S.fatigue; }
+  else if(e.target.id==="conf"){ S.confidence=+e.target.value; var cv=document.getElementById("cv"); if(cv) cv.textContent=S.confidence; }
   else if(e.target.id==="notes"){ S.notes=e.target.value; }
 });
 render();
