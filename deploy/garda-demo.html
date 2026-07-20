@@ -17,7 +17,14 @@
   .rail{background:var(--navy2);border-right:1px solid var(--hair);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
   .rail .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:#fff;padding:0 20px 4px}
   .rail .brand span{color:var(--gold)}
-  .rail .sub{color:var(--mist);font-size:11px;padding:0 20px 16px;border-bottom:1px solid var(--hair);margin-bottom:10px}
+  .rail .sub{color:var(--mist);font-size:11px;padding:0 20px 14px}
+  .moderow{padding:0 20px 14px;border-bottom:1px solid var(--hair);margin-bottom:10px}
+  .modetog{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;font-weight:600;color:#fff}
+  .modetog input{width:34px;height:18px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.16);border-radius:999px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;margin:0}
+  .modetog input:checked{background:var(--gold)}
+  .modetog input:before{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
+  .modetog input:checked:before{left:18px}
+  .modehint{color:var(--mist);font-size:10.5px;line-height:1.4;margin-top:7px}
   .rail button{display:flex;gap:11px;align-items:baseline;width:100%;background:none;border:none;color:var(--mist);font:inherit;font-size:12.5px;text-align:left;padding:9px 20px;cursor:pointer;border-left:3px solid transparent}
   .rail button:hover{color:#fff;background:rgba(255,255,255,.03)}
   .rail button.on{color:#fff;background:rgba(200,151,47,.12);border-left-color:var(--gold)}
@@ -106,6 +113,7 @@
   <aside class="rail">
     <div class="brand">Continuum<span>.</span></div>
     <div class="sub">GardaWorld demonstration runner</div>
+    <div class="moderow"><label class="modetog"><input type="checkbox" id="privmode"><span>Firewall first</span></label><div class="modehint">Privacy lead in the room: opens with the masking and escalation beats.</div></div>
     <nav id="railnav"></nav>
   </aside>
   <div class="main">
@@ -204,6 +212,15 @@ var SCENES=[
 ];
 
 /* ============ RUNNER ============ */
+/* Display order is a mapping over SCENES, so the underlying script stays
+   chronological. Privacy mode front-loads the masking beat (scene 6, the
+   split screen) and the escalation beat (scene 10) right after the opening,
+   so a JHSC or privacy lead sees the firewall working first. */
+var ORDERS={
+  standard:[0,1,2,3,4,5,6,7,8,9,10,11,12,13],
+  privacy:[0,1,5,9,2,3,4,6,7,8,10,11,12,13]
+};
+var order=ORDERS.standard;
 var idx=0;
 function esc(t){return String(t).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
 var VIGNETTES={
@@ -316,9 +333,10 @@ function vignette(key){
   if(VIGNETTES[key])return VIGNETTES[key];
   return '<div class="vig"><div>Vignette: <b>'+esc(key)+'</b><br><span style="font-size:11px">high-fidelity portal replica lands in a later stage</span></div></div>';
 }
-function sceneHTML(s,i){
-  var h='<section class="scene'+(i===idx?" active":"")+'" data-i="'+i+'">';
-  h+='<div class="kicker">'+esc(s.kicker)+'</div><h1>'+esc(s.title)+'</h1><div class="of">Scene '+(i+1)+' of '+SCENES.length+'</div>';
+function sceneHTML(pos){
+  var s=SCENES[order[pos]];
+  var h='<section class="scene'+(pos===idx?" active":"")+'" data-pos="'+pos+'">';
+  h+='<div class="kicker">'+esc(s.kicker)+'</div><h1>'+esc(s.title)+'</h1><div class="of">Scene '+(pos+1)+' of '+order.length+'</div>';
   h+='<div class="lbl">Narration</div><div class="narration">'+esc(s.narration)+'</div>';
   h+='<div class="lbl">Vignette</div>'+vignette(s.vig);
   h+='<div class="lbl">Presenter notes</div><ul class="notes">'+s.notes.map(function(n){return '<li class="'+(n.v?"verbatim":"")+'">'+(n.v?'<span class="vtag">Say verbatim</span>':"")+esc(n.t)+'</li>';}).join("")+'</ul>';
@@ -328,29 +346,33 @@ function sceneHTML(s,i){
   return h;
 }
 function buildRail(){
-  document.getElementById("railnav").innerHTML=SCENES.map(function(s,i){
-    return '<button class="'+(i===idx?"on":"")+'" onclick="go('+i+')"><span class="rn">'+(i+1)+'</span><span>'+esc(s.title)+'</span></button>';
+  document.getElementById("railnav").innerHTML=order.map(function(si,pos){
+    var s=SCENES[si];
+    return '<button class="'+(pos===idx?"on":"")+'" onclick="go('+pos+')"><span class="rn">'+(pos+1)+'</span><span>'+esc(s.title)+'</span></button>';
   }).join("");
 }
 function buildStage(){
-  document.getElementById("stage").innerHTML=SCENES.map(sceneHTML).join("");
+  var h="";for(var pos=0;pos<order.length;pos++){h+=sceneHTML(pos);}
+  document.getElementById("stage").innerHTML=h;
 }
 function sync(){
   var secs=document.querySelectorAll(".scene");
   for(var i=0;i<secs.length;i++)secs[i].classList.toggle("active",i===idx);
   var btns=document.querySelectorAll("#railnav button");
   for(var j=0;j<btns.length;j++)btns[j].classList.toggle("on",j===idx);
-  document.getElementById("progbar").style.width=Math.round((idx+1)/SCENES.length*100)+"%";
-  document.getElementById("count").textContent="Scene "+(idx+1)+" of "+SCENES.length;
+  document.getElementById("progbar").style.width=Math.round((idx+1)/order.length*100)+"%";
+  document.getElementById("count").textContent="Scene "+(idx+1)+" of "+order.length;
   document.getElementById("prev").disabled=idx===0;
-  document.getElementById("next").disabled=idx===SCENES.length-1;
+  document.getElementById("next").disabled=idx===order.length-1;
   window.scrollTo(0,0);
 }
-function go(i){if(i<0)i=0;if(i>SCENES.length-1)i=SCENES.length-1;idx=i;sync();}
+function go(i){if(i<0)i=0;if(i>order.length-1)i=order.length-1;idx=i;sync();}
+function setMode(privacy){order=privacy?ORDERS.privacy:ORDERS.standard;idx=0;buildRail();buildStage();sync();}
 function next(){go(idx+1);}
 function prev(){go(idx-1);}
 document.getElementById("next").addEventListener("click",next);
 document.getElementById("prev").addEventListener("click",prev);
+document.getElementById("privmode").addEventListener("change",function(e){setMode(e.target.checked);});
 document.addEventListener("keydown",function(e){
   if(e.key==="ArrowRight"||e.key==="PageDown"){next();}
   else if(e.key==="ArrowLeft"||e.key==="PageUp"){prev();}

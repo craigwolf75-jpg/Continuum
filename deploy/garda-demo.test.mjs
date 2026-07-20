@@ -32,11 +32,16 @@ ok("no vignette placeholders shipped (all keyed)", count(/"[a-z-]+":\s*\n?\s*'/g
 
 /* 2. Navigation contract: bounds + keyboard */
 ok("go() clamps lower bound", html.includes("if(i<0)i=0"));
-ok("go() clamps upper bound", html.includes("i>SCENES.length-1"));
+ok("go() clamps upper bound", /i>(order|SCENES)\.length-1/.test(html));
 ok("arrow-key navigation", html.includes("ArrowRight") && html.includes("ArrowLeft"));
 ok("prev disabled at first scene", html.includes("idx===0"));
-ok("next disabled at last scene", html.includes("idx===SCENES.length-1"));
+ok("next disabled at last scene", /idx===(order|SCENES)\.length-1/.test(html));
 ok("print handout, one scene per page", html.includes("page-break-after") && low.includes("window.print"));
+
+/* 2b. Masking-beat reorder toggle (Prompt 19 section 4) */
+ok("firewall-first toggle present", html.includes('id="privmode"') && html.includes("function setMode"));
+ok("standard order covers all fourteen scenes", /standard:\[0,1,2,3,4,5,6,7,8,9,10,11,12,13\]/.test(html));
+ok("privacy order front-loads masking (6) and escalation (10)", /privacy:\[0,1,5,9,/.test(html));
 
 /* 3. Scene 6 split: employer half carries NO intelligence label (mechanical) */
 const split = region('"checkin-split":', '"employer":');
