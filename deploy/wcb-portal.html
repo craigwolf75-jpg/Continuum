@@ -99,6 +99,9 @@ section.view{display:none}section.view.on{display:block}
 @media(max-width:1100px){.cols{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:88px 14px 40px}.kpis{grid-template-columns:1fr}}
 @media print{aside.side,header.top,.scrim,.drawer,.toast{display:none !important}main{margin:0;padding:0}}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
 </style>
 </head>
 <body>

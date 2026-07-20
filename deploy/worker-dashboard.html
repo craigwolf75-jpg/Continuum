@@ -27,7 +27,7 @@ main{margin-left:240px;padding:26px;min-height:100vh}
 h2.pg{font-size:29px;color:var(--navy)}
 .sub{color:var(--muted);font-size:13.5px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 18px rgba(14,27,44,.10)}
-.btn{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:13px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 18px rgba(14,27,44,.12);transition:transform .15s}
+.btn{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:13px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;box-shadow:0 6px 18px rgba(14,27,44,.12);transition:transform .15s}
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink);box-shadow:none}
@@ -121,6 +121,9 @@ section.view{display:none}section.view.on{display:block}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(max-width:1080px){.grid2{grid-template-columns:1fr !important}.tiles{grid-template-columns:1fr}}
 @media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:16px 12px 80px}}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
 </style>
 </head>
 <body>
@@ -163,7 +166,7 @@ function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}wri
 function resetAll(){S=fresh();S.checkedInToday=false;toast("Demo <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function toast(h){var el=document.getElementById("toast");el.innerHTML=h;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2600);}
-function burst(x,y){for(var i=0;i<14;i++){var p=document.createElement("div");p.className="burst";p.style.left=x+"px";p.style.top=y+"px";document.body.appendChild(p);
+function burst(x,y){if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;for(var i=0;i<14;i++){var p=document.createElement("div");p.className="burst";p.style.left=x+"px";p.style.top=y+"px";document.body.appendChild(p);
  (function(p,a,d){var t0=null;function step(ts){if(!t0)t0=ts;var k=(ts-t0)/700;if(k>=1){p.remove();return;}
  p.style.transform="translate("+(Math.cos(a)*d*k)+"px,"+(Math.sin(a)*d*k+30*k*k)+"px) scale("+(1-k)+")";p.style.opacity=1-k;requestAnimationFrame(step);}requestAnimationFrame(step);})(p,Math.random()*6.283,60+Math.random()*70);}}
 /* bridge write (13b schema): functional fields only, projection at the write side */
