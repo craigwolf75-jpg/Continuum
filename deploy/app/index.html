@@ -88,7 +88,7 @@
 <script>
 (function(){
   var S = window.ContinuumStore;
-  var draft = { pain:null, mobility:null, notes:'', period:null };
+  var draft = { pain:null, mobility:null, fatigue:null, confidence:null, notes:'', period:null };
   var justEscalated = false;
 
   function route(){ var h=(location.hash||'#today').replace('#',''); return ['today','history','duties','more'].indexOf(h)>=0?h:'today'; }
@@ -231,6 +231,12 @@
       '<div class="sliderhead" style="margin-top:14px"><span>How well can you move it?</span><span id="mobv">'+(draft.mobility!=null?draft.mobility:5)+'</span></div>'+
       '<input id="mob" class="slider" type="range" min="0" max="10" value="'+(draft.mobility!=null?draft.mobility:5)+'">'+
       '<div class="scale"><span>Not at all</span><span>Fully</span></div>'+
+      '<div class="sliderhead" style="margin-top:14px"><span>How is your fatigue?</span><span id="fatv">'+(draft.fatigue!=null?draft.fatigue:3)+'</span></div>'+
+      '<input id="fat" class="slider" type="range" min="0" max="10" value="'+(draft.fatigue!=null?draft.fatigue:3)+'">'+
+      '<div class="scale"><span>Rested</span><span>Exhausted</span></div>'+
+      '<div class="sliderhead" style="margin-top:14px"><span>How confident are you using it?</span><span id="confv">'+(draft.confidence!=null?draft.confidence:7)+'</span></div>'+
+      '<input id="conf" class="slider" type="range" min="0" max="10" value="'+(draft.confidence!=null?draft.confidence:7)+'">'+
+      '<div class="scale"><span>Not at all</span><span>Fully</span></div>'+
       '<textarea id="notes" placeholder="Anything you want your care team to know (optional)" style="margin-top:12px"></textarea>'+
       '<button class="btn" data-action="submit" style="margin-top:12px">Submit check in</button></div>';
     return html;
@@ -285,6 +291,8 @@
     var p=document.getElementById('pain'), m=document.getElementById('mob');
     if(p) p.oninput=function(){ draft.pain=+p.value; var pv=document.getElementById('painv'); if(pv) pv.textContent=p.value; };
     if(m) m.oninput=function(){ draft.mobility=+m.value; var mv=document.getElementById('mobv'); if(mv) mv.textContent=m.value; };
+    var fa=document.getElementById('fat'); if(fa) fa.oninput=function(){ draft.fatigue=+fa.value; var fv=document.getElementById('fatv'); if(fv) fv.textContent=fa.value; };
+    var cf=document.getElementById('conf'); if(cf) cf.oninput=function(){ draft.confidence=+cf.value; var cv=document.getElementById('confv'); if(cv) cv.textContent=cf.value; };
     var n=document.getElementById('notes'); if(n) n.oninput=function(){ draft.notes=n.value; };
   }
 
@@ -301,10 +309,10 @@
     else if(a==='reset'){ S.reset(); draft={pain:null,mobility:null,notes:'',period:null}; justEscalated=false; signedIn=false; lsDel('cx_signed_in'); G=null; location.hash='#today'; render(); }
     else if(a==='done'){ S.completeDuty(t.getAttribute('data-id'),'done'); render(); }
     else if(a==='submit'){
-      var pain=draft.pain!=null?draft.pain:5, mob=draft.mobility!=null?draft.mobility:5;
-      var res=S.submitCheckIn({pain:pain, mobility:mob, notes:draft.notes||'', period:draft.period||(new Date().getHours()<12?'AM':'PM')});
+      var pain=draft.pain!=null?draft.pain:5, mob=draft.mobility!=null?draft.mobility:5, fat=draft.fatigue!=null?draft.fatigue:3, conf=draft.confidence!=null?draft.confidence:7;
+      var res=S.submitCheckIn({pain:pain, mobility:mob, fatigue:fat, confidence:conf, notes:draft.notes||'', period:draft.period||(new Date().getHours()<12?'AM':'PM')});
       justEscalated = !!(res && res.escalated);
-      draft={pain:null,mobility:null,notes:'',period:null};
+      draft={pain:null,mobility:null,fatigue:null,confidence:null,notes:'',period:null};
       render();
     }
   });
