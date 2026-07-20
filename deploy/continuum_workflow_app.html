@@ -299,7 +299,7 @@ function seedCommon(){
     marcus:{name:"Marcus Bedard", trade:"Scaffolder", ref:"NX-2026-00481", body_part:"Right shoulder",
       type:"Shoulder strain", diagnosis:"Grade 1 supraspinatus strain", prognosis:21, visits:2,
       status:"light_duty", prior_status:null, restrictions:RESTRICTION_DEFAULT, injuryDay:0},
-    duties:[], escalations:[], wcb:[], audit:[], events:[], checkedIn:{}, ffw:false, closedNote:false
+    duties:[], escalations:[], wcb:[], audit:[], events:[], checkedIn:{}, ffw:false, closedNote:false, dutyAck:null
   };
 }
 function seedDay9(){
@@ -411,6 +411,8 @@ function autoActions(entered){
 
 /* ============================ CHECK-IN + ESCALATION ============================ */
 function currentPeriod(){ return S.checkedIn[S.day+"AM"] ? "PM" : "AM"; }
+function fmtTime(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
+function ackDuties(){ if(S.dutyAck&&S.dutyAck.day===S.day)return; S.dutyAck={day:S.day, ts:Date.now()}; render(); }
 function submitCheckin(pain, mobility, fatigue, confidence, notes){
   const period = currentPeriod();
   if(S.checkedIn[S.day+period]) return;
@@ -638,6 +640,7 @@ function renderWorker(){
     (m.status==="escalated"?'<div class="esc-banner" style="margin-top:12px"><h3>Your care team is taking a closer look</h3><p class="note">Your recent check-ins asked for attention. Your clinician has been notified. Keep checking in as normal.</p></div>':'')+
     (m.status==="signed_off"?'<div class="card" style="border-color:var(--good);margin-top:12px"><h3 style="color:var(--good)">You are back on full duty</h3><p class="note">This case is closed. Nice work.</p></div>':'')+
     '</div>'+
+    (m.status!=="signed_off" && m.restrictions ? '<div class="card"><div class="kicker">Today\'s restrictions</div><p class="note" style="margin:6px 0 10px">'+esc(m.restrictions)+'</p>'+(S.dutyAck&&S.dutyAck.day===S.day?'<span class="badge" style="background:#e4efe8;color:#2c6e46;border-color:#a9d9c0">Acknowledged today at '+fmtTime(S.dutyAck.ts)+'</span>':'<button class="btn" onclick="ackDuties()">I understand my duties today</button>')+'<p class="note" style="font-size:11px;margin-top:8px">A daily record that you understood your restrictions. Your coordinator sees the time, never your scores.</p></div>' : '')+
     (m.status!=="signed_off" ? (doneToday ?
       '<div class="card"><h3>Both check-ins done today</h3><p class="note">See you tomorrow. Use Advance day up top to move time forward.</p></div>'
       :
