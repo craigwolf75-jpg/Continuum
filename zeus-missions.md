@@ -99,15 +99,16 @@ folds in.
 ## DESIGN-1 backlog (from Apollo's baseline pass)
 
 ### S-DESIGN-A: Employer inference-channel ruling and fix
-- Status: BLOCKED (human gate + canon consistency)
+- Status: PARTIAL. D1-F01 resolved and shipped; D1-F02 still BLOCKED on a ruling.
 - Lead: apollo, with argus and calliope co-sign; athena for the wiring
-- Blocked on: Gary's ruling. D1-F01 employer live row shows "Clinician
-  reviewing" on escalation (employer-dashboard.html ~327/199/388); D1-F02 the
-  employer RTW bar drops light_duty 55 to escalated 45 on a clinical escalation
-  (liveRtw() ~187). Prompt 19 canon permits "awaiting clinical review" as an
-  employer phrase, so this may be compliant routing rather than a leak. Zeus
-  will not guess a privacy-law call. Fix (hold last functional value, adjust the
-  tag) proceeds only on Gary's decision.
+- D1-F01 RESOLVED (Gary ruled 2026-07-20): the employer tag "Clinician reviewing"
+  is replaced with the Prompt 19 canon phrase "Awaiting clinical review"
+  (employer-dashboard.html 327 and 388). Shipped.
+- D1-F02 BLOCKED on Gary's ruling: liveRtw() line 187 gives escalated a base of
+  45, below light_duty 55, so an escalated worker reads as lower readiness than a
+  light-duty one, quantifying a setback. Options: hold the last functional value
+  across an escalation, or leave the dip as legitimate functional readiness.
+  Zeus will not guess a privacy-law call. No fix until Gary decides.
 
 ### S-DESIGN-B: prefers-reduced-motion guards
 - Status: QUEUED
