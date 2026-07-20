@@ -39,6 +39,26 @@
   /* placeholder vignette (Stage 1) */
   .vig{border:1px dashed var(--hair);border-radius:14px;background:var(--card);min-height:190px;display:flex;align-items:center;justify-content:center;color:var(--mist);font-size:13px;text-align:center;padding:22px}
   .vig b{color:var(--gold2);font-family:'Space Grotesk',sans-serif}
+  /* high-fidelity vignette frames (light portal replicas) */
+  .frame{border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);background:#fff;color:#16202E;box-shadow:0 16px 46px rgba(0,0,0,.42);font-size:12.5px}
+  .frame>.bar{height:32px;background:#eef1f6;border-bottom:1px solid #dde3ec;display:flex;align-items:center;gap:6px;padding:0 12px}
+  .frame>.bar i{width:9px;height:9px;border-radius:50%;background:#cfd6e0}
+  .frame>.bar .u{margin-left:8px;font-size:11px;color:#6b7686}
+  .fbody{padding:15px 17px}
+  .phone{width:262px;margin:0 auto;border-radius:24px;border:1px solid rgba(0,0,0,.12);background:#fff;color:#16202E;box-shadow:0 16px 46px rgba(0,0,0,.42);overflow:hidden;font-size:12.5px}
+  .phone .notch{height:22px;background:#0E1B2C}
+  .pbody{padding:14px 15px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .split .sidelbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);margin-bottom:6px}
+  .v-h{font-weight:700;font-size:14px;color:#16202E}
+  .v-sub{color:#5a6678;font-size:11.5px}
+  .v-pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:10.5px;font-weight:700}
+  .v-func{background:#e7edf5;color:#33465e}
+  .v-flag{background:#fff4d6;color:#8a5a00;border:1px solid #e7c975}
+  .v-ok{background:#e3f0e3;color:#2c6e46}
+  .v-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eef1f5}
+  .card2{border:1px solid #e6e9ef;border-radius:10px;padding:12px 14px;background:#fff}
+  @media print{.frame,.phone{box-shadow:none}.frame>.bar{background:#f0f0f0}}
   /* notes */
   .notes{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:16px 18px}
   .notes li{list-style:none;padding:7px 0 7px 26px;position:relative;font-size:13.5px;color:var(--mist);line-height:1.5}
@@ -186,8 +206,67 @@ var SCENES=[
 /* ============ RUNNER ============ */
 var idx=0;
 function esc(t){return String(t).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+var VIGNETTES={
+ "positioning":
+  '<div style="text-align:center;padding:24px 18px">'+
+   '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:1.35">Continuum owns the<br><span style="color:var(--gold2)">space between events.</span></div>'+
+   '<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap">'+
+    '<span class="v-pill" style="background:rgba(255,255,255,.07);color:#AAB6C6;border:1px solid var(--hair)">Event: injury and care</span><span style="color:var(--gold)">&rarr;</span>'+
+    '<span class="v-pill" style="background:var(--gold);color:#0E1B2C">The gap: recovery</span><span style="color:var(--gold)">&rarr;</span>'+
+    '<span class="v-pill" style="background:rgba(255,255,255,.07);color:#AAB6C6;border:1px solid var(--hair)">Event: full duty</span></div>'+
+   '<div style="color:#AAB6C6;font-size:12px;margin-top:16px">SIGMA manages the claim. Continuum manages the recovery.</div></div>',
+ "intake":
+  '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">claims system &middot; first notice of injury</span></div>'+
+   '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="v-h">New claim NX-2026-00481</div><span class="v-pill v-ok">Open</span></div>'+
+   '<div class="v-row"><span class="v-sub">Claimant</span><b>Marcus Bedard</b></div>'+
+   '<div class="v-row"><span class="v-sub">Employer</span><b>Worley</b></div>'+
+   '<div class="v-row"><span class="v-sub">Injury</span><b>Right shoulder, grade 1 supraspinatus strain</b></div>'+
+   '<div class="v-row" style="border-bottom:none"><span class="v-sub">Continuum</span><span class="v-pill v-ok">Recovery plan attached</span></div></div></div>',
+ "sms":
+  '<div class="phone"><div class="notch"></div><div class="pbody" style="background:#0E1B2C;min-height:150px">'+
+   '<div style="color:#8494a8;font-size:10.5px;text-align:center;margin-bottom:14px">Messages &middot; now</div>'+
+   '<div style="background:#243449;color:#fff;border-radius:16px 16px 16px 4px;padding:12px 14px;max-width:210px;font-size:12.5px;line-height:1.45">You have an update from your Continuum recovery team. Open the app to view.</div>'+
+   '<div style="color:#8494a8;font-size:10.5px;margin-top:8px">No diagnosis, scores, or restrictions in the message. Content stays behind sign in.</div></div></div>',
+ "onboarding":
+  '<div class="phone"><div class="notch"></div><div class="pbody">'+
+   '<div style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;color:#0E1B2C">Continuum<span style="color:#C8972F">.</span></div><div class="v-sub" style="margin-bottom:10px">Your recovery</div>'+
+   '<div class="card2" style="margin-bottom:10px"><div style="display:flex;gap:9px;align-items:flex-start"><span style="width:20px;height:20px;border-radius:6px;border:2px solid #C8972F;flex-shrink:0"></span><div style="font-size:11.5px;line-height:1.45"><b>Consent</b><br>Timestamped and revocable. Collection begins only after you agree.</div></div></div>'+
+   '<div class="v-row"><span class="v-sub">Injury</span><b>Right shoulder strain</b></div>'+
+   '<div class="v-row"><span class="v-sub">Restriction</span><b>No lifting above shoulder</b></div>'+
+   '<div class="v-row" style="border-bottom:none"><span class="v-sub">Recovery day</span><b>9 of 21</b></div></div></div>',
+ "ack":
+  '<div class="phone"><div class="notch"></div><div class="pbody">'+
+   '<div class="v-h" style="margin-bottom:3px">Today\'s restrictions</div><div class="v-sub" style="margin-bottom:12px">No lifting above shoulder height &middot; breaks every 60 minutes</div>'+
+   '<div style="background:#0E1B2C;color:#fff;border-radius:10px;padding:12px 14px;text-align:center;font-weight:700;font-size:12.5px">I understand my duties today</div>'+
+   '<div style="text-align:center;margin-top:10px"><span class="v-pill v-ok">Acknowledged 6:58 AM</span></div>'+
+   '<div class="v-sub" style="margin-top:12px;font-size:11px">A daily timestamped record that the worker knew his limits.</div></div></div>',
+ "checkin-split":
+  '<div class="split">'+
+   '<div class="side"><div class="sidelbl">Clinician and coordinator</div><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">clinical portal</span></div>'+
+    '<div class="fbody"><div class="v-h" style="margin-bottom:8px">Marcus Bedard</div>'+
+    '<div class="v-row"><span class="v-sub">Pain</span><b>7</b></div>'+
+    '<div class="v-row"><span class="v-sub">Fatigue / confidence</span><b>6 / 4</b></div>'+
+    '<div class="v-row" style="border-bottom:none"><span class="v-sub">Signal</span><span class="v-pill v-flag">Plateau flagged</span></div>'+
+    '<div style="margin-top:9px;font-size:11px;color:#8a5a00">Escalated to the clinician per program rules.</div></div></div></div>'+
+   '<div class="side"><div class="sidelbl">Employer, same second</div><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">employer dashboard</span></div>'+
+    '<div class="fbody"><div class="v-h" style="margin-bottom:8px">Marcus Bedard</div>'+
+    '<div class="v-row"><span class="v-sub">Status</span><span class="v-pill v-func">Light duty</span></div>'+
+    '<div class="v-row"><span class="v-sub">Duties</span><b>On track</b></div>'+
+    '<div class="v-row" style="border-bottom:none"><span class="v-sub">Plan</span><span class="v-pill v-func">Under review</span></div>'+
+    '<div style="margin-top:9px;font-size:11px;color:#5a6678">No score, no diagnosis, no inference.</div></div></div></div></div>',
+ "employer":
+  '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">employer dashboard &middot; what work is safe today</span></div>'+
+   '<div class="fbody"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">'+
+    '<div class="card2"><div class="v-sub">Injured workers</div><div style="font-size:21px;font-weight:700">28</div></div>'+
+    '<div class="card2"><div class="v-sub">On light duty</div><div style="font-size:21px;font-weight:700">18</div></div>'+
+    '<div class="card2"><div class="v-sub">RTW rate</div><div style="font-size:21px;font-weight:700">76%</div></div></div>'+
+   '<div class="v-row"><b>Marcus Bedard</b><span class="v-pill v-func">Light duty</span></div>'+
+   '<div class="v-row"><span class="v-sub">Duties</span><b>On track</b></div>'+
+   '<div class="v-row" style="border-bottom:none"><span class="v-sub">Plan</span><span class="v-pill v-func">Awaiting clinical review</span></div></div></div>'
+};
 function vignette(key){
-  return '<div class="vig"><div>Vignette: <b>'+esc(key)+'</b><br><span style="font-size:11px">high-fidelity portal replica lands in Stage 2</span></div></div>';
+  if(VIGNETTES[key])return VIGNETTES[key];
+  return '<div class="vig"><div>Vignette: <b>'+esc(key)+'</b><br><span style="font-size:11px">high-fidelity portal replica lands in a later stage</span></div></div>';
 }
 function sceneHTML(s,i){
   var h='<section class="scene'+(i===idx?" active":"")+'" data-i="'+i+'">';
