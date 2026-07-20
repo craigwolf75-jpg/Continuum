@@ -324,7 +324,7 @@ function workerTable(list,preview){
  h+='<table><thead><tr><th>Worker</th><th>Injury</th><th>Days</th><th>Status</th><th>Light duty / restrictions</th><th>Next review</th><th>RTW</th></tr></thead><tbody>';
  list.forEach(function(w){var idx=S.workers.indexOf(w);var lv=w.live;
   h+='<tr class="rowlink"'+(lv?' style="background:rgba(200,151,47,.07)"':'')+' onclick="'+(lv?'openLiveDrawer()':'openDrawer('+idx+')')+'"><td><b>'+esc(w.name)+'</b>'+(lv?'<span class="live-badge">Live</span>':'')+'<div style="color:var(--muted);font-size:11px">'+esc(w.role)+'</div></td>'+
-  '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Clinician reviewing</span>':'')+'</td>'+
+  '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Awaiting clinical review</span>':'')+'</td>'+
   '<td style="max-width:230px;color:var(--muted)">'+esc(w.restr)+'</td><td>'+esc(w.review)+'</td><td style="min-width:110px">'+rtwBar(w.rtw)+'</td></tr>';});
  h+='</tbody></table>';
  h+='<div class="tfoot">'+(preview?'Showing '+list.length+' of '+actives().length+' injured workers &middot; ':"")+'<span class="prov derived">Derived functional status</span> &nbsp; Functional status only, never medical detail &nbsp; <a href="#" onclick="peekFirewall();return false">What this view cannot see</a></div>';
@@ -385,7 +385,7 @@ function openLiveDrawer(){
  if(!LIVE)return; var w=LIVE;
  var h='<div class="kicker">Live from the worker app</div><h1 style="font-size:21px">'+esc(w.name)+'<span class="live-badge">Live</span></h1>'+
  '<div class="sub">'+esc(w.role)+' &middot; '+esc(w.loc)+'</div>'+
- '<div style="margin:12px 0">'+chipFor(w.status)+(w.clinicianReviewing?'<span class="rev-tag">Clinician reviewing</span>':'')+'</div>'+
+ '<div style="margin:12px 0">'+chipFor(w.status)+(w.clinicianReviewing?'<span class="rev-tag">Awaiting clinical review</span>':'')+'</div>'+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Case (functional only)</div>'+
  '<table><tbody><tr><td>Injury</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
  '<tr><td>Days injured</td><td><b>'+w.days+'</b></td></tr>'+
