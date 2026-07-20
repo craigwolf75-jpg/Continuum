@@ -262,7 +262,7 @@ function rtwBar(v){return '<div style="display:flex;align-items:center;gap:8px">
 function kpiCard(label,big,delta,extra){return '<div class="card kpi"><div class="cardhead">'+label+'</div><div style="display:flex;justify-content:space-between;align-items:flex-end;gap:8px"><div><div class="n">'+big+'</div><div class="d">'+delta+'</div></div><div>'+(extra||"")+'</div></div></div>';}
 function renderOverview(){
  var c=counts(),tot=actives().length,cats=catCounts(),bk=bucketCounts(),locs=locCounts();
- var h=pagehead("The employer view",'Every recovery on <span class="g">one screen.</span>',"Injury Management Dashboard &middot; Live status of injured workers and return-to-work progress",
+ var h=pagehead("The employer view",'Every recovery on <span class="g">one screen.</span>',"What work is safe today &middot; live functional status of injured workers and return-to-work progress",
   '<button class="btn" onclick="window.print()">Export PDF</button> <button class="btn" onclick="go(\'workers\')">Filters</button>');
  h+='<div class="grid kpis">'+
  kpiCard("Total injured workers",tot,'<span class="down">&#8595; 8% vs last 7 days</span>',spark([31,30,29,30,29,28],64,34,"#3E9A64"))+

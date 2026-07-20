@@ -141,7 +141,7 @@ function pagehead(title,sub,extra){
  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:12px"><div><h1>'+title+'</h1><p class="sub">'+sub+'</p></div>'+(extra||"")+'</div>';}
 /* ---------- dashboard ---------- */
 function renderDashboard(){
- var h=pagehead("Platform Overview","Operational metadata and aggregates only. This seat never sees clinical content.",
+ var h=pagehead("Platform Overview","Where are my biggest operational risks. Operational metadata and aggregates only; this seat never sees clinical content.",
   '<button class="btn ghost" onclick="window.print()"><span class="msym" style="font-size:18px">file_download</span> Export</button>');
  h+='<div class="kpis">'+
  '<div class="kpi"><div class="lbl">Tenants</div><div class="n">'+realT().length+'<span class="tag">+ 1 sandbox</span></div></div>'+
