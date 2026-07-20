@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: GardaWorld demonstration runner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0E1B2C;--navy2:#0A1526;--card:#14243B;--gold:#C8972F;--gold2:#E3B968;--mist:#AAB6C6;--ink:#EAF0F7;--hair:rgba(255,255,255,.09);
+    --notice:#8a5a00;--noticebg:#fff4d6;--noticeline:#e7c975;--live:#1f6f52;--livebg:#dff3e8;--liveline:#8fceb0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--navy);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5}
+  .app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+  /* scene rail */
+  .rail{background:var(--navy2);border-right:1px solid var(--hair);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .rail .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:#fff;padding:0 20px 4px}
+  .rail .brand span{color:var(--gold)}
+  .rail .sub{color:var(--mist);font-size:11px;padding:0 20px 16px;border-bottom:1px solid var(--hair);margin-bottom:10px}
+  .rail button{display:flex;gap:11px;align-items:baseline;width:100%;background:none;border:none;color:var(--mist);font:inherit;font-size:12.5px;text-align:left;padding:9px 20px;cursor:pointer;border-left:3px solid transparent}
+  .rail button:hover{color:#fff;background:rgba(255,255,255,.03)}
+  .rail button.on{color:#fff;background:rgba(200,151,47,.12);border-left-color:var(--gold)}
+  .rail button .rn{color:var(--gold);font-weight:700;font-size:11px;min-width:16px}
+  .rail button.on .rn{color:var(--gold2)}
+  /* stage */
+  .main{display:flex;flex-direction:column;min-height:100vh}
+  .prog{height:4px;background:rgba(255,255,255,.08)}
+  .prog i{display:block;height:100%;background:var(--gold);transition:width .3s}
+  .stagewrap{flex:1;padding:34px 46px;max-width:1080px;width:100%;margin:0 auto}
+  .scene{display:none}
+  .scene.active{display:block;animation:fade .35s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .scene h1{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:#fff;margin:5px 0 2px}
+  .scene .of{color:var(--mist);font-size:12.5px;margin-bottom:20px}
+  .lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);margin:22px 0 8px}
+  .narration{font-size:18px;line-height:1.62;color:#F2F6FB}
+  /* placeholder vignette (Stage 1) */
+  .vig{border:1px dashed var(--hair);border-radius:14px;background:var(--card);min-height:190px;display:flex;align-items:center;justify-content:center;color:var(--mist);font-size:13px;text-align:center;padding:22px}
+  .vig b{color:var(--gold2);font-family:'Space Grotesk',sans-serif}
+  /* notes */
+  .notes{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:16px 18px}
+  .notes li{list-style:none;padding:7px 0 7px 26px;position:relative;font-size:13.5px;color:var(--mist);line-height:1.5}
+  .notes li:before{content:"";position:absolute;left:8px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .notes li.verbatim{color:#fff}
+  .notes li.verbatim:before{background:var(--gold2);box-shadow:0 0 0 3px rgba(227,185,104,.18)}
+  .vtag{display:inline-block;background:var(--gold);color:var(--navy);font-size:9px;font-weight:700;letter-spacing:.06em;border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:middle;text-transform:uppercase}
+  /* smarter chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:rgba(255,255,255,.05);border:1px solid var(--hair);border-radius:999px;padding:7px 14px;font-size:12.5px;color:var(--ink)}
+  .chip b{color:var(--gold2);font-weight:700}
+  /* live system chip */
+  .livechip{display:flex;gap:12px;align-items:flex-start;background:var(--livebg);border:1px solid #a9d9c0;border-radius:12px;padding:14px 16px;color:#123f2d;margin-top:22px}
+  .livechip .tag{background:var(--live);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;border-radius:6px;padding:4px 9px;white-space:nowrap;text-transform:uppercase;flex-shrink:0;margin-top:1px}
+  .livechip .lt b{display:block;font-size:13px;color:#0e3524;margin-bottom:2px}
+  .livechip .lt span{font-size:12.5px;color:#2f5c48}
+  /* nav bar */
+  .nav{position:sticky;bottom:0;background:rgba(10,21,38,.94);border-top:1px solid var(--hair);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 46px}
+  .nav .count{color:var(--mist);font-size:12.5px}
+  .nav .btns{display:flex;gap:10px}
+  .nav button{border-radius:10px;padding:11px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;border:none}
+  .nav .prev{background:rgba(255,255,255,.1);color:#fff}
+  .nav .prev[disabled]{opacity:.35;cursor:default}
+  .nav .next{background:var(--gold);color:var(--navy)}
+  .nav .next[disabled]{opacity:.35;cursor:default}
+  .nav .print{background:none;border:1px solid var(--hair);color:var(--mist)}
+  @media(max-width:820px){.app{grid-template-columns:1fr}.rail{position:static;height:auto;display:flex;flex-wrap:wrap;gap:2px}.rail .brand,.rail .sub{width:100%}.rail button{width:auto}.stagewrap{padding:22px}.nav{padding:12px 22px}}
+  /* print: full script handout, one scene per page */
+  @media print{
+    body{background:#fff;color:#111}
+    .rail,.nav,.prog{display:none !important}
+    .app{display:block}
+    .stagewrap{max-width:none;padding:0}
+    .scene{display:block !important;page-break-after:always;padding:24px 8px;border-bottom:1px solid #ccc}
+    .scene h1{color:#111}.kicker{color:#8a5a00}.narration{color:#111;font-size:15px}
+    .vig{background:#f4f6fa;color:#555;border-color:#ccc}
+    .notes{background:#f7f7f7;border-color:#ddd}.notes li{color:#333}.notes li.verbatim{color:#000}
+    .chip{color:#111;border-color:#ccc}.chip b{color:#8a5a00}
+    .livechip{background:#eef7f1;color:#123f2d}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand">Continuum<span>.</span></div>
+    <div class="sub">GardaWorld demonstration runner</div>
+    <nav id="railnav"></nav>
+  </aside>
+  <div class="main">
+    <div class="prog"><i id="progbar" style="width:7%"></i></div>
+    <div class="stagewrap" id="stage"></div>
+    <div class="nav">
+      <span class="count" id="count"></span>
+      <div class="btns">
+        <button class="print" onclick="window.print()">Print handout</button>
+        <button class="prev" id="prev">Back</button>
+        <button class="next" id="next">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============ SCENE SCRIPT (Prompt 20) ============ */
+var SCENES=[
+ {kicker:"Where care ends",title:"The space between events",vig:"positioning",
+  narration:"Every workplace injury has a moment of care: the clinic, the doctor, the first treatment. Then the worker goes home and the system goes quiet. That quiet is where recovery actually happens, and it is where no one is watching. Continuum owns the space between events. It does not replace the physician, the board, or your claims system; it manages the recovery that lives in the gap none of them can see.",
+  notes:[{v:1,t:"Continuum owns the space between events."},{v:0,t:"Open slow. Let the phrase land before you move to Marcus."}],
+  smarter:[{r:"Everyone",t:"names the category before anyone asks what this competes with."}],live:null},
+
+ {kicker:"First notice",title:"The claim opens",vig:"intake",
+  narration:"Marcus Bedard is a scaffolder at Worley. On a Tuesday he strains his right shoulder, a grade one supraspinatus strain. The claim opens in the board's system as claim NX-2026-00481. That first notice is the only handshake Continuum needs to begin. From here, the recovery is ours to coordinate.",
+  notes:[{v:0,t:"Name the claim number once, so the SIGMA scene later lands as the same case."},{v:0,t:"Do not overstate the integration. First notice in; that is the pilot scope."}],
+  smarter:[{r:"Claims",t:"the file opens with a recovery plan attached, not just a diagnosis."}],live:null},
+
+ {kicker:"The alert",title:"The message that says nothing",vig:"sms",
+  narration:"Marcus gets a text. It tells him he has an update from his recovery team, and nothing else: no diagnosis, no scores, no restrictions in the message body. He taps through and signs in, and only then does the content appear, behind his login. The alert is a doorbell, never the letter.",
+  notes:[{v:1,t:"The text is a doorbell, never the letter."},{v:0,t:"An SMS is not a private channel, so nothing private ever rides on it."}],
+  smarter:[{r:"Worker",t:"knows something needs attention, with no exposure on an unsecured channel."}],live:null},
+
+ {kicker:"Onboarding",title:"Marcus onboards",vig:"onboarding",
+  narration:"Marcus opens the worker app. He reads a plain consent, timestamped and revocable, and only then does collection begin. His injury summary, his restrictions, his recovery plan, all in one phone column. He is not filling out a form for the insurer. He is being handed his own recovery.",
+  notes:[{v:0,t:"Slow down on consent. This is the trust moment."},{v:0,t:"If asked about withdrawal: he can revoke any time and the case continues unchanged."}],
+  smarter:[{r:"Worker",t:"sees exactly what is expected today, and what is off limits."}],
+  live:{tag:"Live system",tabs:"Worker dashboard",note:"Open the worker dashboard and walk the consent gate and the Today view live. The same tab returns at the timeline scene."}},
+
+ {kicker:"Every morning",title:"The morning acknowledgement",vig:"ack",
+  narration:"Every morning, before anything else, Marcus confirms he understands today's restrictions: no lifting above shoulder height, breaks every sixty minutes. One tap, timestamped. It takes three seconds and it creates something valuable, a daily record that the worker knew his limits. That record is safety culture, instrumentation, and legal defense in a single tap.",
+  notes:[{v:1,t:"Safety culture, instrumentation, and legal defense in a single tap."},{v:0,t:"This is the compliance artifact a JHSC lead cares about. Say the word timestamped."}],
+  smarter:[{r:"Worker",t:"reaffirms the limits daily."},{r:"HSE",t:"holds a dated record the worker acknowledged them."}],live:null},
+
+ {kicker:"The keystroke",title:"One check-in, two truths",vig:"checkin-split",
+  narration:"At six pm on a hard day, Marcus logs his check-in: pain, mobility, and now fatigue and confidence too. Watch what happens the same second on two screens. The coordinator and clinician see the intelligence: a plateau flagged, escalated to the clinician per program rules. The employer, updated the same second, sees only function: duties on track, duty plan under review. The employer never sees a clinical inference. That is not a limitation. It is the reason Marcus tells the truth at six pm on a hard day.",
+  notes:[{v:1,t:"The employer never sees a clinical inference, and that is the reason he tells the truth."},{v:0,t:"If the Garda privacy lead is in the room, slow down here and let them watch the masking work."}],
+  smarter:[{r:"Clinician",t:"sees the plateau, and the fatigue and confidence trend."},{r:"Coordinator",t:"knows to route it."},{r:"Employer",t:"knows the plan is under review, and nothing clinical."}],
+  live:{tag:"Live system",tabs:"Worker dashboard + HSE portal + Employer dashboard",note:"Three tabs. Submit the check-in on the worker dashboard and let the HSE and employer tabs update live across the bridge."}},
+
+ {kicker:"The next morning",title:"What work is safe today",vig:"employer",
+  narration:"The next morning Marcus's supervisor opens the employer dashboard. One question, answered: what work is safe today. Duties on track, one plan under review, awaiting clinical review. Functional status only, never a score, never a diagnosis, never a note. The supervisor makes a better staffing decision and never touches a piece of health information.",
+  notes:[{v:0,t:"Reinforce: the employer surface is functional by design, and that is a feature you demonstrate proudly."}],
+  smarter:[{r:"Employer",t:"knows what is safe to assign, with zero clinical exposure."}],
+  live:{tag:"Live system",tabs:"Employer dashboard",note:"Open the employer dashboard; show the functional row and the awaiting-review masking on Marcus."}},
+
+ {kicker:"The clinician",title:"The full picture, in one place",vig:"clinical",
+  narration:"Dr. A. Owusu opens the clinical portal. Here, and only here, is the full picture: the diagnosis, the scores, the trend, the fatigue and confidence Marcus reported, the free text. The clinician reviews independently and decides what changes. The system routes; the clinician decides. Nothing about treatment is automated.",
+  notes:[{v:1,t:"The system routes; the clinician decides."},{v:0,t:"This is the device-boundary sentence. Say it clearly. Health Canada reads marketing."}],
+  smarter:[{r:"Clinician",t:"has every signal in one place, and the authority to act on it."}],
+  live:{tag:"Live system",tabs:"Clinical portal",note:"Open the clinical portal at Marcus's case; show the recovery signal beside the transition buttons."}},
+
+ {kicker:"The matcher",title:"Duties inside the lines",vig:"matcher",
+  narration:"Back on the HSE portal, the coordinator assigns modified duties, and every task is filtered by Marcus's current restrictions before it can be offered. A duty cannot be assigned until it is hazard checked. Marcus accepts it himself. Nobody accepts for him. And when a trend turns, pain holding high across three check-ins, the same portal shows the escalation, as escalation, never as a diagnosis.",
+  notes:[{v:0,t:"Show the hazard-check gate. Server enforced in the product."},{v:0,t:"Emphasize worker acceptance: nobody accepts for you."}],
+  smarter:[{r:"HSE",t:"assigns only duties the restrictions allow, and sees escalations as escalations."},{r:"Worker",t:"accepts work he knows is safe."}],
+  live:{tag:"Live system",tabs:"HSE portal",note:"Open the HSE portal; assign a duty from the restriction-filtered bank, and show the escalation queue."}},
+
+ {kicker:"When a signal needs a human",title:"Escalated, not diagnosed",vig:"escalation",
+  narration:"Some days the trend turns. Pain holds high across three check-ins, or mobility stalls. The system does not diagnose and it does not recommend treatment. It does one thing: it escalates to the clinician per program rules. A human reviews, the same day. This is tracking and visualization with independent clinician review. It is deliberately not an automated treatment recommendation, and that is what keeps version one outside device regulation.",
+  notes:[{v:1,t:"Escalated to the clinician per program rules."},{v:1,t:"Tracking and visualization with independent clinician review; no scoring, no prediction, no alerts that alter treatment."},{v:0,t:"Volunteer the device line before anyone asks."}],
+  smarter:[{r:"Coordinator",t:"knows a human must look today."},{r:"Clinician",t:"gets the case routed, not a machine's opinion."}],live:null},
+
+ {kicker:"Leadership",title:"Where are the risks",vig:"executive",
+  narration:"Leadership opens the executive view. Descriptive intelligence, today: recovery durations against the sixty three day benchmark, days regained, cases by status, the biggest operational risks. The predictive numbers, the ones that forecast, are badged as roadmap and shown as illustrative. We under promise here on purpose. To an enterprise buyer, that reads as discipline, not weakness.",
+  notes:[{v:0,t:"Point at the roadmap badge. Predictive is later, behind the same flag discipline as the pose module."},{v:1,t:"Descriptive now, predictive later."}],
+  smarter:[{r:"Leadership",t:"sees where the operational risk sits, on real descriptive data."}],live:null},
+
+ {kicker:"The buyer's picture",title:"Continuum inside the claim",vig:"sigma",
+  narration:"Here is the picture GardaWorld wants to see: their claims screen, claim NX-2026-00481, with a gold Continuum Recovery Intelligence panel beside it. Recovery day, functional status, return to work estimate, all functional, all from the recovery side. This is an illustrative mock. The pilot integration is intake level, not a live bidirectional connection. Say that out loud, before anyone asks.",
+  notes:[{v:1,t:"Illustrative mock, and the pilot integration is intake level."},{v:0,t:"This is the scene where over-claiming would cost you the room. Under-claim it."},{v:0,t:"The sigma-panel.html page live-reads the same bridge if you want to show it moving; keep it labeled illustrative."}],
+  smarter:[{r:"Claims",t:"sees recovery progress without leaving the claim, functional only."}],live:null},
+
+ {kicker:"The arc",title:"Day nine to twenty one",vig:"timeline",
+  narration:"Step back and watch the whole arc. Day nine: light duty, pain easing, mobility returning. Each check-in moves the ring. Duties completed, restrictions acknowledged, the trend climbing toward clearance. By day twenty one Marcus is at the threshold, full duty pending one signature. The story is not a chart. It is a worker getting his life back, on a timeline everyone can see.",
+  notes:[{v:0,t:"Let the timeline breathe. This is the emotional beat before the finale."}],
+  smarter:[{r:"Everyone",t:"sees the same arc, each from their own lane."}],live:null},
+
+ {kicker:"The close",title:"Everyone made better decisions",vig:"finale",
+  narration:"Day twenty one. Dr. Owusu presses the gold Clearance button on the clinical portal. The sign-off crosses the bridge. The worker app celebrates. The employer and HSE views retire him. The board portal closes the claim with the full duty package, expected full duty Jul 31. Four tabs, one keystroke, the whole company moving at once. Everyone made better decisions because everyone had better information.",
+  notes:[{v:1,t:"Everyone made better decisions because everyone had better information."},{v:0,t:"Run this live on the worker dashboard Present mode. Press Clearance and let all four tabs move."},{v:0,t:"End here. Do not add a slide after this."}],
+  smarter:[{r:"Everyone",t:"the single check-in that opened this demo is the same signal that just closed the claim."}],
+  live:{tag:"Live system",tabs:"All portals, worker dashboard Present mode",note:"The rehearsed ending: run Present mode to day 21 and land Dr. Owusu's clearance across all four tabs at once."}}
+];
+
+/* ============ RUNNER ============ */
+var idx=0;
+function esc(t){return String(t).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c];});}
+function vignette(key){
+  return '<div class="vig"><div>Vignette: <b>'+esc(key)+'</b><br><span style="font-size:11px">high-fidelity portal replica lands in Stage 2</span></div></div>';
+}
+function sceneHTML(s,i){
+  var h='<section class="scene'+(i===idx?" active":"")+'" data-i="'+i+'">';
+  h+='<div class="kicker">'+esc(s.kicker)+'</div><h1>'+esc(s.title)+'</h1><div class="of">Scene '+(i+1)+' of '+SCENES.length+'</div>';
+  h+='<div class="lbl">Narration</div><div class="narration">'+esc(s.narration)+'</div>';
+  h+='<div class="lbl">Vignette</div>'+vignette(s.vig);
+  h+='<div class="lbl">Presenter notes</div><ul class="notes">'+s.notes.map(function(n){return '<li class="'+(n.v?"verbatim":"")+'">'+(n.v?'<span class="vtag">Say verbatim</span>':"")+esc(n.t)+'</li>';}).join("")+'</ul>';
+  h+='<div class="lbl">Who becomes smarter</div><div class="chips">'+s.smarter.map(function(c){return '<span class="chip"><b>'+esc(c.r)+':</b> '+esc(c.t)+'</span>';}).join("")+'</div>';
+  if(s.live){h+='<div class="livechip"><span class="tag">'+esc(s.live.tag)+'</span><div class="lt"><b>'+esc(s.live.tabs)+'</b><span>'+esc(s.live.note)+'</span></div></div>';}
+  h+='</section>';
+  return h;
+}
+function buildRail(){
+  document.getElementById("railnav").innerHTML=SCENES.map(function(s,i){
+    return '<button class="'+(i===idx?"on":"")+'" onclick="go('+i+')"><span class="rn">'+(i+1)+'</span><span>'+esc(s.title)+'</span></button>';
+  }).join("");
+}
+function buildStage(){
+  document.getElementById("stage").innerHTML=SCENES.map(sceneHTML).join("");
+}
+function sync(){
+  var secs=document.querySelectorAll(".scene");
+  for(var i=0;i<secs.length;i++)secs[i].classList.toggle("active",i===idx);
+  var btns=document.querySelectorAll("#railnav button");
+  for(var j=0;j<btns.length;j++)btns[j].classList.toggle("on",j===idx);
+  document.getElementById("progbar").style.width=Math.round((idx+1)/SCENES.length*100)+"%";
+  document.getElementById("count").textContent="Scene "+(idx+1)+" of "+SCENES.length;
+  document.getElementById("prev").disabled=idx===0;
+  document.getElementById("next").disabled=idx===SCENES.length-1;
+  window.scrollTo(0,0);
+}
+function go(i){if(i<0)i=0;if(i>SCENES.length-1)i=SCENES.length-1;idx=i;sync();}
+function next(){go(idx+1);}
+function prev(){go(idx-1);}
+document.getElementById("next").addEventListener("click",next);
+document.getElementById("prev").addEventListener("click",prev);
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="PageDown"){next();}
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){prev();}
+});
+buildRail();buildStage();sync();
+</script>
+</body>
+</html>
