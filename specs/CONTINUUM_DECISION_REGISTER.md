@@ -2,7 +2,7 @@
 
 Tracks the eight open decisions from Prompt 21 section 20, resolved one at a time per the brief's discipline. Where a resolution here conflicts with an earlier document, this register governs that decision once it is dated and ruled by Gary. See [[continuum-mvp-governance]] and specs/CONTINUUM_PROMPT_21.md.
 
-All eight ruled by Gary on 2026-07-20.
+All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH Enterprise Integration Blueprint) adds three open decisions, D9 through D11, carried as integration and diligence dependencies; none blocks the pilot.
 
 ## Resolved
 
@@ -29,6 +29,19 @@ All eight ruled by Gary on 2026-07-20.
 
 ### D8. Marketing boundary for the word intelligence
 **Ruling: keep the term, bound it by a verb lexicon.** "Recovery Intelligence" / "Continuous Recovery Intelligence" stays as the category (per Prompt 19). Allowed verbs: surfaces, organizes, connects, routes, informs, flags for review. Banned verbs: diagnoses, predicts, recommends, determines, detects, guarantees. Enforced by a standing marketing-review gate, preserving the framing while holding the device posture.
+
+## Open (Prompt 26, SIGMA-RH integration)
+
+Added by the Prompt 26 review of Craig's SIGMA Enterprise Integration Blueprint on 2026-07-20. None blocks the pilot; each is a target-state or diligence dependency owned outside the build, lifted directly from the blueprint's own appendix.
+
+### D9. SIGMA-RH programmatic API beyond the connector
+**Open (Craig's SIGMA-RH relationship).** Confirm whether SIGMA-RH exposes a REST or SOAP API beyond the Power Automate connector. The ideal bidirectional integration needs it; the pragmatic connector-plus-file-exchange state and the pilot manual export do not, so this gates the target state only, never the pilot.
+
+### D10. Enterprise identity federation
+**Open (Craig's SIGMA-RH relationship).** Confirm SAML or Microsoft Entra federation for single sign-on into the integration views. Needed for the ideal state and for enterprise trust; the pilot does not depend on it.
+
+### D11. Vendor security diligence artifacts
+**Open (diligence).** Obtain the SIGMA-RH SOC 2 report and ISO 27001 certificate directly in diligence rather than from vendor marketing pages, to substantiate the per-customer isolation and Canadian residency posture before any enterprise commitment.
 
 ## Counsel dependencies carried forward
 
