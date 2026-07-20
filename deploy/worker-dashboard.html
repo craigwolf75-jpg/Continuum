@@ -154,10 +154,11 @@ function fresh(){return {
   {id:1,task:"Tool crib, inventory management",hours:4,status:"completed"},
   {id:2,task:"Safety paperwork, weekly incident logs",hours:3,status:"accepted"},
   {id:3,task:"Toolbox talk preparation",hours:2,status:"assigned"}],
+ activities:[{id:1,name:"Shoulder mobility, 5 min",status:"pending"},{id:2,name:"Gentle stretches, 3 sets",status:"pending"},{id:3,name:"Ice after activity, 10 min",status:"pending"}],
  msgs:[{who:"them",x:"Morning Marcus. Your new duty list is ready when you are.",t:"K. Morgan, 8:02 AM"}],
  unread:1, present:false
 };}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;if(S.form){if(S.form.fatigue==null)S.form.fatigue=3;if(S.form.confidence==null)S.form.confidence=7;}if(S.ackDay===undefined)S.ackDay=null;if(S.ackTs===undefined)S.ackTs=null;return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;if(S.form){if(S.form.fatigue==null)S.form.fatigue=3;if(S.form.confidence==null)S.form.confidence=7;}if(S.ackDay===undefined)S.ackDay=null;if(S.ackTs===undefined)S.ackTs=null;if(!S.activities)S.activities=fresh().activities;return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}writeBridge();render();}
 function resetAll(){S=fresh();S.checkedInToday=false;toast("Demo <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -277,11 +278,18 @@ function renderDuties(){
    :'<span class="pillst ok">done</span>';
   return '<div class="duty '+(d.status==="completed"?"l-teal":"l-gold")+'"><div><b>'+esc(d.task)+'</b><div class="m">'+d.hours+' hours &middot; '+(d.status==="assigned"?"New: waiting for you":d.status==="accepted"?"Accepted, in your day":"Completed")+'</div></div>'+act+'</div>';}).join("")+
  '<p class="sub" style="font-size:11.5px;margin-top:8px">Every duty here was hazard checked before it was assigned. If one feels wrong, say so in Chat; it goes to your coordinator, not your employer.</p></div>';
+ h+='<div class="card" style="padding:20px;max-width:640px;margin-top:16px"><b style="font-size:15px;color:var(--navy)">Prescribed recovery activities</b> <span class="prov clin">Clinician entered</span>'+
+  '<p class="sub" style="font-size:11.5px;margin:6px 0 12px">Your clinician set these. Marking one skipped is a signal your care team sees, never your employer.</p>'+
+  S.activities.map(function(a){
+   var badge=a.status==="done"?'<span class="pillst ok">done</span>':a.status==="missed"?'<span class="pillst gold">skipped</span>':'<span style="display:flex;gap:6px"><button class="btn" style="padding:7px 12px;font-size:12px" onclick="doActivity('+a.id+',\'done\')">Done</button><button class="btn ghost" style="padding:7px 12px;font-size:12px" onclick="doActivity('+a.id+',\'missed\')">Skip</button></span>';
+   return '<div class="duty '+(a.status==="done"?"l-teal":"l-gold")+'"><div><b>'+esc(a.name)+'</b></div>'+badge+'</div>';}).join("")+
+  '</div>';
  return h;}
 function fmtTime(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
 function ackDuties(ev){if(S.ackDay===S.day)return;S.ackDay=S.day;S.ackTs=Date.now();toast("Duties <b>acknowledged</b> for today.");if(ev)burst(ev.clientX||innerWidth/2,ev.clientY||140);save();}
 function acceptDuty(id){var d=S.duties.find(function(x){return x.id===id;});if(d&&d.status==="assigned"){d.status="accepted";toast("Duty <b>accepted</b>. It is on your list.");save();}}
 function doneDuty(id,ev){var d=S.duties.find(function(x){return x.id===id;});if(d&&d.status==="accepted"){d.status="completed";toast("Nice work. Duty <b>completed</b>.");if(ev)burst(ev.clientX,ev.clientY);save();}}
+function doActivity(id,status){var a=(S.activities||[]).find(function(x){return x.id===id;});if(!a)return;a.status=status;if(status==="missed"){S.logs.unshift({t:"Today",title:"Activity skipped",x:"Skipped a prescribed activity: "+a.name+". Your care team can see this.",tag:"notified"});toast("Marked <b>skipped</b>. Your care team sees it.");}else{toast("Nice work. Activity <b>done</b>.");}save();}
 function renderChat(){
  var h='<h2 class="pg" style="margin-bottom:4px">Chat</h2><p class="sub" style="margin-bottom:18px">A private line to your coordinator. Text alerts only ever say you have an update; the content stays here, behind your login.</p>';
  h+='<div class="card" style="padding:20px;max-width:640px">'+
