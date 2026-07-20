@@ -139,6 +139,7 @@ function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function hFmtTime(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
 function toast(h){var el=document.getElementById("toast");el.innerHTML=h;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2600);}
 function initials(n){return n.split(" ").map(function(x){return x[0];}).join("").replace(/[^A-Za-z]/g,"").slice(0,2).toUpperCase();}
 function W(id){return S.workers.find(function(w){return w.id===id;});}
@@ -156,6 +157,7 @@ function readBridge(){
   var m=W("m"); if(!m) return;
   if(typeof b.day==="number") m.day=b.day;
   m.checkin=!!b.checkedInToday;
+  if(typeof b.dutyAckDay!=="undefined"){m.ackDay=b.dutyAckDay;m.ackTs=b.dutyAckTs;}
   if(b.escalated && b.ts>(S.escTsSeen||0)){
     S.escTsSeen=b.ts;
     if(!S.escalations.some(function(e){return e.w==="m"&&!e.resolved;})){
@@ -237,7 +239,8 @@ function renderDetail(w){
   h+='<section class="restr" style="margin-bottom:20px"><div class="warn"><span class="msym" style="font-size:28px">warning</span></div>'+
   '<div style="flex:1"><h2 style="color:var(--ink)">Medical Restrictions Active</h2><div class="chips">'+
   w.restr.map(function(r){return '<span class="rc"><span class="msym" style="font-size:15px">do_not_disturb_on</span>'+esc(r)+'</span>';}).join("")+
-  '</div></div><div style="text-align:right"><div class="eyebrow">Valid until</div><div style="font-size:20px;font-weight:700;color:var(--navy)">'+esc(w.until||"Per clinician")+'</div></div></section>';}
+  '</div>'+((w.ackTs&&w.ackDay===w.day)?'<div style="margin-top:10px;font-size:12px;color:#2c6e46;font-weight:700"><span class="msym" style="font-size:15px;vertical-align:middle">task_alt</span> Worker acknowledged these restrictions today at '+hFmtTime(w.ackTs)+'</div>':((w.id==="m"&&LIVE)?'<div style="margin-top:10px;font-size:12px;color:var(--muted)">Awaiting today\'s worker acknowledgement</div>':''))+
+  '</div><div style="text-align:right"><div class="eyebrow">Valid until</div><div style="font-size:20px;font-weight:700;color:var(--navy)">'+esc(w.until||"Per clinician")+'</div></div></section>';}
  h+='<div class="two" style="display:grid;grid-template-columns:7fr 5fr;gap:20px">';
  /* assignment card */
  h+='<div class="card" style="padding:20px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2>Assign light duty: '+esc(w.name)+'</h2><span style="background:var(--navy);color:#fff;border-radius:999px;padding:4px 12px;font-size:11px">'+ST[w.status].toUpperCase()+'</span></div>';
