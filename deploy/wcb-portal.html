@@ -181,7 +181,7 @@ function claimTable(list,limit){
 /* ---------- dashboard ---------- */
 function renderDashboard(){
  var o=openClaims(),c=counts();
- var h=pagehead("Claims Overview","Audit and tracking terminal for submissions Continuum filed to this board.",
+ var h=pagehead("Claims Overview","Which claims require intervention. Audit and tracking terminal for submissions Continuum filed to this board.",
   '<button class="btn" onclick="window.print()"><span class="msym" style="font-size:19px">download</span> Export Case Audit</button>');
  h+='<div class="kpis">'+
  '<div class="kpi"><div class="eyebrow">Open claims</div><div style="display:flex;justify-content:space-between;align-items:flex-end"><span class="n">'+o.length+'</span><span class="tag" style="color:var(--red)">&#8593; +2%</span></div></div>'+

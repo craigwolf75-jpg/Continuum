@@ -201,7 +201,7 @@ function census(list){
   '<td>'+stchip(p)+'</td><td class="sub" style="font-size:11.5px">'+esc(p.tenant)+'</td></tr>';}).join("")+'</tbody></table>';}
 /* ---------- dashboard ---------- */
 function renderDashboard(){
- var h='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px"><div><h1>Clinical Performance Overview</h1><p class="sub">Real-time recovery monitoring and patient triage across granted tenants.</p></div>'+
+ var h='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px"><div><h1>Clinical Performance Overview</h1><p class="sub">Should treatment or restrictions change. Real-time recovery monitoring and patient triage across granted tenants.</p></div>'+
  '<div style="display:flex;gap:8px"><button class="btn ghost" onclick="go(\'workers\')"><span class="msym" style="font-size:18px">filter_list</span> Filters</button><button class="btn ghost" onclick="window.print()"><span class="msym" style="font-size:18px">file_download</span> Export</button></div></div>';
  h+='<div class="kpis">'+
  '<div class="kpi"><div class="lbl">Active patients</div><div class="n">'+activeP().length+'<span class="tag" style="color:var(--teal)">across 3 tenants</span></div></div>'+
