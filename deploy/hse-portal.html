@@ -100,6 +100,16 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
 @media(max-width:1080px){.kpis{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr !important}}
 @media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:84px 12px 40px}.kpis{grid-template-columns:1fr}}
 @media print{aside.side,header.top,.toast,.scrim{display:none !important}main{margin:0;padding:0}}
+  .escitem{padding:12px 0;border-bottom:1px solid var(--line)}
+  .escitem:last-child{border-bottom:none}
+  .eschead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:2px}
+  .insight{margin-top:10px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .insight .ipart{display:grid;grid-template-columns:150px 1fr;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:12px;line-height:1.45}
+  .insight .ipart:last-child{border-bottom:none}
+  .insight .il{font-weight:700;color:var(--muted)}
+  .insight .iv{color:var(--ink)}
+  .insight .ipart.authority{background:var(--goldbg)}
+  .insight .ipart.authority .il{color:#735200}
 </style>
 </head>
 <body>
@@ -133,7 +143,7 @@ var ST={reported:"Reported",off_work:"Off work",light_duty:"Light duty",full_dut
 var STAGES=["matched","hazard_checked","assigned","accepted","active","completed"];
 var S, LIVE=null;
 function fresh(){return {workers:JSON.parse(JSON.stringify(WORKERS)),duties:JSON.parse(JSON.stringify(DUTIES)),
- escalations:[{id:1,w:"tc",src:"regression engine (boot)",text:"Pain 8 on three consecutive check-ins; mobility trend stalled."}],section:"dashboard",detail:null,search:"",nextDuty:100,
+ escalations:[{id:1,w:"tc",src:"regression engine (boot)",text:"Pain 8 on three consecutive check-ins; mobility trend stalled.",insight:{changed:"Pain has held at 8 of 10 while mobility stayed flat.",contributors:"Three consecutive check-ins at or above pain 8; mobility trend flat across the window.",period:"Days 15 to 18.",matters:"Sustained high pain with no functional gain is the pattern that most often precedes a stalled recovery.",uncertain:"Whether the cause is tissue, load, or a psychosocial barrier. The check-in cannot tell them apart.",authority:"The treating physician. This routes the case for review; it does not diagnose or change treatment."}}],section:"dashboard",detail:null,search:"",nextDuty:100,
  form:{task:TASKBANK[0],date:"2026-07-19",hours:4,cls:"suitable_onsite",hazard:false}};}
 function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.workers){S=s;return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
@@ -161,7 +171,7 @@ function readBridge(){
   if(b.escalated && b.ts>(S.escTsSeen||0)){
     S.escTsSeen=b.ts;
     if(!S.escalations.some(function(e){return e.w==="m"&&!e.resolved;})){
-      S.escalations.push({id:Date.now(),w:"m",src:"worker signal",text:"Check-in pattern needs attention. Clinician notified.",resolved:false});
+      S.escalations.push({id:Date.now(),w:"m",src:"worker signal",text:"Check-in pattern needs attention. Clinician notified.",resolved:false,insight:{changed:"The recent check-in pattern needs a human look.",contributors:"A live signal from the worker app check-in stream.",period:"Today.",matters:"Catching a change early is the point of the daily check-in.",uncertain:"The underlying data should be reviewed before any conclusion is drawn.",authority:"The treating physician reviews and decides; the coordinator routes."}});
     }
   }
   if(b.status==="signed_off") m.status="signed_off";
@@ -200,7 +210,7 @@ function renderDashboard(){
  if(openEsc().length){
   h+='<div class="card" style="padding:16px;margin-bottom:16px;border-left:5px solid var(--gold)"><div class="eyebrow" style="margin-bottom:8px">Escalations</div>'+
   openEsc().map(function(e){var w=W(e.w);
-   return '<div class="adminrow"><div><b style="font-size:13px">'+esc(w.name)+'</b> <span class="sub" style="font-size:12px">'+esc(e.text)+' Source: '+esc(e.src)+'.</span></div><button class="btn ghost" onclick="resolveEsc('+e.id+')">Resolve</button></div>';}).join("")+'</div>';}
+   return '<div class="escitem"><div class="eschead"><div><b style="font-size:13.5px">'+esc(w.name)+'</b> <span class="sub" style="font-size:11.5px">'+esc(e.text)+'</span></div><button class="btn ghost" onclick="resolveEsc('+e.id+')">Resolve</button></div>'+insightCard(e.insight)+'</div>';}).join("")+'</div>';}
  h+='<div class="card" style="overflow:hidden"><div style="padding:16px;border-bottom:1px solid var(--line);background:var(--bright);display:flex;justify-content:space-between;align-items:center"><h2>Case queue</h2><span class="sub">Sorted by attention needed</span></div>';
  var order={off_work:0,reported:1,light_duty:2,full_duty_pending:3};
  var sorted=openCases().slice().sort(function(a,b){
@@ -213,6 +223,7 @@ function renderDashboard(){
   '<td>'+spark(w.pain,"#C0453B")+'</td><td>'+spark(w.mob,"#508c9c")+'</td><td>'+esc(w.review||"")+'</td></tr>';}).join("")+
  '</tbody></table><div style="padding:12px 16px;font-size:11.5px;color:var(--muted);background:var(--bright);border-top:1px solid var(--line)">This seat sees scores and clinical notes for operational need. It never moves medical status; the physician decides every transition.</div></div>';
  return h;}
+function insightCard(ins){if(!ins)return "";var row=function(l,v){return '<div class="ipart"><span class="il">'+l+'</span><span class="iv">'+esc(v)+'</span></div>';};return '<div class="insight">'+row("What changed",ins.changed)+row("Contributing signals",ins.contributors)+row("Period",ins.period)+row("Why it may matter",ins.matters)+row("What remains uncertain",ins.uncertain)+'<div class="ipart authority"><span class="il">Who holds authority</span><span class="iv">'+esc(ins.authority)+'</span></div></div>';}
 function resolveEsc(id){var e=S.escalations.find(function(x){return x.id===id;});if(e){e.resolved=true;toast("Escalation <b>resolved</b>");save();}}
 /* ---------- workers list + detail ---------- */
 function renderWorkers(){
