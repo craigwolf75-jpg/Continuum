@@ -85,6 +85,34 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
 .bottomnav button.on{color:#735200}
 .bottomnav button.on .msym{color:var(--gold)}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.oly-doctrine{background:var(--goldbg);border:1px solid var(--gold);border-radius:10px;padding:10px 14px;font-size:12px;color:#735200;font-weight:600;margin:6px 0 16px}
+.oly-roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:18px}
+.oly-agent{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}
+.oly-agent.zeus{border-color:var(--gold);background:var(--goldbg)}
+.oly-agent .an{font-size:14px;font-weight:800;color:var(--navy)}
+.oly-agent .al{font-size:11px;color:var(--soft);margin-top:2px}
+.oly-agent .am{font-size:12px;color:var(--muted);margin-top:8px}
+.oly-st{font-size:10px;font-weight:800;letter-spacing:.06em;border-radius:999px;padding:2px 8px;text-transform:uppercase;flex-shrink:0}
+.oly-st.working{background:#e4efe8;color:#2c6e46}.oly-st.coordinating{background:var(--goldbg);color:#735200}
+.oly-st.blocked{background:var(--redbg);color:#93000a}.oly-st.waiting{background:var(--cont);color:#3b475a}.oly-st.idle{background:#eef1f6;color:#5E6B7C}
+.oly-feed .fe{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.oly-feed .fe:first-child{border-top:none}
+.oly-fi{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--low)}
+.oly-fi .msym{font-size:18px;color:var(--navy)}
+.oly-fe-b{flex:1}
+.oly-fe-h{font-size:12px}.oly-fe-h b{color:var(--navy)}
+.oly-fe-t{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);margin-left:6px}
+.oly-fe-m{font-size:12.5px;color:var(--muted);margin-top:2px}
+.oly-con{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.oly-con.blk{border-color:var(--alert);border-left:4px solid var(--alert)}
+.oly-con.done{opacity:.6}
+.oly-con .ch{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.oly-sev{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:2px 7px}
+.oly-sev.blocking{background:var(--redbg);color:#93000a}.oly-sev.process{background:var(--goldbg);color:#735200}.oly-sev.note{background:#eef1f6;color:#5E6B7C}
+.oly-cstat{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.olybadge{display:inline-block;min-width:18px;height:18px;line-height:18px;text-align:center;background:var(--gold);color:#0f1c2d;border-radius:999px;font-size:10px;font-weight:800;padding:0 5px;margin-left:auto}
+.olybadge.blk{background:var(--alert);color:#fff}
+.oly-schema{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;background:#0f1c2d;color:#cfe0ff;border-radius:10px;padding:12px 14px;overflow-x:auto;white-space:pre;margin-top:8px}
 @media(max-width:1080px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr !important}}
 @media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:84px 12px 96px}.kpis{grid-template-columns:1fr}.bottomnav{display:flex}}
 @media print{aside.side,header.top,.toast,.mscrim,.modal,.bottomnav{display:none !important}main{margin:0;padding:0}}
@@ -115,12 +143,36 @@ var USERS=[{"id": "u1", "name": "Dr. A. Owusu", "role": "physician", "org": "Nex
 var GRANTS=[{"id": 1, "grantee": "Nexus Health (clinical)", "subject": "Worley Industrial", "scope": "all cases"}, {"id": 2, "grantee": "Nexus Health (clinical)", "subject": "Ledcor Group", "scope": "all cases"}, {"id": 3, "grantee": "Nexus Health (clinical)", "subject": "GardaWorld", "scope": "all cases"}, {"id": 4, "grantee": "WSIB Ontario (board)", "subject": "GardaWorld", "scope": "submitted filings"}, {"id": 5, "grantee": "WCB Alberta (board)", "subject": "Worley Industrial", "scope": "submitted filings"}, {"id": 6, "grantee": "WCB Alberta (board)", "subject": "Ledcor Group", "scope": "submitted filings"}];
 
 var LSKEY="continuum_admin_v1";
-var NAV=[["dashboard","dashboard","Dashboard"],["tenants","apartment","Tenants"],["users","group","Users"],["grants","key","Grants"],["billing","payments","Billing"],["audit","history","Audit"],["settings","settings","Settings"]];
+var FEEDKEY="continuum_olympus_feed_v1";
+var NAV=[["dashboard","dashboard","Dashboard"],["olympus","bolt","Mount Olympus"],["tenants","apartment","Tenants"],["users","group","Users"],["grants","key","Grants"],["billing","payments","Billing"],["audit","history","Audit"],["settings","settings","Settings"]];
+var ROSTER=[
+ {id:"zeus",name:"Zeus",lane:"Obsidian Brain, main thread",status:"coordinating",mission:"SITE-12d closed; queue idle",zeus:true},
+ {id:"athena",name:"Athena (12a)",lane:"Architecture and code",status:"blocked",mission:"package.json request at the human gate"},
+ {id:"apollo",name:"Apollo (12b)",lane:"Design and motion",status:"idle",mission:"DESIGN-1 backlog queued"},
+ {id:"calliope",name:"Calliope (12f)",lane:"Content and voice",status:"idle",mission:"standing by"},
+ {id:"heracles",name:"Heracles (12c)",lane:"Quality and tests",status:"working",mission:"proving the next patch"},
+ {id:"hermes",name:"Hermes (12d)",lane:"Release",status:"idle",mission:"last ship 9f2a1c4"},
+ {id:"argus",name:"Argus (12e)",lane:"The watcher",status:"waiting",mission:"process failure filed"}];
+var OLY_BASE=1721480400000;
+function olympusSeed(){var b=OLY_BASE;return {watermark:0,
+ feed:[
+  {ts:b+1,agent:"zeus",type:"handoff",msg:"Decomposed SITE-12d. Routing: Athena builds, Apollo motions, Calliope words, Heracles proves, Argus scans, Hermes ships."},
+  {ts:b+2,agent:"athena",type:"update",msg:"Diff ready, two files, entry points wired. Smallest correct change; every function handed to Heracles with its tests."},
+  {ts:b+3,agent:"apollo",type:"update",msg:"Motion spec: transform and opacity, 240ms. prefers-reduced-motion fallback verified, not assumed."},
+  {ts:b+4,agent:"calliope",type:"update",msg:"Reading check: grade 6.8 on the primary surface. One sentence flagged and rewritten lawfully."},
+  {ts:b+5,agent:"heracles",type:"gate",msg:"148 assertions passing. Coverage gap named: the empty-state path is untested, filed for follow-up."},
+  {ts:b+6,agent:"argus",type:"finding",msg:"Patrol clean on all seven. One housekeeping finding: a dead keyframe, ranked housekeeping."},
+  {ts:b+7,agent:"hermes",type:"ship",msg:"Shipped to main, commit 9f2a1c4. Smoke check green: surfaces load, nothing blank, no raw zero."},
+  {ts:b+8,agent:"zeus",type:"gate",msg:"SITE-12d closed. Four gates satisfied, evidence attached. Same-mission green and clean."}],
+ concerns:[
+  {ts:b+9,agent:"athena",kind:"concern",severity:"blocking",status:"open",msg:"Requesting a package.json change to add a date library. Blocked at the human gate: the locks need Gary's recorded approval."},
+  {ts:b+10,agent:"argus",kind:"concern",severity:"process",status:"open",msg:"Third recurrence of the missing reduced-motion guard. Reported as a process failure with the pattern named, not a typo."},
+  {ts:b+5,agent:"hermes",kind:"concern",severity:"note",status:"resolved",msg:"Rollback drill on the staging deploy completed and restored. No action needed."}]};}
 var ROLES=["worker","hse","employer_admin","physician","board_officer","continuum_admin"];
 var WEEKLY=350, ONBOARD=400, PILOT_DISCOUNT=0.4;
 var S;
 function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.parse(JSON.stringify(USERS)),grants:JSON.parse(JSON.stringify(GRANTS)),
- section:"dashboard",search:"",roleFilter:null,nextId:100,
+ section:"dashboard",search:"",roleFilter:null,nextId:100,olympus:olympusSeed(),
  audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
  form:{name:"",role:"worker",org:"Worley Industrial"}};}
 function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;return;}}}catch(e){}S=fresh();}
@@ -139,9 +191,10 @@ function completion(){var a=activeCases();return a?Math.round(realT().reduce(fun
 function pausedCount(){return S.tenants.filter(function(t){return t.paused;}).length;}
 function go(sec){S.section=sec;save();window.scrollTo(0,0);}
 function renderNav(){
- var mk=function(n){return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';};
+ var mk=function(n){var badge="";if(n[0]==="olympus"){var oc=olyOpen().length;if(oc)badge='<span class="olybadge'+(olyBlocking()?" blk":"")+'">'+oc+'</span>';}
+  return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+badge+'</button>';};
  document.getElementById("sidenav").innerHTML=NAV.map(mk).join("");
- document.getElementById("bottomnav").innerHTML=NAV.filter(function(n){return ["dashboard","tenants","users","billing"].indexOf(n[0])>=0;}).map(mk).join("");}
+ document.getElementById("bottomnav").innerHTML=NAV.filter(function(n){return ["dashboard","olympus","tenants","users","billing"].indexOf(n[0])>=0;}).map(mk).join("");}
 function pagehead(title,sub,extra){
  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:12px"><div><h1>'+title+'</h1><p class="sub">'+sub+'</p></div>'+(extra||"")+'</div>';}
 /* ---------- dashboard ---------- */
@@ -310,12 +363,81 @@ function renderSettings(){
  '<div class="adminrow"><div><b>Retention</b><div class="sub" style="font-size:11.5px">Per-table configuration: video shortest, audit longest, per the statutory minimums counsel sets. Deletion is a job with its own audit trail.</div></div><span class="pillst gold">counsel to confirm</span></div>'+
  '</div>';
  return h;}
+/* ---------- Mount Olympus ---------- */
+// Pure merge: filter the whole batch against the pre-merge watermark, sort, advance after.
+// Fixes the defect where advancing the watermark mid-loop dropped earlier-ts entries in a batch.
+function olympusMerge(batch,watermark){
+ var wm=watermark||0;
+ var fresh=batch.filter(function(e){return e&&typeof e.ts==="number"&&e.ts>wm;});
+ fresh.sort(function(a,b){return a.ts-b.ts;});
+ var nw=fresh.reduce(function(m,e){return e.ts>m?e.ts:m;},wm);
+ return {fresh:fresh,watermark:nw};
+}
+function ingestOlympus(){
+ var raw=null;try{raw=localStorage.getItem(FEEDKEY);}catch(e){}
+ var batch=[];if(raw){try{batch=JSON.parse(raw);}catch(e){}}
+ if(!Array.isArray(batch))return;
+ var res=olympusMerge(batch,S.olympus.watermark);
+ if(!res.fresh.length)return;
+ res.fresh.forEach(function(e){
+  if(e.kind==="concern"){S.olympus.concerns.push({ts:e.ts,agent:e.agent,kind:"concern",severity:e.severity||"note",status:"open",msg:e.msg});}
+  else{S.olympus.feed.push({ts:e.ts,agent:e.agent,type:e.type||"update",msg:e.msg});}
+ });
+ S.olympus.watermark=res.watermark;
+ save();
+}
+function olyOpen(){return S.olympus.concerns.filter(function(c){return c.status==="open";});}
+function olyBlocking(){return olyOpen().some(function(c){return c.severity==="blocking";});}
+function olyWorking(){return ROSTER.filter(function(a){return a.status==="working"||a.status==="coordinating";}).length;}
+function olyLast(){return S.olympus.feed.slice().sort(function(a,b){return b.ts-a.ts;})[0]||null;}
+function ackConcern(ts){var c=S.olympus.concerns.find(function(x){return x.ts===ts;});if(!c||c.status!=="open")return;c.status="acknowledged";audit("Olympus: acknowledged "+c.agent+"'s concern");toast("Concern <b>acknowledged</b>");save();}
+function resolveConcern(ts){var c=S.olympus.concerns.find(function(x){return x.ts===ts;});if(!c||c.status==="resolved")return;c.status="resolved";audit("Olympus: resolved "+c.agent+"'s concern");toast("Concern <b>resolved</b>");save();}
+function simulateOlympus(){
+ var raw=null;try{raw=localStorage.getItem(FEEDKEY);}catch(e){}
+ var batch=[];if(raw){try{batch=JSON.parse(raw);}catch(e){}}
+ if(!Array.isArray(batch))batch=[];
+ batch.push({ts:Date.now(),agent:"heracles",type:"gate",msg:"Re-ran the suite: assertions hard-fail now, all green."});
+ try{localStorage.setItem(FEEDKEY,JSON.stringify(batch));}catch(e){}
+ ingestOlympus();
+ toast("Incoming update <b>ingested</b> from the feed key");
+}
+var OLY_ICON={update:"bolt",handoff:"swap_horiz",gate:"verified",ship:"rocket_launch",finding:"search"};
+function renderOlympus(){
+ var last=olyLast();var oc=olyOpen().length;var blk=olyBlocking();
+ var h=pagehead("Mount Olympus","The agent group command center. Operational telemetry only; case content never appears here.",
+  '<button class="btn gold" onclick="simulateOlympus()"><span class="msym" style="font-size:18px">add_alert</span> Simulate incoming update</button>');
+ h+='<div class="oly-doctrine">Operational telemetry only. Case content never appears here: the feed speaks of suites, patrols, commits, and gates, never of workers.</div>';
+ h+='<div class="kpis">'+
+  '<div class="kpi gold"><div class="lbl">Agents</div><div class="n">'+ROSTER.length+'<span class="tag">Zeus and six hands</span></div></div>'+
+  '<div class="kpi teal"><div class="lbl">Working now</div><div class="n">'+olyWorking()+'<span class="tag">active this moment</span></div></div>'+
+  '<div class="kpi '+(blk?"red":(oc?"gold":""))+'"><div class="lbl">Open concerns</div><div class="n">'+oc+(blk?'<span class="tag" style="color:var(--alert)">one blocking</span>':(oc?'<span class="tag">awaiting</span>':'<span class="tag">clear</span>'))+'</div></div>'+
+  '<div class="kpi"><div class="lbl">Last activity</div><div class="n" style="font-size:15px;font-weight:700">'+(last?esc(last.agent):"none")+'<span class="tag" style="display:block;margin-left:0;margin-top:3px;font-weight:400;letter-spacing:0">'+(last?esc(last.msg.slice(0,52))+(last.msg.length>52?"...":""):"")+'</span></div></div>'+
+  '</div>';
+ h+='<h2 style="margin:6px 0 8px">Roster</h2><div class="oly-roster">'+
+  ROSTER.map(function(a){return '<div class="oly-agent'+(a.zeus?" zeus":"")+'"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="an">'+esc(a.name)+'</span><span class="oly-st '+a.status+'">'+a.status+'</span></div><div class="al">'+esc(a.lane)+'</div><div class="am">'+esc(a.mission)+'</div></div>';}).join("")+
+  '</div>';
+ h+='<div class="card" style="padding:18px;margin-bottom:16px"><h2 style="margin-bottom:4px">Concerns</h2><p class="sub" style="font-size:12px;margin-bottom:12px">Blocking concerns are the human gate made visible: agents wait here rather than proceeding, even on a schedule.</p>'+
+  S.olympus.concerns.slice().sort(function(a,b){return b.ts-a.ts;}).map(function(c){var done=c.status==="resolved";
+   return '<div class="oly-con'+(c.severity==="blocking"&&!done?" blk":"")+(done?" done":"")+'"><div class="ch"><div><b>'+esc(c.agent)+'</b> <span class="oly-sev '+c.severity+'">'+c.severity+'</span> <span class="oly-cstat">'+c.status+'</span></div><div>'+
+   (c.status==="open"?'<button class="btn ghost" style="padding:6px 10px;font-size:11px" onclick="ackConcern('+c.ts+')">Acknowledge</button> ':"")+
+   (done?'':'<button class="btn'+(c.severity==="blocking"?" danger":" ghost")+'" style="padding:6px 10px;font-size:11px" onclick="resolveConcern('+c.ts+')">Resolve</button>')+
+   '</div></div><div class="am" style="margin-top:6px">'+esc(c.msg)+'</div></div>';}).join("")+
+  '</div>';
+ h+='<div class="card oly-feed" style="padding:18px;margin-bottom:16px"><h2 style="margin-bottom:8px">Activity feed</h2>'+
+  S.olympus.feed.slice().sort(function(a,b){return b.ts-a.ts;}).map(function(e){
+   return '<div class="fe"><div class="oly-fi"><span class="msym">'+(OLY_ICON[e.type]||"bolt")+'</span></div><div class="oly-fe-b"><div class="oly-fe-h"><b>'+esc(e.agent)+'</b><span class="oly-fe-t">'+esc(e.type)+'</span></div><div class="oly-fe-m">'+esc(e.msg)+'</div></div></div>';}).join("")+
+  '</div>';
+ h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:6px">Feed key and wire format <span class="prov sys">System computed</span></h2><p class="sub" style="font-size:12px">The portal merges this key on load and polls it every 5 seconds. In production the same shape flows through the admin API. Anything appending JSON here appears live.</p>'+
+  '<div class="oly-schema">key      '+FEEDKEY+'\nupdate   { ts, agent, type, msg }        type: update | handoff | gate | ship | finding\nconcern  { ts, agent, kind:"concern", severity, msg }    severity: blocking | process | note\nMerged against a watermark; entries at or below the last-seen ts are not re-ingested.</div>'+
+  '</div>';
+ return h;
+}
 function render(){
  renderNav();
- var views={dashboard:renderDashboard,tenants:renderTenants,users:renderUsers,grants:renderGrants,billing:renderBilling,audit:renderAudit,settings:renderSettings};
+ var views={dashboard:renderDashboard,olympus:renderOlympus,tenants:renderTenants,users:renderUsers,grants:renderGrants,billing:renderBilling,audit:renderAudit,settings:renderSettings};
  document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
 }
-load();render();
+load();render();ingestOlympus();setInterval(ingestOlympus,5000);
 </script>
 </body>
 </html>

@@ -154,6 +154,13 @@ stops, he does not assume a default.
 4. Collect results. Hand every new function to Heracles with its tests. Send
    every change to Argus for the relevant scan.
 5. Check the four gates. If a human gate applies, stop and surface to Gary.
-6. On all applicable gates satisfied, Hermes integrates and ships.
-7. Update the queue file: mark the mission done, append any Argus findings to
+6. Post the run to Olympus. Each agent's update, handoff, gate, finding, and
+   ship goes to the feed key continuum_olympus_feed_v1 in the wire format
+   { ts, agent, type, msg }; a concern goes as { ts, agent, kind: concern,
+   severity, msg } and lands open. Blocking concerns are the human gate made
+   visible: the agent waits there rather than proceeding, even on a schedule.
+   Olympus telemetry is operational only: suites, patrols, commits, and gates,
+   never case content and never worker facts.
+7. On all applicable gates satisfied, Hermes integrates and ships.
+8. Update the queue file: mark the mission done, append any Argus findings to
    the backlog.
