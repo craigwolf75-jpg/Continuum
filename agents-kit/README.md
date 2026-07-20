@@ -1,7 +1,7 @@
 # Continuum Agents Kit
 
 A drop-in Claude Code agent group for the Continuum site repo. Zeus governs the
-main thread through CLAUDE.md; five sub agents live in .claude/agents/; a seeded
+main thread through CLAUDE.md; six sub agents live in .claude/agents/; a seeded
 mission queue lives in zeus-missions.md.
 
 ## The autonomy model, stated honestly
@@ -29,9 +29,9 @@ schema, and the ruling on which portals go public.
 
 1. Copy CLAUDE.md to the root of the Continuum site repo. If a CLAUDE.md
    already exists there, merge Zeus's doctrine into it rather than overwriting.
-2. Copy the .claude/agents/ directory into the repo root so the five agent
-   files sit at .claude/agents/athena.md, apollo.md, heracles.md, hermes.md,
-   and argus.md.
+2. Copy the .claude/agents/ directory into the repo root so the six agent
+   files sit at .claude/agents/athena.md, apollo.md, calliope.md, heracles.md,
+   hermes.md, and argus.md.
 3. Copy zeus-missions.md to the root of the repo.
 4. Open Claude Code in the repo and say the one sentence: Zeus, run the queue.
 
@@ -73,10 +73,11 @@ not remove the human gates, which still stop the run and surface to Gary.
 
 - CLAUDE.md: Zeus's doctrine. Routing table, the eight inherited laws, the four
   gates, the canon ledger, the escalation list, the propagation rule.
-- zeus-missions.md: the seeded queue. Four pending site-repo missions, a first
-  full Argus patrol, and a backlog.
+- zeus-missions.md: the seeded queue. A design baseline pass, four pending
+  site-repo missions, a first full Argus patrol, and a backlog.
 - .claude/agents/athena.md: architecture and code.
-- .claude/agents/apollo.md: content and design.
+- .claude/agents/apollo.md: design and motion.
+- .claude/agents/calliope.md: content and voice.
 - .claude/agents/heracles.md: quality and tests.
 - .claude/agents/hermes.md: release.
 - .claude/agents/argus.md: the watcher.
@@ -84,10 +85,11 @@ not remove the human gates, which still stop the run and surface to Gary.
 ## The roster
 
 The group carries prompt-family IDs: 12 Zeus, 12a Athena, 12b Apollo, 12c
-Heracles, 12d Hermes, 12e Argus.
+Heracles, 12d Hermes, 12e Argus, 12f Calliope.
 
-Zeus, Athena, Apollo, Heracles, Hermes, Argus. These names are deliberately
-distinct from the ViaConnect roster; different platform, different crew, no
+Zeus, Athena, Apollo, Calliope, Heracles, Hermes, Argus. These names are
+deliberately distinct from the ViaConnect roster; different platform, different
+crew, no
 cross-contamination. What crosses over is law, not personnel: the dash rule,
 the resilience pattern, the migration and package.json locks, and the paired-
 document delivery standard bind both rosters because they are project law.
