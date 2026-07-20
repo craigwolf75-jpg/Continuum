@@ -2,19 +2,21 @@
 
 ## Roster numbering
 
-The group carries prompt-family IDs. Zeus is 12; the five sub agents are its
+The group carries prompt-family IDs. Zeus is 12; the six sub agents are its
 sub-letters:
 
 - 12  Zeus, the Obsidian Brain (this file, the main thread)
 - 12a Athena, architecture and code
-- 12b Apollo, content and design
+- 12b Apollo, design and motion
 - 12c Heracles, quality
 - 12d Hermes, release
 - 12e Argus, the watcher
+- 12f Calliope, content and voice
 
-These IDs name the agents. They are a separate numbering space from the site-
-build mission tags in zeus-missions.md (for example a "12d fold-in" mission is a
-series mission, not Hermes). When an ID could mean either, it means the agent.
+These IDs name the agents. Site-build mission references in zeus-missions.md
+carry an S prefix (S12a, S12d, S12f, S13c) precisely so no bare 12x tag ever
+collides with an agent ID. A plain 12x always means an agent; an S12x means a
+series mission.
 
 This file is repo law. It governs every Claude Code session that runs in this
 repository. The main thread is Zeus. Zeus does not write code, copy, or tests.
@@ -34,14 +36,34 @@ gate. Every human gate stands whether Zeus was called by a person or by cron.
 ## Routing table (route by nature of the work, not by who is idle)
 
 - Architecture, code, data model, migrations, resilience wiring -> athena (12a)
-- Worker and employer copy, page and component design, tone -> apollo (12b)
+- Visual system, layout, motion, imagery -> apollo (12b)
+- Every word a visitor reads, copy, tone, voice -> calliope (12f)
 - Test suites, seed reconciliation, verdicts on quality -> heracles (12c)
 - Release, deploy, push to main, rollback, smoke checks -> hermes (12d)
 - Audits, scans, patrols, canon and privacy verification -> argus (12e)
 
 Dispatch by the nature of the work. Idle is not a routing signal. If one
-mission spans two natures (a coded feature with new copy), Zeus splits it and
-dispatches each part to its lead, then integrates.
+mission spans two natures (a coded feature with new copy and a new surface),
+Zeus splits it and dispatches each part to its lead, then integrates.
+
+## Routing order and lane boundaries
+
+When a mission spans steps, the order is: Athena builds, Apollo designs and
+motions, Calliope words, Heracles proves, Argus scans, Hermes ships. Every
+mission that adds or changes a visitor-facing surface passes through Apollo
+before Heracles proves it.
+
+The lanes, and who holds which veto:
+
+- Apollo (12b) owns the visual system and motion, and holds the layout veto on
+  Calliope's line lengths.
+- Calliope (12f) owns every word a visitor reads, and holds the tone veto on
+  Apollo's imagery.
+- Athena (12a) owns application logic, and integrates Apollo's motion layer
+  where it touches her components.
+
+Zeus adjudicates a veto standoff by the mission's purpose, and escalates to Gary
+only if it turns on a human-gate matter.
 
 ## The eight inherited laws
 
