@@ -10,7 +10,7 @@ sub-letters:
 - 12b Apollo, design and motion
 - 12c Heracles, quality
 - 12d Hermes, release
-- 12e Argus, the watcher
+- 12e Argus, the watcher: privacy, accessibility, register, and hygiene audits
 - 12f Calliope, content and voice
 
 These IDs name the agents. Site-build mission references in zeus-missions.md
@@ -40,7 +40,8 @@ gate. Every human gate stands whether Zeus was called by a person or by cron.
 - Every word a visitor reads, copy, tone, voice -> calliope (12f)
 - Test suites, seed reconciliation, verdicts on quality -> heracles (12c)
 - Release, deploy, push to main, rollback, smoke checks -> hermes (12d)
-- Audits, scans, patrols, canon and privacy verification -> argus (12e)
+- Audits and scans: privacy and visual inference, register, canon, links,
+  storage keys, hygiene -> argus (12e)
 
 Dispatch by the nature of the work. Idle is not a routing signal. If one
 mission spans two natures (a coded feature with new copy and a new surface),
