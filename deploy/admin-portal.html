@@ -155,11 +155,11 @@ function renderDashboard(){
  h+='<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
  h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Active cases by tenant <span class="prov sys">System computed</span></h2>'+
  realT().map(function(t){var p=Math.round(t.active/activeCases()*100);
-  return '<div class="brow"><div class="bl"><span>'+esc(t.name)+(t.pilot?' <span class="pillst gold">pilot</span>':'')+'</span><span>'+t.active+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(t.pilot?"var(--gold)":"var(--navy)")+'"></i></div></div>';}).join("")+
+  return '<div class="brow" style="cursor:pointer" title="Open tenants" onclick="go(\'tenants\')"><div class="bl"><span>'+esc(t.name)+(t.pilot?' <span class="pillst gold">pilot</span>':'')+'</span><span>'+t.active+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(t.pilot?"var(--gold)":"var(--navy)")+'"></i></div></div>';}).join("")+
  '<p class="sub" style="font-size:11.5px;margin-top:8px">These per-tenant counts equal each tenant\'s own portal: Worley\'s 7 is the HSE queue, and the 24 total is the clinical census.</p></div>';
  h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Users by role</h2>'+
  ROLES.map(function(r){var v=S.users.filter(function(u){return u.role===r&&u.status==="active";}).length;var p=Math.round(v/activeUsers().length*100);
-  return '<div class="brow"><div class="bl"><span>'+r+'</span><span>'+v+'</span></div><div class="bt"><i style="width:'+p+'%;background:var(--teal)"></i></div></div>';}).join("")+
+  return '<div class="brow" style="cursor:pointer" title="Open users with this role" onclick="S.roleFilter=\''+r+'\';S.section=\'users\';save()"><div class="bl"><span>'+r+'</span><span>'+v+'</span></div><div class="bt"><i style="width:'+p+'%;background:var(--teal)"></i></div></div>';}).join("")+
  '<p class="sub" style="font-size:11.5px;margin-top:8px">Role is a data value; adding supervisor or leadership as real logins is an insert, not a refactor.</p></div>';
  h+='</div>';
  h+='<div class="card" style="padding:16px;margin-top:14px"><h2 style="margin-bottom:8px">Compliance switchboard</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">'+
