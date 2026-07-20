@@ -101,25 +101,22 @@ NOT a breach. But Prompt 05 also makes diagnosis Nexus-only, so the two items
 below turn on one narrower question for Gary: how much injury/diagnosis
 vocabulary is allowed off the Nexus surface.
 
-- S-HSE-DIAGNOSIS (M5-F01, narrowed): BLOCKED (human gate). HSE pain/mobility is
-  canon-authorized, NOT a finding. The open question: HSE shows the diagnosis
-  string "grade 1 supraspinatus strain" (hse-portal.html:146), but Prompt 05
-  makes diagnosis Nexus-only. Gary: is the diagnosis term allowed on HSE, or
-  Nexus-only? Lead when ruled: calliope/athena.
-- S-INJURY-RULING (M5-F03): BLOCKED (human gate). The employer Injury column and
-  the bridge carry "Right shoulder strain". The employer firewall excludes pain,
-  diagnosis, notes, photos but shows injury. Gary/Calliope: is injury-nature
-  ("strain") functional (keep) or diagnosis (suppress) on the employer surface?
-- S-BRIDGE-WRITERS (M5-F02): QUEUED. The bridge key is written by three files
-  (worker-dashboard, continuum_workflow_app, worker-embed), but doctrine names
-  worker-dashboard as sole writer. Payloads are clinically clean. Fix: amend the
-  law to "any worker surface" or consolidate to one writer. Lead: athena, then
-  argus re-scan. Priority high (doctrine vs reality).
-- S-APP-REDIRECT (M5-F04): BLOCKED (confirm intent). vercel.json redirects /app
-  and /app/(.*) to /worker-dashboard, orphaning app/index.html (the sign-in gate,
-  where S-DESIGN-C just landed) and bypassing sign-in from the hub. Gary: is the
-  bypass intended for the demo? If not, remove the redirect; if yes, the orphaned
-  sign-in page and its focus fix are moot. Lead: athena/hermes.
+- S-HSE-DIAGNOSIS (M5-F01): RESOLVED (Gary ruled 2026-07-20, keep as-is). Canon
+  clarified: injury-type naming ("grade 1 supraspinatus strain") is authorized
+  context on the HSE clinical operational seat, not a diagnosis leak. HSE
+  pain/mobility was already canon-authorized. No change.
+- S-INJURY-RULING (M5-F03): RESOLVED (Gary ruled 2026-07-20, keep as-is). The
+  employer Injury column ("Right shoulder strain") is functional context for duty
+  planning, not a suppressed diagnosis. "Diagnosis Nexus-only" reads as
+  free-text/clinical detail, not injury-type naming. No change.
+- S-BRIDGE-WRITERS (M5-F02): RESOLVED (doctrine clarified). Any WORKER surface may
+  write the functional-only bridge (worker-dashboard, continuum_workflow_app,
+  worker-embed); Argus verified all three payloads clinically clean. The law is
+  "functional-only projection", not "single writer". No code change.
+- S-APP-REDIRECT (M5-F04): DONE (Gary ruled 2026-07-20, not intended). The two
+  /app redirects removed from vercel.json so /app serves the sign-in gate
+  (app/index.html) again; the S-DESIGN-C focus fix is now live. noindex headers
+  kept. Lead: athena/hermes.
 - S-DASH-SWEEP (M5-F06, F07): QUEUED. Em/en dashes in support.js vendor doc
   comments (not visitor-facing) and three internal specs docs (PROMPT_04,
   Wireframe_Reference_v2, PROMPT_05_RECONCILIATION). The five *.test.mjs dash
