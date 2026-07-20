@@ -110,6 +110,9 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
   .insight .iv{color:var(--ink)}
   .insight .ipart.authority{background:var(--goldbg)}
   .insight .ipart.authority .il{color:#735200}
+  .qsort{font-size:11.5px;color:var(--muted)}
+  .qs{background:none;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font:inherit;font-size:11.5px;cursor:pointer;color:var(--muted);margin-left:4px}
+  .qs.on{background:var(--navy);color:#fff;border-color:var(--navy)}
   .prov{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:5px;background:var(--low);color:var(--soft);border:1px solid var(--line);vertical-align:middle;white-space:nowrap}
   .prov.intel{background:var(--goldbg);color:#735200;border-color:#e7c975}
   .prov.worker{background:var(--tealbg);color:#2c5c6b}
@@ -146,11 +149,14 @@ var BRIDGE_KEY="continuum_worker_bridge_v1";
 var NAV=[["dashboard","dashboard","Dashboard"],["claims","description","Claims"],["workers","group","Workers"],["analytics","monitoring","Analytics"],["settings","settings","Settings"]];
 var ST={reported:"Reported",off_work:"Off work",light_duty:"Light duty",full_duty_pending:"Return pending",signed_off:"Signed off"};
 var STAGES=["matched","hazard_checked","assigned","accepted","active","completed"];
+/* per duty-holding worker: days from restrictions published to first suitable onsite assignment */
+var FTD={m:2,a:1,d:2,e:2};
+function ftdAvg(){var v=Object.keys(FTD).map(function(k){return FTD[k];});return v.reduce(function(x,y){return x+y;},0)/v.length;}
 var S, LIVE=null;
 function fresh(){return {workers:JSON.parse(JSON.stringify(WORKERS)),duties:JSON.parse(JSON.stringify(DUTIES)),
- escalations:[{id:1,w:"tc",src:"regression engine (boot)",text:"Pain 8 on three consecutive check-ins; mobility trend stalled.",insight:{changed:"Pain has held at 8 of 10 while mobility stayed flat.",contributors:"Three consecutive check-ins at or above pain 8; mobility trend flat across the window.",period:"Days 15 to 18.",matters:"Sustained high pain with no functional gain is the pattern that most often precedes a stalled recovery.",uncertain:"Whether the cause is tissue, load, or a psychosocial barrier. The check-in cannot tell them apart.",authority:"The treating physician. This routes the case for review; it does not diagnose or change treatment."}}],section:"dashboard",detail:null,search:"",nextDuty:100,audit:[],
+ escalations:[{id:1,w:"tc",src:"regression engine (boot)",text:"Pain 8 on three consecutive check-ins; mobility trend stalled.",insight:{changed:"Pain has held at 8 of 10 while mobility stayed flat.",contributors:"Three consecutive check-ins at or above pain 8; mobility trend flat across the window.",period:"Days 15 to 18.",matters:"Sustained high pain with no functional gain is the pattern that most often precedes a stalled recovery.",uncertain:"Whether the cause is tissue, load, or a psychosocial barrier. The check-in cannot tell them apart.",authority:"The treating physician. This routes the case for review; it does not diagnose or change treatment."}}],section:"dashboard",detail:null,search:"",nextDuty:100,audit:[],qsort:"attention",stepUps:[{worker:"Okafor",task:"Vehicle inspection logbooks"}],
  form:{task:TASKBANK[0],date:"2026-07-19",hours:4,cls:"suitable_onsite",hazard:false}};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.workers){S=s;return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.workers){S=s;if(!S.qsort)S.qsort="attention";if(!S.stepUps)S.stepUps=fresh().stepUps;if(!S.audit)S.audit=[];return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -217,9 +223,13 @@ function renderDashboard(){
   h+='<div class="card" style="padding:16px;margin-bottom:16px;border-left:5px solid var(--gold)"><div class="eyebrow" style="margin-bottom:8px">Escalations</div>'+
   openEsc().map(function(e){var w=W(e.w);var nm=e.wname||(w?w.name:"Worker");var tag=e.src==="supervisor observation"?' <span class="prov" style="background:#e7edf5;color:#33465e">Supervisor observation</span>':'';
    return '<div class="escitem"><div class="eschead"><div><b style="font-size:13.5px">'+esc(nm)+'</b>'+tag+' <span class="sub" style="font-size:11.5px">'+esc(e.text)+'</span></div><button class="btn ghost" onclick="resolveEsc('+e.id+')">Resolve</button></div>'+insightCard(e.insight)+'</div>';}).join("")+'</div>';}
- h+='<div class="card" style="overflow:hidden"><div style="padding:16px;border-bottom:1px solid var(--line);background:var(--bright);display:flex;justify-content:space-between;align-items:center"><h2>Case queue</h2><span class="sub">Sorted by attention needed</span></div>';
+ var qsort=S.qsort||"attention";
+ var sbtn=function(k,l){return '<button class="qs'+(qsort===k?" on":"")+'" onclick="setQSort(\''+k+'\')">'+l+'</button>';};
+ h+='<div class="card" style="overflow:hidden"><div style="padding:16px;border-bottom:1px solid var(--line);background:var(--bright);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><h2>Case queue</h2><div class="qsort">Sort '+sbtn("attention","Attention")+sbtn("day","Day")+sbtn("pain","Pain")+'</div></div>';
  var order={off_work:0,reported:1,light_duty:2,full_duty_pending:3};
  var sorted=openCases().slice().sort(function(a,b){
+  if(qsort==="pain")return (b.pain[b.pain.length-1]||0)-(a.pain[a.pain.length-1]||0);
+  if(qsort==="day")return b.day-a.day;
   var ea=S.escalations.some(function(e){return e.w===a.id&&!e.resolved;})?-1:0;
   var eb=S.escalations.some(function(e){return e.w===b.id&&!e.resolved;})?-1:0;
   if(ea!==eb)return ea-eb;var oa=(a.status in order)?order[a.status]:9,ob=(b.status in order)?order[b.status]:9;return oa-ob;});
@@ -231,6 +241,7 @@ function renderDashboard(){
  return h;}
 function insightCard(ins){if(!ins)return "";var row=function(l,v){return '<div class="ipart"><span class="il">'+l+'</span><span class="iv">'+esc(v)+'</span></div>';};return '<div class="insight"><div class="ihdr"><span class="prov intel">Generated by the intelligence layer</span></div>'+row("What changed",ins.changed)+row("Contributing signals",ins.contributors)+row("Period",ins.period)+row("Why it may matter",ins.matters)+row("What remains uncertain",ins.uncertain)+'<div class="ipart authority"><span class="il">Who holds authority</span><span class="iv">'+esc(ins.authority)+'</span></div></div>';}
 function resolveEsc(id){var e=S.escalations.find(function(x){return x.id===id;});if(e){e.resolved=true;toast("Escalation <b>resolved</b>");save();}}
+function setQSort(m){S.qsort=m;save();}
 /* ---------- workers list + detail ---------- */
 function renderWorkers(){
  if(S.detail) return renderDetail(W(S.detail));
@@ -301,9 +312,12 @@ function renderDetail(w){
  return h;}
 function assignDuty(wid){
  if(!S.form.hazard){toast("Blocked: <b>hazard check first</b>");return;}
- S.duties.push({id:S.nextDuty++,w:wid,task:S.form.task,status:"assigned",hours:S.form.hours,date:"Jul 19",cls:S.form.cls,hc:true});
+ var stepUp=S.form.cls==="suitable_onsite" && S.duties.some(function(d){return d.w===wid && d.cls==="standard_precaution" && d.status!=="completed";});
+ var task=S.form.task;
+ S.duties.push({id:S.nextDuty++,w:wid,task:task,status:"assigned",hours:S.form.hours,date:"Jul 19",cls:S.form.cls,hc:true});
+ if(stepUp){var w=W(wid);S.stepUps.push({worker:w?w.name:wid,task:task});toast("Duty <b>assigned</b>. Step-up recorded: suitable onsite over standard precaution.");}
+ else{toast("Duty <b>assigned</b>. The worker sees it now and accepts in their app.");}
  S.form=fresh().form;
- toast("Duty <b>assigned</b>. The worker sees it now and accepts in their app.");
  save();}
 function advanceDuty(id){
  var d=S.duties.find(function(x){return x.id===id;});if(!d)return;
@@ -332,11 +346,11 @@ function renderClaims(){
 function renderAnalytics(){
  var suitable=S.duties.filter(function(d){return d.cls==="suitable_onsite";}).length;
  var std=S.duties.filter(function(d){return d.cls==="standard_precaution";}).length;
- var stepUps=1;
+ var stepUps=S.stepUps.length;var lastStep=S.stepUps[S.stepUps.length-1];
  var h=pagehead("Analytics","The pilot readout numbers, captured at event time.");
  h+='<div class="kpis" style="grid-template-columns:repeat(3,1fr)">'+
- '<div class="kpi"><div class="ic" style="background:var(--gold)"><span class="msym">timer</span></div><div><div class="n">1.8 days</div><div class="t">Restrictions to first suitable onsite assignment</div></div></div>'+
- '<div class="kpi"><div class="ic" style="background:var(--teal)"><span class="msym">stairs</span></div><div><div class="n">'+stepUps+'</div><div class="t">Duty step-ups this period</div></div></div>'+
+ '<div class="kpi"><div class="ic" style="background:var(--gold)"><span class="msym">timer</span></div><div><div class="n">'+ftdAvg().toFixed(1)+' days</div><div class="t">Restrictions to first suitable onsite assignment</div></div></div>'+
+ '<div class="kpi"><div class="ic" style="background:var(--teal)"><span class="msym">stairs</span></div><div><div class="n">'+stepUps+'</div><div class="t">Duty step-ups this period</div>'+(lastStep?'<div class="t" style="font-size:10px;color:var(--muted)">Latest: '+esc(lastStep.worker)+', '+esc(lastStep.task)+'</div>':'')+'</div></div>'+
  '<div class="kpi"><div class="ic" style="background:var(--navy)"><span class="msym">trending_up</span></div><div><div class="n">'+checkinPct()+'%</div><div class="t">Check-in completion</div></div></div></div>';
  h+='<div class="card bars" style="padding:18px"><div class="eyebrow" style="margin-bottom:6px">Modified days by duty class</div>'+
  '<div class="brow"><div class="bl"><span>Suitable onsite</span><span>'+suitable+' duties</span></div><div class="bt"><i style="width:'+Math.round(suitable/(suitable+std)*100)+'%;background:var(--gold)"></i></div></div>'+
