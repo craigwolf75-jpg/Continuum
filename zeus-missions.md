@@ -33,7 +33,7 @@ folds in.
   React toolkit maps onto CSS transitions here; the React stack is continuum-app.
 
 ### M1: Fold in S12d
-- Status: QUEUED
+- Status: BLOCKED (needs the site-build series spec from Gary)
 - Lead: athena
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: none expected. If the fold-in touches schema, stop for Gary.
@@ -41,7 +41,7 @@ folds in.
   function to Heracles with its tests.
 
 ### M2: Hub Worker card (S12f)
-- Status: QUEUED
+- Status: BLOCKED (needs the site-build series spec from Gary)
 - Lead: apollo for the card copy and design, athena for wiring
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: none for the Worker card itself. Publishing other portal cards is
@@ -50,7 +50,7 @@ folds in.
   7, no guilt mechanics.
 
 ### M3: Dashboard deployment (S13c)
-- Status: QUEUED
+- Status: BLOCKED (needs the site-build series spec from Gary)
 - Lead: hermes, with athena for any build wiring
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: none expected.
@@ -58,7 +58,7 @@ folds in.
   deploy, rollback before diagnosis if the smoke check fails.
 
 ### M4: Demo edge function (S12a)
-- Status: QUEUED
+- Status: BLOCKED (needs the site-build series spec from Gary)
 - Lead: athena
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: if the function reads or writes schema, stop for Gary.
@@ -66,14 +66,15 @@ folds in.
   data path; UNKNOWN never renders as 0.
 
 ### M5: First full Argus patrol
-- Status: QUEUED
+- Status: DONE. Seven patrols run; findings in B3 below.
 - Lead: argus
-- Gates: none to clear (Argus changes nothing); findings become backlog.
-- Human gate: none.
-- Note: a full patrol of the repo as it stands. Run every scan: dash audit,
-  privacy vocabulary, canon, gold-never-red, links, storage key collisions.
-  Every finding lands in the backlog below with file and line, and Zeus routes
-  each fix to its lead.
+- Result: NO confirmed law violation on any live visitor product surface.
+  Employer surface visually clean (all trend arrows green, no red, no alarm
+  color), admin clean, canon consistent (Marcus day 9 pain 4, Cardinal day 18,
+  per-tenant sums 7+12+5=24), 11 storage keys no collision, hygiene clean (no
+  secrets; publishable key correctly labeled). Six findings surfaced, all drift
+  or housekeeping or governance rulings, none a live breach. Absorbed S-DESIGN-F
+  (bridge re-scan): bridge payloads are clinically clean of pain/mobility/notes.
 
 ## Backlog (seeded)
 
@@ -91,10 +92,42 @@ folds in.
 - Note: wire the canon suite into CI so canon drift fails the build. Marcus at
   day 9 pain 4, Cardinal off work day 18, per-tenant numbers that sum.
 
-### B3+: Argus patrol findings
-- Status: QUEUED (populated by M5)
-- Note: findings from the first full patrol land here, each with file and line,
-  each routed by Zeus to its lead.
+### B3: Argus M5 patrol findings
+
+Zeus note: two findings that looked like violations to Argus are resolved by
+canon he did not hold. Prompt 05 reconciliation (client-governed) makes HSE an
+authorized viewer of pain and mobility scores, so HSE showing pain/mobility is
+NOT a breach. But Prompt 05 also makes diagnosis Nexus-only, so the two items
+below turn on one narrower question for Gary: how much injury/diagnosis
+vocabulary is allowed off the Nexus surface.
+
+- S-HSE-DIAGNOSIS (M5-F01, narrowed): BLOCKED (human gate). HSE pain/mobility is
+  canon-authorized, NOT a finding. The open question: HSE shows the diagnosis
+  string "grade 1 supraspinatus strain" (hse-portal.html:146), but Prompt 05
+  makes diagnosis Nexus-only. Gary: is the diagnosis term allowed on HSE, or
+  Nexus-only? Lead when ruled: calliope/athena.
+- S-INJURY-RULING (M5-F03): BLOCKED (human gate). The employer Injury column and
+  the bridge carry "Right shoulder strain". The employer firewall excludes pain,
+  diagnosis, notes, photos but shows injury. Gary/Calliope: is injury-nature
+  ("strain") functional (keep) or diagnosis (suppress) on the employer surface?
+- S-BRIDGE-WRITERS (M5-F02): QUEUED. The bridge key is written by three files
+  (worker-dashboard, continuum_workflow_app, worker-embed), but doctrine names
+  worker-dashboard as sole writer. Payloads are clinically clean. Fix: amend the
+  law to "any worker surface" or consolidate to one writer. Lead: athena, then
+  argus re-scan. Priority high (doctrine vs reality).
+- S-APP-REDIRECT (M5-F04): BLOCKED (confirm intent). vercel.json redirects /app
+  and /app/(.*) to /worker-dashboard, orphaning app/index.html (the sign-in gate,
+  where S-DESIGN-C just landed) and bypassing sign-in from the hub. Gary: is the
+  bypass intended for the demo? If not, remove the redirect; if yes, the orphaned
+  sign-in page and its focus fix are moot. Lead: athena/hermes.
+- S-DASH-SWEEP (M5-F06, F07): QUEUED. Em/en dashes in support.js vendor doc
+  comments (not visitor-facing) and three internal specs docs (PROMPT_04,
+  Wireframe_Reference_v2, PROMPT_05_RECONCILIATION). The five *.test.mjs dash
+  hits are the detector's own regex and must stay. Lead: calliope (specs),
+  athena (runtime). Priority low.
+- S-ADMIN-COPY (M5-F05): QUEUED. admin-portal.html:196 "Keep it off
+  (recommended)" uses "recommended" for a config default, not a product claim.
+  Optional reword. Lead: calliope. Priority low.
 
 ## DESIGN-1 backlog (from Apollo's baseline pass)
 
@@ -146,7 +179,8 @@ folds in.
   dead fadeUp keyframe in index.html (D1-F09). Minor.
 
 ### S-DESIGN-F: Argus re-scan after S-DESIGN-A
-- Status: QUEUED (gated on S-DESIGN-A landing)
+- Status: DONE (absorbed into M5). Argus confirmed the bridge payloads are
+  clinically clean (no pain, mobility, or notes) and the employer surface carries
+  no red or alarm treatment. The only bridge issue is the 3-writer drift, tracked
+  as S-BRIDGE-WRITERS, not an escalation leak.
 - Lead: argus
-- Note: re-scan the employer and worker bridge to confirm no other escalation
-  state leaks into a functional-only surface.
