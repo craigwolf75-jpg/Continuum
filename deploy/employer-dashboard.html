@@ -253,6 +253,7 @@ function renderSide(){
   on=(S.section===n[0])?" on":"";
   h+='<button class="'+on+'" onclick="go(\''+n[0]+'\')">'+(n[2]?'<span class="dot"></span>':"")+n[1]+'</button>';});
  h+='<div class="help"><b>Need Help?</b><p>Contact Support</p></div>';
+ h+='<a href="/hub#roles" style="color:var(--gold);font-weight:600;text-decoration:none;padding:12px 20px 4px;display:block">&#8592; All portals</a>';
  h+='<div class="cpy">&copy; 2026 Continuum<br>All rights reserved. &nbsp;<a href="#" onclick="resetAll();return false" style="color:var(--sidemut)">Reset demo</a></div>';
  document.getElementById("side").innerHTML=h;}
 /* ---------- shared header ---------- */
