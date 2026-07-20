@@ -130,7 +130,7 @@ var S;
 function fresh(){return {
  consented:true, videoConsent:false, section:"dashboard", day:9, status:"light_duty", escalated:false, checkedInToday:false,
  pain:[7,7,6,6,5,5,4], mob:[3,3,4,4,5,6,6],
- form:{pain:4,mob:6,note:""},
+ form:{pain:4,mob:6,fatigue:3,confidence:7,note:""}, ackDay:null, ackTs:null,
  logs:[
   {t:"Today, 9:15 AM",title:"Morning mobility session",x:"Fifteen minutes of guided shoulder movement.",tag:"stable"},
   {t:"Yesterday, 4:30 PM",title:"Physical therapy check-in",x:"Full range achieved without sharp pain.",tag:"optimal"},
@@ -143,7 +143,7 @@ function fresh(){return {
  msgs:[{who:"them",x:"Morning Marcus. Your new duty list is ready when you are.",t:"K. Morgan, 8:02 AM"}],
  unread:1, present:false
 };}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;if(S.form){if(S.form.fatigue==null)S.form.fatigue=3;if(S.form.confidence==null)S.form.confidence=7;}if(S.ackDay===undefined)S.ackDay=null;if(S.ackTs===undefined)S.ackTs=null;return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}writeBridge();render();}
 function resetAll(){S=fresh();S.checkedInToday=false;toast("Demo <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -159,7 +159,8 @@ function writeBridge(){
    day:S.day,prognosisDays:PROG,status:S.status,escalated:!!S.escalated,
    checkedInToday:!!S.checkedInToday,
    dutiesDone:S.duties.filter(function(d){return d.status==="completed";}).length,
-   dutiesTotal:S.duties.length,consented:!!S.consented,ts:Date.now()};
+   dutiesTotal:S.duties.length,consented:!!S.consented,
+   dutyAckDay:(S.ackDay==null?null:S.ackDay),dutyAckTs:(S.ackTs==null?null:S.ackTs),ts:Date.now()};
   localStorage.setItem(BRIDGE_KEY,JSON.stringify(b));
  }catch(e){}}
 function pct(){return Math.min(100,Math.round(S.day/PROG*100));}
@@ -222,6 +223,8 @@ function renderTrend(){
  (S.checkedInToday?'<p class="sub" style="margin-bottom:10px">You already logged today. Another one is fine if something changed.</p>':"")+
  '<div class="slider-row"><label>Pain right now <output>'+f.pain+'</output></label><input type="range" min="0" max="10" value="'+f.pain+'" oninput="S.form.pain=+this.value;save()"></div>'+
  '<div class="slider-row"><label>How well you can move <output>'+f.mob+'</output></label><input type="range" min="0" max="10" value="'+f.mob+'" oninput="S.form.mob=+this.value;save()"></div>'+
+ '<div class="slider-row"><label>Fatigue right now <output>'+f.fatigue+'</output></label><input type="range" min="0" max="10" value="'+f.fatigue+'" oninput="S.form.fatigue=+this.value;save()"></div>'+
+ '<div class="slider-row"><label>Confidence using it <output>'+f.confidence+'</output></label><input type="range" min="0" max="10" value="'+f.confidence+'" oninput="S.form.confidence=+this.value;save()"></div>'+
  '<label style="font-size:12px;font-weight:700;color:var(--muted)">Anything to add (only your care team sees this)</label>'+
  '<textarea placeholder="A few words is plenty" oninput="S.form.note=this.value">'+esc(f.note)+'</textarea>'+
  '<button class="btn" style="width:100%;margin-top:12px" onclick="saveLog(event)">Save log</button>'+
@@ -241,13 +244,18 @@ function saveLog(ev){
   S.logs.unshift({t:"Today",title:"Check-in shared with your clinician",x:"Thanks for being honest about a hard day. Your care team has been notified and will look the same day.",tag:"notified"});
   toast("Saved. Your <b>clinician was notified</b>. That is the system working.");}
  else{S.escalated=false;
-  S.logs.unshift({t:"Today",title:"Standard check-in",x:(f.note?f.note:"Pain "+f.pain+", mobility "+f.mob+"."),tag:f.mob>=7?"optimal":"stable"});
+  S.logs.unshift({t:"Today",title:"Standard check-in",x:(f.note?f.note:"Pain "+f.pain+", mobility "+f.mob+", fatigue "+f.fatigue+", confidence "+f.confidence+"."),tag:f.mob>=7?"optimal":"stable"});
   toast("Log <b>saved</b>. Small steps count.");
   if(ev)burst(ev.clientX||innerWidth/2,ev.clientY||innerHeight/2);}
- S.form={pain:f.pain,mob:f.mob,note:""};
+ S.form={pain:f.pain,mob:f.mob,fatigue:f.fatigue,confidence:f.confidence,note:""};
  save();}
 function renderDuties(){
+ var acked=S.ackDay===S.day;
  var h='<h2 class="pg" style="margin-bottom:4px">My Duties</h2><p class="sub" style="margin-bottom:18px">Only duties your clinician\'s restrictions allow ever reach this list. You accept them; nobody accepts for you.</p>';
+ h+='<div class="card" style="padding:20px;max-width:640px;margin-bottom:16px"><b style="font-size:15px;color:var(--navy)">Today\'s restrictions</b>'+
+  '<div class="m" style="margin:6px 0 12px">No lifting above shoulder height &middot; breaks every 60 minutes.</div>'+
+  (acked?'<span class="pillst ok">Acknowledged today at '+fmtTime(S.ackTs)+'</span>':'<button class="btn" onclick="ackDuties(event)">I understand my duties today</button>')+
+  '<p class="sub" style="font-size:11px;margin-top:10px">A daily record that you understood your restrictions. Your HSE coordinator sees the time you confirmed, never your scores.</p></div>';
  h+='<div class="card" style="padding:20px;max-width:640px">'+
  S.duties.map(function(d){
   var act=d.status==="assigned"?'<button class="btn" style="padding:8px 14px;font-size:12px" onclick="acceptDuty('+d.id+')">Accept</button>'
@@ -256,6 +264,8 @@ function renderDuties(){
   return '<div class="duty '+(d.status==="completed"?"l-teal":"l-gold")+'"><div><b>'+esc(d.task)+'</b><div class="m">'+d.hours+' hours &middot; '+(d.status==="assigned"?"New: waiting for you":d.status==="accepted"?"Accepted, in your day":"Completed")+'</div></div>'+act+'</div>';}).join("")+
  '<p class="sub" style="font-size:11.5px;margin-top:8px">Every duty here was hazard checked before it was assigned. If one feels wrong, say so in Chat; it goes to your coordinator, not your employer.</p></div>';
  return h;}
+function fmtTime(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
+function ackDuties(ev){if(S.ackDay===S.day)return;S.ackDay=S.day;S.ackTs=Date.now();toast("Duties <b>acknowledged</b> for today.");if(ev)burst(ev.clientX||innerWidth/2,ev.clientY||140);save();}
 function acceptDuty(id){var d=S.duties.find(function(x){return x.id===id;});if(d&&d.status==="assigned"){d.status="accepted";toast("Duty <b>accepted</b>. It is on your list.");save();}}
 function doneDuty(id,ev){var d=S.duties.find(function(x){return x.id===id;});if(d&&d.status==="accepted"){d.status="completed";toast("Nice work. Duty <b>completed</b>.");if(ev)burst(ev.clientX,ev.clientY);save();}}
 function renderChat(){
