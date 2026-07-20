@@ -83,6 +83,9 @@ not remove the human gates, which still stop the run and surface to Gary.
 
 ## The roster
 
+The group carries prompt-family IDs: 12 Zeus, 12a Athena, 12b Apollo, 12c
+Heracles, 12d Hermes, 12e Argus.
+
 Zeus, Athena, Apollo, Heracles, Hermes, Argus. These names are deliberately
 distinct from the ViaConnect roster; different platform, different crew, no
 cross-contamination. What crosses over is law, not personnel: the dash rule,

@@ -7,6 +7,12 @@ QUEUED, IN PROGRESS, BLOCKED (waiting on a human gate), DONE.
 Each mission names its lead by nature of work, the gates it must clear, and any
 human gate that stops for Gary.
 
+Numbering note: the roster IDs (12 Zeus, 12a Athena, 12b Apollo, 12c Heracles,
+12d Hermes, 12e Argus) name the agents. The mission tags below (12d fold-in, 12f
+hub Worker card, 13c dashboard deployment, 12a demo edge function) are site-build
+series references and are a separate numbering space, not agent IDs. Where a tag
+could read as either, the mission tag here means the series item, not the agent.
+
 ## Active queue
 
 ### M1: Fold in 12d
