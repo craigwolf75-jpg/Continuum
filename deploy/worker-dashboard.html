@@ -104,6 +104,17 @@ textarea:focus{box-shadow:0 0 0 2px var(--gold)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast b{color:var(--gold)}
 .burst{position:fixed;pointer-events:none;z-index:90;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.prail{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(680px,calc(100% - 32px));background:var(--navy);color:#fff;border-radius:14px;box-shadow:0 14px 40px rgba(14,27,44,.4);z-index:85;padding:16px 18px;display:none}
+.prail.on{display:block}
+.prail .pr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.prail .pr-beat{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
+.prail .pr-x{background:none;border:none;color:#9fb0c6;font-size:20px;cursor:pointer;line-height:1}
+.prail .pr-say{font-size:14.5px;line-height:1.55;margin-bottom:14px}
+.prail .pr-ctl{display:flex;gap:10px;justify-content:flex-end}
+.prail .pr-ctl button{border-radius:9px;padding:9px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.prail .pr-ctl .back{background:rgba(255,255,255,.14);color:#fff}
+.prail .pr-ctl .back[disabled]{opacity:.4;cursor:default}
+.prail .pr-ctl .next{background:var(--gold);color:var(--navy)}
 section.view{display:none}section.view.on{display:block}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(max-width:1080px){.grid2{grid-template-columns:1fr !important}.tiles{grid-template-columns:1fr}}
@@ -118,6 +129,7 @@ section.view{display:none}section.view.on{display:block}
 </aside>
 <main><div class="wrap" id="main"></div></main>
 <div class="toast" id="toast"></div>
+<div class="prail" id="prail"></div>
 <script>
 "use strict";
 
@@ -190,7 +202,7 @@ function chart(){
 function renderDashboard(){
  var h='<header style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px"><div>'+
  '<h2 class="pg">Your Recovery: Last 7 Days</h2><p class="sub">What should I do today &middot; Worker ID: 99283-WB &middot; Coordinator: K. Morgan &middot; Day '+S.day+' of '+PROG+'</p></div>'+
- '<div style="display:flex;gap:10px"><button class="btn ghost" onclick="presentStep(event)"><span class="msym" style="font-size:18px">play_arrow</span> Present</button>'+
+ '<div style="display:flex;gap:10px"><button class="btn ghost" onclick="startPresent()"><span class="msym" style="font-size:18px">play_arrow</span> Present</button>'+
  '<button class="btn" onclick="go(\'trend\')"><span class="msym" style="font-size:19px">add_circle</span> New Recovery Log</button></div></header>';
  var trend=S.escalated?"Your clinician is taking a look":"Trending well";
  h+='<div style="display:grid;grid-template-columns:2fr 1fr;gap:14px" class="grid2"><div>';
@@ -293,25 +305,43 @@ function toggleConsent(){
  S.consented=!S.consented;
  toast(S.consented?"Check-ins are <b>back on</b>.":"Check-ins <b>paused</b>. Your recovery plan continues unchanged.");
  save();}
-/* ---------- presentation mode ---------- */
-function presentStep(ev){
- if(S.day>=PROG){toast("Recovery arc <b>complete</b>. Reset to run it again.");return;}
- S.day++;
- var np=Math.max(0,curPain()-(Math.random()<.7?1:0));
- var nm=Math.min(10,curMob()+(Math.random()<.7?1:0));
- S.pain=S.pain.slice(1).concat([np]);
- S.mob=S.mob.slice(1).concat([nm]);
- S.checkedInToday=true;S.escalated=false;
- S.logs.unshift({t:"Day "+S.day,title:"Standard check-in",x:"Pain "+np+", mobility "+nm+".",tag:nm>=7?"optimal":"stable"});
- if(S.day>=PROG){S.status="signed_off";
-  S.logs.unshift({t:"Day "+S.day,title:"Cleared for full duty",x:"Dr. A. Owusu signed off your return. Welcome back.",tag:"optimal"});
-  toast("<b>Signed off.</b> Full duty, day "+S.day+".");if(ev)burst(ev.clientX||innerWidth/2,ev.clientY||120);}
- else toast("Day <b>"+S.day+"</b>: pain "+String.fromCharCode(8595)+" mobility "+String.fromCharCode(8593));
- save();}
+/* ---------- presentation mode: scripted demo runner (Prompt 19 D) ---------- */
+function doCheckin(p,m){S.pain=S.pain.slice(1).concat([p]);S.mob=S.mob.slice(1).concat([m]);S.checkedInToday=true;S.escalated=false;S.logs.unshift({t:"Day "+S.day,title:"Standard check-in",x:"Pain "+p+", mobility "+m+".",tag:m>=7?"optimal":"stable"});}
+function advanceDays(n){for(var i=0;i<n;i++){S.day++;var np=Math.max(0,curPain()-1),nm=Math.min(10,curMob()+1);S.pain=S.pain.slice(1).concat([np]);S.mob=S.mob.slice(1).concat([nm]);}S.checkedInToday=true;S.logs.unshift({t:"Day "+S.day,title:"Standard check-in",x:"Pain "+curPain()+", mobility "+curMob()+".",tag:curMob()>=7?"optimal":"stable"});}
+var BEATS=[
+ {say:"Day 9. Marcus opens the worker app and logs a check-in. Pain is down, mobility is up. The recovery ring moves.",run:function(){doCheckin(4,6);}},
+ {say:"The employer dashboard now shows Marcus on light duty. Functional status only. It never sees his pain, his mobility, or his notes.",run:function(){}},
+ {say:"Marcus acknowledges today's restrictions. His HSE coordinator sees the time he confirmed, and nothing else.",run:function(){S.ackDay=S.day;S.ackTs=Date.now();}},
+ {say:"Days pass. Every morning check-in nudges the ring forward and keeps all four portals current, live across the bridge.",run:function(){advanceDays(6);}},
+ {say:"HSE assigns a duty inside his restrictions. Marcus accepts it himself. Nobody accepts for him.",run:function(){var d=S.duties.filter(function(x){return x.status!=="completed";})[0];if(d)d.status="completed";}},
+ {say:"Day 21. Dr. Owusu reviews the recovery signal and presses Clearance. The sign-off crosses the bridge.",run:function(){advanceDays(Math.max(0,PROG-S.day));S.status="signed_off";S.logs.unshift({t:"Day "+S.day,title:"Cleared for full duty",x:"Dr. A. Owusu signed off your return. Welcome back.",tag:"optimal"});}},
+ {say:"The worker app celebrates. Employer and HSE retire him. The board closes the claim with the full duty package. Everyone made better decisions because everyone had better information.",run:function(){}}
+];
+function startPresent(){goBeat(0);}
+function exitPresent(){S.present=false;save();}
+function goBeat(n){
+ if(n<0)n=0;if(n>BEATS.length-1)n=BEATS.length-1;
+ var keepConsent=S.consented;
+ S=fresh();S.consented=keepConsent;S.present=true;S.section="dashboard";
+ for(var i=0;i<=n;i++){BEATS[i].run();}
+ S.beat=n;
+ save();
+ if(n===BEATS.length-1)burst(innerWidth/2,140);}
+function presentNext(){if((S.beat||0)<BEATS.length-1)goBeat((S.beat||0)+1);}
+function presentBack(){if((S.beat||0)>0)goBeat((S.beat||0)-1);}
+function updateRail(){
+ var el=document.getElementById("prail");if(!el)return;
+ if(!S.present){el.className="prail";el.innerHTML="";return;}
+ var n=S.beat||0, last=n===BEATS.length-1;
+ el.className="prail on";
+ el.innerHTML='<div class="pr-top"><span class="pr-beat">Beat '+(n+1)+' of '+BEATS.length+'</span><button class="pr-x" onclick="exitPresent()" aria-label="Exit present mode">&times;</button></div>'+
+  '<div class="pr-say">'+esc(BEATS[n].say)+'</div>'+
+  '<div class="pr-ctl"><button class="back" onclick="presentBack()"'+(n===0?" disabled":"")+'>Back</button><button class="next" onclick="'+(last?"startPresent()":"presentNext()")+'">'+(last?"Replay":"Next")+'</button></div>';}
 function render(){
  renderNav();
  var views={dashboard:renderDashboard,trend:renderTrend,duties:renderDuties,chat:renderChat,settings:renderSettings};
  document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
+ updateRail();
 }
 load();writeBridge();render();
 </script>
