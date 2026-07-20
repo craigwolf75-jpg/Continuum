@@ -101,6 +101,8 @@
   function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
   var signedIn = lsGet('cx_signed_in')==='1';
+  var dutyAck = (function(){ try{ return JSON.parse(lsGet('cx_duty_ack'))||null; }catch(e){ return null; } })();
+  function fmtTime(ts){ try{ return new Date(ts).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}); }catch(e){ return ''; } }
   var G = null;
   function gateInit(){ if(!G) G={step:'phone',digits:'',code:['','','','','',''],pw:''}; }
   function fmtPhone(d){ var p=(d||'').slice(0,10); if(!p.length) return ''; if(p.length<=3) return '('+p; if(p.length<=6) return '('+p.slice(0,3)+') '+p.slice(3); return '('+p.slice(0,3)+') '+p.slice(3,6)+'-'+p.slice(6); }
@@ -218,6 +220,12 @@
       '<div class="row" style="margin-top:10px"><span class="label">Estimated return</span><span class="val">'+fmtDate(m.estimated_return_date)+'</span></div>'+
       (m.diagnosis_summary?'<div class="row" style="margin-top:10px"><span class="label">Summary</span><span class="val" style="text-align:right;max-width:60%">'+esc(m.diagnosis_summary)+'</span></div>':'')+'</div>';
     if(justEscalated){ html+='<div class="flag">Thank you for logging this. We have let your care team know so they can check in with you.</div>'; }
+    // morning duty acknowledgement
+    var acked = dutyAck && dutyAck.day===m.day;
+    html+='<div class="card"><div class="kick" style="margin-bottom:8px">Today\'s restrictions</div>'+
+      '<p class="sub" style="margin-bottom:10px">'+esc(m.restriction||'No lifting above shoulder height')+'</p>'+
+      (acked?'<span class="statuspill">Acknowledged today at '+fmtTime(dutyAck.ts)+'</span>':'<button class="btn" data-action="ackduty" data-day="'+m.day+'">I understand my duties today</button>')+
+      '<p class="sub" style="font-size:11px;margin-top:10px">A daily record that you understood your restrictions. Your coordinator sees the time, never your scores.</p></div>';
     // check-in card
     var didAM = vm.check_ins.some(function(l){ return sameDay(l.logged_at) && l.period==='AM'; });
     var didPM = vm.check_ins.some(function(l){ return sameDay(l.logged_at) && l.period==='PM'; });
@@ -308,6 +316,7 @@
     else if(a==='revoke'){ S.revokeConsent(); render(); }
     else if(a==='reset'){ S.reset(); draft={pain:null,mobility:null,notes:'',period:null}; justEscalated=false; signedIn=false; lsDel('cx_signed_in'); G=null; location.hash='#today'; render(); }
     else if(a==='done'){ S.completeDuty(t.getAttribute('data-id'),'done'); render(); }
+    else if(a==='ackduty'){ dutyAck={day:+t.getAttribute('data-day'), ts:Date.now()}; lsSet('cx_duty_ack', JSON.stringify(dutyAck)); render(); }
     else if(a==='submit'){
       var pain=draft.pain!=null?draft.pain:5, mob=draft.mobility!=null?draft.mobility:5, fat=draft.fatigue!=null?draft.fatigue:3, conf=draft.confidence!=null?draft.confidence:7;
       var res=S.submitCheckIn({pain:pain, mobility:mob, fatigue:fat, confidence:conf, notes:draft.notes||'', period:draft.period||(new Date().getHours()<12?'AM':'PM')});
