@@ -17,19 +17,20 @@ folds in.
 ## Active queue
 
 ### DESIGN-1: Apollo baseline pass
-- Status: QUEUED
+- Status: DONE (audit + motion plan), with one part deferred and one escalated.
 - Lead: apollo
-- Gates: none to clear (a baseline audit and plan; findings become backlog).
-  Any surface change it recommends returns as its own mission through the
-  normal gates.
-- Human gate: none.
-- Note: Apollo's onboarding mission, seeded ahead of the first Argus patrol.
-  Audit the site's current visual system and motion against his laws (motion
-  serves comprehension, prefers-reduced-motion honored, performance as a design
-  property, the healthcare register, no visual treatment reintroducing clinical
-  inference). Deliver the Figma source of truth for the existing pages. Produce
-  a prioritized motion plan for the hub and demo cards. Every finding lands in
-  the backlog below.
+- Result: audit of all ten visitor-facing surfaces delivered against the five
+  laws; 12 findings (D1-F01..F12) distilled into backlog items S-DESIGN-A..F
+  below; reduced-motion sweep and a hub + demo-card motion plan delivered.
+- Deferred (human/tooling gate): the Figma source of truth for existing pages
+  was NOT produced. It creates external artifacts in Gary's Figma and needs the
+  integration connected; it stops for Gary.
+- Escalated (canon + human gate): findings D1-F01/F02 (employer "Clinician
+  reviewing" tag and escalation-driven RTW dip) may or may not be law-5 leaks,
+  because Prompt 19 canon explicitly permits "awaiting clinical review" as an
+  employer phrase. Awaiting Gary's ruling before any fix (see S-DESIGN-A).
+- Stack finding: this repo is plain HTML/CSS/JS, so Apollo's Framer Motion and
+  React toolkit maps onto CSS transitions here; the React stack is continuum-app.
 
 ### M1: Fold in S12d
 - Status: QUEUED
@@ -94,3 +95,51 @@ folds in.
 - Status: QUEUED (populated by M5)
 - Note: findings from the first full patrol land here, each with file and line,
   each routed by Zeus to its lead.
+
+## DESIGN-1 backlog (from Apollo's baseline pass)
+
+### S-DESIGN-A: Employer inference-channel ruling and fix
+- Status: BLOCKED (human gate + canon consistency)
+- Lead: apollo, with argus and calliope co-sign; athena for the wiring
+- Blocked on: Gary's ruling. D1-F01 employer live row shows "Clinician
+  reviewing" on escalation (employer-dashboard.html ~327/199/388); D1-F02 the
+  employer RTW bar drops light_duty 55 to escalated 45 on a clinical escalation
+  (liveRtw() ~187). Prompt 19 canon permits "awaiting clinical review" as an
+  employer phrase, so this may be compliant routing rather than a leak. Zeus
+  will not guess a privacy-law call. Fix (hold last functional value, adjust the
+  tag) proceeds only on Gary's decision.
+
+### S-DESIGN-B: prefers-reduced-motion guards
+- Status: QUEUED
+- Lead: apollo
+- Note: add a reduced-motion block to worker-dashboard, hse-portal,
+  clinical-dashboard, wcb-portal, admin-portal; extend the partial one in
+  employer-dashboard (D1-F03, F05, F06). The pattern already exists in
+  worker-embed.html and continuum_workflow_app.html.
+
+### S-DESIGN-C: Worker-app accessibility
+- Status: QUEUED
+- Lead: athena, apollo co-sign
+- Note: restore a designed gold focus ring on the served worker app
+  (app/index.html strips outline at ~66) and raise worker action buttons to a
+  44px touch target (worker-dashboard.html ~276-284). Worker-facing (D1-F04, F07).
+
+### S-DESIGN-D: Hub role-picker motion pass
+- Status: QUEUED
+- Lead: apollo
+- Note: entrance stagger + hover lift + press feedback on the six hub cards,
+  transform/opacity only, 200-400ms, inside a reduced-motion guard. Hub does not
+  load support.js, so no background-tab throttle. Enhancement, no finding.
+
+### S-DESIGN-E: Register and polish sweep
+- Status: QUEUED
+- Lead: apollo
+- Note: HSE red pain sparkline to desaturated amber (D1-F08), hub and marketing
+  :focus-visible rings (D1-F10), secondary-button touch targets (D1-F11), delete
+  dead fadeUp keyframe in index.html (D1-F09). Minor.
+
+### S-DESIGN-F: Argus re-scan after S-DESIGN-A
+- Status: QUEUED (gated on S-DESIGN-A landing)
+- Lead: argus
+- Note: re-scan the employer and worker bridge to confirm no other escalation
+  state leaks into a functional-only surface.
