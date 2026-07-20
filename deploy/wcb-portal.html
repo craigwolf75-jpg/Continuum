@@ -152,8 +152,9 @@ var LSKEY="continuum_board_portal_v1";
 var NAV=[["dashboard","dashboard","Dashboard"],["claims","description","Claims"],["providers","group","Providers"],["analytics","monitoring","Analytics"],["settings","settings","Settings"]];
 var ST={reported:["REPORTED",20],light_duty:["LIGHT DUTY",60],return_pending:["RETURN PENDING",85],closed:["CLOSED",100]};
 var S;
-function fresh(){return {claims:JSON.parse(JSON.stringify(CLAIMS)),section:"dashboard",filter:null,search:""};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.claims){S=s;return;}}}catch(e){}S=fresh();}
+function fresh(){return {claims:JSON.parse(JSON.stringify(CLAIMS)),section:"dashboard",filter:null,search:"",csort:{key:null,dir:1}};}
+function sortClaims(k){if(!S.csort)S.csort={key:null,dir:1};if(S.csort.key===k)S.csort.dir*=-1;else S.csort={key:k,dir:1};save();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.claims){S=s;if(!S.csort)S.csort={key:null,dir:1};return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -172,14 +173,17 @@ function docPill(s){return '<span class="pillst '+(s==="acknowledged"?"ok":s==="
 function pagehead(title,sub,extra){
  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px"><div><div style="display:flex;align-items:center;gap:10px"><h1>'+title+'</h1><span class="pill">READ AND FILE TRACKING</span></div><div class="sub">'+sub+'</div></div>'+(extra||"")+'</div>';}
 function claimTable(list,limit){
- var rows=(limit?list.slice(0,limit):list).map(function(c){
+ var cs=S.csort||{key:null,dir:1};var sorted=list.slice();
+ if(cs.key){sorted.sort(function(a,b){var va,vb;if(cs.key==="worker"){va=a.name;vb=b.name;}else if(cs.key==="status"){va=a.status;vb=b.status;}else{va=ST[a.status][1];vb=ST[b.status][1];}if(va<vb)return -1*cs.dir;if(va>vb)return 1*cs.dir;return 0;});}
+ var rows=(limit?sorted.slice(0,limit):sorted).map(function(c){
   var i=S.claims.indexOf(c);
   return '<tr class="rl" onclick="openDrawer('+i+')"><td><div style="display:flex;align-items:center"><span class="avatar">'+initials(c.name)+'</span><div><b style="text-transform:uppercase">'+esc(c.name)+'</b><div style="font-size:11px;color:var(--muted)">'+esc(c.emp)+'</div></div></div></td>'+
   '<td><span style="font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)">#'+esc(c.ref)+'</span><div style="font-size:10.5px;color:var(--soft)">'+esc(c.board)+'</div></td>'+
   '<td>'+stchip(c.status)+(c.ack_pending?'<div style="font-size:10.5px;color:#735200;margin-top:4px">'+c.ack_pending+' filing to acknowledge</div>':"")+'</td>'+
   '<td style="width:180px">'+phase(c.status)+'</td>'+
   '<td><span class="msym" style="color:#3b475a">visibility</span></td></tr>';}).join("");
- return '<table><thead><tr><th>Worker and employer</th><th>Claim ID</th><th>Status</th><th>Claim phase</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';}
+ var ind=function(k){return cs.key===k?(cs.dir>0?' &#9650;':' &#9660;'):'';};
+ return '<table><thead><tr><th onclick="sortClaims(\'worker\')" style="cursor:pointer">Worker and employer'+ind("worker")+'</th><th>Claim ID</th><th onclick="sortClaims(\'status\')" style="cursor:pointer">Status'+ind("status")+'</th><th onclick="sortClaims(\'phase\')" style="cursor:pointer">Claim phase'+ind("phase")+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';}
 /* ---------- dashboard ---------- */
 function renderDashboard(){
  var o=openClaims(),c=counts();
@@ -272,7 +276,7 @@ function renderAnalytics(){
  var h=pagehead("Analytics","Submission and claim movement this period.");
  h+='<div class="cols" style="margin-top:14px"><div class="card bars" style="padding:18px"><div class="eyebrow" style="margin-bottom:6px">Claims by status</div>'+
  Object.keys(ST).map(function(k){var v=c[k],p=Math.round(v/tot*100);
-  return '<div class="brow"><div class="bl"><span>'+ST[k][0]+'</span><span>'+v+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(k==="light_duty"?"var(--gold)":k==="closed"?"var(--good)":"var(--navy)")+'"></i></div></div>';}).join("")+'</div>';
+  return '<div class="brow" style="cursor:pointer" title="Open these claims" onclick="S.filter=\''+k+'\';S.section=\'claims\';save()"><div class="bl"><span>'+ST[k][0]+'</span><span>'+v+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(k==="light_duty"?"var(--gold)":k==="closed"?"var(--good)":"var(--navy)")+'"></i></div></div>';}).join("")+'</div>';
  h+='<div class="card bars" style="padding:18px"><div class="eyebrow" style="margin-bottom:6px">Claims by board</div>'+
  Object.keys(boards).map(function(k){var v=boards[k],p=Math.round(v/tot*100);
   return '<div class="brow"><div class="bl"><span>'+esc(k)+'</span><span>'+v+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(k.indexOf("WSIB")===0?"#93d0e0":"var(--navy)")+'"></i></div></div>';}).join("")+
