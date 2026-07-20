@@ -214,8 +214,8 @@ function renderDashboard(){
  '</div>';
  if(openEsc().length){
   h+='<div class="card" style="padding:16px;margin-bottom:16px;border-left:5px solid var(--gold)"><div class="eyebrow" style="margin-bottom:8px">Escalations</div>'+
-  openEsc().map(function(e){var w=W(e.w);
-   return '<div class="escitem"><div class="eschead"><div><b style="font-size:13.5px">'+esc(w.name)+'</b> <span class="sub" style="font-size:11.5px">'+esc(e.text)+'</span></div><button class="btn ghost" onclick="resolveEsc('+e.id+')">Resolve</button></div>'+insightCard(e.insight)+'</div>';}).join("")+'</div>';}
+  openEsc().map(function(e){var w=W(e.w);var nm=e.wname||(w?w.name:"Worker");var tag=e.src==="supervisor observation"?' <span class="prov" style="background:#e7edf5;color:#33465e">Supervisor observation</span>':'';
+   return '<div class="escitem"><div class="eschead"><div><b style="font-size:13.5px">'+esc(nm)+'</b>'+tag+' <span class="sub" style="font-size:11.5px">'+esc(e.text)+'</span></div><button class="btn ghost" onclick="resolveEsc('+e.id+')">Resolve</button></div>'+insightCard(e.insight)+'</div>';}).join("")+'</div>';}
  h+='<div class="card" style="overflow:hidden"><div style="padding:16px;border-bottom:1px solid var(--line);background:var(--bright);display:flex;justify-content:space-between;align-items:center"><h2>Case queue</h2><span class="sub">Sorted by attention needed</span></div>';
  var order={off_work:0,reported:1,light_duty:2,full_duty_pending:3};
  var sorted=openCases().slice().sort(function(a,b){
@@ -352,14 +352,17 @@ function renderSettings(){
  '<div class="adminrow"><div><b>Quiet hours</b><div class="sub" style="font-size:11.5px">No nudges outside 8am to 9pm worker local time. SMS bodies never carry case content.</div></div><span class="pillst ok">on</span></div>'+
  '</div>';
  return h;}
+function readConcern(){try{var raw=localStorage.getItem("continuum_supervisor_concern_v1");if(!raw)return;var c=JSON.parse(raw);if(!c||!c.ts||c.ts<=(S.concernTsSeen||0))return;S.concernTsSeen=c.ts;if(S.escalations.some(function(e){return e.id===c.ts;}))return;S.escalations.push({id:c.ts,w:null,wname:c.worker,src:"supervisor observation",text:"Supervisor reported: "+c.text,resolved:false});}catch(e){}}
 function render(){
  readBridge();
+ readConcern();
  renderNav();
  var views={dashboard:renderDashboard,claims:renderClaims,workers:renderWorkers,analytics:renderAnalytics,settings:renderSettings};
  document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
 }
 window.addEventListener("storage",function(e){if(e.key===BRIDGE_KEY){readBridge();render();
- if(LIVE&&LIVE.checkedInToday)toast("<b>Marcus B.</b> checked in, live from the worker app");}});
+ if(LIVE&&LIVE.checkedInToday)toast("<b>Marcus B.</b> checked in, live from the worker app");}
+ else if(e.key==="continuum_supervisor_concern_v1"){render();toast("New <b>supervisor observation</b> in the queue");}});
 document.addEventListener("visibilitychange",function(){if(!document.hidden){render();}});
 load();render();
 </script>

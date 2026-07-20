@@ -450,11 +450,21 @@ function renderNotes(){
  '<div style="display:flex;gap:8px;flex-wrap:wrap"><select id="noteWorker">'+actives().map(function(w){return '<option>'+esc(w.name)+'</option>';}).join("")+'</select>'+
  '<input type="text" id="noteText" placeholder="Functional note, for example: duties confirmed manageable" style="flex:1;min-width:220px">'+
  '<button class="btn gold" onclick="addNote()">Add note</button></div></div>';
+ h+='<div class="card" style="margin-bottom:12px;border-left:4px solid var(--gold)"><div class="cardhead">Raise a concern or observation</div><p style="font-size:11.5px;color:var(--muted);margin:0 0 8px">A functional observation for the coordinator. Never medical. It flows to the HSE attention queue as a signal.</p>'+
+ '<div style="display:flex;gap:8px;flex-wrap:wrap"><select id="concWorker">'+actives().map(function(w){return '<option>'+esc(w.name)+'</option>';}).join("")+'</select>'+
+ '<input type="text" id="concText" placeholder="For example: struggled with the tool crib duty this morning" style="flex:1;min-width:220px">'+
+ '<button class="btn gold" onclick="raiseConcern()">Raise concern</button></div></div>';
  h+=S.notes.map(function(n){return '<div class="notecard"><div class="meta">'+esc(n.who)+' &middot; '+esc(n.when)+' &middot; '+esc(n.worker)+'</div>'+esc(n.text)+'</div>';}).join("");
  return h;}
 function addNote(){
  var w=document.getElementById("noteWorker").value,t=document.getElementById("noteText").value.trim();
  if(!t)return;S.notes.unshift({who:"K. Morgan",when:"Jun 29, 2026",worker:w,text:t});toast("Note added");save();}
+function raiseConcern(){
+ var w=document.getElementById("concWorker").value,t=document.getElementById("concText").value.trim();
+ if(!t)return;
+ try{localStorage.setItem("continuum_supervisor_concern_v1",JSON.stringify({worker:w,text:t,ts:Date.now()}));}catch(e){}
+ S.notes.unshift({who:"Supervisor",when:"Today",worker:w,text:"Concern raised to coordinator: "+t});
+ toast("Concern <b>raised</b>. Your coordinator sees it now.");save();}
 function renderReports(){
  var h=pagehead("Analytics","Reports","Period summary, export ready");
  h+='<div class="grid" style="grid-template-columns:repeat(3,1fr)">'+
