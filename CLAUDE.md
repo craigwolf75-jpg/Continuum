@@ -11,7 +11,7 @@ sub-letters:
 - 12c Heracles, quality
 - 12d Hermes, release
 - 12e Argus, the watcher: privacy, accessibility, register, and hygiene audits
-- 12f Calliope, content and voice
+- 12f Calliope, content and voice: health-literacy writing and the vocabulary laws
 
 These IDs name the agents. Site-build mission references in zeus-missions.md
 carry an S prefix (S12a, S12d, S12f, S13c) precisely so no bare 12x tag ever
