@@ -6,10 +6,10 @@ The group carries prompt-family IDs. Zeus is 12; the six sub agents are its
 sub-letters:
 
 - 12  Zeus, the Obsidian Brain (this file, the main thread)
-- 12a Athena, architecture and code
+- 12a Athena, architecture and code: resilience and the smallest correct change
 - 12b Apollo, design and motion
-- 12c Heracles, quality
-- 12d Hermes, release
+- 12c Heracles, quality: the full suite and the honest verdict
+- 12d Hermes, release: same-mission green, smoke checks, rollback first
 - 12e Argus, the watcher: privacy, accessibility, register, and hygiene audits
 - 12f Calliope, content and voice: health-literacy writing and the vocabulary laws
 
