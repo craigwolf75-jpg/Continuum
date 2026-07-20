@@ -27,7 +27,7 @@
   <div style="position:sticky;top:0;z-index:80;background:rgba(14,27,46,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)">
     <div style="max-width:1200px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
       <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:21px;color:#fff;letter-spacing:-0.01em;flex-shrink:0">Continuum<span style="color:#C8972F">.</span></div>
-      <div style="display:flex;align-items:center;gap:18px;flex-wrap:nowrap;justify-content:flex-end;min-width:0;overflow-x:auto">
+      <div class="hdr-desktop" style="display:flex;align-items:center;gap:18px;flex-wrap:nowrap;justify-content:flex-end;min-width:0;overflow-x:auto">
         <a href="#home" style="font-size:13px;color:#fff;font-weight:500;white-space:nowrap">Home</a>
         <a href="#how" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">How It Works</a>
         <a href="#try-app" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">Try the App</a>
@@ -40,8 +40,65 @@
         <a href="/hub" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">Sign in</a>
         <a href="#cta" style="background:#C8972F;color:#0E1B2C;font-size:13px;font-weight:600;padding:10px 18px;border-radius:10px;white-space:nowrap;flex-shrink:0" style-hover="background:#E3B968;color:#0E1B2C">Start a Pilot</a>
       </div>
+      <div class="hdr-mobile" style="align-items:center;gap:12px">
+        <a href="#cta" style="background:#C8972F;color:#0E1B2C;font-size:13px;font-weight:600;padding:9px 15px;border-radius:9px;white-space:nowrap" style-hover="background:#E3B968;color:#0E1B2C">Start a Pilot</a>
+        <button class="mnav-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
     </div>
   </div>
+
+  <!-- ============ MOBILE NAV DRAWER (home header only) ============ -->
+  <style>
+    .hdr-mobile{display:none}
+    .mnav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:40px;padding:0 9px;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:9px;cursor:pointer;flex-shrink:0}
+    .mnav-toggle span{display:block;height:2px;background:#fff;border-radius:2px}
+    .mnav-backdrop{position:fixed;inset:0;background:rgba(6,12,22,.6);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility 0s linear .25s;z-index:90}
+    .mnav-backdrop.open{opacity:1;visibility:visible;transition:opacity .25s ease}
+    .mnav-drawer{display:flex;position:fixed;top:0;right:0;height:100%;width:284px;max-width:82vw;box-sizing:border-box;flex-direction:column;padding:18px 18px 26px;background:#0E1B2C;border-left:1px solid rgba(255,255,255,.08);box-shadow:-16px 0 44px rgba(0,0,0,.4);transform:translateX(100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s;z-index:100;overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .mnav-drawer.open{transform:none;visibility:visible;transition:transform .25s ease}
+    .mnav-dhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .mnav-dhead b{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#8492A6}
+    .mnav-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:8px;color:#fff;font-size:22px;line-height:1;cursor:pointer}
+    .mnav-links{display:flex;flex-direction:column}
+    .mnav-links a{display:block;padding:14px 6px;font-size:15px;font-weight:500;color:#D7DEE8;border-bottom:1px solid rgba(255,255,255,.06)}
+    .mnav-links a:hover{color:#fff}
+    @media(max-width:1200px){
+      .hdr-desktop{display:none !important}
+      .hdr-mobile{display:flex !important}
+      .mnav-toggle{display:inline-flex}
+    }
+  </style>
+  <div class="mnav-backdrop"></div>
+  <aside class="mnav-drawer" role="dialog" aria-modal="true" aria-label="Site menu">
+    <div class="mnav-dhead">
+      <b>Menu</b>
+      <button class="mnav-close" type="button" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="mnav-links">
+      <a href="#home">Home</a>
+      <a href="#how">How It Works</a>
+      <a href="#try-app">Try the App</a>
+      <a href="/continuum_workflow_app">Workflow Demo</a>
+      <a href="#roles">For Employers</a>
+      <a href="#doctrine">For Clinicians</a>
+      <a href="#signal">For Workers</a>
+      <a href="#privacy">Privacy &amp; Trust</a>
+      <a href="#evidence">Evidence</a>
+      <a href="/hub">Sign in</a>
+    </nav>
+  </aside>
+  <script>
+    function mnavEls(){return {d:document.querySelector('.mnav-drawer'),b:document.querySelector('.mnav-backdrop'),t:document.querySelector('.mnav-toggle')};}
+    function mnavOpen(){var e=mnavEls();if(!e.d)return;e.b.classList.add('open');e.d.classList.add('open');if(e.t)e.t.setAttribute('aria-expanded','true');document.documentElement.style.overflow='hidden';}
+    function mnavClose(){var e=mnavEls();if(!e.d)return;e.b.classList.remove('open');e.d.classList.remove('open');if(e.t)e.t.setAttribute('aria-expanded','false');document.documentElement.style.overflow='';}
+    function mnavToggle(){var e=mnavEls();if(!e.d)return;(e.d.classList.contains('open')?mnavClose:mnavOpen)();}
+    document.addEventListener('click',function(ev){
+      if(ev.target.closest('.mnav-toggle')){mnavToggle();return;}
+      if(ev.target.closest('.mnav-close')||(ev.target.classList&&ev.target.classList.contains('mnav-backdrop'))){mnavClose();return;}
+      if(ev.target.closest('.mnav-links a')){mnavClose();}
+    });
+    document.addEventListener('keydown',function(ev){if(ev.key==='Escape')mnavClose();});
+  </script>
 
   <!-- ================= S1 HERO (navy) ================= -->
   <div id="home" style="background:linear-gradient(175deg,#0E1B2C 0%,#0A1526 100%);padding:110px 32px 120px">
