@@ -152,9 +152,11 @@ var CHAIN=["reported","off_work","light_duty","full_duty_pending","signed_off"];
 /* the transition table: from -> [legal to states], physician-only in the product; this portal IS the physician */
 var TRANSITIONS={reported:["off_work","light_duty"],off_work:["light_duty"],light_duty:["off_work","full_duty_pending"],full_duty_pending:["light_duty","signed_off"],signed_off:[]};
 var S, LIVE=null;
-function fresh(){return {patients:JSON.parse(JSON.stringify(PATIENTS)),section:"dashboard",detail:null,search:"",escTsSeen:0,
+function fresh(){return {patients:JSON.parse(JSON.stringify(PATIENTS)),section:"dashboard",detail:null,search:"",escTsSeen:0,wsort:{key:null,dir:1},wfilter:null,
  form:{pid:"",injury:"",prog:50,restr:""},audit:[]};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.patients){S=s;return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.patients){S=s;if(!S.wsort)S.wsort={key:null,dir:1};if(S.wfilter===undefined)S.wfilter=null;return;}}}catch(e){}S=fresh();}
+function bucketOf(p){if(p.prog>=80)return "ahead";if(p.prog>=60)return "ontrack";if(p.prog>=40)return "behind";return "stalled";}
+function sortW(k){if(!S.wsort)S.wsort={key:null,dir:1};if(S.wsort.key===k)S.wsort.dir*=-1;else S.wsort={key:k,dir:1};save();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -204,8 +206,11 @@ function stchip(p){
  return '<span class="stchip s-'+p.status+'">'+ST[p.status]+'</span>';}
 function painCell(p){var c=p.pain>=8?"var(--alert)":p.pain>=5?"#735200":"var(--teal)";return '<b style="color:'+c+'">'+p.pain+'/10</b>';}
 function census(list){
- return '<table><thead><tr><th>Worker / Diagnosis</th><th style="text-align:center">Pain</th><th style="text-align:center">Mobility</th><th>Duty status</th><th>Tenant</th></tr></thead><tbody>'+
- list.map(function(p){
+ var ws=S.wsort||{key:null,dir:1};var sorted=list.slice();
+ if(ws.key){sorted.sort(function(a,b){var va,vb;if(ws.key==="name"){va=a.name;vb=b.name;}else if(ws.key==="pain"){va=a.pain;vb=b.pain;}else{va=a.tenant;vb=b.tenant;}if(va<vb)return -1*ws.dir;if(va>vb)return 1*ws.dir;return 0;});}
+ var ind=function(k){return ws.key===k?(ws.dir>0?' &#9650;':' &#9660;'):'';};
+ return '<table><thead><tr><th onclick="sortW(\'name\')" style="cursor:pointer">Worker / Diagnosis'+ind("name")+'</th><th onclick="sortW(\'pain\')" style="cursor:pointer;text-align:center">Pain'+ind("pain")+'</th><th style="text-align:center">Mobility</th><th>Duty status</th><th onclick="sortW(\'tenant\')" style="cursor:pointer">Tenant'+ind("tenant")+'</th></tr></thead><tbody>'+
+ sorted.map(function(p){
   return '<tr class="rl" onclick="openP(\''+p.id+'\')"><td'+(p.esc&&p.esc.level==="urgent"?' style="border-left:4px solid var(--alert)"':"")+'>'+
   '<span class="avatar" style="background:'+(p.esc?"var(--red)":"var(--navy)")+'">'+initials(p.name)+'</span><b>'+esc(p.name)+'</b>'+(p.id==="m"&&LIVE?' <span style="color:#735200;font-size:10px;font-weight:700">LIVE</span>':'')+'<div class="sub" style="font-size:11px;margin-left:42px">'+esc(p.dx)+'</div></td>'+
   '<td style="text-align:center">'+painCell(p)+'</td>'+
@@ -268,7 +273,10 @@ function renderWorkers(){
  if(S.detail)return renderDetail(Pt(S.detail));
  var list=S.patients.slice();
  if(S.search)list=list.filter(function(p){return (p.name+" "+p.dx+" "+p.tenant).toLowerCase().indexOf(S.search.toLowerCase())>=0;});
+ if(S.wfilter)list=list.filter(function(p){return bucketOf(p)===S.wfilter;});
+ var BLABEL={ahead:"Ahead",ontrack:"On track",behind:"Behind",stalled:"Stalled"};
  var h='<h1 style="margin-bottom:4px">Workers</h1><p class="sub" style="margin-bottom:14px">The full caseload, cross tenant via access grants. '+list.length+' shown.</p>';
+ if(S.wfilter)h+='<div style="margin-bottom:12px"><span class="stchip s-esc">Filtered: '+BLABEL[S.wfilter]+' vs prognosis</span> <a href="#" onclick="S.wfilter=null;save();return false" style="color:var(--teal);font-size:12.5px;margin-left:8px">Clear</a></div>';
  h+='<div class="card" style="overflow:hidden">'+census(list)+'</div>';
  return h;}
 function statebar(p){
@@ -344,7 +352,8 @@ function renderAnalytics(){
  h+='<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
  h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Progress vs prognosis</h2>'+
  Object.keys(buckets).map(function(k){var v=buckets[k],pcnt=Math.round(v/a.length*100);
-  return '<div class="brow"><div class="bl"><span>'+k+'</span><span>'+v+' ('+pcnt+'%)</span></div><div class="bt"><i style="width:'+pcnt+'%;background:'+(k.indexOf("Stalled")===0?"var(--alert)":k.indexOf("Behind")===0?"var(--gold)":"var(--teal)")+'"></i></div></div>';}).join("")+'</div>';
+  var bkey=k.indexOf("Ahead")===0?"ahead":k.indexOf("On track")===0?"ontrack":k.indexOf("Behind")===0?"behind":"stalled";
+  return '<div class="brow" style="cursor:pointer" title="Open these patients" onclick="S.wfilter=\''+bkey+'\';S.section=\'workers\';save()"><div class="bl"><span>'+k+'</span><span>'+v+' ('+pcnt+'%)</span></div><div class="bt"><i style="width:'+pcnt+'%;background:'+(k.indexOf("Stalled")===0?"var(--alert)":k.indexOf("Behind")===0?"var(--gold)":"var(--teal)")+'"></i></div></div>';}).join("")+'</div>';
  h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:6px">Caseload</h2>'+
  '<div class="adminrow"><span>Average recovery score</span><b>'+score()+'%</b></div>'+
  '<div class="adminrow"><span>Open escalations</span><b>'+escP().length+'</b></div>'+
