@@ -148,7 +148,7 @@ var ST={reported:"Reported",off_work:"Off work",light_duty:"Light duty",full_dut
 var STAGES=["matched","hazard_checked","assigned","accepted","active","completed"];
 var S, LIVE=null;
 function fresh(){return {workers:JSON.parse(JSON.stringify(WORKERS)),duties:JSON.parse(JSON.stringify(DUTIES)),
- escalations:[{id:1,w:"tc",src:"regression engine (boot)",text:"Pain 8 on three consecutive check-ins; mobility trend stalled.",insight:{changed:"Pain has held at 8 of 10 while mobility stayed flat.",contributors:"Three consecutive check-ins at or above pain 8; mobility trend flat across the window.",period:"Days 15 to 18.",matters:"Sustained high pain with no functional gain is the pattern that most often precedes a stalled recovery.",uncertain:"Whether the cause is tissue, load, or a psychosocial barrier. The check-in cannot tell them apart.",authority:"The treating physician. This routes the case for review; it does not diagnose or change treatment."}}],section:"dashboard",detail:null,search:"",nextDuty:100,
+ escalations:[{id:1,w:"tc",src:"regression engine (boot)",text:"Pain 8 on three consecutive check-ins; mobility trend stalled.",insight:{changed:"Pain has held at 8 of 10 while mobility stayed flat.",contributors:"Three consecutive check-ins at or above pain 8; mobility trend flat across the window.",period:"Days 15 to 18.",matters:"Sustained high pain with no functional gain is the pattern that most often precedes a stalled recovery.",uncertain:"Whether the cause is tissue, load, or a psychosocial barrier. The check-in cannot tell them apart.",authority:"The treating physician. This routes the case for review; it does not diagnose or change treatment."}}],section:"dashboard",detail:null,search:"",nextDuty:100,audit:[],
  form:{task:TASKBANK[0],date:"2026-07-19",hours:4,cls:"suitable_onsite",hazard:false}};}
 function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.workers){S=s;return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
@@ -190,7 +190,8 @@ function spark(vals,color){
  return '<svg class="spark" width="'+w+'" height="'+h+'"><polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round"/></svg>';}
 /* ---------- nav + shells ---------- */
 function go(sec){S.section=sec;S.detail=null;save();window.scrollTo(0,0);}
-function openWorker(id){S.section="workers";S.detail=id;S.form=fresh().form;save();window.scrollTo(0,0);}
+function hseAudit(msg){if(!S.audit)S.audit=[];S.audit.unshift({msg:msg,ts:Date.now()});if(S.audit.length>25)S.audit.pop();}
+function openWorker(id){var w=W(id);hseAudit("Opened clinical detail for "+(w?w.name:id)+"; scores and notes viewed");S.section="workers";S.detail=id;S.form=fresh().form;save();window.scrollTo(0,0);}
 function renderNav(){
  document.getElementById("sidenav").innerHTML=NAV.map(function(n){
   return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';}).join("");
@@ -351,6 +352,9 @@ function renderSettings(){
  '<div class="adminrow"><div><b>Access requests</b><div class="sub" style="font-size:11.5px">One click produces the human readable export of everything held on a worker.</div></div><span class="pillst ok">wired</span></div>'+
  '<div class="adminrow"><div><b>Quiet hours</b><div class="sub" style="font-size:11.5px">No nudges outside 8am to 9pm worker local time. SMS bodies never carry case content.</div></div><span class="pillst ok">on</span></div>'+
  '</div>';
+ h+='<div class="card" style="padding:18px;margin-top:14px"><div class="eyebrow" style="margin-bottom:8px">Access log</div><p class="sub" style="font-size:11.5px;margin-bottom:10px">Every read of clinical detail on this seat is recorded, in symmetry with the clinical and admin trails.</p>'+
+  ((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div class="adminrow"><span class="sub" style="font-size:12px">'+esc(a.msg)+'</span><span class="sub" style="font-size:11px">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p class="sub" style="font-size:12px">No reads yet. Open a worker to record one.</p>')+
+  '</div>';
  return h;}
 function readConcern(){try{var raw=localStorage.getItem("continuum_supervisor_concern_v1");if(!raw)return;var c=JSON.parse(raw);if(!c||!c.ts||c.ts<=(S.concernTsSeen||0))return;S.concernTsSeen=c.ts;if(S.escalations.some(function(e){return e.id===c.ts;}))return;S.escalations.push({id:c.ts,w:null,wname:c.worker,src:"supervisor observation",text:"Supervisor reported: "+c.text,resolved:false});}catch(e){}}
 function render(){

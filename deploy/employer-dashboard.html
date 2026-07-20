@@ -170,7 +170,7 @@ var NAV=[["overview","Overview",null],
 ["_g3","ADMIN",null],
 ["users","Users & Roles","g"],["settings","Settings","g"],["integrations","Integrations","g"]];
 var S;
-function freshState(){return {workers:JSON.parse(JSON.stringify(WORKERS)),returned:[],section:"overview",filter:null,search:"",notes:[
+function freshState(){return {workers:JSON.parse(JSON.stringify(WORKERS)),returned:[],section:"overview",filter:null,search:"",audit:[],notes:[
  {who:"K. Morgan", when:"Jun 27, 2026", worker:"David Martinez", text:"Route adjusted to local deliveries only. Duties confirmed manageable."},
  {who:"Site HSE", when:"Jun 26, 2026", worker:"Kevin O'Brien", text:"Ground-level staging assigned. Hazard check complete."}
 ]};}
@@ -243,7 +243,8 @@ function multiline(series,w,h,labels){
 var MONTHS=["May 25","Jun 1","Jun 8","Jun 15","Jun 22","Jun 29"];
 
 /* ---------- navigation ---------- */
-function go(sec){S.section=sec==="dashboards"?"overview":sec;S.filter=null;save();window.scrollTo(0,0);}
+function empAudit(msg){if(!S.audit)S.audit=[];S.audit.unshift({msg:msg,ts:Date.now()});if(S.audit.length>25)S.audit.pop();}
+function go(sec){S.section=sec==="dashboards"?"overview":sec;S.filter=null;if(S.section==="workers")empAudit("Viewed the injured workers functional list");save();window.scrollTo(0,0);}
 function renderSide(){
  var h='<div class="logo"><div class="mark"><span></span></div><div class="lt"><b>CONTINUUM</b><i>Injury Recovery Platform</i><i style="display:block;margin-top:5px;color:#8b97a9;font-size:10.5px">What work is safe today</i></div></div>';
  NAV.forEach(function(n){
@@ -498,7 +499,8 @@ function renderUsers(){
 function renderSettings(){
  return pagehead("Admin","Settings","Workspace configuration")+
  adminCard("Notifications",[["Weekly summary email","Mondays 7:00","true"?true:true],["New injury alert","Immediate",true],["Review reminders","48 hours ahead",true]])+
- adminCard("Data",[["Retention schedule","Per custodian direction and statute",true],["Export on request","Right of access supported",true]]);}
+ adminCard("Data",[["Retention schedule","Per custodian direction and statute",true],["Export on request","Right of access supported",true]])+
+ '<div class="card"><div class="cardhead">Access log</div><p style="font-size:12.5px;margin-bottom:8px">Reads of the functional worker list are recorded here, in symmetry with the clinical and admin trails.</p>'+((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-top:1px solid var(--line)"><span>'+esc(a.msg)+'</span><span style="color:var(--muted)">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p style="font-size:12px;color:var(--muted)">No reads yet. Open the Injured Workers view to record one.</p>')+'</div>';}
 function renderIntegrations(){
  return pagehead("Admin","Integrations","Works with the systems you already run")+
  adminCard("Connected",[["Safety platform intake","Incident opens the case automatically",true],["Clinical provider","Nexus Health clearances and restrictions",true]])+
