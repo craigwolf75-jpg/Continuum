@@ -115,6 +115,8 @@ textarea:focus{box-shadow:0 0 0 2px var(--gold)}
 .prail .pr-ctl .back{background:rgba(255,255,255,.14);color:#fff}
 .prail .pr-ctl .back[disabled]{opacity:.4;cursor:default}
 .prail .pr-ctl .next{background:var(--gold);color:var(--navy)}
+.prov{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:5px;background:#eef1f6;color:#5E6B7C;border:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+.prov.clin{background:#e6eeff;color:#3b475a}
 section.view{display:none}section.view.on{display:block}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(max-width:1080px){.grid2{grid-template-columns:1fr !important}.tiles{grid-template-columns:1fr}}
@@ -264,7 +266,7 @@ function saveLog(ev){
 function renderDuties(){
  var acked=S.ackDay===S.day;
  var h='<h2 class="pg" style="margin-bottom:4px">My Duties</h2><p class="sub" style="margin-bottom:18px">Only duties your clinician\'s restrictions allow ever reach this list. You accept them; nobody accepts for you.</p>';
- h+='<div class="card" style="padding:20px;max-width:640px;margin-bottom:16px"><b style="font-size:15px;color:var(--navy)">Today\'s restrictions</b>'+
+ h+='<div class="card" style="padding:20px;max-width:640px;margin-bottom:16px"><b style="font-size:15px;color:var(--navy)">Today\'s restrictions</b> <span class="prov clin">Clinician entered</span>'+
   '<div class="m" style="margin:6px 0 12px">No lifting above shoulder height &middot; breaks every 60 minutes.</div>'+
   (acked?'<span class="pillst ok">Acknowledged today at '+fmtTime(S.ackTs)+'</span>':'<button class="btn" onclick="ackDuties(event)">I understand my duties today</button>')+
   '<p class="sub" style="font-size:11px;margin-top:10px">A daily record that you understood your restrictions. Your HSE coordinator sees the time you confirmed, never your scores.</p></div>';

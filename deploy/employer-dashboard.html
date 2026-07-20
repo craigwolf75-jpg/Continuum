@@ -100,6 +100,8 @@ input:focus,textarea:focus{border-color:var(--gold)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast b{color:var(--gold)}
 section.view{display:none}section.view.on{display:block}
+.prov{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:5px;background:#eef1f6;color:#5E6B7C;border:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+.prov.derived{background:#e7edf5;color:#33465e}
 .notecard{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
 .notecard .meta{color:var(--muted);font-size:11px;margin-bottom:4px}
 .admin-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
@@ -323,7 +325,7 @@ function workerTable(list,preview){
   '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Clinician reviewing</span>':'')+'</td>'+
   '<td style="max-width:230px;color:var(--muted)">'+esc(w.restr)+'</td><td>'+esc(w.review)+'</td><td style="min-width:110px">'+rtwBar(w.rtw)+'</td></tr>';});
  h+='</tbody></table>';
- h+='<div class="tfoot">'+(preview?'Showing '+list.length+' of '+actives().length+' injured workers &middot; ':"")+'Functional status only, never medical detail &nbsp; <a href="#" onclick="peekFirewall();return false">What this view cannot see</a></div>';
+ h+='<div class="tfoot">'+(preview?'Showing '+list.length+' of '+actives().length+' injured workers &middot; ':"")+'<span class="prov derived">Derived functional status</span> &nbsp; Functional status only, never medical detail &nbsp; <a href="#" onclick="peekFirewall();return false">What this view cannot see</a></div>';
  return h;}
 function peekFirewall(){toast("Not hidden, <b>not present</b>: pain scores, diagnosis, worker notes, photos never enter this view's data.");}
 /* ---------- workers section ---------- */
