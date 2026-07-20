@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: Recovery Intelligence inside a claims system (illustrative)</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+<style>
+  :root{
+    --sg-bg:#eef1f6;--sg-card:#ffffff;--sg-navy:#1f3a5f;--sg-blue:#2c5c92;--sg-ink:#1a2536;--sg-muted:#5a6678;--sg-line:#d7dee8;--sg-soft:#eef3fa;
+    --c-navy:#0E1B2C;--c-navy2:#0A1526;--c-gold:#C8972F;--c-gold2:#E3B968;--c-mist:#AAB6C6;--c-hair:rgba(255,255,255,.09);
+    --notice:#8a5a00;--noticebg:#fff4d6;--noticeline:#e7c975;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--sg-bg);color:var(--sg-ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
+  .msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:20px;line-height:1;display:inline-block;vertical-align:middle}
+  /* illustrative banner */
+  .illus{display:flex;align-items:center;gap:10px;background:var(--noticebg);color:var(--notice);border-bottom:1px solid var(--noticeline);padding:10px 22px;font-size:13px;font-weight:600}
+  .illus .msym{font-size:19px}
+  /* SIGMA chrome */
+  header.sg{background:var(--sg-navy);color:#fff;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+  .sg-wm{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.04em;font-size:16px}
+  .sg-wm .dot{width:26px;height:26px;border-radius:6px;background:#fff;color:var(--sg-navy);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+  .sg-wm small{font-weight:600;font-size:10.5px;opacity:.7;letter-spacing:.12em;text-transform:uppercase}
+  .sg-user{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:600}
+  .wrap{max-width:1120px;margin:0 auto;padding:22px}
+  .crumbs{color:var(--sg-muted);font-size:12.5px;margin-bottom:14px}
+  .crumbs b{color:var(--sg-ink)}
+  .cols{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+  .card{background:var(--sg-card);border:1px solid var(--sg-line);border-radius:12px;overflow:hidden}
+  .card .hd{padding:15px 20px;border-bottom:1px solid var(--sg-line);display:flex;align-items:center;justify-content:space-between}
+  .card .hd h2{font-size:15px;font-weight:700;color:var(--sg-navy)}
+  .status-pill{background:#e3f0e3;color:#2c6e46;border-radius:999px;padding:3px 11px;font-size:11.5px;font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--sg-line)}
+  .field{background:var(--sg-card);padding:14px 20px}
+  .field .l{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sg-muted);margin-bottom:3px}
+  .field .v{font-size:14.5px;font-weight:600;color:var(--sg-ink)}
+  .sg-note{padding:14px 20px;font-size:12.5px;color:var(--sg-muted);border-top:1px solid var(--sg-line)}
+  /* embedded Continuum panel */
+  .cont{background:linear-gradient(180deg,var(--c-navy) 0%,var(--c-navy2) 100%);border:1px solid var(--c-hair);border-radius:12px;color:#fff;overflow:hidden}
+  .cont .chd{padding:16px 18px;border-bottom:1px solid var(--c-hair);display:flex;align-items:center;justify-content:space-between}
+  .cont .chd .b{display:flex;align-items:center;gap:9px}
+  .cont .chd .c{width:26px;height:26px;border-radius:7px;background:var(--c-navy);color:var(--c-gold);border:1px solid var(--c-hair);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:"Space Grotesk",sans-serif}
+  .cont .chd .t{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:13.5px}
+  .tag{background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:5px;padding:2px 7px;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .cont .body{padding:6px 18px 16px}
+  .row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--c-hair)}
+  .row:last-child{border-bottom:none}
+  .row .k{color:var(--c-mist);font-size:12.5px}
+  .row .val{font-weight:700;font-size:14px;text-align:right}
+  .row .val .liveflag{color:var(--c-gold);font-size:9.5px;font-weight:700;letter-spacing:.08em;margin-left:6px;vertical-align:middle}
+  .ring{display:flex;align-items:baseline;gap:8px}
+  .ring .big{font-family:"Space Grotesk",sans-serif;font-size:26px;font-weight:700;color:var(--c-gold2)}
+  .bar{height:6px;border-radius:4px;background:rgba(255,255,255,.12);margin-top:6px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--c-gold);border-radius:4px}
+  .cont .foot{padding:13px 18px;background:rgba(0,0,0,.18);border-top:1px solid var(--c-hair);font-size:11px;color:var(--c-mist);line-height:1.5}
+  @media(max-width:840px){.cols{grid-template-columns:1fr}.wrap{padding:16px}}
+</style>
+</head>
+<body>
+  <div class="illus"><span class="msym">info</span><span>Illustrative mock. This shows the concept of a Continuum Recovery Intelligence panel inside a claims system. The pilot integration with SIGMA is intake level, not a live bidirectional connection.</span></div>
+
+  <header class="sg">
+    <div class="sg-wm"><span class="dot">S</span><span>SIGMA Claims<br></span><small>Case management</small></div>
+    <div class="sg-user"><span class="msym" style="font-size:17px">account_circle</span> Claims adjuster</div>
+  </header>
+
+  <div class="wrap">
+    <div class="crumbs">Claims &nbsp;/&nbsp; Open cases &nbsp;/&nbsp; <b>NX-2026-00481</b></div>
+    <div class="cols">
+
+      <!-- SIGMA claim summary (mocked chrome) -->
+      <div class="card">
+        <div class="hd"><h2>Claim NX-2026-00481</h2><span class="status-pill">Open, active</span></div>
+        <div class="grid">
+          <div class="field"><div class="l">Claimant</div><div class="v">Marcus Bedard</div></div>
+          <div class="field"><div class="l">Employer</div><div class="v">Worley</div></div>
+          <div class="field"><div class="l">Injury</div><div class="v">Right shoulder, grade 1 supraspinatus strain</div></div>
+          <div class="field"><div class="l">Body part</div><div class="v">Right shoulder</div></div>
+          <div class="field"><div class="l">Date of injury</div><div class="v">July 11, 2026</div></div>
+          <div class="field"><div class="l">Benefit status</div><div class="v">Wage replacement active</div></div>
+          <div class="field"><div class="l">Adjuster</div><div class="v">Auto assigned</div></div>
+          <div class="field"><div class="l">Jurisdiction</div><div class="v">Alberta, WCB</div></div>
+        </div>
+        <div class="sg-note">This claim record is managed in the claims system. Continuum feeds intake at first notice of injury; the recovery panel to the right is an illustration of what a live return of functional signals could look like.</div>
+      </div>
+
+      <!-- embedded Continuum Recovery Intelligence panel (live from the bridge) -->
+      <div class="cont">
+        <div class="chd"><div class="b"><span class="c">C</span><span class="t">Continuum Recovery Intelligence</span></div><span class="tag">Illustrative</span></div>
+        <div class="body">
+          <div style="padding:14px 0 4px">
+            <div class="k" style="color:var(--c-mist);font-size:12.5px;margin-bottom:2px">Recovery progress <span class="liveflag" id="liveflag" style="display:none">live</span></div>
+            <div class="ring"><span class="big" id="dayBig">Day 9</span><span style="color:var(--c-mist);font-size:12.5px" id="dayOf">of 21</span></div>
+            <div class="bar"><i id="progBar" style="width:43%"></i></div>
+          </div>
+          <div class="row"><span class="k">Functional status</span><span class="val" id="fstatus">Light duty</span></div>
+          <div class="row"><span class="k">Return to work</span><span class="val" id="rtw">On track, full duty in about 2 weeks</span></div>
+          <div class="row"><span class="k">Duties today</span><span class="val" id="duties">1 of 3 done</span></div>
+          <div class="row"><span class="k">Restrictions acknowledged</span><span class="val" id="ack">Awaiting today</span></div>
+          <div class="row"><span class="k">Days versus 63 day benchmark</span><span class="val" id="bench">Tracking ahead</span></div>
+        </div>
+        <div class="foot">Functional signals only. No pain, mobility, or clinical scores cross into the claim record. Benchmark is descriptive; predictive modeling is not enabled. Panel is illustrative, not a live feed.</div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+(function(){
+  var BRIDGE_KEY="continuum_worker_bridge_v1", PROG=21;
+  var STLABEL={reported:"Reported",off_work:"Off work",light_duty:"Light duty",full_duty_pending:"Full duty pending",signed_off:"Signed off, full duty",escalated:"Under clinical review"};
+  function fmtTime(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
+  function set(id,txt){var el=document.getElementById(id);if(el)el.textContent=txt;}
+  function read(){
+    var b=null;
+    try{var raw=localStorage.getItem(BRIDGE_KEY);if(raw){var p=JSON.parse(raw);if(p&&p.ts&&Date.now()-p.ts<86400000&&p.consented!==false)b=p;}}catch(e){}
+    var live=!!b;
+    var day=b&&typeof b.day==="number"?b.day:9;
+    var prog=b&&b.prognosisDays?b.prognosisDays:PROG;
+    var status=b&&b.status?b.status:"light_duty";
+    var done=b&&typeof b.dutiesDone==="number"?b.dutiesDone:1;
+    var total=b&&typeof b.dutiesTotal==="number"?b.dutiesTotal:3;
+    var weeks=Math.max(0,Math.ceil((prog-day)/7));
+    document.getElementById("liveflag").style.display=live?"inline":"none";
+    set("dayBig","Day "+day); set("dayOf","of "+prog);
+    document.getElementById("progBar").style.width=Math.min(100,Math.round(day/prog*100))+"%";
+    set("fstatus",STLABEL[status]||"Light duty");
+    set("rtw",status==="signed_off"?"Cleared, full duty":("On track, full duty in about "+weeks+(weeks===1?" week":" weeks")));
+    set("duties",done+" of "+total+" done");
+    var ackToday=b&&b.dutyAckTs&&b.dutyAckDay===day;
+    set("ack",ackToday?("Yes, at "+fmtTime(b.dutyAckTs)):"Awaiting today");
+    set("bench",day<=Math.round(prog*0.75)?"Tracking ahead":"On benchmark");
+  }
+  read();
+  window.addEventListener("storage",function(e){if(e.key===BRIDGE_KEY)read();});
+  window.addEventListener("focus",read);
+  document.addEventListener("visibilitychange",function(){if(!document.hidden)read();});
+})();
+</script>
+</body>
+</html>
