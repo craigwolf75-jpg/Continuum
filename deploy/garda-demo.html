@@ -262,7 +262,55 @@ var VIGNETTES={
     '<div class="card2"><div class="v-sub">RTW rate</div><div style="font-size:21px;font-weight:700">76%</div></div></div>'+
    '<div class="v-row"><b>Marcus Bedard</b><span class="v-pill v-func">Light duty</span></div>'+
    '<div class="v-row"><span class="v-sub">Duties</span><b>On track</b></div>'+
-   '<div class="v-row" style="border-bottom:none"><span class="v-sub">Plan</span><span class="v-pill v-func">Awaiting clinical review</span></div></div></div>'
+   '<div class="v-row" style="border-bottom:none"><span class="v-sub">Plan</span><span class="v-pill v-func">Awaiting clinical review</span></div></div></div>',
+ "clinical":
+  '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">clinical portal &middot; full clinical detail</span></div>'+
+   '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="v-h">Marcus Bedard</div><span class="v-sub">Dr. A. Owusu</span></div>'+
+   '<div class="v-row"><span class="v-sub">Diagnosis</span><b>Grade 1 supraspinatus strain</b></div>'+
+   '<div class="v-row"><span class="v-sub">Pain / mobility</span><b>7 &rarr; 4 &middot; 3 &rarr; 6</b></div>'+
+   '<div class="v-row"><span class="v-sub">Fatigue / confidence</span><b>6 / 4</b></div>'+
+   '<div class="v-row" style="border-bottom:none"><span class="v-sub">Note</span><span class="v-sub" style="max-width:58%;text-align:right">"Shoulder tight after the morning walk."</span></div>'+
+   '<div style="display:flex;gap:8px;margin-top:12px"><span class="v-pill v-func">Publish restriction</span><span class="v-pill" style="background:#C8972F;color:#0E1B2C">Clearance</span></div>'+
+   '<div style="margin-top:9px;font-size:11px;color:#5a6678">The system routes; the clinician decides.</div></div></div>',
+ "matcher":
+  '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">HSE portal &middot; assign light duty</span></div>'+
+   '<div class="fbody"><div class="v-sub" style="margin-bottom:6px">Active restrictions</div>'+
+   '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"><span class="v-pill v-flag">No lifting above shoulder</span><span class="v-pill v-flag">Breaks every 60 min</span></div>'+
+   '<div class="card2" style="margin-bottom:10px"><div class="v-sub">Task bank, filtered by restrictions</div><div style="font-weight:700;margin-top:3px">Tool crib inventory &middot; 4 h</div></div>'+
+   '<div class="v-row"><span class="v-sub">Hazard check</span><span class="v-pill v-ok">Complete</span></div>'+
+   '<div style="background:#0E1B2C;color:#fff;border-radius:9px;padding:10px;text-align:center;font-weight:700;font-size:12px;margin-top:10px">Confirm and assign</div>'+
+   '<div style="margin-top:9px;font-size:11px;color:#5a6678">Marcus accepts it himself. Nobody accepts for him.</div></div></div>',
+ "escalation":
+  '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">HSE portal &middot; escalation queue</span></div>'+
+   '<div class="fbody"><div style="border-left:4px solid #C8972F;padding:10px 12px;background:#fff8e9;border-radius:8px;margin-bottom:12px"><b>Marcus Bedard</b><div class="v-sub">Pain 8 on three consecutive check-ins.</div><div style="color:#8a5a00;font-weight:700;font-size:11.5px;margin-top:4px">Escalated to the clinician per program rules.</div></div>'+
+   '<div style="background:#f4f6fa;border:1px solid #e6e9ef;border-radius:8px;padding:11px 13px;font-size:11.5px;color:#33465e;line-height:1.5"><b>Device boundary:</b> tracking and visualization with independent clinician review. No scoring, no prediction, no alerts that alter treatment.</div></div></div>',
+ "executive":
+  '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">executive view &middot; operational overview</span></div>'+
+   '<div class="fbody"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">'+
+    '<div class="card2"><div class="v-sub">Avg recovery</div><div style="font-size:20px;font-weight:700">41 d</div><div class="v-sub" style="color:#2c6e46">vs 63 benchmark</div></div>'+
+    '<div class="card2"><div class="v-sub">Days regained</div><div style="font-size:20px;font-weight:700">312</div></div>'+
+    '<div class="card2"><div class="v-sub">Open cases</div><div style="font-size:20px;font-weight:700">24</div></div></div>'+
+   '<div class="card2" style="opacity:.78;border-style:dashed"><div style="display:flex;justify-content:space-between;align-items:center"><div class="v-sub">Forecast RTW by site</div><span class="v-pill v-flag">Roadmap &middot; illustrative</span></div><div style="font-size:12.5px;color:#8a97a8;margin-top:3px">Predictive is later, behind the same flag discipline as pose.</div></div></div></div>',
+ "sigma":
+  '<div style="border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);box-shadow:0 16px 46px rgba(0,0,0,.42)">'+
+   '<div style="background:#fff4d6;color:#8a5a00;font-size:11px;font-weight:600;padding:8px 14px;border-bottom:1px solid #e7c975">Illustrative mock &middot; pilot integration is intake level, not a live bidirectional connection.</div>'+
+   '<div style="display:grid;grid-template-columns:1fr 220px">'+
+    '<div style="background:#fff;padding:14px 16px;color:#16202E"><div class="v-sub" style="margin-bottom:8px">SIGMA Claims &middot; NX-2026-00481</div><div class="v-row"><span class="v-sub">Claimant</span><b>Marcus Bedard</b></div><div class="v-row"><span class="v-sub">Employer</span><b>Worley</b></div><div class="v-row" style="border-bottom:none"><span class="v-sub">Status</span><span class="v-pill v-ok">Open, active</span></div></div>'+
+    '<div style="background:#0E1B2C;color:#fff;padding:14px 15px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;font-weight:600">Continuum panel</span><span class="v-pill" style="background:#fff4d6;color:#8a5a00;font-size:8.5px">Illustrative</span></div><div style="color:#AAB6C6;font-size:11px">Recovery day</div><div style="font-size:20px;font-weight:700;color:#E3B968;font-family:\'Space Grotesk\',sans-serif">Day 14 <span style="font-size:11px;color:#AAB6C6">of 21</span></div><div style="border-top:1px solid rgba(255,255,255,.1);margin-top:8px;padding-top:8px;font-size:11px;color:#AAB6C6">Functional status<b style="color:#fff;float:right">Light duty</b></div></div></div></div>',
+ "timeline":
+  '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">worker dashboard &middot; recovery timeline</span></div>'+
+   '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="v-h">Day 9 to Day 21</div><span class="v-pill v-ok">Full duty pending</span></div>'+
+   '<div style="display:flex;align-items:flex-end;gap:5px;height:64px">'+
+    '<i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:28%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:34%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:40%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:48%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:56%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:66%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:78%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:90%"></i><i style="flex:1;background:#E3B968;border-radius:3px 3px 0 0;height:100%"></i></div>'+
+   '<div style="display:flex;justify-content:space-between;font-size:10.5px;color:#5a6678;margin-top:5px"><span>Day 9</span><span>Day 15</span><span>Day 21</span></div>'+
+   '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:11px"><span class="v-pill v-func">Check-ins logged</span><span class="v-pill v-func">Restrictions acknowledged</span><span class="v-pill v-func">Duties completed</span></div></div></div>',
+ "finale":
+  '<div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+    '<div class="card2" style="background:#0E1B2C;color:#fff;border-color:var(--hair)"><div class="v-sub" style="color:#AAB6C6">Worker app</div><b style="color:#E3B968">Cleared. Welcome back.</b></div>'+
+    '<div class="card2"><div class="v-sub">Employer</div><b>Retired from the list</b></div>'+
+    '<div class="card2"><div class="v-sub">HSE</div><b>Case closed</b></div>'+
+    '<div class="card2"><div class="v-sub">Board</div><b>Claim closed, full duty package</b></div></div>'+
+   '<div style="text-align:center;margin-top:12px"><span class="v-pill" style="background:#C8972F;color:#0E1B2C;padding:6px 16px">Dr. Owusu pressed Clearance &middot; expected full duty Jul 31</span></div></div>'
 };
 function vignette(key){
   if(VIGNETTES[key])return VIGNETTES[key];
