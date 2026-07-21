@@ -84,14 +84,8 @@
   var S=window.ContinuumStore;
   var rolesMounted=false;
   var ROLES={hse:'HSE',employer:'Employer',nexus:'Nexus Health',wcb:'WCB'};
-  var ROLEKEY={hse:'hse',employer:'employer_admin',nexus:'nexus_physician',wcb:'wcb_officer'};
-  var TASK_BANK=['Tool crib inventory (seated)','Site walk permit checks','Toolbox talk documentation','Materials receiving log'];
 
   function view(){ return (location.hash||'#login').replace('#',''); }
-  function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function fmtDate(iso){ try{return new Date(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'});}catch(e){return '';} }
-  function pillClass(s){ return {light_duty:'p-light',off_work:'p-off',full_duty_pending:'p-pending',signed_off:'p-signed',escalated:'p-esc',reported:'p-off'}[s]||'p-off'; }
-  function statusLabel(s){ return ({reported:'Reported',off_work:'Off work',light_duty:'Light duty',full_duty_pending:'Return pending',signed_off:'Signed off',escalated:'Escalated'})[s]||s; }
 
   function render(){
     var v=view(), host=document.getElementById('hub');
@@ -108,7 +102,6 @@
     if(v==='nexus'){ location.href='/clinical-dashboard.html'; return; }
     if(v==='admin'){ location.href='/admin-portal.html'; return; }
     if(!ROLES[v]) { location.hash='#login'; return; }
-    host.innerHTML=workspace(v);
   }
 
   function loginView(){
@@ -148,99 +141,10 @@
       '</div></div>';
   }
 
-  function topBar(v){
-    return '<div class="top"><div class="brand" style="margin:0;gap:8px"><div class="cmark" style="width:26px;height:26px;font-size:14px">C</div><div class="wordmark" style="font-size:16px">Continuum</div>'+
-      '<span class="pill '+'p-off" style="margin-left:8px;background:rgba(200,151,47,.16);color:var(--gold2)">'+ROLES[v]+'</span></div>'+
-      '<div style="display:flex;gap:8px"><button class="btn ghost sm" data-action="switch">Switch role</button><button class="btn ghost sm" data-action="reset">Reset</button></div></div>';
-  }
-
-  function workspace(v){
-    var vm=S.viewModel(ROLEKEY[v]);
-    var inner = v==='employer'?employerWS(vm): v==='hse'?hseWS(vm): v==='nexus'?nexusWS(vm): wcbWS(vm);
-    return topBar(v)+'<div class="wrap">'+inner+'</div>';
-  }
-
-  function employerWS(vm){
-    var k=vm.kpis;
-    var html='<h2 class="sec">Employer dashboard</h2>'+
-      '<div class="panel"><div class="kpis">'+
-      kpi(k.active,'Active cases')+kpi(k.light_duty,'On light duty')+kpi(k.off_work,'Off work')+kpi(k.pending_return,'Return pending')+kpi(k.rtw_rate+'%','RTW rate')+
-      '</div></div>';
-    html+='<div class="panel"><h2 class="sec">Workers</h2><table><thead><tr><th>Worker</th><th>Trade</th><th>Body part</th><th>Status</th><th>Restriction</th><th>Days off</th><th>RTW</th></tr></thead><tbody>';
-    vm.workers.forEach(function(w){
-      html+='<tr><td>'+esc(w.name)+'</td><td>'+esc(w.job_title)+'</td><td>'+esc(w.body_part)+'</td><td><span class="pill '+pillClass(w.status)+'">'+statusLabel(w.status)+'</span></td><td>'+esc(w.restriction)+'</td><td>'+w.days_off+'</td><td><div class="prog"><span style="width:'+Math.round(w.rtw_progress*100)+'%"></span></div></td></tr>';
-    });
-    html+='</tbody></table><p class="note" style="margin-top:10px">This view is functional status only. It carries no pain or mobility scores, no diagnosis, no notes, and no photos.</p>';
-    if(vm.can_confirm_return) html+='<div class="actions"><button class="chip gold" data-action="confirm">Confirm return to full duty for Marcus Bedard</button></div>';
-    html+='</div>';
-    return html;
-  }
-  function kpi(n,l){ return '<div class="kpi"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
-
-  function hseWS(vm){
-    var html='<h2 class="sec">Light duties</h2>'+
-      '<div class="panel"><div class="note" style="margin-bottom:8px">Published medical restrictions (set by Nexus Health, read only):</div>'+
-      '<div>'+vm.restrictions_readonly.map(function(r){return '<span class="pill p-light" style="margin-right:6px">'+esc(r)+'</span>';}).join('')+'</div></div>';
-    html+='<div class="panel"><h2 class="sec">Recovery monitoring</h2><table><thead><tr><th>Worker</th><th>Body part</th><th>Status</th><th>Pain</th><th>Movement</th></tr></thead><tbody>';
-    vm.workers.forEach(function(w){
-      html+='<tr><td>'+esc(w.name)+'</td><td>'+esc(w.body_part)+'</td><td><span class="pill '+pillClass(w.status)+'">'+statusLabel(w.status)+'</span></td><td>'+(w.pain_score==null?'-':w.pain_score)+'</td><td>'+(w.mobility_score==null?'-':w.mobility_score)+'</td></tr>';
-    });
-    html+='</tbody></table><p class="note" style="margin-top:8px">HSE sees pain and mobility scores for operational need. No diagnosis notes, free text, or photos.</p></div>';
-    var esc0 = S.viewModel('nexus_physician'); // status guard: assignable only when case in light_duty
-    html+='<div class="panel"><h2 class="sec">Assign a duty (within restrictions)</h2><div class="actions">'+
-      TASK_BANK.map(function(t){return '<button class="chip" data-task="'+esc(t)+'">'+esc(t)+'</button>';}).join('')+'</div>'+
-      '<div style="margin-top:14px"><table><thead><tr><th>Task</th><th>Assigned</th><th>Status</th></tr></thead><tbody>'+
-      vm.duties.map(function(d){return '<tr><td>'+esc(d.task_description)+'</td><td>'+fmtDate(d.assigned_date)+'</td><td>'+(d.completed_date?'Done ('+esc(d.worker_feedback||'')+')':'Assigned')+'</td></tr>';}).join('')+
-      '</tbody></table></div></div>';
-    return html;
-  }
-
-  function nexusWS(vm){
-    var p=vm.patient, c=p.clinical||{};
-    var html='<h2 class="sec">Nexus Health workspace</h2>';
-    vm.escalations.filter(function(e){return e.open;}).forEach(function(e){
-      html+='<div class="alert"><strong>Escalation.</strong> '+esc(e.trigger)+'. <button class="chip" data-action="reassess" style="margin-left:8px">Reassess and return to prior status</button></div>';
-    });
-    html+='<div class="panel"><h2 class="sec">'+esc(p.name)+'</h2>'+
-      '<div class="note">'+esc(p.body_part)+' &middot; '+esc(p.injury_type)+' &middot; status <strong>'+statusLabel(p.status)+'</strong></div>'+
-      '<div class="doc" style="margin-top:12px"><div class="note">Diagnosis</div><div>'+esc(c.diagnosis_notes||c.diagnosis_summary||'')+'</div>'+
-      '<div class="note" style="margin-top:8px">Severity '+esc(c.severity||'')+' &middot; prognosis '+(c.prognosis_days||'')+' days &middot; physician '+esc(c.physician||'')+'</div></div>';
-    // recent scores
-    html+='<div style="margin-top:12px"><table><thead><tr><th>Date</th><th>Period</th><th>Pain</th><th>Movement</th><th>Notes</th></tr></thead><tbody>'+
-      vm.check_ins.slice(-5).reverse().map(function(l){return '<tr><td>'+fmtDate(l.logged_at)+'</td><td>'+l.period+'</td><td>'+l.pain_score+'</td><td>'+l.mobility_score+'</td><td>'+esc(l.notes)+'</td></tr>';}).join('')+
-      '</tbody></table></div>';
-    // clearance actions by current status
-    html+='<div class="actions">';
-    if(p.status==='off_work') html+='<button class="chip gold" data-action="clear-light">Clear for modified duty</button>';
-    if(p.status==='light_duty') html+='<button class="chip gold" data-action="clear-full">Clear for full duty</button>';
-    html+='</div></div>';
-    if(vm.ffw_form){ var f=vm.ffw_form; html+='<div class="panel"><h2 class="sec">Fitness for work form</h2><div class="doc"><h4>'+esc(f.title)+'</h4>'+
-      '<div class="note">Case '+esc(f.case_ref)+'</div><div style="margin-top:8px">Worker: '+esc(f.worker)+'<br>Employer: '+esc(f.employer)+'<br>Physician: '+esc(f.physician)+'<br>Determination: <strong>'+esc(f.determination)+'</strong></div>'+
-      '<p class="note" style="margin-top:10px">'+esc(f.note)+'</p></div></div>'; }
-    return html;
-  }
-
-  function wcbWS(vm){
-    var html='<h2 class="sec">WCB claims (read only)</h2>'+
-      '<div class="panel"><table><thead><tr><th>Claim</th><th>Worker</th><th>Body part</th><th>Status</th></tr></thead><tbody>'+
-      vm.claims.map(function(w){return '<tr><td>'+esc(w.nexus_case_ref)+'</td><td>'+esc(w.name)+'</td><td>'+esc(w.body_part)+'</td><td><span class="pill '+pillClass(w.status)+'">'+statusLabel(w.status)+'</span></td></tr>';}).join('')+
-      '</tbody></table></div>';
-    html+='<div class="panel"><h2 class="sec">Milestone notifications</h2><p class="note" style="margin-bottom:10px">Document lifecycle tracking only. Nothing transmits to WCB from here. Documents are filed through myWCB or health care provider online services.</p><table><thead><tr><th>Type</th><th>Claim</th><th>Status</th><th>Action</th></tr></thead><tbody>';
-    vm.notifications.forEach(function(n){
-      var next = n.status==='generated'?'<button class="chip" data-wcb="submitted" data-id="'+n.id+'">Mark submitted</button>': n.status==='submitted'?'<button class="chip" data-wcb="acknowledged" data-id="'+n.id+'">Mark acknowledged</button>':'<span class="note">Complete</span>';
-      html+='<tr><td>'+esc(n.type)+'</td><td>'+esc(n.wcb_claim_number)+'</td><td>'+esc(n.status)+'</td><td>'+next+'</td></tr>';
-    });
-    html+='</tbody></table></div>';
-    return html;
-  }
-
-  var RESTR='No lifting above shoulder height';
   document.addEventListener('click', function(ev){
-    var t=ev.target.closest('[data-action],[data-role],[data-task],[data-wcb],[data-nav]'); if(!t) return;
+    var t=ev.target.closest('[data-action],[data-role],[data-nav]'); if(!t) return;
     if(t.hasAttribute('data-nav')){ location.href=t.getAttribute('data-nav'); return; }
     if(t.hasAttribute('data-role')){ location.hash='#'+t.getAttribute('data-role'); return; }
-    if(t.hasAttribute('data-task')){ S.assignDuty(t.getAttribute('data-task'),'hse'); render(); return; }
-    if(t.hasAttribute('data-wcb')){ S.markWcb(t.getAttribute('data-id'), t.getAttribute('data-wcb')); render(); return; }
     var a=t.getAttribute('data-action');
     if(a==='signin') location.hash='#roles';
     else if(a==='switch') location.hash='#roles';
@@ -248,10 +152,6 @@
     else if(a==='seed9'){ S.seedDay9(); render(); }
     else if(a==='seedesc'){ S.seedEscalationReady(); render(); }
     else if(a==='advday'){ S.advanceDay(); render(); }
-    else if(a==='confirm'){ S.confirmReturn('employer_admin'); render(); }
-    else if(a==='reassess'){ S.reassess('nexus_physician'); render(); }
-    else if(a==='clear-light'){ S.publishRestrictions([RESTR],'nexus_physician'); S.transition('light_duty','nexus_physician'); render(); }
-    else if(a==='clear-full'){ S.transition('full_duty_pending','nexus_physician'); render(); }
   });
 
   window.addEventListener('hashchange', render);
