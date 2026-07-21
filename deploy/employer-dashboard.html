@@ -128,6 +128,7 @@ section.view{display:none}section.view.on{display:block}
 <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
 <aside class="drawer" id="drawer" aria-label="Worker detail"></aside>
 <div class="toast" id="toast"></div>
+<script src="/presenter.js"></script>
 <script>
 "use strict";
 var WORKERS=[
@@ -526,6 +527,27 @@ readBridge();
 window.addEventListener("storage",function(e){ if(e.key==="continuum_worker_bridge_v1") readBridge(); });
 window.addEventListener("focus",readBridge);
 document.addEventListener("visibilitychange",function(){ if(!document.hidden) readBridge(); });
+/* ---------- Prompt 32: presenter kit (self-contained, wraps render, touches nothing else) ---------- */
+(function(){
+ var CPSEC={
+  overview:{title:"The employer overview",body:"The employer overview carries one promise: notice what is not here, no diagnoses, no pain scores, no medical notes; the employer sees what work is safe, never private health details."},
+  workers:{title:"Injured workers, functional list",body:"The injured workers list, shown as functional status only: can they work today, and which duties are safe. No health details appear here."},
+  claims:{title:"Claims and documentation",body:"The claim record and its documents. The employer sees the claim status and the paperwork, not the worker's health information."},
+  rtw:{title:"Return to work",body:"The plan to bring each worker back to safe, suitable duties, tracked by status. What is shown is the work, not the medicine."},
+  visits:{title:"Doctor visits",body:"Doctor visits as a schedule: when an appointment happened and whether the worker is cleared for duties. The employer sees that a visit occurred and the work outcome, never what was discussed."},
+  notes:{title:"Case notes",body:"Case notes about the return-to-work plan. These are functional notes, never medical notes."},
+  reports:{title:"Reports",body:"Reports you can export and share, built from the functional data only."},
+  trends:{title:"Trends",body:"How the caseload moves over time, as totals and rates. Descriptive, not predictive."},
+  benchmarking:{title:"Benchmarking",body:"How this workplace compares to similar ones, at the aggregate level, with no individual identified."},
+  users:{title:"Users and roles",body:"Who has access and what each role can see. Roles decide the view; the walls decide what stays off limits."},
+  settings:{title:"Settings",body:"Configuration for this employer workspace."},
+  integrations:{title:"Integrations",body:"Connections to other systems. Data leaves only as the walls allow, and only the functional fields cross."},
+  dashboards:{title:"Dashboards",body:"The at-a-glance view of the whole caseload in charts. Every number is a count or a rate, never a private detail."}
+ };
+ ContinuumPresenter.attach({sections:CPSEC,getSection:function(){return S.section;}});
+ var _cpRender=render; render=function(){_cpRender.apply(this,arguments);ContinuumPresenter.refresh();};
+ ContinuumPresenter.refresh();
+})();
 </script>
 </body>
 </html>
