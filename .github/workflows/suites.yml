@@ -1,0 +1,38 @@
+# Continuum Node suite gate (Prompt B2). Runs every deploy/*.test.mjs on push and
+# pull_request to main, so a failing portal suite or a canon drift fails the build.
+# These suites read the static artifacts and need no secrets. Runs alongside the
+# exposure-proof SQL gate. No em-dashes anywhere.
+
+name: suites
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  suites:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run all Node suites (canon drift fails the build)
+        run: |
+          set -e
+          shopt -s nullglob
+          count=0
+          for t in deploy/*.test.mjs; do
+            echo "== $t =="
+            node "$t"
+            count=$((count + 1))
+          done
+          if [ "$count" -eq 0 ]; then
+            echo "No suites found under deploy/*.test.mjs"
+            exit 1
+          fi
+          echo "Ran $count Node suites."
