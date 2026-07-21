@@ -1,4 +1,4 @@
-# CONTINUUM PROMPT 05 — Spec Reconciliation: Client MVP Handoff vs Design Track
+# CONTINUUM PROMPT 05 - Spec Reconciliation: Client MVP Handoff vs Design Track
 
 **Project:** Continuum, worker injury recovery and return-to-work platform
 **Prepared for:** Gary (build lead)
@@ -19,50 +19,50 @@ The client has delivered an authoritative MVP build kit: locked scope decisions,
 
 ## 2. CONFLICT REGISTER
 
-### C1. Role model — CLIENT GOVERNS
+### C1. Role model - CLIENT GOVERNS
 - Client enum: worker, hse, employer_admin, wcb_officer, nexus_physician. Five roles.
 - Internal track used six workspaces: coordinator, supervisor, HSE, physician, claims, leadership. The coordinator role and the leadership analytics workspace do not exist in the client model.
 - **Ruling:** production builds the five client roles exactly. The coordinator concept is retired from MVP; the employer dashboard carries the KPI and worker-table function. Leadership analytics is not an MVP surface. Prior recommendation to fold employer confirmation into a supervisor workspace is withdrawn: employer_admin is a first-class role and is the only role that triggers full_duty_pending to signed_off.
 
-### C2. HSE visibility of pain and mobility scores — CLIENT GOVERNS
+### C2. HSE visibility of pain and mobility scores - CLIENT GOVERNS
 - Client matrix: HSE sees pain and mobility scores (operational need). Employer_admin does not.
 - Internal design law: supervisor and HSE both saw functional language only.
 - **Ruling:** internal law was stricter than the client wants. HSE surfaces may display scores. Employer_admin remains functional-only, enforced in the API response shape, never just the UI. Diagnosis notes, photos, and check-in free text remain Nexus-only regardless of role.
 
-### C3. Check-in mechanics — CLIENT GOVERNS
+### C3. Check-in mechanics - CLIENT GOVERNS
 - Client: twice-daily check-in, pain slider 0 to 10, mobility slider 0 to 10, optional notes, push plus SMS-fallback reminders, offline queue with idempotent sync.
 - Internal track: once-daily three-step tap check-in plus a camera movement session.
 - **Ruling:** production check-in is the client's slider model. The camera movement session, photo AI triage, conversational check-ins, and video assessment are all client-designated fast-follow and MUST NOT be built for the MVP or demoed as current capability.
 
-### C4. Status machine — ALIGNED WITH TWO CORRECTIONS
+### C4. Status machine - ALIGNED WITH TWO CORRECTIONS
 - Both sides: reported, off_work, light_duty, full_duty_pending, signed_off, plus escalated.
 - Correction 1: reported to off_work advances automatically on the worker's first check-in. No human role advances it.
 - Correction 2: escalated is a value in the injuries.status enum (side state reachable from any active state, returning to the prior state on Nexus reassessment). Implementation requires a prior_status memory field so return-to-prior is deterministic. The internal overlay-flag recommendation is withdrawn in favor of the client enum, with prior_status as the implementation detail that makes it safe.
 - Transition authority table (server-enforced): worker auto-advance reported to off_work; nexus_physician for both medical advancements and escalated-to-prior; employer_admin for full_duty_pending to signed_off; system raises escalated.
 
-### C5. Brand tokens — CLIENT GOVERNS
+### C5. Brand tokens - CLIENT GOVERNS
 - Client: navy #0E1B2C, gold #C8972F, white-labels to tenant logo via tenants.branding jsonb.
 - Internal: navy #0E1B2E, gold #C9963C plus an extended palette.
 - **Ruling:** client hexes are canonical. Internal extended palette (cream, ink, slate, mist, gold-soft) may continue as secondary tokens where they do not conflict. All future deliverables and code use #0E1B2C and #C8972F.
 
-### C6. Cast and seed data — SPLIT RULING
+### C6. Cast and seed data - SPLIT RULING
 - Client worked example: Marcus Bedard, scaffolder, Worley (approx. 3,000 workers), Dr. A. Owusu, case NX-2026-00481, right shoulder, grade 1 supraspinatus strain, 21-day prognosis.
 - Internal demo cast: Mateo R., Northline Industrial, Dr. Osei, claim 2408841.
 - **Ruling:** production seed scripts and anything shown to the client use the client's cast and tenant (seed tenant is Worley per client Prompt 1). The internal cast remains permitted only inside the internal static demo if that track continues. No real data ever, in either track.
 
-### C7. WCB-Alberta integration — CLIENT GOVERNS (research finding)
+### C7. WCB-Alberta integration - CLIENT GOVERNS (research finding)
 - Finding: no public third-party claims API. Reporting runs through myWCB (employer report of injury, legally required within 72 hours), physician forms via HCP online services, and case-manager-routed forms (fitness-for-work, Notice to Injured Employee, PDA).
 - **Ruling:** no WCB API integration in MVP. Build document generation for the three milestone payloads, a submit-to-WCB hand-off step, and the wcb_notifications lifecycle: pending, generated, submitted, acknowledged, failed. Any internal screen implying a live WCB feed is re-labeled as document lifecycle tracking. Future EDI inquiry goes to WCB eBusiness Support before go-live.
 - Exact WCB form field sets must be confirmed against current WCB-Alberta forms before go-live (client open item 9).
 
-### C8. Escalation rules — CLIENT GOVERNS
+### C8. Escalation rules - CLIENT GOVERNS
 - Rules: pain at or above 8 for 3 consecutive check-ins, OR mobility declining across 2 or more days, OR a configurable red-flag keyword in notes. Rule-based only, no ML in MVP. Escalations never auto-advance medical status; Nexus closes the loop via reassess.
 - Internal demo used a single-check-in pain threshold; corrected to the three-rule model.
 
-### C9. Authentication — CLIENT GOVERNS
+### C9. Authentication - CLIENT GOVERNS
 - Workers: SMS OTP (6-digit, 5-minute expiry, single-use, rate-limited, E.164, managed provider). Dashboards: email plus OTP now, SiteDocs SSO seam for later. Never roll your own OTP infrastructure.
 
-### C10. Data protection baseline — CLIENT GOVERNS, ALIGNED
+### C10. Data protection baseline - CLIENT GOVERNS, ALIGNED
 - PIPEDA plus Alberta Health Information Act posture; explicit timestamped revocable consent gating all collection; Canadian-region hosting for all PHI; TLS in transit, AES-256 at rest; signed-URL-only file access; append-only immutable audit_log on every read, edit, and export of health data; soft delete only, health records never hard-deleted; minimum-necessary field exposure per role. Canadian privacy-lawyer review before launch (client-owned).
 
 ---

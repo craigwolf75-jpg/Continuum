@@ -132,14 +132,13 @@ vocabulary is allowed off the Nexus surface.
   /app redirects removed from vercel.json so /app serves the sign-in gate
   (app/index.html) again; the S-DESIGN-C focus fix is now live. noindex headers
   kept. Lead: athena/hermes.
-- S-DASH-SWEEP (M5-F06, F07): QUEUED. Em/en dashes in support.js vendor doc
-  comments (not visitor-facing) and three internal specs docs (PROMPT_04,
-  Wireframe_Reference_v2, PROMPT_05_RECONCILIATION). The five *.test.mjs dash
-  hits are the detector's own regex and must stay. Lead: calliope (specs),
-  athena (runtime). Priority low.
-- S-ADMIN-COPY (M5-F05): QUEUED. admin-portal.html:196 "Keep it off
-  (recommended)" uses "recommended" for a config default, not a product claim.
-  Optional reword. Lead: calliope. Priority low.
+- S-DASH-SWEEP (M5-F06, F07): DONE. The three internal specs docs (PROMPT_04,
+  Wireframe_Reference_v2, PROMPT_05_RECONCILIATION) swept to the dash rule (0
+  em/en dashes). support.js is vendor-generated ("do not edit", dashes in
+  doc-comments only, not visitor-facing) so its 8 comment dashes are a documented
+  upstream exception, alongside the *.test.mjs detector regexes.
+- S-ADMIN-COPY (M5-F05): DONE. The pose-modal button "Keep it off (recommended)"
+  is reworded to "Keep it off (default)", so no product-claim reading remains.
 
 ## DESIGN-1 backlog (from Apollo's baseline pass)
 
