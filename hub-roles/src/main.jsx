@@ -106,14 +106,11 @@ function RolesView() {
   }, []);
 
   useEffect(() => {
-    const played = (() => { try { return !!sessionStorage.getItem("continuum_hub_intro_played"); } catch (e) { return false; } })();
-    const settle = () => { cardRefs.current.forEach(n => { if (n) { n.style.opacity = "1"; n.style.pointerEvents = "auto"; } }); if (logoRef.current) logoRef.current.style.opacity = "1"; if (footRef.current) footRef.current.style.opacity = "1"; };
-
-    if (played) { settle(); return; }
-
+    // Play the entrance on every mount. Gary wants the motion every time the hub
+    // loads, so there is no session-once gate: each time the roles view mounts
+    // (fresh load, re-sign-in, or return to the hub) the swirl runs again.
     if (reduced) {
       // Reduced motion: short fade and 12px rise, 60ms stagger, 0.6s total. No swirl.
-      try { sessionStorage.setItem("continuum_hub_intro_played", "1"); } catch (e) {}
       if (logoRef.current) animate(logoRef.current, { opacity: [0, 1] }, { duration: 0.4, ease: "easeOut" });
       cardRefs.current.forEach((n, i) => { if (!n) return; n.style.pointerEvents = "auto"; animate(n, { opacity: [0, 1], y: [12, 0] }, { duration: 0.6, delay: i * 0.06, ease: "easeOut" }); });
       if (footRef.current) animate(footRef.current, { opacity: [0, 1] }, { duration: 0.6, delay: 0.3 });
@@ -121,7 +118,6 @@ function RolesView() {
     }
 
     // Full entrance, 2.8s. Logo leads, cards swirl in and drop, footer trails.
-    try { sessionStorage.setItem("continuum_hub_intro_played", "1"); } catch (e) {}
     if (logoRef.current) animate(logoRef.current, { opacity: [0, 1], y: [-16, 0] }, { duration: 0.45, ease: "easeOut" });
     if (footRef.current) animate(footRef.current, { opacity: [0, 0, 1] }, { duration: 2.5, times: [0, 0.84, 1], ease: "easeOut" });
     cardRefs.current.forEach((n, i) => {
@@ -156,5 +152,10 @@ function RolesView() {
 
 export function mount(el) {
   if (!el) return;
-  createRoot(el).render(<RolesView />);
+  // Replay-safe: unmount any prior root on this node before mounting again, so
+  // returning to the hub re-runs the entrance cleanly without a duplicate root.
+  if (el.__crRoot) { try { el.__crRoot.unmount(); } catch (e) {} }
+  const root = createRoot(el);
+  el.__crRoot = root;
+  root.render(<RolesView />);
 }

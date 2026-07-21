@@ -51,8 +51,9 @@ ok("worker static gold removed from the hub fallback css", !hub.includes(".role-
 ok("border is a constant 1.5px in both states", src.includes("border:1.5px solid"));
 ok("border-color and color transition over 180ms ease", src.includes("border-color 180ms ease") && src.includes("color 180ms ease"));
 
-// motion: session-once, reduced-motion fallback, non-interactive mid flight
-ok("plays once per session via continuum_hub_intro_played", src.includes("continuum_hub_intro_played"));
+// motion: plays every mount, reduced-motion fallback, non-interactive mid flight
+ok("entrance plays on every mount (no session-once gate)", !src.includes("continuum_hub_intro_played"));
+ok("mount is replay-safe (unmounts a prior root before replay)", src.includes("__crRoot") && src.includes(".unmount()"));
 ok("current role remembered via continuum_hub_current_role", src.includes("continuum_hub_current_role"));
 ok("reduced-motion honored (short fade and rise, no swirl)", src.includes("useReducedMotion") && /if \(reduced\)/.test(src));
 ok("cards non-interactive until landed", src.includes('pointerEvents = "none"') && src.includes('pointerEvents = "auto"'));
