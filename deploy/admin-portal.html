@@ -146,28 +146,28 @@ var LSKEY="continuum_admin_v1";
 var FEEDKEY="continuum_olympus_feed_v1";
 var NAV=[["dashboard","dashboard","Dashboard"],["olympus","bolt","Mount Olympus"],["tenants","apartment","Tenants"],["users","group","Users"],["grants","key","Grants"],["billing","payments","Billing"],["audit","history","Audit"],["settings","settings","Settings"]];
 var ROSTER=[
- {id:"zeus",name:"Zeus",lane:"Obsidian Brain, main thread",status:"coordinating",mission:"SITE-12d closed; queue idle",zeus:true},
- {id:"athena",name:"Athena (12a)",lane:"Architecture and code",status:"blocked",mission:"package.json request at the human gate"},
- {id:"apollo",name:"Apollo (12b)",lane:"Design and motion",status:"idle",mission:"DESIGN-1 backlog queued"},
- {id:"calliope",name:"Calliope (12f)",lane:"Content and voice",status:"idle",mission:"standing by"},
- {id:"heracles",name:"Heracles (12c)",lane:"Quality and tests",status:"working",mission:"proving the next patch"},
- {id:"hermes",name:"Hermes (12d)",lane:"Release",status:"idle",mission:"last ship 9f2a1c4"},
- {id:"argus",name:"Argus (12e)",lane:"The watcher",status:"waiting",mission:"process failure filed"}];
+ {id:"zeus",name:"Zeus",lane:"Obsidian Brain, main thread",status:"coordinating",mission:"Queue clear; Prompt 33 hub and the admin fix shipped",zeus:true},
+ {id:"athena",name:"Athena (12a)",lane:"Architecture and code",status:"idle",mission:"Hub bundle built; worker bridge single-sourced"},
+ {id:"apollo",name:"Apollo (12b)",lane:"Design and motion",status:"idle",mission:"Hub motion landing and DESIGN-1 shipped"},
+ {id:"calliope",name:"Calliope (12f)",lane:"Content and voice",status:"idle",mission:"Presenter copy and hub Worker card shipped"},
+ {id:"heracles",name:"Heracles (12c)",lane:"Quality and tests",status:"working",mission:"11 suites green; watching the next change"},
+ {id:"hermes",name:"Hermes (12d)",lane:"Release",status:"idle",mission:"Last ship c8327dd, admin portal restored"},
+ {id:"argus",name:"Argus (12e)",lane:"The watcher",status:"idle",mission:"M5 patrol clean; stale-state regression added"}];
 var OLY_BASE=1721480400000;
-function olympusSeed(){var b=OLY_BASE;return {watermark:0,
+function olympusSeed(){var b=OLY_BASE;return {version:2,watermark:0,
  feed:[
-  {ts:b+1,agent:"zeus",type:"handoff",msg:"Decomposed SITE-12d. Routing: Athena builds, Apollo motions, Calliope words, Heracles proves, Argus scans, Hermes ships."},
-  {ts:b+2,agent:"athena",type:"update",msg:"Diff ready, two files, entry points wired. Smallest correct change; every function handed to Heracles with its tests."},
-  {ts:b+3,agent:"apollo",type:"update",msg:"Motion spec: transform and opacity, 240ms. prefers-reduced-motion fallback verified, not assumed."},
-  {ts:b+4,agent:"calliope",type:"update",msg:"Reading check: grade 6.8 on the primary surface. One sentence flagged and rewritten lawfully."},
-  {ts:b+5,agent:"heracles",type:"gate",msg:"148 assertions passing. Coverage gap named: the empty-state path is untested, filed for follow-up."},
-  {ts:b+6,agent:"argus",type:"finding",msg:"Patrol clean on all seven. One housekeeping finding: a dead keyframe, ranked housekeeping."},
-  {ts:b+7,agent:"hermes",type:"ship",msg:"Shipped to main, commit 9f2a1c4. Smoke check green: surfaces load, nothing blank, no raw zero."},
-  {ts:b+8,agent:"zeus",type:"gate",msg:"SITE-12d closed. Four gates satisfied, evidence attached. Same-mission green and clean."}],
+  {ts:b+1,agent:"zeus",type:"handoff",msg:"Decomposed the presenter kit and the hub redesign across the roster."},
+  {ts:b+2,agent:"calliope",type:"update",msg:"Presenter explainer cards written for both portals; grade 7 held, privacy line verbatim."},
+  {ts:b+3,agent:"apollo",type:"update",msg:"Hub role select rebuilt to the Figma motion spec: swirl, tuck, and a staggered spring drop."},
+  {ts:b+4,agent:"athena",type:"update",msg:"package.json approved by Gary; built the React and Framer Motion hub bundle."},
+  {ts:b+5,agent:"heracles",type:"gate",msg:"258 assertions across 11 suites, all green."},
+  {ts:b+6,agent:"argus",type:"finding",msg:"A stale admin state could blank the portal. Filed with the fix: migrate the state on load."},
+  {ts:b+7,agent:"hermes",type:"ship",msg:"Shipped to main, commit c8327dd. Admin portal restored, sidebar back."},
+  {ts:b+8,agent:"zeus",type:"gate",msg:"Queue clear. Four gates satisfied, evidence attached."}],
  concerns:[
-  {ts:b+9,agent:"athena",kind:"concern",severity:"blocking",status:"open",msg:"Requesting a package.json change to add a date library. Blocked at the human gate: the locks need Gary's recorded approval."},
-  {ts:b+10,agent:"argus",kind:"concern",severity:"process",status:"open",msg:"Third recurrence of the missing reduced-motion guard. Reported as a process failure with the pattern named, not a typo."},
-  {ts:b+5,agent:"hermes",kind:"concern",severity:"note",status:"resolved",msg:"Rollback drill on the staging deploy completed and restored. No action needed."}]};}
+  {ts:b+9,agent:"athena",kind:"concern",severity:"note",status:"resolved",msg:"package.json change for the hub build. Gary approved React and Framer Motion; resolved."},
+  {ts:b+10,agent:"argus",kind:"concern",severity:"note",status:"open",msg:"Low-priority dash sweep of the vendor runtime comments and three internal docs is still queued."},
+  {ts:b+7,agent:"hermes",kind:"concern",severity:"note",status:"resolved",msg:"Rollback drill on the staging deploy completed and restored. No action needed."}]};}
 var ROLES=["worker","hse","employer_admin","physician","board_officer","continuum_admin"];
 var WEEKLY=350, ONBOARD=400, PILOT_DISCOUNT=0.4;
 var S;
@@ -175,7 +175,7 @@ function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.
  section:"dashboard",search:"",roleFilter:null,nextId:100,olympus:olympusSeed(),
  audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
  form:{name:"",role:"worker",org:"Worley Industrial"}};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==2)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}

@@ -64,10 +64,11 @@ ok("simulate appends to the feed key then ingests", /function simulateOlympus\(\
 ok("portal ingests on load and polls every five seconds", /load\(\);render\(\);ingestOlympus\(\);setInterval\(ingestOlympus,5000\);/.test(html));
 
 // seeded SITE-12d run in charter voices + concerns
-ok("seed: the full SITE-12d run", html.includes("Decomposed SITE-12d") && html.includes("148 assertions passing") && html.includes("commit 9f2a1c4"));
-ok("seed: Athena blocking package.json concern at the human gate", html.includes("package.json change") && html.includes('severity:"blocking"'));
-ok("seed: Argus third-recurrence process failure", html.includes("Third recurrence") && html.includes('severity:"process"'));
+ok("seed: reflects the current work", html.includes("Framer Motion hub bundle") && html.includes("258 assertions across 11 suites") && html.includes("commit c8327dd"));
+ok("seed: roster shows Athena no longer blocked", !/id:"athena"[\s\S]*?status:"blocked"/.test(html.slice(html.indexOf("var ROSTER="), html.indexOf("var OLY_BASE="))));
+ok("seed: no blocking concern in the current state", !html.includes('severity:"blocking"'));
 ok("seed: a resolved concern example", html.includes('status:"resolved"'));
+ok("olympus seed is versioned and load re-seeds on a version change", /version:2/.test(html) && html.includes("S.olympus.version!==2"));
 
 // keys, bridge absence, clinical absence
 ok("state key unchanged (continuum_admin_v1)", html.includes('LSKEY="continuum_admin_v1"'));
@@ -76,7 +77,7 @@ ok("worker bridge key absent from the admin artifact", !html.includes("continuum
 ok("no clinical vocabulary in the admin artifact", !/\b(pain|mobility|diagnosis|supraspinatus)\b/i.test(html));
 
 /* ================= stale-state safety (a state saved before Olympus must not blank the portal) ================= */
-ok("load migrates a stale state by seeding S.olympus", /if\(!S\.olympus\)S\.olympus=olympusSeed\(\)/.test(html));
+ok("load migrates a stale state by seeding S.olympus", /if\(!S\.olympus.*\)S\.olympus=olympusSeed\(\)/.test(html));
 ok("olyOpen guards a missing olympus", /function olyOpen\(\)\{return \(S\.olympus/.test(html));
 ok("olyLast guards a missing olympus", /function olyLast\(\)\{return \(S\.olympus/.test(html));
 const olyOpenFn = new Function("S", extract(/function olyOpen\(\)\{.*\}/, "olyOpen")[0] + " return olyOpen();");
