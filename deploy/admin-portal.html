@@ -149,21 +149,21 @@ var ROSTER=[
  {id:"zeus",name:"Zeus",lane:"Obsidian Brain, main thread",status:"coordinating",mission:"Queue clear; Prompt 33 hub and the admin fix shipped",zeus:true},
  {id:"athena",name:"Athena (12a)",lane:"Architecture and code",status:"idle",mission:"Hub bundle built; worker bridge single-sourced"},
  {id:"apollo",name:"Apollo (12b)",lane:"Design and motion",status:"idle",mission:"Hub motion landing and DESIGN-1 shipped"},
- {id:"calliope",name:"Calliope (12f)",lane:"Content and voice",status:"idle",mission:"Presenter copy and hub Worker card shipped"},
+ {id:"calliope",name:"Calliope (12f)",lane:"Content and voice",status:"idle",mission:"Internal docs swept to the dash rule"},
  {id:"heracles",name:"Heracles (12c)",lane:"Quality and tests",status:"working",mission:"11 suites green; watching the next change"},
- {id:"hermes",name:"Hermes (12d)",lane:"Release",status:"idle",mission:"Last ship c8327dd, admin portal restored"},
- {id:"argus",name:"Argus (12e)",lane:"The watcher",status:"idle",mission:"M5 patrol clean; stale-state regression added"}];
+ {id:"hermes",name:"Hermes (12d)",lane:"Release",status:"idle",mission:"Last ship: the housekeeping sweep"},
+ {id:"argus",name:"Argus (12e)",lane:"The watcher",status:"idle",mission:"Dash sweep filed; support.js deferred upstream"}];
 var OLY_BASE=1721480400000;
-function olympusSeed(){var b=OLY_BASE;return {version:2,watermark:0,
+function olympusSeed(){var b=OLY_BASE;return {version:3,watermark:0,
  feed:[
   {ts:b+1,agent:"zeus",type:"handoff",msg:"Decomposed the presenter kit and the hub redesign across the roster."},
   {ts:b+2,agent:"calliope",type:"update",msg:"Presenter explainer cards written for both portals; grade 7 held, privacy line verbatim."},
   {ts:b+3,agent:"apollo",type:"update",msg:"Hub role select rebuilt to the Figma motion spec: swirl, tuck, and a staggered spring drop."},
   {ts:b+4,agent:"athena",type:"update",msg:"package.json approved by Gary; built the React and Framer Motion hub bundle."},
   {ts:b+5,agent:"heracles",type:"gate",msg:"258 assertions across 11 suites, all green."},
-  {ts:b+6,agent:"argus",type:"finding",msg:"A stale admin state could blank the portal. Filed with the fix: migrate the state on load."},
+  {ts:b+6,agent:"argus",type:"finding",msg:"Internal docs swept to the dash rule; the vendor runtime comments defer to the upstream fix."},
   {ts:b+7,agent:"hermes",type:"ship",msg:"Shipped to main, commit c8327dd. Admin portal restored, sidebar back."},
-  {ts:b+8,agent:"zeus",type:"gate",msg:"Queue clear. Four gates satisfied, evidence attached."}],
+  {ts:b+8,agent:"zeus",type:"gate",msg:"Housekeeping cleared. Only the go-public portal ruling waits for Gary."}],
  concerns:[
   {ts:b+9,agent:"athena",kind:"concern",severity:"note",status:"resolved",msg:"package.json change for the hub build. Gary approved React and Framer Motion; resolved."},
   {ts:b+10,agent:"argus",kind:"concern",severity:"note",status:"open",msg:"Low-priority dash sweep of the vendor runtime comments and three internal docs is still queued."},
@@ -175,7 +175,7 @@ function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.
  section:"dashboard",search:"",roleFilter:null,nextId:100,olympus:olympusSeed(),
  audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
  form:{name:"",role:"worker",org:"Worley Industrial"}};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==2)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==3)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -246,7 +246,7 @@ function posePrompt(id){
  if(t.pose){t.pose=false;audit("Pose analysis flag OFF for "+t.name);toast("Pose module <b>off</b> for "+esc(t.name));save();return;}
  openModal('<h2 style="margin-bottom:8px">Enable pose analysis for '+esc(t.name)+'?</h2>'+
  '<p class="sub" style="font-size:12.5px">This module is deliberately dark for the pilot. Camera-based movement analysis is likely a regulated medical device; enabling it changes the venture\'s regulatory posture and requires counsel sign-off first.</p>'+
- '<button class="btn ghost" style="width:100%;margin-top:14px" onclick="closeModal()">Keep it off (recommended)</button>'+
+ '<button class="btn ghost" style="width:100%;margin-top:14px" onclick="closeModal()">Keep it off (default)</button>'+
  '<button class="btn danger" style="width:100%;margin-top:8px" onclick="poseEnable(\''+id+'\')">Enable anyway (demo)</button>');}
 function poseEnable(id){
  var t=T(id);t.pose=true;closeModal();

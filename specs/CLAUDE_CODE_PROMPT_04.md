@@ -1,10 +1,10 @@
-> ⛔ **RETIRED — superseded in full by [specs/CONTINUUM_PROMPT_06.md](CONTINUUM_PROMPT_06.md), governed by [specs/CONTINUUM_PROMPT_05_RECONCILIATION.md](CONTINUUM_PROMPT_05_RECONCILIATION.md) (2026-07-17).**
+> ⛔ **RETIRED - superseded in full by [specs/CONTINUUM_PROMPT_06.md](CONTINUUM_PROMPT_06.md), governed by [specs/CONTINUUM_PROMPT_05_RECONCILIATION.md](CONTINUUM_PROMPT_05_RECONCILIATION.md) (2026-07-17).**
 > Prompt 06 rebuilds the connected demo against the CLIENT baseline (five roles,
 > visibility matrix, slider check-ins, the client wireframe as pixel source) and
 > explicitly retires this prompt and its TO-CONFIRM items (resolved by Prompt 05).
 > Prompt 05 (governing) also parked the internal static-demo track (§3). Do NOT run
 > the build steps below as-is.
-> If the demo resumes as a marketing asset, it must first re-baseline to Prompt 05 —
+> If the demo resumes as a marketing asset, it must first re-baseline to Prompt 05 - 
 > five roles (worker/hse/employer_admin/wcb_officer/nexus_physician; coordinator and
 > leadership retired), HSE sees pain/mobility scores, slider check-ins (no camera
 > session as a current feature), client hexes #0E1B2C / #C8972F, client cast
@@ -12,7 +12,7 @@
 > on the critical path. Retained for reference and for the gating/QA guidance, which
 > still applies to the static track if it continues.
 
-# CONTINUUM PROMPT 04 (revised 2026-07-17) — Claude Code prompt 2: the working app
+# CONTINUUM PROMPT 04 (revised 2026-07-17) - Claude Code prompt 2: the working app
 
 > This is the review-corrected version of the Prompt 04 draft. It folds in a
 > repo audit performed against the actual deployed repo. The original draft
@@ -23,7 +23,7 @@
 
 ---
 
-## 0. PRECONDITION (HARD GATE) — do not start the build until this is true
+## 0. PRECONDITION (HARD GATE) - do not start the build until this is true
 
 The original draft says *"the 13 hi-fi screens in the repo are the pixel spec,"*
 *"move the screen gallery to /screens,"* and *"read the corresponding /screens
@@ -33,7 +33,7 @@ Audit of the repo on 2026-07-17 (branch `main`):
 
 - The only HTML files are `deploy/index.html` (marketing landing),
   `deploy/demo/index.html` (the guided demo), and `deploy/404.html`.
-- **Zero** per-screen pages. **Zero** `.dc.html` sources are committed — the
+- **Zero** per-screen pages. **Zero** `.dc.html` sources are committed - the
   markup only references them in comments (e.g. `Continuum Worker App.dc.html`,
   `Hub H2 Overview Dashboard.dc.html`).
 - There is no `/screens` path anywhere.
@@ -45,7 +45,7 @@ entire prompt depends on has no source to lift from.
 
 **Also confirm [TO CONFIRM]:** if the screen designs currently live only *inside*
 the 9-scene `/demo` (not as standalone pages), then "copy the /screens page
-markup" is impossible as written — the markup would have to be reverse-extracted
+markup" is impossible as written - the markup would have to be reverse-extracted
 from the demo or re-exported from the external `.dc.html` files. Decide which,
 and get standalone screen files into `/screens` either way.
 
@@ -54,35 +54,35 @@ and get standalone screen files into `/screens` either way.
 ## 1. THE TARGET SHAPE
 
 Landing page + working app, all still static-hostable on the same Vercel project
-(Root Directory `deploy/`, auto-deploy on push to `main` — note there are now
+(Root Directory `deploy/`, auto-deploy on push to `main` - note there are now
 **two** Vercel projects wired to this repo, `continuum` and `continuum-o51l`;
 "confirm green" means both).
 
-- `/` — the marketing landing page (exists; keep its design). **Add** an app-entry
+- `/` - the marketing landing page (exists; keep its design). **Add** an app-entry
   affordance to it (see §2 note: the page currently has NO "Sign in" control; its
   only CTA is "Start a Pilot" → `#cta`). Adding a header "Sign in" link that
   points at `/hub` is an explicitly-allowed edit to the otherwise-unchanged page.
-- `/app` — the WORKER APP as one connected single-page experience: onboarding
+- `/app` - the WORKER APP as one connected single-page experience: onboarding
   (5 screens) → Today → tap check-in (3 steps + completion) → movement session →
   progress → duties/messages/more, with a bottom tab bar (Today, Movement,
   Progress, More) and real client-side state. Router via `location.hash`.
-- `/hub` — the CONTINUUM HUB as one connected single-page experience: login →
-  role picker → that role's workspace with working navigation between its H2–H8
-  surfaces **per the role's nav set (defined in §2a — do not leave undefined)**.
-- `/demo` — keep the guided demo untouched.
-- `/screens/*` — the per-screen hi-fi pages as a design-reference gallery (kept
+- `/hub` - the CONTINUUM HUB as one connected single-page experience: login →
+  role picker → that role's workspace with working navigation between its H2-H8
+  surfaces **per the role's nav set (defined in §2a - do not leave undefined)**.
+- `/demo` - keep the guided demo untouched.
+- `/screens/*` - the per-screen hi-fi pages as a design-reference gallery (kept
   deployed and gated; they are the spec). Add a `/screens` index that links them.
 
 ---
 
 ## 2. HOW TO BUILD IT
 
-- Plain HTML + vanilla JS. NO build step, NO framework install, NO bundler — the
+- Plain HTML + vanilla JS. NO build step, NO framework install, NO bundler - the
   Vercel project serves static files from `deploy/` and must stay that way.
   **Default to vanilla.** Preact (single vendored file) is an ask-first exception,
   not a casual option; a localStorage store + manual DOM updates does not need it.
   Ask before adding ANY dependency.
-- **[TO CONFIRM — architecture risk] support.js interplay.** The lifted markup
+- **[TO CONFIRM - architecture risk] support.js interplay.** The lifted markup
   depends on `support.js` (the `<x-dc>`/`<helmet>` runtime, `style-hover`, etc.).
   Before building, determine whether support.js is an inert style/hover shim
   (safe to mutate the DOM underneath with vanilla JS) or a live renderer that
@@ -96,10 +96,10 @@ Landing page + working app, all still static-hostable on the same Vercel project
   real interaction instead.
 - **State:** one plain JS store (localStorage-persisted) shared by `/app` and
   `/hub`, keyed `continuum_demo_state`. Seed it with the Day 9 baseline (see §2b
-  for the FULL seed — the aggregate figures alone are not enough to render the
+  for the FULL seed - the aggregate figures alone are not enough to render the
   dashboards). A visible "Reset demo data" control restores the seed, located in
   **[TO CONFIRM]** the hub (recommend: a hub account/settings menu in the H1
-  shell chrome, since "settings" is not one of H2–H8) and in `/app` More.
+  shell chrome, since "settings" is not one of H2-H8) and in `/app` More.
 - **Cross-surface reactivity is the wow.** A worker check-in updates the
   coordinator's check-ins KPI and adherence calendar; pain ≥8 raises an
   escalation on the coordinator dashboard; Frank assigning a duty makes it
@@ -107,23 +107,23 @@ Landing page + working app, all still static-hostable on the same Vercel project
   Frank's duty chip; Dr. Osei publishing a restriction update changes Frank's
   pinned RestrictionCard and Mateo's duties header; clearance READY →
   full_duty_pending → employer confirm closes the case.
-  - **[TO CONFIRM — choreography] how "live" is observed.** localStorage is
+ - **[TO CONFIRM - choreography] how "live" is observed.** localStorage is
     shared, but a presenter on one surface at a time sees nothing update unless
     you wire cross-tab `storage` events OR re-read state on every
     role-switch/navigation. Recommend: re-read on navigation (covers the
     role-switch demo) AND add `storage`-event listeners (covers side-by-side
     tabs). State which the demo script relies on.
-  - **Every cross-surface propagation MUST apply the access-matrix translation**
+ - **Every cross-surface propagation MUST apply the access-matrix translation**
     (see §3): the same event surfaces as clinical detail to the coordinator/
     physician and as functional-only language (Fine / Manageable / Too much) or
     not at all to supervisor/employer/leadership.
-- **Status machine — [TO CONFIRM, then implement exactly].** The draft's
+- **Status machine - [TO CONFIRM, then implement exactly].** The draft's
   `reported → off_work/treating → light_duty → full_duty_pending → signed_off,
   plus escalated` is ambiguous. Lock these before coding:
   1. Is `off_work/treating` one state or two? (Recommend: one combined state
      `off_work_treating`.)
   2. Is `escalated` a mutually-exclusive status or an OVERLAY flag that coexists
-     with the current status? (Recommend: overlay flag — a worker on `light_duty`
+     with the current status? (Recommend: overlay flag - a worker on `light_duty`
      can be escalated by pain ≥8 without leaving light duty.)
   3. How does the physician clearance control (`READY` / `BETTER, NOT READY YET`)
      map to the status states? (Recommend: `READY` triggers
@@ -131,9 +131,9 @@ Landing page + working app, all still static-hostable on the same Vercel project
   Enforce the guards: only the physician role advances clinical status; only the
   employer confirms return (see §2a for who "employer" is).
 - The movement session's camera is SIMULATED (looping keypoint animation, as the
-  demo does) — no `getUserMedia`, no network dependency.
+  demo does) - no `getUserMedia`, no network dependency.
 
-### 2a. Role → surface map and the "employer" actor — [TO CONFIRM]
+### 2a. Role → surface map and the "employer" actor - [TO CONFIRM]
 
 The draft defers to *"the role's nav set"* but never defines it, and names an
 "employer" who is not in the role picker. These are access-matrix decisions
@@ -143,17 +143,17 @@ design phase's matrix:
 | Role (picker)      | Surfaces in its nav set        | Clinical data? |
 |--------------------|--------------------------------|----------------|
 | Coordinator (Dana) | H2 Overview, H3 Case-file      | Yes (care team)|
-| Supervisor (Frank) | H4 Supervisor                  | No — functional only |
-| HSE (Priya)        | H5 HSE                         | No — functional only |
+| Supervisor (Frank) | H4 Supervisor                  | No - functional only |
+| HSE (Priya)        | H5 HSE                         | No - functional only |
 | Physician (Osei)   | H6 Physician (+ clearance panel)| Yes            |
 | Claims             | H7 Claims / early-warning      | Per matrix     |
-| Leadership         | H8 Leadership analytics        | No — aggregates only |
+| Leadership         | H8 Leadership analytics        | No - aggregates only |
 
 **"Employer confirm"** is not a picker role as written. Confirm whether the
 return-to-work confirmation actor is the Supervisor (Frank) or Leadership, and
-map it to a concrete picker role — the case cannot close without it.
+map it to a concrete picker role - the case cannot close without it.
 
-### 2b. The Day 9 seed — full, not aggregate-only — [TO CONFIRM the specifics]
+### 2b. The Day 9 seed - full, not aggregate-only - [TO CONFIRM the specifics]
 
 Mateo R.: claim 2408841, Northline Industrial, right wrist sprain, day 9,
 pain 3, ring 62%, two plan items done, duties (one accepted, one pending),
@@ -163,9 +163,9 @@ Aggregates for the coordinator Overview: 28 / 18 / 24 / 64% / 76%,
 cost impact $142,680, time loss 624 hrs (carry the Prompt 03 evidence figures:
 63-day baseline WCB Alberta 2024; 763,326 / 274,022 / 1,056 AWCBC 2023).
 
-**Missing from the draft — add:** per-worker seed records for the eight named
+**Missing from the draft - add:** per-worker seed records for the eight named
 dashboard workers (Thompson, Miller, Johnson, Martinez, Anderson, O'Brien,
-Clark, Singh) — each needs a status, adherence, and any early-warning flag, or
+Clark, Singh) - each needs a status, adherence, and any early-warning flag, or
 the coordinator case list, H7 early-warning board, and H8 analytics cannot
 render live rows from the aggregates alone.
 
@@ -175,28 +175,28 @@ pre-escalated in the seed and why, or remove it.
 
 **Onboarding vs the seed:** the Day 9 seed marks Mateo's onboarding COMPLETE.
 The "onboarding gate on first /app visit" fires ONLY on fresh/unseeded state (or
-after a reset that chooses to replay it) — it must NOT block the day-9 demo.
+after a reset that chooses to replay it) - it must NOT block the day-9 demo.
 
 ---
 
-## 3. RULES THAT STILL BIND (from Prompt 03 — verify against the repo, don't assume)
+## 3. RULES THAT STILL BIND (from Prompt 03 - verify against the repo, don't assume)
 
 - Brand tokens exactly; Space Grotesk + Inter; gold kickers; no emojis; no
   em/en-dashes in any copy.
 - Role-access matrix is design law: supervisor/employer/leadership views contain
-  functional language only — never diagnosis, pain, or movement data; the
+  functional language only - never diagnosis, pain, or movement data; the
   clearance panel renders only for the physician role. Absent means absent,
   never grayed out or locked.
 - Worker-facing copy at grade 7; 48px minimum tap targets in `/app`; red-flag
   states use gold, never red.
-- **Gating posture — this must be EXTENDED, not "kept" (current repo covers only
+- **Gating posture - this must be EXTENDED, not "kept" (current repo covers only
   `/demo`).** After this prompt:
-  - `robots.txt` must `Disallow:` `/app`, `/hub`, `/demo`, **and `/screens`**
-    (today it lists only the first three — add `/screens`).
-  - `vercel.json` must carry `X-Robots-Tag: noindex, nofollow` for `/app`,
+ - `robots.txt` must `Disallow:` `/app`, `/hub`, `/demo`, **and `/screens`**
+    (today it lists only the first three - add `/screens`).
+ - `vercel.json` must carry `X-Robots-Tag: noindex, nofollow` for `/app`,
     `/app/*`, `/hub`, `/hub/*`, `/screens`, `/screens/*` (today it covers ONLY
-    `/demo` and `/demo/*` — add the rest).
-  - Every NEW page (`/app`, `/hub`, each `/screens/*`) must be CREATED with the
+    `/demo` and `/demo/*` - add the rest).
+ - Every NEW page (`/app`, `/hub`, each `/screens/*`) must be CREATED with the
     `<meta name="robots" content="noindex, nofollow">` + `<link rel="canonical"
     href="/">` head block. The landing page `/` stays the only indexable route.
 - Demo cast only (Mateo R., claim 2408841, Northline Industrial,
@@ -219,7 +219,7 @@ after a reset that chooses to replay it) — it must NOT block the day-9 demo.
 4. **The duty loop:** Frank assigns (restriction pinned, only fitting duties
    listed) → Priya hazard-checks → Mateo accepts → Frank's confirmations show
    Fine / Manageable / Too much from Mateo's next check-in (functional language
-   only for Frank — §3).
+   only for Frank - §3).
 5. **The clinical loop:** Dr. Osei's signal review, restrictions editor (publish
    propagates), clearance READY → employer confirm → case closes, WCB stage
    tracker advances. **[TO CONFIRM]** enumerate the WCB stages (tie to the 63-day
@@ -227,7 +227,7 @@ after a reset that chooses to replay it) — it must NOT block the day-9 demo.
 6. **Remaining surfaces:** worker (onboarding gate on fresh state only, movement
    session, progress, more/privacy center) and hub (H5 receipts, H7 early-warning
    board, H8 analytics reading live aggregates).
-7. **QA pass — assert every §3 rule, not just navigation.** Walk both loops end
+7. **QA pass - assert every §3 rule, not just navigation.** Walk both loops end
    to end; reset works; the access matrix holds in every role; no dead ends; AND
    verify: 48px tap targets in `/app`, grade-7 worker copy, gold-not-red for
    red-flag states, no emojis, no em/en-dashes, and the full gating posture on
@@ -240,7 +240,7 @@ to click.
 
 ---
 
-## Appendix A — changes from the original Prompt 04 draft (traceability)
+## Appendix A - changes from the original Prompt 04 draft (traceability)
 
 1. **[Blocker]** 13 hi-fi screens are not in the repo → added §0 hard-gate
    precondition; the "lift the markup" workflow has no source until they land.
@@ -257,7 +257,7 @@ to click.
    items (TO CONFIRM) for `off_work/treating`, `escalated` overlay, READY mapping.
 8. Seed was aggregate-only → §2b adds per-worker records for the 8 named workers;
    resolves the pain-3-vs-"escalation set" contradiction.
-9. `/hub settings` (reset location) is not an H2–H8 surface → §2 places it in the
+9. `/hub settings` (reset location) is not an H2-H8 surface → §2 places it in the
    H1 shell chrome (TO CONFIRM).
 10. support.js ↔ vanilla-state interplay unaddressed → §2 architecture-risk item;
     validate on one screen first.
@@ -269,7 +269,7 @@ to click.
     grade-7 copy, gold-not-red, no emojis/dashes, full gating.
 14. Two Vercel projects now double-deploy → §1/§4 "confirm green" means both.
 
-## Appendix B — repo facts this revision is based on (verified 2026-07-17)
+## Appendix B - repo facts this revision is based on (verified 2026-07-17)
 
 - Repo `github.com/craigwolf75-jpg/Continuum`, branch `main`. Vercel Root
   Directory `deploy/`. Two prod projects auto-deploy: `continuum`, `continuum-o51l`.

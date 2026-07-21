@@ -5,18 +5,18 @@
 
      IMPORTANT: this is the REFERENCE DOC, not the clickable wireframe. The doc
      itself (section intro) names a separate companion file
-     `Continuum_MVP_Wireframe.html` that "shows every screen" — that HTML is the
+     `Continuum_MVP_Wireframe.html` that "shows every screen" - that HTML is the
      pixel source Prompt 06's §0 gate requires, and is NOT yet in the repo.
 
      Demo-scope deviations from this reference (Prompt 06 governs the demo build):
-       - NO photo capture in the DEMO (this doc includes an optional check-in
+      - NO photo capture in the DEMO (this doc includes an optional check-in
          photo, image_url, and "or photo" in the escalation trigger; Prompt 06 §1
          removes photo from the demo). The mainline MVP keeps photo UPLOAD in
          scope; only photo AI triage is fast-follow.
-       - NO in-app messaging in the DEMO (this doc lists messaging as a feature;
+      - NO in-app messaging in the DEMO (this doc lists messaging as a feature;
          Prompt 06's worker tabs are Today/History/Duties/More, no Messages). -->
 
-# Continuum MVP Wireframe and Build Reference (v2) — reference doc
+# Continuum MVP Wireframe and Build Reference (v2) - reference doc
 
 **Continuum · RETURN TO WORK · Version 2 · June 2026 · Prepared by Craig**
 
@@ -34,12 +34,12 @@ A worker centered injury recovery and return to work platform. A worker is injur
 
 ## 3. The Surfaces
 
-- **Worker App** — mobile, offline first. SMS OTP login, then a privacy consent screen captured and timestamped on first launch. Home shows the injury summary and the twice daily check-in: pain slider (0-10), mobility slider (0-10), notes, and an optional photo. Below is the history of recent check-ins. A light-duty checklist and an in-app message thread with the care team are reachable from the bottom navigation. *Build note:* check-ins write to `recovery_logs` and queue locally when offline, syncing when connectivity returns; photos upload to signed URL storage.
-- **Employer Dashboard** — web, real time. Worker table color coded by recovery status, KPI tiles, charts, filters, reviews-and-alerts side rail. Company assigns modified-duty tasks within doctor set restrictions from the Light Duties view. *Privacy boundary:* the employer sees functional status, restrictions, days off, doctor visits, RTW progress, plus injury type for accommodation. It does NOT show diagnosis notes, photos, check-in free text, or raw pain and mobility scores. *Build note:* reads `injuries` + latest `recovery_logs`, scoped by `company_id` through RLS; field level rules enforced in the API response, not just the UI.
-- **Light Duties** — Company assigns modified-duty tasks within doctor set restrictions; worker checks them off daily; completion and feedback flow back. Medical restrictions are set by Nexus Health and read only to the company. *Build note:* writes `light_duties`; valid only while the injury is in the light duty state.
-- **Nexus Health (Clinician)** — the front door and clinical control center. The assessment form creates the injury and sends it to the Continuum API, which fires the worker SMS. Dashboard shows KPIs, escalation alerts, patient list with recovery progress, clearance actions, and the auto generated fitness-for-work form. *Build note:* only the Nexus Health role can advance medical status; intake endpoint built to the proposed contract and stubbed until the spec arrives.
-- **WCB Dashboard** — read only. Claims table and the three milestone notifications: initial injury, light duty cleared, full duty cleared. WCB-Alberta has no public API, so Continuum generates the documents (including the FFW form) for filing through myWCB or HCP online services, and tracks each to acknowledgement. *Build note:* `wcb_notifications` records every payload; WCB access is read only through `access_grants`, scoped to assigned employers.
-- **Reference tabs** — Status Flow (lifecycle below), Roles and Access (permission rules below), Data Model (tables below).
+- **Worker App** - mobile, offline first. SMS OTP login, then a privacy consent screen captured and timestamped on first launch. Home shows the injury summary and the twice daily check-in: pain slider (0-10), mobility slider (0-10), notes, and an optional photo. Below is the history of recent check-ins. A light-duty checklist and an in-app message thread with the care team are reachable from the bottom navigation. *Build note:* check-ins write to `recovery_logs` and queue locally when offline, syncing when connectivity returns; photos upload to signed URL storage.
+- **Employer Dashboard** - web, real time. Worker table color coded by recovery status, KPI tiles, charts, filters, reviews-and-alerts side rail. Company assigns modified-duty tasks within doctor set restrictions from the Light Duties view. *Privacy boundary:* the employer sees functional status, restrictions, days off, doctor visits, RTW progress, plus injury type for accommodation. It does NOT show diagnosis notes, photos, check-in free text, or raw pain and mobility scores. *Build note:* reads `injuries` + latest `recovery_logs`, scoped by `company_id` through RLS; field level rules enforced in the API response, not just the UI.
+- **Light Duties** - Company assigns modified-duty tasks within doctor set restrictions; worker checks them off daily; completion and feedback flow back. Medical restrictions are set by Nexus Health and read only to the company. *Build note:* writes `light_duties`; valid only while the injury is in the light duty state.
+- **Nexus Health (Clinician)** - the front door and clinical control center. The assessment form creates the injury and sends it to the Continuum API, which fires the worker SMS. Dashboard shows KPIs, escalation alerts, patient list with recovery progress, clearance actions, and the auto generated fitness-for-work form. *Build note:* only the Nexus Health role can advance medical status; intake endpoint built to the proposed contract and stubbed until the spec arrives.
+- **WCB Dashboard** - read only. Claims table and the three milestone notifications: initial injury, light duty cleared, full duty cleared. WCB-Alberta has no public API, so Continuum generates the documents (including the FFW form) for filing through myWCB or HCP online services, and tracks each to acknowledgement. *Build note:* `wcb_notifications` records every payload; WCB access is read only through `access_grants`, scoped to assigned employers.
+- **Reference tabs** - Status Flow (lifecycle below), Roles and Access (permission rules below), Data Model (tables below).
 
 ## 4. Data Model
 
