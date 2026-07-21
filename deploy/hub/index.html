@@ -7,10 +7,11 @@
 <link rel="canonical" href="/">
 <title>Continuum hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="/config.js"></script>
 <script src="/supabase.js"></script>
 <script src="/store.js"></script>
+<script src="/hub/roles.js"></script>
 <style>
   :root{--navy:#0E1B2C;--navy2:#0A1526;--card:#14243B;--gold:#C8972F;--gold2:#E3B968;--ink:#16202E;--slate:#5E6B7C;--mist:#AAB6C6;--hair:rgba(255,255,255,.08);--panel:#F7F7F5}
   *{box-sizing:border-box}
@@ -48,8 +49,7 @@
     .role:hover{transform:none}
     .role:active{transform:none}
   }
-  .role-worker{border-color:rgba(200,151,47,.5);font-family:inherit;color:#fff;width:100%}
-  .role-worker h3{color:var(--gold)}
+  .role-worker{font-family:inherit;color:#fff;width:100%}
   .role h3{font-family:'Space Grotesk',sans-serif;margin:0 0 4px;font-size:17px}
   .role p{color:var(--mist);font-size:12.5px;margin:0;line-height:1.5}
   .top{position:sticky;top:0;z-index:5;background:var(--navy);border-bottom:1px solid var(--hair);padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
@@ -82,6 +82,7 @@
 <script>
 (function(){
   var S=window.ContinuumStore;
+  var rolesMounted=false;
   var ROLES={hse:'HSE',employer:'Employer',nexus:'Nexus Health',wcb:'WCB'};
   var ROLEKEY={hse:'hse',employer:'employer_admin',nexus:'nexus_physician',wcb:'wcb_officer'};
   var TASK_BANK=['Tool crib inventory (seated)','Site walk permit checks','Toolbox talk documentation','Materials receiving log'];
@@ -94,8 +95,13 @@
 
   function render(){
     var v=view(), host=document.getElementById('hub');
+    if(v!=='roles') rolesMounted=false;
     if(v==='login') return host.innerHTML=loginView();
-    if(v==='roles') return host.innerHTML=rolesView();
+    if(v==='roles'){
+      if(rolesMounted) return;
+      if(window.ContinuumRolesView&&window.ContinuumRolesView.mount){ host.innerHTML=''; window.ContinuumRolesView.mount(host); rolesMounted=true; return; }
+      return host.innerHTML=rolesView(); /* graceful fallback if the bundle fails to load */
+    }
     if(v==='employer'){ location.href='/employer-dashboard.html'; return; }
     if(v==='wcb'){ location.href='/wcb-portal.html'; return; }
     if(v==='hse'){ location.href='/hse-portal.html'; return; }
