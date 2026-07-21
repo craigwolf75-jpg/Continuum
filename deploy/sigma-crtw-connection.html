@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: proposed SIGMA connection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0E1B2C;--navy2:#0A1526;--card:#14243B;--gold:#C8972F;--gold2:#E3B968;--mist:#AAB6C6;--ink:#EAF0F7;--hair:rgba(255,255,255,.09);
+    --notice:#8a5a00;--noticebg:#fff4d6;--noticeline:#e7c975;--ok:#1f6f52;--okbg:#dff3e8;--okline:#8fceb0;--panel:#F7F7F5}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--navy);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.55}
+  a{color:var(--gold);text-decoration:none}
+  .kick{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff}
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 28px 70px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+  .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#fff}
+  .brand span{color:var(--gold)}
+  .flag{background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:999px;font-size:11.5px;font-weight:700;padding:6px 13px}
+  .lead{font-size:20px;line-height:1.5;color:#F2F6FB;max-width:760px;margin:6px 0 22px}
+  .lead b{color:var(--gold2)}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:10px}
+  .metric{background:var(--card);border:1px solid var(--hair);border-radius:13px;padding:15px 16px}
+  .metric .n{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--gold2)}
+  .metric .l{font-size:12px;color:var(--mist);margin-top:3px}
+  .demotag{font-size:10.5px;color:var(--mist);letter-spacing:.05em;text-transform:uppercase;font-weight:700;margin-bottom:20px}
+  .lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);margin:28px 0 10px}
+  .three{display:grid;grid-template-columns:1fr 260px 1fr;gap:14px;align-items:stretch}
+  .col{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:16px 17px}
+  .col h3{font-size:15px;margin-bottom:2px}
+  .col .csub{font-size:11.5px;color:var(--mist);margin-bottom:12px}
+  .col ul{list-style:none}
+  .col li{font-size:12.5px;color:#D8E0EA;padding:6px 0;border-bottom:1px solid var(--hair)}
+  .col li:last-child{border-bottom:none}
+  .exch{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;background:linear-gradient(180deg,#12233b,#0e1c30);border:1px dashed var(--noticeline);border-radius:14px;padding:16px 14px}
+  .arrows{font-size:22px;color:var(--gold);letter-spacing:2px;margin:6px 0}
+  .exch .tbc{font-size:11.5px;color:var(--gold2);font-weight:700;margin:6px 0 10px}
+  .methods{width:100%}
+  .method{background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:9px;font-size:11.5px;color:#D8E0EA;padding:7px 10px;margin-top:7px;text-align:left}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .step{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:13px 14px}
+  .step .sn{font-family:'Space Grotesk',sans-serif;color:var(--gold);font-weight:700;font-size:12px}
+  .step .st{font-size:12.5px;color:#E4EAF2;margin-top:5px;line-height:1.45}
+  .movecols,.privcols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .movecol,.privcol{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:16px 17px}
+  .movecol h3,.privcol h3{font-size:14px;margin-bottom:4px}
+  .movecol .csub,.privcol .csub{font-size:11.5px;color:var(--mist);margin-bottom:10px}
+  .fld{font-size:12.5px;color:#D8E0EA;padding:5px 0;border-bottom:1px solid var(--hair)}
+  .fld:last-child{border-bottom:none}
+  .privcol.allow{border-color:var(--okline)}
+  .privcol.protect{border-color:#7a4a4a}
+  .ptag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin-bottom:8px}
+  .ptag.a{background:var(--okbg);color:var(--ok)}
+  .ptag.p{background:#f6e5e5;color:#8a3a3a}
+  .registry{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .comp{background:var(--card);border:1px solid var(--hair);border-radius:11px;padding:12px 13px}
+  .comp .cn{font-family:'Space Grotesk',sans-serif;font-size:13px;color:#fff;font-weight:600}
+  .comp .cd{font-size:11.5px;color:var(--mist);margin-top:4px;line-height:1.45}
+  .disc{margin-top:28px;background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.55}
+  .start{display:inline-block;margin-top:22px;background:var(--gold);color:var(--navy);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;border:none;border-radius:12px;padding:14px 22px;cursor:pointer}
+  .start:hover{background:var(--gold2)}
+  /* guided presentation overlay */
+  .overlay{display:none;position:fixed;inset:0;z-index:50;background:var(--navy);overflow-y:auto}
+  .overlay.on{display:block}
+  .prog{height:4px;background:rgba(255,255,255,.08)}
+  .prog i{display:block;height:100%;background:var(--gold);transition:width .3s}
+  .pbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--hair)}
+  .pbar .count{font-size:12.5px;color:var(--mist);font-weight:600}
+  .pbar .x{background:none;border:1px solid var(--hair);color:var(--mist);border-radius:9px;padding:7px 13px;font:inherit;font-size:12.5px;cursor:pointer}
+  .screenwrap{max-width:900px;margin:0 auto;padding:30px 28px 40px}
+  .screen{display:none}
+  .screen.active{display:block;animation:fade .3s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .screen h2{font-size:27px;margin:6px 0 4px}
+  .screen .of{color:var(--mist);font-size:12.5px;margin-bottom:20px}
+  .body18{font-size:17px;line-height:1.6;color:#F2F6FB}
+  .democase{display:inline-block;background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:999px;font-size:11px;font-weight:700;padding:4px 11px;margin-bottom:12px}
+  .banner{background:#fff8e9;border:1px solid var(--noticeline);border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;color:#5a4a1a;font-size:13px;margin:16px 0}
+  .banner b{color:#7a5a12}
+  .approve{background:var(--card);border:1px solid var(--hair);border-radius:11px;padding:13px 15px;margin-top:14px}
+  .approve .who{font-size:12.5px;color:var(--gold2);font-weight:700;margin-top:6px}
+  .absent{background:rgba(255,255,255,.03);border:1px solid var(--hair);border-radius:11px;padding:13px 15px;margin-top:14px;font-size:12.5px;color:#C4CEDA;line-height:1.55}
+  .absent s{color:#7a8494;text-decoration:line-through}
+  .share{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:16px;margin-top:16px}
+  .stamp{font-size:12px;color:var(--mist);margin-top:10px}
+  .notesbox{margin-top:22px;border-top:1px solid var(--hair);padding-top:14px}
+  .noteshead{display:flex;align-items:center;justify-content:space-between}
+  .noteshead .lbl{margin:0}
+  .togbtn{background:none;border:1px solid var(--hair);color:var(--mist);border-radius:8px;padding:5px 11px;font:inherit;font-size:11.5px;cursor:pointer}
+  .notes{margin-top:10px}
+  .notes.hidden{display:none}
+  .notes li{list-style:none;font-size:13px;color:#C4CEDA;line-height:1.5;padding:5px 0 5px 14px;border-left:2px solid var(--gold);margin-bottom:6px;background:rgba(200,151,47,.05)}
+  .navrow{display:flex;align-items:center;justify-content:space-between;margin-top:26px}
+  .navrow button{background:var(--card);border:1px solid var(--hair);color:#fff;font:inherit;font-size:14px;font-weight:600;border-radius:11px;padding:11px 20px;cursor:pointer}
+  .navrow button:hover:not(:disabled){border-color:var(--gold)}
+  .navrow button:disabled{opacity:.4;cursor:not-allowed}
+  .navrow button.primary{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+  @media(max-width:820px){.metrics,.registry,.steps{grid-template-columns:1fr 1fr}.three,.movecols,.privcols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="wrap" id="home"></main>
+<div class="overlay" id="present"></div>
+<script>
+(function(){
+  /* D13: GardaWorld's system of record is SIGMA-RH (RH for Ressources Humaines).
+     One constant, flipped everywhere by a single edit. The RH spelling is the
+     client's own product name; the HR spelling is never used. */
+  var SYS = "SIGMA-RH";
+  var STORE_KEY = "continuum_sigma_demo_v1"; /* isolated: touches no portal, bridge, or store key */
+
+  /* Single data object. A real integration later replaces this object and the
+     sync and error feeds; the screens do not change. */
+  var DATA = {
+    primaryMessage: SYS+" manages the incident and claim record. Continuum CRTW manages the active recovery and the safe return to work. Together, one connected journey.",
+    metrics: [
+      {n:"12 days", l:"Average time to first safe duties"},
+      {n:"89%", l:"Return to work rate"},
+      {n:"7", l:"Active recovery cases"},
+      {n:"3", l:"Modified work plans this week"}
+    ],
+    sigmaItems: ["Incident report","Claim number","Employer of record","Worker identity","Injury classification","Claim status","Benefit record"],
+    crtwItems: ["Recovery day","Functional status","Modified work plan","Check in history","Restriction acknowledgements","Duty assignments","Return to work milestone","Clinician review state"],
+    methods: ["Secure file exchange","A direct system connection","A workflow connector","A scheduled export"],
+    steps: [
+      "An incident is recorded in "+SYS+".",
+      "A recovery case opens in Continuum.",
+      "Continuum manages the day to day recovery.",
+      "Modified work is approved by a person.",
+      "Prepared updates are ready to share back to "+SYS+"."
+    ],
+    inbound: ["Claim number","Worker name","Employer","Job title","Injury type","Injury date","Body part","Claim status","Adjuster contact","Benefit start date"],
+    preparedReturn: ["Functional recovery milestone","Modified duty participation","Projected return to work window (clinician reviewed estimate)","Current functional status","Restriction acknowledgement","Duty plan state","Days on modified duty","Return milestone reached","Case workflow state","Last review date","Prepared document reference"],
+    privacyAllowed: ["Functional status","Safe duties the worker can do","Modified work participation","Projected return to work window","Case workflow state"],
+    privacyProtected: ["Diagnosis","Symptoms","Pain and mobility scores","Clinical notes","Movement video","Consent state"],
+    registry: [
+      {cn:"Connection status", cd:"Workflow Proposed. Method to be confirmed. A live connection is not yet established."},
+      {cn:"Case information received", cd:"The reference fields that arrive from "+SYS+" to open a recovery case."},
+      {cn:"Approved information prepared for return", cd:"Functional outcomes prepared for sharing, each in plain workflow words."},
+      {cn:"Data synchronization history", cd:"Three demonstration entries, labeled as demonstration data."},
+      {cn:"Permission status", cd:"Read and write paths. The write path is shown honestly as awaiting technical discovery."},
+      {cn:"Field mapping", cd:"One component, used four times: the two flow columns, the privacy columns, and the share view."},
+      {cn:"Document exchange", cd:"Unapproved medical documents are marked never exchanged."},
+      {cn:"Integration errors", cd:"An honest empty state: no exchange attempted, error handling built and ready."},
+      {cn:"Human review banner", cd:"Every proposed outcome carries the reminder that a person reviews and approves it."}
+    ],
+    demoCase: {name:"Jordan Miller", claim:"SIGMA-2026-04417", employer:"GardaWorld", coordinator:"Priya Anand, return to work coordinator", clinician:"Dr. L. Roy"}
+  };
+
+  var esc = function(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); };
+  var list = function(arr){ return "<ul>"+arr.map(function(i){return "<li>"+esc(i)+"</li>";}).join("")+"</ul>"; };
+  var flds = function(arr){ return arr.map(function(i){return '<div class="fld">'+esc(i)+"</div>";}).join(""); };
+
+  /* Field mapping: one reusable component, used four times. */
+  function fieldMapping(arr){ return flds(arr); }
+
+  function renderHome(){
+    var d=DATA, h="";
+    h+='<div class="top"><div class="brand">Continuum <span>x '+esc(SYS)+'</span></div><div class="flag">Proposed workflow</div></div>';
+    h+='<div class="kick">The connected journey</div>';
+    h+='<p class="lead">'+esc(SYS)+' manages the incident and claim record. Continuum CRTW manages the <b>active recovery</b> and the <b>safe return to work</b>. Together, one connected journey.</p>';
+    h+='<div class="metrics">'+d.metrics.map(function(m){return '<div class="metric"><div class="n">'+esc(m.n)+'</div><div class="l">'+esc(m.l)+'</div></div>';}).join("")+'</div>';
+    h+='<div class="demotag">Demonstration data</div>';
+    /* three-part visual */
+    h+='<div class="lbl">How the two systems connect</div>';
+    h+='<div class="three">';
+    h+='<div class="col"><h3>'+esc(SYS)+'</h3><div class="csub">GardaWorld existing system</div>'+list(d.sigmaItems)+'</div>';
+    h+='<div class="exch"><div class="kick" style="color:var(--gold2)">Secure information exchange</div><div class="arrows">&#8646;</div><div class="tbc">Method to be confirmed</div><div class="methods">'+d.methods.map(function(m){return '<div class="method">'+esc(m)+'</div>';}).join("")+'</div></div>';
+    h+='<div class="col"><h3>Continuum CRTW</h3><div class="csub">Active recovery and safe return</div>'+list(d.crtwItems)+'</div>';
+    h+='</div>';
+    /* journey */
+    h+='<div class="lbl">The five step journey</div><div class="steps">'+d.steps.map(function(s,i){return '<div class="step"><div class="sn">Step '+(i+1)+'</div><div class="st">'+esc(s)+'</div></div>';}).join("")+'</div>';
+    /* how information moves */
+    h+='<div class="lbl">How information moves</div><div class="movecols">';
+    h+='<div class="movecol"><h3>'+esc(SYS)+' to Continuum</h3><div class="csub">Ten reference fields open the case</div>'+fieldMapping(d.inbound)+'</div>';
+    h+='<div class="movecol"><h3>Continuum prepares for '+esc(SYS)+'</h3><div class="csub">Eleven prepared return fields, functional words only</div>'+fieldMapping(d.preparedReturn)+'</div>';
+    h+='</div>';
+    /* privacy */
+    h+='<div class="lbl">The right information for the right person</div><div class="privcols">';
+    h+='<div class="privcol allow"><span class="ptag a">Allowed to cross</span>'+fieldMapping(d.privacyAllowed)+'</div>';
+    h+='<div class="privcol protect"><span class="ptag p">Protected, never crosses</span>'+fieldMapping(d.privacyProtected)+'</div>';
+    h+='</div>';
+    /* registry */
+    h+='<div class="lbl">Reusable component registry</div><div class="registry">'+d.registry.map(function(c){return '<div class="comp"><div class="cn">'+esc(c.cn)+'</div><div class="cd">'+esc(c.cd)+'</div></div>';}).join("")+'</div>';
+    /* disclaimer */
+    h+='<div class="disc">Proposed workflow. No live integration exists today. Every figure shown is demonstration data. Information prepared for sharing is prepared and ready; nothing is ever written to '+esc(SYS)+' until a connection method is confirmed in technical discovery and a person authorizes each exchange.</div>';
+    h+='<button class="start" id="startbtn">Start GardaWorld Demonstration</button>';
+    document.getElementById("home").innerHTML=h;
+    document.getElementById("startbtn").addEventListener("click",openPresent);
+  }
+
+  /* Seven screen guided presentation, built from an array. */
+  var dc=DATA.demoCase;
+  var SCREENS=[
+    {kick:"Overview", title:"One connected journey",
+     body:'<p class="body18">'+esc(SYS)+' keeps the incident and the claim. Continuum manages the recovery that happens between the events: the check ins, the modified work, the functional progress, and the safe return. Neither system replaces the other.</p>',
+     notes:["Open by naming the two systems and the one journey.","GardaWorld does not need to replace its system of record."]},
+    {kick:"Step one", title:"A new claim in "+SYS,
+     body:'<span class="democase">Demonstration Case</span><p class="body18">A workplace injury for '+esc(dc.name)+' is recorded in '+esc(SYS)+' as claim '+esc(dc.claim)+'. Continuum reads the reference fields it needs to open a recovery case. It reads a shallow set, never the whole record.</p>',
+     notes:["This is the inbound direction: reference fields only.","Say the demonstration case name so the room can follow one worker."]},
+    {kick:"Step two", title:"The recovery case is created",
+     body:'<span class="democase">Demonstration Case</span><p class="body18">Demonstration case created for '+esc(dc.name)+'. Continuum now manages the day to day recovery: check ins, restrictions, and duty planning. The confirmation shows the case is open in Continuum, not that anything changed in '+esc(SYS)+'.</p><div class="approve"><b>Case opened in Continuum.</b><div class="who">Coordinator: '+esc(dc.coordinator)+'</div></div>',
+     notes:["Create case confirmation lives here.","Nothing was written back to "+SYS+"; the case simply opened in Continuum."]},
+    {kick:"Step three", title:"Modified work, approved by a person",
+     body:'<span class="democase">Demonstration Case</span><p class="body18">A modified work plan is proposed for '+esc(dc.name)+'. It is not applied until a person approves it.</p><div class="banner"><b>Human review.</b> Continuum prepares the plan. A named coordinator reviews and approves it. Software never approves modified work on its own.</div><div class="approve"><b>Modified work plan approved.</b><div class="who">Approved by '+esc(dc.coordinator)+'</div></div><div class="absent">The employer view names what it deliberately does not carry: <s>diagnosis</s>, <s>symptoms</s>, <s>pain and mobility scores</s>, <s>clinical notes</s>. The employer sees the safe duties and the functional status, and nothing clinical.</div>',
+     notes:["Slow down here. This is the strongest screen.","Point at the human review banner and the named approver.","Show the employer view by what is absent from it, not only what is present."]},
+    {kick:"Step four", title:"The recovery journey",
+     body:'<span class="democase">Demonstration Case</span><p class="body18">'+esc(dc.name)+' moves through the recovery: check ins logged, restrictions acknowledged, duties completed, functional status improving toward a safe return.</p><div class="banner"><b>Review before changes.</b> Any change to medical status is reviewed by the treating clinician before it moves. Continuum surfaces the pattern; the clinician decides.</div>',
+     notes:["The review before changes rule is the safety line: the clinician decides status.","Continuum informs; it never changes medical status on its own."]},
+    {kick:"Step five", title:"Prepared to share back",
+     body:'<span class="democase">Demonstration Case</span><p class="body18">Continuum prepares the functional outcomes for '+esc(dc.name)+' in plain workflow words: functional recovery milestone, modified duty participation, and a projected return to work window carrying its label as a clinician reviewed estimate. These are prepared for sharing back to '+esc(SYS)+'.</p><div class="approve"><b>Prepared for return.</b><div class="who">Functional words only. No clinical detail crosses.</div></div>',
+     notes:["Everything prepared for return speaks functional workflow language.","The return to work window always carries its clinician reviewed estimate label."]},
+    {kick:"Ready", title:"Information ready to share",
+     body:'<span class="democase">Demonstration Case</span><p class="body18">The prepared updates for '+esc(dc.name)+' are prepared and ready. Nothing is written to '+esc(SYS)+' yet: the exchange method is confirmed in technical discovery, and a person authorizes each send. The honesty about the write path is itself the credibility argument.</p><div class="share"><b>Prepared and ready to share.</b><div class="stamp" id="stamp"></div><button class="start" style="margin-top:14px" id="sharebtn">View Information Being Shared</button></div>',
+     notes:["Prepared and ready, never written. Do not claim a completed transfer.","In front of an information technology audience, this honesty is the credibility."]}
+  ];
+
+  var idx=0, notesHidden=false;
+
+  function loadState(){ try{ var s=JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); if(typeof s.idx==="number") idx=Math.max(0,Math.min(SCREENS.length-1,s.idx)); if(typeof s.notesHidden==="boolean") notesHidden=s.notesHidden; }catch(e){} }
+  function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify({idx:idx,notesHidden:notesHidden})); }catch(e){} }
+
+  function stampText(){ var d=new Date(); return "Prepared "+d.toLocaleString(); }
+
+  function screenHTML(s,pos){
+    var h='<section class="screen'+(pos===idx?" active":"")+'" data-pos="'+pos+'">';
+    h+='<div class="kick">'+esc(s.kick)+'</div><h2>'+esc(s.title)+'</h2><div class="of">Screen '+(pos+1)+' of '+SCREENS.length+'</div>';
+    h+=s.body;
+    h+='<div class="notesbox"><div class="noteshead"><div class="lbl">Presenter notes</div><button class="togbtn" id="tognotes">'+(notesHidden?"Show notes":"Hide notes")+'</button></div>';
+    h+='<ul class="notes'+(notesHidden?" hidden":"")+'" id="noteslist">'+s.notes.map(function(n){return "<li>"+esc(n)+"</li>";}).join("")+'</ul></div>';
+    h+='</section>';
+    return h;
+  }
+
+  function buildPresent(){
+    var h='<div class="prog"><i id="progbar"></i></div>';
+    h+='<div class="pbar"><div class="count" id="count"></div><button class="x" id="exitbtn">Exit</button></div>';
+    h+='<div class="screenwrap" id="screenwrap">';
+    for(var p=0;p<SCREENS.length;p++){ h+=screenHTML(SCREENS[p],p); }
+    h+='<div class="navrow"><button id="prev">Previous</button><button id="next" class="primary">Next</button></div>';
+    h+='</div>';
+    document.getElementById("present").innerHTML=h;
+    wire();
+    sync();
+  }
+
+  function wire(){
+    document.getElementById("prev").addEventListener("click",prev);
+    document.getElementById("next").addEventListener("click",next);
+    document.getElementById("exitbtn").addEventListener("click",closePresent);
+    var tog=document.getElementById("tognotes"); if(tog) tog.addEventListener("click",toggleNotes);
+    var sb=document.getElementById("sharebtn"); if(sb) sb.addEventListener("click",function(){ /* view only, no transfer */ });
+  }
+
+  function sync(){
+    var scr=document.querySelectorAll(".screen");
+    for(var i=0;i<scr.length;i++) scr[i].classList.toggle("active",i===idx);
+    document.getElementById("progbar").style.width=Math.round((idx+1)/SCREENS.length*100)+"%";
+    document.getElementById("count").textContent="Screen "+(idx+1)+" of "+SCREENS.length;
+    document.getElementById("prev").disabled=idx===0;
+    document.getElementById("next").disabled=idx===SCREENS.length-1;
+    var st=document.getElementById("stamp"); if(st) st.textContent=stampText();
+    var tog=document.getElementById("tognotes"); if(tog){ tog.textContent=notesHidden?"Show notes":"Hide notes"; }
+    var nl=document.getElementById("noteslist"); if(nl){ nl.classList.toggle("hidden",notesHidden); }
+    window.scrollTo(0,0);
+    saveState();
+  }
+  function go(i){ if(i<0)i=0; if(i>SCREENS.length-1)i=SCREENS.length-1; idx=i; sync(); }
+  function next(){ go(idx+1); }
+  function prev(){ go(idx-1); }
+  function toggleNotes(){ notesHidden=!notesHidden; sync(); }
+  function openPresent(){ document.getElementById("present").classList.add("on"); go(idx); }
+  function closePresent(){ document.getElementById("present").classList.remove("on"); }
+
+  document.addEventListener("keydown",function(e){
+    if(!document.getElementById("present").classList.contains("on")) return;
+    if(e.key==="ArrowRight"||e.key==="PageDown"){ next(); }
+    else if(e.key==="ArrowLeft"||e.key==="PageUp"){ prev(); }
+    else if(e.key==="Escape"){ closePresent(); }
+  });
+
+  loadState();
+  renderHome();
+  buildPresent();
+})();
+</script>
+</body>
+</html>
