@@ -33,7 +33,7 @@ folds in.
   React toolkit maps onto CSS transitions here; the React stack is continuum-app.
 
 ### M1: Fold in S12d
-- Status: BLOCKED (needs the site-build series spec from Gary)
+- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S12d.md; pending Gary's scope confirmation)
 - Lead: athena
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: none expected. If the fold-in touches schema, stop for Gary.
@@ -41,7 +41,7 @@ folds in.
   function to Heracles with its tests.
 
 ### M2: Hub Worker card (S12f)
-- Status: BLOCKED (needs the site-build series spec from Gary)
+- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S12f.md; pending Gary's scope confirmation)
 - Lead: apollo for the card copy and design, athena for wiring
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: none for the Worker card itself. Publishing other portal cards is
@@ -50,7 +50,7 @@ folds in.
   7, no guilt mechanics.
 
 ### M3: Dashboard deployment (S13c)
-- Status: BLOCKED (needs the site-build series spec from Gary)
+- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S13c.md; pending Gary's scope confirmation)
 - Lead: hermes, with athena for any build wiring
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: none expected.
@@ -58,7 +58,7 @@ folds in.
   deploy, rollback before diagnosis if the smoke check fails.
 
 ### M4: Demo edge function (S12a)
-- Status: BLOCKED (needs the site-build series spec from Gary)
+- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S12a.md; pending Gary's scope confirmation)
 - Lead: athena
 - Gates: Heracles green, Argus clean, canon consistency
 - Human gate: if the function reads or writes schema, stop for Gary.
