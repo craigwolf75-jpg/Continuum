@@ -2,7 +2,7 @@
 
 Tracks the eight open decisions from Prompt 21 section 20, resolved one at a time per the brief's discipline. Where a resolution here conflicts with an earlier document, this register governs that decision once it is dated and ruled by Gary. See [[continuum-mvp-governance]] and specs/CONTINUUM_PROMPT_21.md.
 
-All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH Enterprise Integration Blueprint) adds three open decisions, D9 through D11, carried as integration and diligence dependencies; none blocks the pilot.
+All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH Enterprise Integration Blueprint) adds three open decisions, D9 through D11, carried as integration and diligence dependencies; none blocks the pilot. Prompt 30 adds D12 (the July 23 pilot-minimum definition), the stream's most time-sensitive open item.
 
 ## Resolved
 
@@ -10,6 +10,8 @@ All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH
 **Ruling: Next.js / Supabase / Capacitor.** Confirms the ratified series baseline (G1). The mainline continuum-app is already scaffolded and building on this stack: Next.js 14.2, Supabase client wired (server, browser, middleware), foundation schema migration in place (commit f3d5b9e). The v2 wiring specification's NestJS / PostgreSQL / React Native assumption is superseded. Supabase provides Postgres, so the database posture (row-level isolation as the projection-law floor) is unchanged. No rework; every migration already written stands. Prompt 27's CRTW Intelligence PRD is the second backend document written on the NestJS assumption and, like the v2 spec, is reconciled by this ruling rather than reopening it: the crtw schema, RLS, materialized rollups and scheduled jobs all have Supabase equivalents, so the spec translates rather than breaks, and the reply to Craig informs him of this ruling rather than asking for it. Prompt 28's Platform Master PRD is the third such document and escalates D1 to blocking for Phase 1; this ruling already clears the block, so Phase 1 planning proceeds on Next.js and Supabase, the relational core and warehouse translating to Supabase equivalents.
 
 Two Prompt 28 register notes ride alongside D1, both design-and-marketing commitments rather than open decisions: the Digital Twin's simulation use is named in the tenant's committee transparency material, since a stored scenario used to justify a workforce decision is discoverable in a labour dispute and crtw_simulation's reproducibility is the defense; and Tier 4's crtw_predictive licensing is sold as governed readiness, never as prediction, until the Health Canada pathway clears, which is the marketing law applied to the price list.
+
+Prompt 30's Complete Build Spec v5 presupposes the NestJS and PostgreSQL stack a fourth time. With the July 23 pilot date three days out, this ceases to be a paper question: D1 is answered de facto by whatever actually runs on the 23rd, and per this ruling that is Next.js and Supabase; it should be stated aloud to Craig rather than inherited.
 
 ### D2. Transition authority beyond physicians
 **Ruling: physician-only for MVP, authority modeled as data.** Requirement F8 stays physician-only for the pilot: only the physician seat moves medical status through the legal transition table, all else rejected server-side. Build the transition-authority table as data (per-role, per-transition) so physiotherapist or nurse-practitioner authority can be enabled later as an insert, not a refactor. Revisit if the pilot's clinical partner is NP-led.
@@ -44,6 +46,13 @@ Added by the Prompt 26 review of Craig's SIGMA Enterprise Integration Blueprint 
 
 ### D11. Vendor security diligence artifacts
 **Open (diligence).** Obtain the SIGMA-RH SOC 2 report and ISO 27001 certificate directly in diligence rather than from vendor marketing pages, to substantiate the per-customer isolation and Canadian residency posture before any enterprise commitment.
+
+## Open (Prompt 30, pilot minimum)
+
+Added by the Prompt 30 review of the Complete Build Spec v5 on 2026-07-20. This is the stream's most time-sensitive item.
+
+### D12. The July 23 pilot-minimum definition
+**Open (Gary and Craig), time-critical.** Three days does not build a transactional core, an analytics schema, and a React Native app, so what July 23 must actually deliver needs a ruling now. The proposed achievable definition: July 23 is the program start running on what exists and is tested today, enrollment and consent on paper or portal, the six-portal demo family as the working surfaces (worker check-ins, coordinator queue with the hazard gate, clinician transitions, employer functional view, board submission tracking), coordinator-operated manual processes where the backend is not yet live, and the Ontario filing on the human path with the WSIB B2B adapter as a Phase 2 upgrade. Under that definition the date is real and the risk is staffing, not software. If instead July 23 requires any part of the Part II backend build, the date and the build sequence contradict each other and one must move, to be said this week rather than discovered on the 22nd. Whichever answer, it settles D1 by force of reality.
 
 ## Counsel dependencies carried forward
 
