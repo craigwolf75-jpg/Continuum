@@ -47,29 +47,33 @@ folds in.
   surface.
 
 ### M2: Hub Worker card (S12f)
-- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S12f.md; pending Gary's scope confirmation)
-- Lead: apollo for the card copy and design, athena for wiring
-- Gates: Heracles green, Argus clean, canon consistency
-- Human gate: none for the Worker card itself. Publishing other portal cards is
-  a separate ruling (see backlog B1).
-- Note: the S12f hub Worker card. Worker tone laws apply: gold never red, grade
-  7, no guilt mechanics.
+- Status: DONE.
+- Lead: calliope (copy), apollo (emphasis), athena (route)
+- Result: the hub Worker card copy is finalized to grade-7, calm, next-step
+  visible ("Do a quick check-in, see your duties for today, and follow your
+  plan. Open it to start."). Gold not red, no guilt mechanics. It remains the
+  emphasized primary path (full-width gold, lands first via S-DESIGN-D) and
+  routes to the worker dashboard. Argus clean.
 
 ### M3: Dashboard deployment (S13c)
-- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S13c.md; pending Gary's scope confirmation)
-- Lead: hermes, with athena for any build wiring
-- Gates: Heracles green, Argus clean, canon consistency
-- Human gate: none expected.
-- Note: the S13c dashboard deployment. Direct push to main, smoke check on
-  deploy, rollback before diagnosis if the smoke check fails.
+- Status: DONE.
+- Lead: hermes (smoke gate), athena (resilience)
+- Result: deploy/smoke.test.mjs (35 checks, auto-run by suites.yml) is the
+  deployment smoke gate. For every interactive surface it parse-checks the inline
+  script (a syntax error is a blank deploy, so it fails the build), and asserts
+  the mount element, a render path, a live read, and a try/catch degradation path
+  (three-layer resilience). All surfaces parse and pass; no resilience gaps found.
 
 ### M4: Demo edge function (S12a)
-- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S12a.md; pending Gary's scope confirmation)
+- Status: DONE.
 - Lead: athena
-- Gates: Heracles green, Argus clean, canon consistency
-- Human gate: if the function reads or writes schema, stop for Gary.
-- Note: the S12a demo edge function. Three-layer resilience is mandatory on the
-  data path; UNKNOWN never renders as 0.
+- Result: deploy/api/status.js is a Vercel serverless function at /api/status
+  returning operational telemetry only (ok, region, surfaces, surfaceCount,
+  generatedAt) with no case content or worker facts. Three-layer resilience:
+  live VERCEL_REGION, then CONTINUUM_REGION, then the string UNKNOWN (never 0);
+  it never throws to the caller. deploy/api-status.test.mjs (12 checks, auto-run
+  by suites.yml) proves operational-only, UNKNOWN-not-0, and no-500. Prod reach
+  of /api/status verified at deploy. Argus clean.
 
 ### M5: First full Argus patrol
 - Status: DONE. Seven patrols run; findings in B3 below.
