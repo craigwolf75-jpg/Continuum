@@ -53,7 +53,7 @@ ok("olympus takes a mobile bottom-nav slot", /\["dashboard","olympus","tenants",
 // sidebar badge
 ok("sidebar badge counts open concerns", /if\(n\[0\]==="olympus"\)\{var oc=olyOpen\(\)\.length;if\(oc\)badge=/.test(html));
 ok("sidebar badge flags a blocking concern red", /olybadge'\+\(olyBlocking\(\)\?" blk":""\)/.test(html));
-ok("open-concern count drives the badge and disappears at zero", /var oc=olyOpen\(\)\.length;if\(oc\)/.test(html) && /return S\.olympus\.concerns\.filter\(function\(c\)\{return c\.status==="open";\}\)/.test(html));
+ok("open-concern count drives the badge and disappears at zero", /var oc=olyOpen\(\)\.length;if\(oc\)/.test(html) && /function olyOpen\(\)\{return.*c\.status==="open"/.test(html));
 
 // concern lifecycle: open -> acknowledged -> resolved, each audited
 ok("acknowledge moves open concern to acknowledged and audits", /function ackConcern\(ts\)\{[\s\S]*?if\(!c\|\|c\.status!=="open"\)return;c\.status="acknowledged";audit\(/.test(html));
@@ -74,6 +74,13 @@ ok("state key unchanged (continuum_admin_v1)", html.includes('LSKEY="continuum_a
 ok("feed key documented (continuum_olympus_feed_v1)", html.includes('FEEDKEY="continuum_olympus_feed_v1"'));
 ok("worker bridge key absent from the admin artifact", !html.includes("continuum_worker_bridge_v1"));
 ok("no clinical vocabulary in the admin artifact", !/\b(pain|mobility|diagnosis|supraspinatus)\b/i.test(html));
+
+/* ================= stale-state safety (a state saved before Olympus must not blank the portal) ================= */
+ok("load migrates a stale state by seeding S.olympus", /if\(!S\.olympus\)S\.olympus=olympusSeed\(\)/.test(html));
+ok("olyOpen guards a missing olympus", /function olyOpen\(\)\{return \(S\.olympus/.test(html));
+ok("olyLast guards a missing olympus", /function olyLast\(\)\{return \(S\.olympus/.test(html));
+const olyOpenFn = new Function("S", extract(/function olyOpen\(\)\{.*\}/, "olyOpen")[0] + " return olyOpen();");
+ok("olyOpen returns empty and does not throw when olympus is absent", Array.isArray(olyOpenFn({ tenants: [] })) && olyOpenFn({ tenants: [] }).length === 0);
 
 /* ================= canon KPI regression (24, 75, 16) ================= */
 const realT = TENANTS.filter(t => !t.sandbox);
