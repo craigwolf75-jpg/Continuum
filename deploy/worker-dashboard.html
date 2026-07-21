@@ -135,11 +135,11 @@ section.view{display:none}section.view.on{display:block}
 <main><div class="wrap" id="main"></div></main>
 <div class="toast" id="toast"></div>
 <div class="prail" id="prail"></div>
+<script src="/bridge.js"></script>
 <script>
 "use strict";
 
 var LSKEY="continuum_worker_dash_v1";
-var BRIDGE_KEY="continuum_worker_bridge_v1";
 var NAV=[["dashboard","dashboard","Dashboard"],["trend","insights","Recovery Trend"],["duties","assignment_turned_in","My Duties"],["chat","forum","Chat"],["settings","settings","Settings"]];
 var FLAGS=["numb","tingling","sharp","worse at night","cannot sleep"];
 var PROG=21;
@@ -171,16 +171,14 @@ function burst(x,y){if(window.matchMedia && window.matchMedia("(prefers-reduced-
  p.style.transform="translate("+(Math.cos(a)*d*k)+"px,"+(Math.sin(a)*d*k+30*k*k)+"px) scale("+(1-k)+")";p.style.opacity=1-k;requestAnimationFrame(step);}requestAnimationFrame(step);})(p,Math.random()*6.283,60+Math.random()*70);}}
 /* bridge write (13b schema): functional fields only, projection at the write side */
 function writeBridge(){
- try{
-  var b={source:"worker-dashboard",name:"Marcus Bedard",trade:"Scaffolder",
-   injury:"Right shoulder strain",restr:"No lifting above shoulder height",
-   day:S.day,prognosisDays:PROG,status:S.status,escalated:!!S.escalated,
-   checkedInToday:!!S.checkedInToday,
-   dutiesDone:S.duties.filter(function(d){return d.status==="completed";}).length,
-   dutiesTotal:S.duties.length,consented:!!S.consented,
-   dutyAckDay:(S.ackDay==null?null:S.ackDay),dutyAckTs:(S.ackTs==null?null:S.ackTs),ts:Date.now()};
-  localStorage.setItem(BRIDGE_KEY,JSON.stringify(b));
- }catch(e){}}
+ ContinuumBridge.writeBridgeShared({source:"worker-dashboard",name:"Marcus Bedard",trade:"Scaffolder",
+  injury:"Right shoulder strain",restr:"No lifting above shoulder height",
+  day:S.day,prognosisDays:PROG,status:S.status,escalated:!!S.escalated,
+  checkedInToday:!!S.checkedInToday,
+  dutiesDone:S.duties.filter(function(d){return d.status==="completed";}).length,
+  dutiesTotal:S.duties.length,consented:!!S.consented,
+  dutyAckDay:(S.ackDay==null?null:S.ackDay),dutyAckTs:(S.ackTs==null?null:S.ackTs)});
+}
 function pct(){return Math.min(100,Math.round(S.day/PROG*100));}
 function curPain(){return S.pain[S.pain.length-1];}
 function curMob(){return S.mob[S.mob.length-1];}

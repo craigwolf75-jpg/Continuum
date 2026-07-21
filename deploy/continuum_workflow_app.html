@@ -250,6 +250,7 @@ input[type=text],select{width:100%;background:var(--chipbg);border:1px solid var
 
 <div class="rail"><div class="dot"></div><div class="msg" id="railMsg"><b>Wiring rail</b> <span>every data write is narrated here with the sections it feeds</span></div></div>
 
+<script src="/bridge.js"></script>
 <script>
 "use strict";
 /* ============================ STORE ============================ */
@@ -351,16 +352,15 @@ function save(){
    dashboard never ingests clinical detail even in memory. */
 function writeBridge(){
   var m = S.marcus;
-  var bridge = {
+  ContinuumBridge.writeBridgeShared({
     source:"workflow", name:m.name, trade:m.trade, injury:m.type,
     restr:m.restrictions||"", day:S.day, prognosisDays:m.prognosis,
     status:m.status, escalated:m.status==="escalated",
     checkedInToday: !!(S.checkedIn[S.day+"AM"] || S.checkedIn[S.day+"PM"]),
     dutiesDone: S.duties.filter(function(d){return d.done;}).length,
     dutiesTotal: S.duties.length,
-    consented: !!(S.consent && S.consent.granted_at), ts: Date.now()
-  };
-  try{ localStorage.setItem("continuum_worker_bridge_v1", JSON.stringify(bridge)); }catch(e){}
+    consented: !!(S.consent && S.consent.granted_at)
+  });
 }
 function load(){
   try{ const raw = localStorage.getItem(KEY); if(raw){ const parsed = JSON.parse(raw); if(parsed.schema_version===3){ S = parsed; return; } } }catch(e){}

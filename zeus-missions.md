@@ -33,12 +33,18 @@ folds in.
   React toolkit maps onto CSS transitions here; the React stack is continuum-app.
 
 ### M1: Fold in S12d
-- Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S12d.md; pending Gary's scope confirmation)
+- Status: DONE.
 - Lead: athena
-- Gates: Heracles green, Argus clean, canon consistency
-- Human gate: none expected. If the fold-in touches schema, stop for Gary.
-- Note: the S12d fold-in from the series. Smallest correct change; hand every
-  function to Heracles with its tests.
+- Result: single-sourced the worker bridge projection into deploy/bridge.js
+  (ContinuumBridge.writeBridgeShared over a functional allowlist; any key not on
+  the list is dropped, so no clinical field can ever cross). worker-dashboard,
+  continuum_workflow_app, and worker-embed now build their fields and call the
+  one shared writer; the dead BRIDGE_KEY const was removed. Payloads unchanged
+  (consumers read by key). deploy/bridge.test.mjs (15 checks, auto-run by
+  suites.yml) proves allowlist-only + clinical fields dropped + one writer. This
+  closes M5-F02 / S-BRIDGE-WRITERS at code level, not just doctrine. Full suite:
+  7 suites, 146 checks green. Argus clean, no direct bridge setItem left in any
+  surface.
 
 ### M2: Hub Worker card (S12f)
 - Status: QUEUED (spec authored: specs/CONTINUUM_MISSION_S12f.md; pending Gary's scope confirmation)
