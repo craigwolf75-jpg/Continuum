@@ -86,11 +86,16 @@ folds in.
   decide which portals go public; he asks once and waits.
 
 ### B2: Canon suite into CI
-- Status: QUEUED
-- Lead: heracles, with hermes for the CI wiring
-- Gates: Heracles green (the canon suite itself must pass), Argus clean.
-- Note: wire the canon suite into CI so canon drift fails the build. Marcus at
-  day 9 pain 4, Cardinal off work day 18, per-tenant numbers that sum.
+- Status: DONE.
+- Lead: heracles (canon suite), hermes (CI wiring).
+- Result: deploy/canon.test.mjs proves the ledger across surfaces (Marcus day 9
+  pain 4 on worker/hse/clinical, Cardinal off work day 18 on hse/clinical,
+  non-sandbox tenant active sums to 24 on admin, plus the canon copy). Wired into
+  CI via .github/workflows/suites.yml, which runs every deploy/*.test.mjs on push
+  and pull_request to main, so a portal-suite failure or canon drift fails the
+  build. Runs alongside the existing exposure-proof SQL gate. One unsound "no day
+  12 or 21" assertion was watched failing, diagnosed as a false positive (the
+  21-day prognosis is canon), and removed. Full run: 6 suites, 131 checks green.
 
 ### B3: Argus M5 patrol findings
 
