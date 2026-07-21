@@ -133,7 +133,7 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
   </div>
 </header>
 <aside class="side">
-  <div style="padding:0 24px 14px"><b style="color:#fff;font-size:16px">CONTINUUM</b><div style="color:#78859a;font-size:11px">RTW Coordination Hub</div></div>
+  <div style="padding:0 24px 14px"><b style="color:#fff;font-size:16px">CONTINUUM</b><div style="color:#78859a;font-size:11px">Return to Work (RTW) Coordination Hub</div></div>
   <div class="prof" id="profcard" onclick="openWorker('m')"></div>
   <nav id="sidenav"></nav>
   <div class="foot"><a href="/hub#roles" style="color:var(--gold);display:block;margin-bottom:8px;font-weight:600;text-decoration:none">&#8592; All portals</a>Help &nbsp;&middot;&nbsp; Logout<br><a href="#" onclick="resetAll();return false" style="color:#9fb0c6">Reset demo</a></div>
@@ -215,7 +215,7 @@ function pagehead(title,sub,extra){
  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px"><div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+(extra||"")+'</div>';}
 /* ---------- dashboard ---------- */
 function renderDashboard(){
- var h=pagehead("RTW Coordination","Who needs my attention today. Every open case, sorted by attention needed.",
+ var h=pagehead("Return to Work (RTW) Coordination","Who needs my attention today. Every open case, sorted by attention needed.",
   '<button class="btn navy" onclick="window.print()"><span class="msym" style="font-size:18px">download</span> Export</button>');
  h+='<div class="kpis">'+
  '<div class="kpi"><div class="ic" style="background:var(--navy)"><span class="msym">medical_services</span></div><div><div class="n">'+openCases().length+'</div><div class="t">Open cases</div></div></div>'+
@@ -353,7 +353,7 @@ function renderAnalytics(){
  var stepUps=S.stepUps.length;var lastStep=S.stepUps[S.stepUps.length-1];
  var h=pagehead("Analytics","The pilot readout numbers, captured at event time.");
  h+='<div class="kpis" style="grid-template-columns:repeat(3,1fr)">'+
- '<div class="kpi"><div class="ic" style="background:var(--gold)"><span class="msym">timer</span></div><div><div class="n">'+ftdAvg().toFixed(1)+' days</div><div class="t">Restrictions to first suitable onsite assignment</div></div></div>'+
+ '<div class="kpi"><div class="ic" style="background:var(--gold)"><span class="msym">timer</span></div><div><div class="n">'+ftdAvg().toFixed(1)+' days</div><div class="t">Days from restrictions received to first safe onsite duties</div></div></div>'+
  '<div class="kpi"><div class="ic" style="background:var(--teal)"><span class="msym">stairs</span></div><div><div class="n">'+stepUps+'</div><div class="t">Duty step-ups this period</div>'+(lastStep?'<div class="t" style="font-size:10px;color:var(--muted)">Latest: '+esc(lastStep.worker)+', '+esc(lastStep.task)+'</div>':'')+'</div></div>'+
  '<div class="kpi"><div class="ic" style="background:var(--navy)"><span class="msym">trending_up</span></div><div><div class="n">'+checkinPct()+'%</div><div class="t">Check-in completion</div></div></div></div>';
  h+='<div class="card bars" style="padding:18px"><div class="eyebrow" style="margin-bottom:6px">Modified days by duty class</div>'+
@@ -365,10 +365,10 @@ function renderAnalytics(){
 function renderSettings(){
  var h=pagehead("Settings","This seat's configuration and duties of care.");
  h+='<div class="card" style="padding:18px">'+
- '<div class="adminrow"><div><b>Proxy entry</b><div class="sub" style="font-size:11.5px">For workers who declined or withdrew the app, the coordinator enters what they report by phone, flagged entered_by_role.</div></div><span class="pillst ok">supported</span></div>'+
+ '<div class="adminrow"><div><b>Proxy entry</b><div class="sub" style="font-size:11.5px">For workers who declined or withdrew the app, the coordinator enters what they report by phone, saved as a coordinator entry.</div></div><span class="pillst ok">supported</span></div>'+
  '<div class="adminrow"><div><b>Consent withdrawal</b><div class="sub" style="font-size:11.5px">A worker can withdraw by telling their coordinator. The button lives on the case; capture stops immediately.</div></div><span class="pillst ok">wired</span></div>'+
  '<div class="adminrow"><div><b>Access requests</b><div class="sub" style="font-size:11.5px">One click produces the human readable export of everything held on a worker.</div></div><span class="pillst ok">wired</span></div>'+
- '<div class="adminrow"><div><b>Quiet hours</b><div class="sub" style="font-size:11.5px">No nudges outside 8am to 9pm worker local time. SMS bodies never carry case content.</div></div><span class="pillst ok">on</span></div>'+
+ '<div class="adminrow"><div><b>Quiet hours</b><div class="sub" style="font-size:11.5px">No reminders outside 8am to 9pm in the local time zone of the worker. Text messages (SMS) never carry case content.</div></div><span class="pillst ok">on</span></div>'+
  '</div>';
  h+='<div class="card" style="padding:18px;margin-top:14px"><div class="eyebrow" style="margin-bottom:8px">Access log</div><p class="sub" style="font-size:11.5px;margin-bottom:10px">Every read of clinical detail on this seat is recorded, in symmetry with the clinical and admin trails.</p>'+
   ((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div class="adminrow"><span class="sub" style="font-size:12px">'+esc(a.msg)+'</span><span class="sub" style="font-size:11px">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p class="sub" style="font-size:12px">No reads yet. Open a worker to record one.</p>')+

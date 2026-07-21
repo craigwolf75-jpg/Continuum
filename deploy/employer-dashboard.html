@@ -327,7 +327,7 @@ function renderOverview(){
  return h;}
 function workerTable(list,preview){
  var h='<div class="cardhead">Active injured workers &middot; '+actives().length+'</div>';
- h+='<table><thead><tr><th>Worker</th><th>Injury</th><th>Days</th><th>Status</th><th>Light duty / restrictions</th><th>Next review</th><th>RTW</th></tr></thead><tbody>';
+ h+='<table><thead><tr><th>Worker</th><th>Injury</th><th>Days</th><th>Status</th><th>Light duty / restrictions</th><th>Next review</th><th>Return to work</th></tr></thead><tbody>';
  list.forEach(function(w){var idx=S.workers.indexOf(w);var lv=w.live;
   h+='<tr class="rowlink"'+(lv?' style="background:rgba(200,151,47,.07)"':'')+' onclick="'+(lv?'openLiveDrawer()':'openDrawer('+idx+')')+'"><td><b>'+esc(w.name)+'</b>'+(lv?'<span class="live-badge">Live</span>':'')+'<div style="color:var(--muted);font-size:11px">'+esc(w.role)+'</div></td>'+
   '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Awaiting clinical review</span>':'')+'</td>'+

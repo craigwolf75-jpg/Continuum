@@ -229,7 +229,7 @@ function renderDashboard(){
  '<div class="kpi"><div class="lbl">Active patients</div><div class="n">'+activeP().length+'<span class="tag" style="color:var(--teal)">across 3 tenants</span></div></div>'+
  '<div class="kpi red"><div class="lbl">Open escalations</div><div class="n" style="color:var(--alert)">'+escP().length+'<span class="tag" style="color:var(--alert)">'+(escP().length?"urgent action":"clear")+'</span></div></div>'+
  '<div class="kpi gold"><div class="lbl">Recovery score</div><div class="n">'+score()+'%<span class="tag">vs prognosis</span></div></div>'+
- '<div class="kpi teal"><div class="lbl">Pending clearances</div><div class="n">'+fdpP().length+'<span class="tag">RTW authorizations</span></div></div>'+
+ '<div class="kpi teal"><div class="lbl">Pending clearances</div><div class="n">'+fdpP().length+'<span class="tag">return to work authorizations</span></div></div>'+
  '</div>';
  h+='<div class="grid2" style="display:grid;grid-template-columns:2fr 1fr;gap:14px"><div>';
  h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><span class="msym" style="color:var(--alert)">report</span><h2>Priority Escalations</h2></div>';
