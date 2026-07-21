@@ -58,7 +58,7 @@ function styleTag() {
     ".cr-brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}" +
     ".cr-badge{width:44px;height:44px;border-radius:10px;background:" + T.logoBadge + ";color:" + T.gold + ";display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px}" +
     ".cr-wordmark{font-weight:700;font-size:34px;color:" + T.titleRest + "}" +
-    ".cr-grid{display:grid;grid-template-columns:repeat(2,340px);gap:24px;justify-content:center}" +
+    ".cr-grid{display:grid;grid-template-columns:repeat(2,340px);grid-auto-rows:1fr;gap:24px;justify-content:center}" +
     ".cr-card{background:" + T.cardFill + ";border:1.5px solid " + T.borderRest + ";border-radius:10px;padding:24px;display:block;text-decoration:none;transition:border-color 180ms ease}" +
     ".cr-card:focus-visible{outline:2px solid " + T.gold + ";outline-offset:3px}" +
     ".cr-title{font-weight:600;font-size:20px;line-height:1.3;margin-bottom:6px;transition:color 180ms ease}" +
