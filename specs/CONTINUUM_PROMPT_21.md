@@ -10,6 +10,7 @@
 **Amended:** July 20, 2026, by Prompt 30 (Complete Build Spec v5 reconciliation): section 12 (Addendum A, Compliance and Rebate Intelligence) and, in the decision register, a D1 de-facto note plus new decision D12 (the July 23 pilot-minimum definition). See specs/CONTINUUM_PROMPT_30.md.
 **Amended:** July 20, 2026, by Prompt 31 (July 23 pilot runbook and HSE pilot pack): section 15 (the pilot-minimum operating model) and, in the decision register, D12 ruled by Gary plus a D1 Phase-2-gate corollary. See specs/CONTINUUM_PROMPT_31.md.
 **Amended:** July 21, 2026, by Prompt 33 (platform-wide plain-language pass): establishes CONTINUUM_PLAIN_LANGUAGE_STANDARD.md as house content law (all user-facing copy at Grade 6 to 8, abbreviations expanded at first use, no software terminology on user surfaces), with the canon phrases (Health Canada and the four gates, the routing phrase) and every functional, medical, legal, and privacy meaning held intact, and the restriction display strings, Form 7 language, and pilot consent text clinician-and-counsel gated. See specs/CONTINUUM_PROMPT_33.md.
+**Amended:** July 21, 2026, by Prompt 34 (SIGMA connection demonstration page): decision register D13 (the SIGMA system name ruled SIGMA-RH, correcting the demonstration spec's SIGMA-HR) and D14 (the CRTW acronym expansion, open). See specs/CONTINUUM_PROMPT_34.md.
 
 ## 1. Purpose, category, and the operating law
 

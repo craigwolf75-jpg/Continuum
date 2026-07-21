@@ -2,7 +2,7 @@
 
 Tracks the eight open decisions from Prompt 21 section 20, resolved one at a time per the brief's discipline. Where a resolution here conflicts with an earlier document, this register governs that decision once it is dated and ruled by Gary. See [[continuum-mvp-governance]] and specs/CONTINUUM_PROMPT_21.md.
 
-All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH Enterprise Integration Blueprint) adds three open decisions, D9 through D11, carried as integration and diligence dependencies; none blocks the pilot. Prompt 30 adds D12 (the July 23 pilot-minimum definition), ruled by Gary the same day and recorded in Prompt 31.
+All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH Enterprise Integration Blueprint) adds three open decisions, D9 through D11, carried as integration and diligence dependencies; none blocks the pilot. Prompt 30 adds D12 (the July 23 pilot-minimum definition), ruled by Gary the same day and recorded in Prompt 31. Prompt 34 adds D13 (the SIGMA system name, ruled SIGMA-RH) and D14 (the CRTW acronym expansion, open).
 
 ## Resolved
 
@@ -53,6 +53,16 @@ Opened by the Prompt 30 review of the Complete Build Spec v5 and ruled by Gary t
 
 ### D12. The July 23 pilot-minimum definition
 **Ruling: the achievable pilot minimum, ruled by Gary on 2026-07-20 (recorded in Prompt 31).** July 23 is the program start running on what exists and is tested today: enrollment and consent on paper or portal, the six-portal demo family as the working surfaces (worker check-ins, coordinator queue with the hazard gate, clinician transitions, employer functional view, board submission tracking), coordinator-operated manual processes where the backend is not yet live, and the Ontario filing on the human path with the WSIB B2B adapter as a Phase 2 upgrade. The coordinator is the pilot network (workers report by phone, text, or in person; the coordinator records proxy entries), so the date is real and the risk is staffing, not software. Prompt 31 shipped the HSE pilot pack this ruling required (blank-slate pilot mode, the New Case form, and the working proxy check-in with the escalation rule), giving Phase 1 zero backend dependency and standing down the D1 blocking escalation.
+
+## Prompt 34 (SIGMA demonstration naming)
+
+Added by the Prompt 34 SIGMA connection demonstration page on 2026-07-21, both to settle before the GardaWorld room.
+
+### D13. SIGMA system name
+**Ruling: SIGMA-RH.** GardaWorld's product is SIGMA-RH (RH for the French Ressources Humaines), Craig's adopted integration blueprint uses SIGMA-RH throughout, and every spec on main uses SIGMA-RH. Prompt 34's demonstration spec wrote SIGMA-HR; that is the wrong name and would say the client's own system's name wrong in front of their executives. Any build of the demonstration page defaults its system-name constant to SIGMA-RH. Final confirmation with GardaWorld's own people is still worth taking before the room, but canon already sides with RH.
+
+### D14. CRTW acronym expansion
+**Open (Gary and the venture).** Two expansions are in play: Corporate Recovery, Training and Workforce Intelligence (Craig's PRD, the analytics layer, currently in canon and the plain-language standard) versus Connected Return-to-Work platform (Prompt 34's demonstration spec, argued as the better fit for a sales room). One expansion should be ruled platform-wide before it collides in a document a client reads. Flagged for the next Craig exchange.
 
 ## Counsel dependencies carried forward
 
