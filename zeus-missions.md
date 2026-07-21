@@ -165,11 +165,15 @@ vocabulary is allowed off the Nexus surface.
   44px touch target (worker-dashboard.html ~276-284). Worker-facing (D1-F04, F07).
 
 ### S-DESIGN-D: Hub role-picker motion pass
-- Status: QUEUED
+- Status: DONE.
 - Lead: apollo
-- Note: entrance stagger + hover lift + press feedback on the six hub cards,
-  transform/opacity only, 200-400ms, inside a reduced-motion guard. Hub does not
-  load support.js, so no background-tab throttle. Enhancement, no finding.
+- Result: hub/index.html .role cards now carry a 200ms transform/border/shadow
+  transition with a hover lift (translateY -2px + soft navy shadow), a press
+  (scale .98), and a staggered entrance (roleIn keyframes, opacity + translateY
+  8px, 280ms, nth-child delays 0 to 300ms, worker card first). All neutralized by
+  a prefers-reduced-motion guard (transition/animation none, transform none).
+  Transform and opacity only, no CLS. Argus clean, focus ring intact, full suite
+  green.
 
 ### S-DESIGN-E: Register and polish sweep
 - Status: DONE. HSE pain sparkline recolored red to muted amber #B87A2E; gold

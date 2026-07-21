@@ -32,8 +32,22 @@
   .presenter .kick{color:var(--gold2)}
   .presenter .prow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .roles{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:520px;max-width:100%}
-  .role{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:20px;cursor:pointer;text-align:left}
-  .role:hover{border-color:var(--gold)}
+  .role{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:20px;cursor:pointer;text-align:left;transition:transform 200ms ease,border-color 200ms ease,box-shadow 200ms ease;animation:roleIn 280ms ease backwards}
+  .role:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 18px rgba(14,27,44,.35)}
+  .role:active{transform:scale(.98)}
+  /* Entrance stagger: worker card lands first and emphasized, the rest assemble after it */
+  .role:nth-child(1){animation-delay:0ms}
+  .role:nth-child(2){animation-delay:60ms}
+  .role:nth-child(3){animation-delay:120ms}
+  .role:nth-child(4){animation-delay:180ms}
+  .role:nth-child(5){animation-delay:240ms}
+  .role:nth-child(6){animation-delay:300ms}
+  @keyframes roleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @media (prefers-reduced-motion: reduce){
+    .role{transition:none;animation:none}
+    .role:hover{transform:none}
+    .role:active{transform:none}
+  }
   .role-worker{border-color:rgba(200,151,47,.5);font-family:inherit;color:#fff;width:100%}
   .role-worker h3{color:var(--gold)}
   .role h3{font-family:'Space Grotesk',sans-serif;margin:0 0 4px;font-size:17px}
