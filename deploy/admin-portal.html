@@ -175,7 +175,7 @@ function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.
  section:"dashboard",search:"",roleFilter:null,nextId:100,olympus:olympusSeed(),
  audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
  form:{name:"",role:"worker",org:"Worley Industrial"}};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -386,10 +386,10 @@ function ingestOlympus(){
  S.olympus.watermark=res.watermark;
  save();
 }
-function olyOpen(){return S.olympus.concerns.filter(function(c){return c.status==="open";});}
+function olyOpen(){return (S.olympus&&S.olympus.concerns?S.olympus.concerns:[]).filter(function(c){return c.status==="open";});}
 function olyBlocking(){return olyOpen().some(function(c){return c.severity==="blocking";});}
 function olyWorking(){return ROSTER.filter(function(a){return a.status==="working"||a.status==="coordinating";}).length;}
-function olyLast(){return S.olympus.feed.slice().sort(function(a,b){return b.ts-a.ts;})[0]||null;}
+function olyLast(){return (S.olympus&&S.olympus.feed?S.olympus.feed:[]).slice().sort(function(a,b){return b.ts-a.ts;})[0]||null;}
 function ackConcern(ts){var c=S.olympus.concerns.find(function(x){return x.ts===ts;});if(!c||c.status!=="open")return;c.status="acknowledged";audit("Olympus: acknowledged "+c.agent+"'s concern");toast("Concern <b>acknowledged</b>");save();}
 function resolveConcern(ts){var c=S.olympus.concerns.find(function(x){return x.ts===ts;});if(!c||c.status==="resolved")return;c.status="resolved";audit("Olympus: resolved "+c.agent+"'s concern");toast("Concern <b>resolved</b>");save();}
 function simulateOlympus(){
