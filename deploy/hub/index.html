@@ -75,10 +75,16 @@
   .doc{background:#fff;border:1px solid rgba(22,32,46,.1);border-radius:11px;padding:16px;color:var(--ink)}
   .doc h4{font-family:'Space Grotesk',sans-serif;margin:0 0 8px}
   button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  #sigmaentry{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;flex-direction:column;gap:1px;background:var(--card);border:1px solid var(--hair);border-left:3px solid var(--gold);border-radius:12px;padding:10px 15px;text-decoration:none;box-shadow:0 8px 22px rgba(10,21,38,.5)}
+  #sigmaentry:hover{border-color:var(--gold)}
+  #sigmaentry .se-t{color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px}
+  #sigmaentry .se-s{color:var(--gold2);font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-top:1px}
+  @media(max-width:520px){#sigmaentry{right:12px;bottom:12px;padding:8px 12px}}
 </style>
 </head>
 <body>
 <div id="hub"></div>
+<a id="sigmaentry" href="/sigma-portal.html" title="SIGMA administrator seat"><span class="se-t">SIGMA Exchange</span><span class="se-s">Proposed workflow</span></a>
 <script>
 (function(){
   var S=window.ContinuumStore;

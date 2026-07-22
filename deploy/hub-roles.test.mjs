@@ -68,5 +68,9 @@ ok("focus is visible", src.includes(":focus-visible"));
 ok("main.jsx dash clean", !/[–—]/.test(src));
 ok("built bundle dash clean", !/[–—]/.test(bundle));
 
+// Prompt 34a stopgap: SIGMA Exchange entry point on the hub (until SITE-34a rebuilds the card)
+ok("hub carries a SIGMA Exchange entry link", hub.includes('id="sigmaentry"') && hub.includes('href="/sigma-portal.html"'));
+ok("SIGMA entry is honest (proposed workflow)", hub.includes("Proposed workflow"));
+
 console.log("\nhub-roles suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
