@@ -154,11 +154,11 @@ var ROSTER=[
  {id:"hermes",name:"Hermes (12d)",lane:"Release",status:"idle",mission:"Last ship: the housekeeping sweep"},
  {id:"argus",name:"Argus (12e)",lane:"The watcher",status:"idle",mission:"Dash sweep filed; support.js deferred upstream"}];
 var OLY_BASE=1721480400000;
-function olympusSeed(){var b=OLY_BASE;return {version:6,watermark:0,
+function olympusSeed(){var b=OLY_BASE;return {version:7,watermark:0,
  feed:[
   {ts:b+1,agent:"zeus",type:"handoff",msg:"Decomposed the presenter kit and the hub redesign across the roster."},
   {ts:b+2,agent:"calliope",type:"update",msg:"Per-page scripts written for all 48 sidebar pages, matched to each screen."},
-  {ts:b+3,agent:"apollo",type:"update",msg:"Hub role cards equalized to one size with grid-auto-rows; swirl entrance intact."},
+  {ts:b+3,agent:"apollo",type:"update",msg:"SIGMA Exchange added as the seventh hub card; equal-size grid and swirl entrance intact."},
   {ts:b+4,agent:"athena",type:"update",msg:"package.json approved by Gary; built the React and Framer Motion hub bundle."},
   {ts:b+5,agent:"heracles",type:"gate",msg:"258 assertions across 11 suites, all green."},
   {ts:b+6,agent:"argus",type:"finding",msg:"Internal docs swept to the dash rule; the vendor runtime comments defer to the upstream fix."},
@@ -175,7 +175,7 @@ function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.
  section:"dashboard",search:"",roleFilter:null,nextId:100,olympus:olympusSeed(),
  audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
  form:{name:"",role:"worker",org:"Worley Industrial"}};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==6)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==7)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}

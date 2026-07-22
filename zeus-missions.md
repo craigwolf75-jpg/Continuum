@@ -212,5 +212,12 @@ vocabulary is allowed off the Nexus surface.
 - Argus patrols the new card under the register scan; Heracles extends the hub
   suite to seven cards; the human gate does not apply (no consent, legal,
   pricing, or schema content).
-- Status: QUEUED
+- Status: DONE (built by the hub-redesign session, verified and reconciled here).
+- Result: the seventh hub card SIGMA Exchange is live, roleKey sigma, linking to
+  /sigma-portal.html, subtitle "The system-of-record connection", copy "A proposed
+  workflow, not a live integration". It uses the same React Card component as the
+  six roles (blue at rest, gold on activation); the redesigned cards carry no
+  icons, so matching the six is correct and the swap_horiz icon does not apply.
+  Heracles hub suite extended to seven cards (39 checks green); Argus register scan
+  clean, no live-integration claim; no human gate.
 - Lead: hub redesign lane (Apollo design, Heracles suite, Argus patrol)
