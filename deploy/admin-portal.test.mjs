@@ -68,7 +68,7 @@ ok("seed: reflects the current work", html.includes("Framer Motion hub bundle") 
 ok("seed: roster shows Athena no longer blocked", !/id:"athena"[\s\S]*?status:"blocked"/.test(html.slice(html.indexOf("var ROSTER="), html.indexOf("var OLY_BASE="))));
 ok("seed: no blocking concern in the current state", !html.includes('severity:"blocking"'));
 ok("seed: a resolved concern example", html.includes('status:"resolved"'));
-ok("olympus seed is versioned and load re-seeds on a version change", /version:4/.test(html) && html.includes("S.olympus.version!==4"));
+ok("olympus seed is versioned and load re-seeds on a version change", /version:5/.test(html) && html.includes("S.olympus.version!==5"));
 
 // keys, bridge absence, clinical absence
 ok("state key unchanged (continuum_admin_v1)", html.includes('LSKEY="continuum_admin_v1"'));

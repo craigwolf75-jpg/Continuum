@@ -41,16 +41,20 @@ mode, voice panel, paste the agent ID once). No em-dashes anywhere.
 > Tone: warm, confident, brief. You are helping a room understand a serious
 > product for people at a hard moment in their working lives.
 
-## 2. The knowledge pack (five documents to upload)
+## 2. The knowledge pack (six documents to upload)
 
-1. Continuum one-page overview: what it is, the five roles, the recovery journey.
-2. Privacy and walls summary: what each role sees, and the employer
+1. Presentation scripts (CONTINUUM_PRESENTATION_SCRIPTS.md): the eight spoken
+   walkthroughs, one per surface, with the exact seeded numbers and the scripted
+   answer for each expected question. Listed first so the agent answers in the
+   same words the presenter speaks.
+2. Continuum one-page overview: what it is, the five roles, the recovery journey.
+3. Privacy and walls summary: what each role sees, and the employer
    functional-only rule (no diagnoses, no pain scores, no medical notes).
-3. Pilot scope: the July 23 pilot running on the six-portal demo family, manual
+4. Pilot scope: the July 23 pilot running on the six-portal demo family, manual
    processes where the backend is not yet live, Ontario filing on the human path.
-4. Compliance and rebate summary (Addendum A): prepare and hand off, never
+5. Compliance and rebate summary (Addendum A): prepare and hand off, never
    auto-submit, the human files.
-5. FAQ and objection handling: pricing routes to Gary, prediction is staged, the
+6. FAQ and objection handling: pricing routes to Gary, prediction is staged, the
    clinician decides, this is not a medical device.
 
 Keep the agent grounded in these honest documents rather than improvisation.
