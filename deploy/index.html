@@ -121,12 +121,21 @@
   <script>
   (function(){
     if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var v=document.querySelector("#home .hero-vid"); if(!v) return;
-    v.muted=true;  /* the muted attribute does not reliably set the property; autoplay needs the property */
-    var play=function(){ v.muted=true; var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); };
-    v.addEventListener("pause",play); v.addEventListener("canplay",play); v.addEventListener("loadeddata",play);
-    document.addEventListener("visibilitychange",function(){ if(!document.hidden) play(); });
-    window.addEventListener("focus",play); play();
+    /* The page's reactive runtime re-renders the hero and can reset the video
+       (muted back to false, currentTime to 0). Self-heal on a throttled interval,
+       re-querying each time, and never bind a pause->play listener (that loops). */
+    function heal(){
+      var v=document.querySelector("#home .hero-vid");
+      if(!v) return;
+      if(!v.muted) v.muted=true;
+      if(v.paused){ var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); }
+    }
+    heal();
+    window.addEventListener("DOMContentLoaded",heal);
+    window.addEventListener("load",heal);
+    document.addEventListener("visibilitychange",function(){ if(!document.hidden) heal(); });
+    window.addEventListener("focus",heal);
+    var n=0, iv=setInterval(function(){ heal(); if(++n>40) clearInterval(iv); }, 500); /* heal ~20s past renders */
   })();
   </script>
 
