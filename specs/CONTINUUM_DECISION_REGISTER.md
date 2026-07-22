@@ -2,7 +2,7 @@
 
 Tracks the eight open decisions from Prompt 21 section 20, resolved one at a time per the brief's discipline. Where a resolution here conflicts with an earlier document, this register governs that decision once it is dated and ruled by Gary. See [[continuum-mvp-governance]] and specs/CONTINUUM_PROMPT_21.md.
 
-All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH Enterprise Integration Blueprint) adds three open decisions, D9 through D11, carried as integration and diligence dependencies; none blocks the pilot. Prompt 30 adds D12 (the July 23 pilot-minimum definition), ruled by Gary the same day and recorded in Prompt 31. Prompt 34 adds D13 (the SIGMA system name, ruled SIGMA-RH) and D14 (the CRTW acronym expansion, open).
+All eight ruled by Gary on 2026-07-20. Prompt 26 (the review of Craig's SIGMA-RH Enterprise Integration Blueprint) adds three open decisions, D9 through D11, carried as integration and diligence dependencies; none blocks the pilot. Prompt 30 adds D12 (the July 23 pilot-minimum definition), ruled by Gary the same day and recorded in Prompt 31. Prompt 34 adds D13 (the SIGMA system name, ruled SIGMA-RH) and D14 (the CRTW acronym expansion, ruled Connected Return-to-Work platform on 2026-07-21).
 
 ## Resolved
 
@@ -62,7 +62,7 @@ Added by the Prompt 34 SIGMA connection demonstration page on 2026-07-21, both t
 **Ruling: SIGMA-RH.** GardaWorld's product is SIGMA-RH (RH for the French Ressources Humaines), Craig's adopted integration blueprint uses SIGMA-RH throughout, and every spec on main uses SIGMA-RH. Prompt 34's demonstration spec wrote SIGMA-HR; that is the wrong name and would say the client's own system's name wrong in front of their executives. Any build of the demonstration page defaults its system-name constant to SIGMA-RH. Final confirmation with GardaWorld's own people is still worth taking before the room, but canon already sides with RH. Prompt 34a operationalizes this as a Settings toggle on the SIGMA portal, defaulting to SIGMA-RH and flipping the name across every screen in one action if GardaWorld confirms the other spelling.
 
 ### D14. CRTW acronym expansion
-**Open (Gary and the venture).** Two expansions are in play: Corporate Recovery, Training and Workforce Intelligence (Craig's PRD, the analytics layer, currently in canon and the plain-language standard) versus Connected Return-to-Work platform (Prompt 34's demonstration spec, argued as the better fit for a sales room). One expansion should be ruled platform-wide before it collides in a document a client reads. Flagged for the next Craig exchange.
+**Ruling: Connected Return-to-Work platform, ruled by Gary on 2026-07-21.** CRTW expands to Connected Return-to-Work platform venture-wide (the Prompt 34 demonstration expansion, the better fit for a sales room). The earlier Corporate Recovery, Training and Workforce Intelligence expansion from the CRTW Intelligence PRD is superseded; the analytics layer is now read as the platform's Connected Return-to-Work Intelligence, and the crtw_predictive flag name is unchanged. The plain-language standard is updated to this expansion.
 
 ## Counsel dependencies carried forward
 

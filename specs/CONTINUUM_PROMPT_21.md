@@ -12,6 +12,7 @@
 **Amended:** July 21, 2026, by Prompt 33 (platform-wide plain-language pass): establishes CONTINUUM_PLAIN_LANGUAGE_STANDARD.md as house content law (all user-facing copy at Grade 6 to 8, abbreviations expanded at first use, no software terminology on user surfaces), with the canon phrases (Health Canada and the four gates, the routing phrase) and every functional, medical, legal, and privacy meaning held intact, and the restriction display strings, Form 7 language, and pilot consent text clinician-and-counsel gated. See specs/CONTINUUM_PROMPT_33.md.
 **Amended:** July 21, 2026, by Prompt 34 (SIGMA connection demonstration page): decision register D13 (the SIGMA system name ruled SIGMA-RH, correcting the demonstration spec's SIGMA-HR) and D14 (the CRTW acronym expansion, open). See specs/CONTINUUM_PROMPT_34.md.
 **Amended:** July 21, 2026, by Prompt 34a (SIGMA portal and board-portal SIGMA section): builds deploy/sigma-portal.html (the SIGMA administrator seat, six sections, name toggle defaulting to SIGMA-RH per D13) and the wcb-portal SIGMA exchange section, plus the queued SITE-34a hub-card mission. See specs/CONTINUUM_PROMPT_34a.md.
+**Amended:** July 21, 2026, by the D14 ruling: CRTW expands to Connected Return-to-Work platform venture-wide (superseding Corporate Recovery, Training and Workforce Intelligence); the plain-language standard is updated to match. See specs/CONTINUUM_DECISION_REGISTER.md D14.
 
 ## 1. Purpose, category, and the operating law
 

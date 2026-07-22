@@ -8,7 +8,7 @@ All user-facing copy reads at Grade 6 to 8. The worker app is the strictest surf
 
 ## 2. Abbreviations expand at first use
 
-Every abbreviation is written out the first time it appears on a surface, with the short form in parentheses, and the short form may be used after that on the same surface. Examples: Return to Work (RTW), then RTW; business to business (B2B); text message (SMS); Corporate Recovery, Training and Workforce Intelligence (CRTW). A bare abbreviation with no expansion anywhere on the surface is a violation.
+Every abbreviation is written out the first time it appears on a surface, with the short form in parentheses, and the short form may be used after that on the same surface. Examples: Return to Work (RTW), then RTW; business to business (B2B); text message (SMS); Connected Return-to-Work (CRTW), per decision D14. A bare abbreviation with no expansion anywhere on the surface is a violation.
 
 ## 3. No software terminology on user surfaces
 
