@@ -221,3 +221,30 @@ vocabulary is allowed off the Nexus surface.
   Heracles hub suite extended to seven cards (39 checks green); Argus register scan
   clean, no live-integration claim; no human gate.
 - Lead: hub redesign lane (Apollo design, Heracles suite, Argus patrol)
+
+## Prompt 12j mission (from the chat stream)
+
+### SITE-12j: worker sign-up and onboarding with real accounts
+- Status: BLOCKED (Phase 2 backend, waiting on the human counsel gate for consent
+  copy; sits behind the D12 pilot-minimum ruling and the D5/D6 counsel
+  dependencies). Recommended by August 1.
+- Scope: real accounts on the deployed site, the backend twin of the artifact
+  wizard shipped in Prompt 12j (deploy/worker-dashboard.html).
+- Auth: Supabase Auth with email magic links (no passwords for a workforce that
+  includes people who will never keep one), plus a coordinator invitation path: the
+  coordinator creates the case, the worker receives a secure invitation link that
+  binds their new account to it.
+- Onboarding: mirrors the artifact wizard exactly (welcome, consent, basics, first
+  check-in) with the consent step rendering counsel's approved text, version-stamped
+  and stored with a timestamp on acceptance. The human gate applies to that copy and
+  it does not ship without counsel sign-off.
+- Data model: workers see only their own rows under row-level security scoped to
+  their authenticated identity; the employer-facing projection is produced server
+  side under the standing serialization test; no clinical field is ever selectable by
+  an employer role, matching the deploy/bridge.js functional allowlist.
+- Leads by nature of work: Athena owns the schema and the RLS floor, Calliope owns
+  every word at grade level, Heracles proves the walls with authenticated-role tests
+  including a worker who attempts another worker's row, Hermes deploys dark behind a
+  flag until counsel clears the consent copy.
+- Human gate: Gary and counsel on the consent copy and the retention or consent
+  wording (D5, D6) before any live data.

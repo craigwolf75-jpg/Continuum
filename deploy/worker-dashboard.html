@@ -117,6 +117,32 @@ textarea:focus{box-shadow:0 0 0 2px var(--gold)}
 .prail .pr-ctl .next{background:var(--gold);color:var(--navy)}
 .prov{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:5px;background:#eef1f6;color:#5E6B7C;border:1px solid var(--line);vertical-align:middle;white-space:nowrap}
 .prov.clin{background:#e6eeff;color:#3b475a}
+.wizard{position:fixed;inset:0;z-index:95;background:rgba(11,28,48,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:20px}
+.wizard.on{display:flex}
+.wizcard{background:var(--card);border-radius:16px;box-shadow:0 24px 60px rgba(14,27,44,.4);width:min(520px,100%);max-height:92vh;overflow:auto;padding:24px}
+.wiztop{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.wizstep{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--teal)}
+.wizx{background:none;border:none;color:var(--soft);font-size:22px;cursor:pointer;line-height:1}
+.wizh{font-size:22px;color:var(--navy);margin-bottom:10px}
+.wizbody p{font-size:13.5px;color:var(--muted);margin-bottom:12px}
+.wizli{list-style:none;margin:0 0 4px;padding:0}
+.wizli li{position:relative;font-size:13px;color:var(--ink);padding:7px 0 7px 24px}
+.wizli li:before{content:"";position:absolute;left:4px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.wizlab{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 6px}
+.wizin{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:13.5px;outline:none}
+.wizin:focus{box-shadow:0 0 0 2px var(--gold)}
+.wizard .crow{display:flex;gap:10px;align-items:flex-start;background:var(--low);border-radius:10px;padding:12px;margin-top:12px;cursor:pointer;font-size:13px;color:var(--ink)}
+.wizard .crow.on{background:var(--tealbg)}
+.wizard .cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;margin-top:1px}
+.wizard .crow.on .cb{background:var(--teal);border-color:var(--teal)}
+.wizfoot{display:flex;gap:10px;justify-content:space-between;margin-top:18px}
+.wizfoot .btn.ghost[disabled]{opacity:.4;cursor:default}
+.wizcancel{font-size:11px;color:var(--soft);text-align:center;margin-top:12px}
+.daymodal{position:fixed;inset:0;z-index:96;background:rgba(11,28,48,.5);display:none;align-items:center;justify-content:center;padding:20px}
+.daymodal.on{display:flex}
+.dmcard{background:var(--card);border-radius:16px;box-shadow:0 24px 60px rgba(14,27,44,.4);width:min(360px,100%);padding:22px}
+.dmcard .lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--muted)}
+.dmcard .val{font-size:28px;font-weight:700}
 section.view{display:none}section.view.on{display:block}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(max-width:1080px){.grid2{grid-template-columns:1fr !important}.tiles{grid-template-columns:1fr}}
@@ -135,6 +161,8 @@ section.view{display:none}section.view.on{display:block}
 <main><div class="wrap" id="main"></div></main>
 <div class="toast" id="toast"></div>
 <div class="prail" id="prail"></div>
+<div class="wizard" id="wizard"></div>
+<div class="daymodal" id="daymodal"></div>
 <script src="/bridge.js"></script>
 <script>
 "use strict";
@@ -144,10 +172,12 @@ var NAV=[["dashboard","dashboard","Dashboard"],["trend","insights","Recovery Tre
 var FLAGS=["numb","tingling","sharp","worse at night","cannot sleep"];
 var PROG=21;
 var S;
+var wiz=null; /* transient sign-up wizard state, never persisted */
 function fresh(){return {
+ pilot:false, name:"Marcus Bedard", trade:"Scaffolder", injury:"Right shoulder strain", restr:"No lifting above shoulder height",
  consented:true, videoConsent:false, section:"dashboard", day:9, status:"light_duty", escalated:false, checkedInToday:false,
  pain:[7,7,6,6,5,5,4], mob:[3,3,4,4,5,6,6],
- form:{pain:4,mob:6,fatigue:3,confidence:7,note:""}, ackDay:null, ackTs:null,
+ form:{pain:4,mob:6,fatigue:3,confidence:7,note:""}, ackDay:null, ackTs:null, consentTs:null,
  logs:[
   {t:"Today, 9:15 AM",title:"Morning mobility session",x:"Fifteen minutes of guided shoulder movement.",tag:"stable"},
   {t:"Yesterday, 4:30 PM",title:"Physical therapy check-in",x:"Full range achieved without sharp pain.",tag:"optimal"},
@@ -161,24 +191,81 @@ function fresh(){return {
  msgs:[{who:"them",x:"Morning Marcus. Your new duty list is ready when you are.",t:"K. Morgan, 8:02 AM"}],
  unread:1, present:false
 };}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;if(S.form){if(S.form.fatigue==null)S.form.fatigue=3;if(S.form.confidence==null)S.form.confidence=7;}if(S.ackDay===undefined)S.ackDay=null;if(S.ackTs===undefined)S.ackTs=null;if(!S.activities)S.activities=fresh().activities;return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;if(S.form){if(S.form.fatigue==null)S.form.fatigue=3;if(S.form.confidence==null)S.form.confidence=7;}if(S.ackDay===undefined)S.ackDay=null;if(S.ackTs===undefined)S.ackTs=null;if(!S.activities)S.activities=fresh().activities;
+if(S.pilot===undefined)S.pilot=false;if(S.name===undefined)S.name="Marcus Bedard";if(S.trade===undefined)S.trade="Scaffolder";if(S.injury===undefined)S.injury="Right shoulder strain";if(S.restr===undefined)S.restr="No lifting above shoulder height";if(S.consentTs===undefined)S.consentTs=null;return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}writeBridge();render();}
-function resetAll(){S=fresh();S.checkedInToday=false;toast("Demo <b>reset</b>");save();}
+function resetAll(){S=fresh();S.checkedInToday=false;wiz=null;closeDay();toast("Demo <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function toast(h){var el=document.getElementById("toast");el.innerHTML=h;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on");},2600);}
 function burst(x,y){if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;for(var i=0;i<14;i++){var p=document.createElement("div");p.className="burst";p.style.left=x+"px";p.style.top=y+"px";document.body.appendChild(p);
  (function(p,a,d){var t0=null;function step(ts){if(!t0)t0=ts;var k=(ts-t0)/700;if(k>=1){p.remove();return;}
  p.style.transform="translate("+(Math.cos(a)*d*k)+"px,"+(Math.sin(a)*d*k+30*k*k)+"px) scale("+(1-k)+")";p.style.opacity=1-k;requestAnimationFrame(step);}requestAnimationFrame(step);})(p,Math.random()*6.283,60+Math.random()*70);}}
-/* bridge write (13b schema): functional fields only, projection at the write side */
+/* bridge write (13b schema): functional fields only, projection at the write side.
+   The active worker crosses (demonstration = Marcus canon, pilot = the signed-up
+   worker); clinical values never do, because bridge.js drops anything off the
+   functional allowlist. */
 function writeBridge(){
- ContinuumBridge.writeBridgeShared({source:"worker-dashboard",name:"Marcus Bedard",trade:"Scaffolder",
-  injury:"Right shoulder strain",restr:"No lifting above shoulder height",
+ ContinuumBridge.writeBridgeShared({source:"worker-dashboard",name:S.name,trade:S.trade,
+  injury:S.injury,restr:S.restr,
   day:S.day,prognosisDays:PROG,status:S.status,escalated:!!S.escalated,
   checkedInToday:!!S.checkedInToday,
   dutiesDone:S.duties.filter(function(d){return d.status==="completed";}).length,
   dutiesTotal:S.duties.length,consented:!!S.consented,
   dutyAckDay:(S.ackDay==null?null:S.ackDay),dutyAckTs:(S.ackTs==null?null:S.ackTs)});
 }
+/* PILOT-CORE-START
+   Pure, DOM-free mechanics shared by the demonstration and the pilot sign-up.
+   These are extracted and executed headlessly by worker-signup.test.mjs, so they
+   must reference nothing outside their own arguments. */
+function windowPush(arr,v){
+ var a=arr.slice();
+ if(a.length<7){a.push(v);}else{a=a.slice(1).concat([v]);}
+ return a;
+}
+function applyCheckin(st,f,flags){
+ var noteL=(f.note||"").toLowerCase();
+ var flagged=f.pain>=8;
+ for(var i=0;i<flags.length;i++){if(noteL.indexOf(flags[i])>=0)flagged=true;}
+ st.pain=windowPush(st.pain,f.pain);
+ st.mob=windowPush(st.mob,f.mob);
+ st.checkedInToday=true;
+ if(st.pilot)st.day=st.day+1; /* first save advances day zero to day one, then each lived day */
+ var when=st.pilot?("Day "+st.day):"Today";
+ if(flagged){st.escalated=true;
+  st.logs.unshift({t:when,title:"Check-in shared with your clinician",x:"Thanks for being honest about a hard day. Your care team has been notified and will look the same day.",tag:"notified"});
+ }else{st.escalated=false;
+  st.logs.unshift({t:when,title:"Standard check-in",x:(f.note?f.note:"Pain "+f.pain+", mobility "+f.mob+", fatigue "+f.fatigue+", confidence "+f.confidence+"."),tag:f.mob>=7?"optimal":"stable"});
+ }
+ st.form={pain:f.pain,mob:f.mob,fatigue:f.fatigue,confidence:f.confidence,note:""};
+ return flagged;
+}
+function chartModel(st){
+ var out=[],i;
+ if(st.pilot){
+  for(i=0;i<7;i++){var ex=i<st.pain.length;
+   out.push({label:ex?("D"+(i+1)):"",pain:ex?st.pain[i]:null,mob:ex?st.mob[i]:null,exists:ex});}
+ }else{
+  var days=["MON","TUE","WED","THU","FRI","SAT","SUN"];
+  for(i=0;i<7;i++){out.push({label:days[i],pain:st.pain[i],mob:st.mob[i],exists:true});}
+ }
+ return out;
+}
+function dayExists(st,i){return i>=0 && i<st.pain.length;}
+function makePilot(id,flags){
+ var st={pilot:true, consented:true, videoConsent:false, section:"dashboard", day:0, status:"reported",
+  escalated:false, checkedInToday:false, pain:[], mob:[],
+  name:id.name, trade:id.trade, injury:id.injury, restr:id.restr||"",
+  form:{pain:id.form.pain,mob:id.form.mob,fatigue:id.form.fatigue,confidence:id.form.confidence,note:id.form.note||""},
+  ackDay:null, ackTs:null, consentTs:id.ts,
+  logs:[],
+  duties:[{id:1,task:"Tool crib, inventory management",hours:4,status:"assigned"}],
+  activities:[{id:1,name:"Gentle range of motion, 5 min",status:"pending"}],
+  msgs:[{who:"them",x:"Welcome to Continuum, "+id.name+". I am your coordinator here. Thirty seconds a day is all this asks.",t:"K. Morgan, just now"}],
+  unread:1, present:false};
+ applyCheckin(st,st.form,flags); /* the wizard step-four check-in: day zero becomes day one, first entry on the timeline */
+ return st;
+}
+/* PILOT-CORE-END */
 function pct(){return Math.min(100,Math.round(S.day/PROG*100));}
 function curPain(){return S.pain[S.pain.length-1];}
 function curMob(){return S.mob[S.mob.length-1];}
@@ -194,14 +281,29 @@ function ringSVG(p){
  '<circle cx="52" cy="52" r="'+r+'" fill="none" stroke="var(--gold)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-p/100))+'" style="transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)"/></svg>';}
 function chipFor(tag){return tag==="stable"?'<span class="chip stable">Stable</span>':tag==="optimal"?'<span class="chip optimal">Optimal</span>':'<span class="chip notified">Clinician notified</span>';}
 function chart(){
- var days=["MON","TUE","WED","THU","FRI","SAT","SUN"];
+ var m=chartModel(S);
  var h='<div class="chart"><div class="yax"><span>10</span><span>8</span><span>6</span><span>4</span><span>2</span><span>0</span></div>';
- for(var i=0;i<7;i++){
-  h+='<div class="day"><div class="pair">'+
-  '<div class="bar pain" style="height:'+(S.pain[i]*10)+'%" title="Pain '+S.pain[i]+'"></div>'+
-  '<div class="bar mob" style="height:'+(S.mob[i]*10)+'%" title="Mobility '+S.mob[i]+'"></div>'+
-  '</div><span class="dl">'+days[i]+'</span></div>';}
+ for(var i=0;i<7;i++){var d=m[i];
+  if(d.exists){
+   h+='<div class="day" style="cursor:pointer" onclick="openDay('+i+')" title="Open day detail"><div class="pair">'+
+   '<div class="bar pain" style="height:'+(d.pain*10)+'%" title="Pain '+d.pain+'"></div>'+
+   '<div class="bar mob" style="height:'+(d.mob*10)+'%" title="Mobility '+d.mob+'"></div>'+
+   '</div><span class="dl">'+d.label+'</span></div>';
+  }else{
+   h+='<div class="day"><div class="pair"><div class="bar" style="height:6%;background:var(--line);opacity:.5"></div></div><span class="dl" style="opacity:.4">&middot;</span></div>';
+  }}
  return h+'</div>';}
+function openDay(i){
+ if(!dayExists(S,i))return; /* refuses indexes that do not exist (unlived pilot days) */
+ var el=document.getElementById("daymodal");if(!el)return;
+ var lbl=S.pilot?("Day "+(i+1)):["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"][i];
+ el.className="daymodal on";
+ el.innerHTML='<div class="dmcard"><div class="wiztop"><span class="wizstep">'+esc(lbl)+'</span><button class="wizx" onclick="closeDay()" aria-label="Close">&times;</button></div>'+
+  '<div style="display:flex;gap:26px;margin-top:8px">'+
+  '<div><div class="lbl">Pain</div><div class="val" style="color:var(--navy)">'+S.pain[i]+'</div></div>'+
+  '<div><div class="lbl">Mobility</div><div class="val" style="color:var(--teal)">'+S.mob[i]+'</div></div>'+
+  '</div><p class="sub" style="margin-top:12px;font-size:11.5px">These numbers stay with your care team. Your employer never sees them.</p></div>';}
+function closeDay(){var el=document.getElementById("daymodal");if(el){el.className="daymodal";el.innerHTML="";}}
 /* ---------- views ---------- */
 function renderDashboard(){
  var h='<header style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px"><div>'+
@@ -251,19 +353,10 @@ function renderTrend(){
  return h;}
 function saveLog(ev){
  if(!S.consented){toast("Check-ins are <b>paused</b> until you turn them back on in Settings.");return;}
- var f=S.form, noteL=(f.note||"").toLowerCase();
- var flagged=f.pain>=8||FLAGS.some(function(k){return noteL.indexOf(k)>=0;});
- S.pain=S.pain.slice(1).concat([f.pain]);
- S.mob=S.mob.slice(1).concat([f.mob]);
- S.checkedInToday=true;
- if(flagged){S.escalated=true;
-  S.logs.unshift({t:"Today",title:"Check-in shared with your clinician",x:"Thanks for being honest about a hard day. Your care team has been notified and will look the same day.",tag:"notified"});
-  toast("Saved. Your <b>clinician was notified</b>. That is the system working.");}
- else{S.escalated=false;
-  S.logs.unshift({t:"Today",title:"Standard check-in",x:(f.note?f.note:"Pain "+f.pain+", mobility "+f.mob+", fatigue "+f.fatigue+", confidence "+f.confidence+"."),tag:f.mob>=7?"optimal":"stable"});
-  toast("Log <b>saved</b>. Small steps count.");
+ var flagged=applyCheckin(S,S.form,FLAGS); /* same escalation and window path in demonstration and pilot */
+ if(flagged){toast("Saved. Your <b>clinician was notified</b>. That is the system working.");}
+ else{toast("Log <b>saved</b>. Small steps count.");
   if(ev)burst(ev.clientX||innerWidth/2,ev.clientY||innerHeight/2);}
- S.form={pain:f.pain,mob:f.mob,fatigue:f.fatigue,confidence:f.confidence,note:""};
  save();}
 function renderDuties(){
  var acked=S.ackDay===S.day;
@@ -311,6 +404,13 @@ function renderSettings(){
  '<div class="adminrow"><div><b>Withdraw completely</b><div class="sub" style="font-size:11.5px">Tell your coordinator any time. Your case continues exactly the same without the app.</div></div><span class="pillst gold">any time</span></div>'+
  '<div class="adminrow"><div><b>What is held about you</b><div class="sub" style="font-size:11.5px">Ask your coordinator and receive a plain-language export.</div></div><span class="pillst ok">your right</span></div>'+
  '</div>';
+ h+='<div class="card" style="padding:20px;max-width:640px;margin-top:16px">'+
+  (S.pilot
+   ? '<div class="adminrow"><div><b>You are in the pilot</b><div class="sub" style="font-size:11.5px">This device holds '+esc(S.name)+'\'s record, created on day zero. You can return to the guided demonstration any time.</div></div>'+
+     '<button class="btn ghost" style="padding:8px 14px;font-size:12px" onclick="returnToDemo()">Return to the demonstration</button></div>'
+   : '<div class="adminrow"><div><b>Sign up as a new worker (pilot)</b><div class="sub" style="font-size:11.5px">Walk the real first run: welcome, consent in plain words, your basics, and your first check-in. It stays on this device.</div></div>'+
+     '<button class="btn" style="padding:8px 14px;font-size:12px" onclick="startSignup()">Sign up</button></div>')+
+  '</div>';
  return h;}
 function toggleConsent(){
  S.consented=!S.consented;
@@ -348,11 +448,63 @@ function updateRail(){
  el.innerHTML='<div class="pr-top"><span class="pr-beat">Beat '+(n+1)+' of '+BEATS.length+'</span><button class="pr-x" onclick="exitPresent()" aria-label="Exit present mode">&times;</button></div>'+
   '<div class="pr-say">'+esc(BEATS[n].say)+'</div>'+
   '<div class="pr-ctl"><button class="back" onclick="presentBack()"'+(n===0?" disabled":"")+'>Back</button><button class="next" onclick="'+(last?"startPresent()":"presentNext()")+'">'+(last?"Replay":"Next")+'</button></div>';}
+/* ---------- sign-up and onboarding wizard (Prompt 12j) ---------- */
+function startSignup(){wiz={step:0,checked:false,name:"",trade:"",injury:"",form:{pain:4,mob:6,fatigue:3,confidence:7,note:""}};window.scrollTo(0,0);renderWizard();}
+function cancelSignup(){wiz=null;renderWizard();} /* returns to the demonstration unharmed; S is untouched */
+function wizToggle(){if(wiz){wiz.checked=!wiz.checked;renderWizard();}}
+function wizBack(){if(wiz&&wiz.step>0){wiz.step--;renderWizard();}}
+function wizNext(){
+ if(!wiz)return;
+ if(wiz.step===1&&!wiz.checked){toast("Taking part is your choice. Tick the box only if you want to.");return;}
+ if(wiz.step===2&&!wiz.name.trim()){toast("Your name lets your coordinator reach you. It is the only thing we need.");return;}
+ if(wiz.step<3){wiz.step++;renderWizard();}}
+function finishSignup(ev){
+ if(!wiz)return;
+ var id={name:wiz.name.trim(),trade:wiz.trade.trim(),injury:wiz.injury.trim(),restr:"",form:wiz.form,ts:Date.now()};
+ S=makePilot(id,FLAGS);
+ wiz=null;
+ toast("This device now holds your <b>record</b>.");
+ save();
+ renderWizard();
+ if(ev)burst(innerWidth/2,140);}
+function returnToDemo(){S=fresh();S.checkedInToday=false;wiz=null;closeDay();toast("Back to the <b>demonstration</b>.");save();}
+function wizSlider(key,label,val){return '<div class="slider-row"><label>'+label+' <output>'+val+'</output></label><input type="range" min="0" max="10" value="'+val+'" oninput="wiz.form.'+key+'=+this.value;this.previousElementSibling.querySelector(\'output\').textContent=this.value"></div>';}
+function renderWizard(){
+ var el=document.getElementById("wizard");if(!el)return;
+ if(!wiz){el.className="wizard";el.innerHTML="";return;}
+ var s=wiz.step, title="", body="";
+ if(s===0){title="Welcome to Continuum";
+  body='<p>This app is yours. About thirty seconds a day.</p>'+
+   '<ul class="wizli"><li>Your care team sees your check-ins.</li><li>Your employer never sees your pain, your movement, or your words.</li><li>They see only whether you are on light duty or full duty.</li></ul>';}
+ else if(s===1){title="Taking part is your choice";
+  body='<p>This is voluntary. You can pause it any day, or withdraw completely, and your recovery plan continues exactly the same by phone.</p>'+
+   '<ul class="wizli"><li>Your employer sees duty status only, never clinical detail.</li><li>Quiet hours are respected. No check-in nudges late at night.</li><li>You can turn it off in Settings whenever you like.</li></ul>'+
+   '<div class="crow '+(wiz.checked?"on":"")+'" onclick="wizToggle()"><span class="cb">'+(wiz.checked?"&#10003;":"")+'</span><div>I understand, and I choose to take part.</div></div>';}
+ else if(s===2){title="The basics";
+  body='<p>In your own words. Only your name is required.</p>'+
+   '<label class="wizlab">Your name</label><input class="wizin" type="text" value="'+esc(wiz.name)+'" oninput="wiz.name=this.value" placeholder="First and last">'+
+   '<label class="wizlab">Your trade</label><input class="wizin" type="text" value="'+esc(wiz.trade)+'" oninput="wiz.trade=this.value" placeholder="For example, scaffolder">'+
+   '<label class="wizlab">What happened, in your words</label><input class="wizin" type="text" value="'+esc(wiz.injury)+'" oninput="wiz.injury=this.value" placeholder="For example, right shoulder strain">';}
+ else{title="Your first check-in";var f=wiz.form;
+  body='<p>The best way to learn this is to do it once. Short and honest beats long and perfect.</p>'+
+   wizSlider("pain","Pain right now",f.pain)+
+   wizSlider("mob","How well you can move",f.mob)+
+   wizSlider("fatigue","Fatigue right now",f.fatigue)+
+   wizSlider("confidence","Confidence using it",f.confidence)+
+   '<label class="wizlab">Anything to add (only your care team sees this)</label><textarea oninput="wiz.form.note=this.value" placeholder="A few words is plenty">'+esc(f.note)+'</textarea>';}
+ var last=(s===3);
+ el.className="wizard on";
+ el.innerHTML='<div class="wizcard"><div class="wiztop"><span class="wizstep">Step '+(s+1)+' of 4</span><button class="wizx" onclick="cancelSignup()" aria-label="Cancel and return to the demonstration">&times;</button></div>'+
+  '<h3 class="wizh">'+esc(title)+'</h3><div class="wizbody">'+body+'</div>'+
+  '<div class="wizfoot"><button class="btn ghost" onclick="wizBack()"'+(s===0?" disabled":"")+'>Back</button>'+
+  '<button class="btn" onclick="'+(last?"finishSignup(event)":"wizNext()")+'">'+(last?"Finish and create my record":"Next")+'</button></div>'+
+  '<p class="wizcancel">Cancel any time. The demonstration stays exactly as it was.</p></div>';}
 function render(){
  renderNav();
  var views={dashboard:renderDashboard,trend:renderTrend,duties:renderDuties,chat:renderChat,settings:renderSettings};
  document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
  updateRail();
+ renderWizard();
 }
 load();writeBridge();render();
 </script>
