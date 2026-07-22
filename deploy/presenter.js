@@ -4,16 +4,24 @@
    The module owns its styles and elements and touches nothing else. Off is the
    default; the Present control lives in each portal's page header (the module no
    longer paints a corner pill); print hides the whole kit.
-   The voice panel mounts the official ElevenLabs Conversational AI widget once an
-   agent id is pasted; the id is shared across both portals through one storage
-   key. No em-dashes anywhere. */
+   The voice panel auto-connects a dedicated ElevenLabs Conversational AI agent
+   (baked in as DEFAULT_AGENT, no manual sign in); an explicit setAgent override is
+   still honored and shared across both portals through one storage key. No
+   em-dashes anywhere. */
 (function (g) {
   var AGENT_KEY = "continuum_presenter_agent_v1"; // shared across both portals
+  // Dedicated Continuum presenter assistant. Baked in so the voice assistant
+  // auto-connects with no manual sign in; an ElevenLabs convai agent id is a
+  // public embed identifier, meant to live client side in the widget attribute.
+  var DEFAULT_AGENT = "agent_8301ky420pc9f4e8ekswyekptnf2";
   var SCRIPT_SRC = "https://unpkg.com/@elevenlabs/convai-widget-embed";
   var cfg = null, on = false, mounted = false;
 
   function getAgent() { try { return localStorage.getItem(AGENT_KEY) || ""; } catch (e) { return ""; } }
   function setAgent(v) { try { if (v) localStorage.setItem(AGENT_KEY, v); else localStorage.removeItem(AGENT_KEY); } catch (e) {} }
+  // The agent actually mounted: an explicit override if one was ever set, else the
+  // dedicated default. Always non-empty, so the assistant never asks to sign in.
+  function activeAgent() { return getAgent() || DEFAULT_AGENT; }
 
   // Pure: which explainer card to show for a section id.
   function explainerFor(sections, id) {
@@ -54,21 +62,11 @@
   function voice() {
     var v = document.getElementById("cp-voice");
     if (!v) { v = document.createElement("div"); v.id = "cp-voice"; document.body.appendChild(v); }
-    var id = getAgent();
-    if (id) {
-      v.innerHTML = '<div class="cp-vh">Voice assistant <span class="cp-active">active</span></div>' +
-        '<div class="cp-vsub">Tap the microphone to ask a question out loud. Remembered on both portals.</div>' +
-        '<button type="button" id="cp-clear">Clear agent</button>';
-      document.getElementById("cp-clear").onclick = function () { setAgent(""); unmountWidget(); voice(); };
-      mountWidget(id);
-    } else {
-      v.innerHTML = '<div class="cp-vh">Voice assistant</div>' +
-        '<div class="cp-vsub">Paste the ElevenLabs agent ID to activate the live question and answer. It is remembered on both portals.</div>' +
-        '<input type="text" id="cp-in" placeholder="agent id" autocomplete="off">' +
-        '<button type="button" id="cp-set">Connect</button>';
-      document.getElementById("cp-set").onclick = function () { var val = (document.getElementById("cp-in").value || "").trim(); if (val) { setAgent(val); voice(); } };
-      unmountWidget();
-    }
+    // The dedicated assistant auto-connects. No sign in step, so the panel never
+    // blocks the conversation; it mounts the widget straight away.
+    v.innerHTML = '<div class="cp-vh">Voice assistant <span class="cp-active">active</span></div>' +
+      '<div class="cp-vsub">Tap the microphone to ask a question out loud. This portal has its own dedicated assistant.</div>';
+    mountWidget(activeAgent());
   }
 
   function card() {
@@ -93,7 +91,7 @@
 
   g.ContinuumPresenter = {
     attach: attach, refresh: refresh, toggle: toggle,
-    AGENT_KEY: AGENT_KEY, getAgent: getAgent, setAgent: setAgent, explainerFor: explainerFor,
+    AGENT_KEY: AGENT_KEY, DEFAULT_AGENT: DEFAULT_AGENT, getAgent: getAgent, setAgent: setAgent, activeAgent: activeAgent, explainerFor: explainerFor,
     isOn: function () { return on; }, isMounted: function () { return mounted; }
   };
 })(typeof window !== "undefined" ? window : this);

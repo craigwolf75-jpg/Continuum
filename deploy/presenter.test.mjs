@@ -28,6 +28,13 @@ CP.setAgent("agent_abc123");
 ok("agent id stores", CP.getAgent() === "agent_abc123" && store[CP.AGENT_KEY] === "agent_abc123");
 CP.setAgent("");
 ok("agent id clears", CP.getAgent() === "" && !(CP.AGENT_KEY in store));
+// ---- dedicated agent auto-connects; no manual sign in ----
+ok("a dedicated default agent is baked in", CP.DEFAULT_AGENT === "agent_8301ky420pc9f4e8ekswyekptnf2");
+ok("effective agent falls back to the dedicated default when none is stored", CP.activeAgent() === "agent_8301ky420pc9f4e8ekswyekptnf2");
+CP.setAgent("agent_override99");
+ok("an explicit override still wins over the default", CP.activeAgent() === "agent_override99");
+CP.setAgent("");
+ok("effective agent returns to the default after an override clears", CP.activeAgent() === "agent_8301ky420pc9f4e8ekswyekptnf2");
 ok("explainerFor returns the section card", CP.explainerFor({ a: { title: "T", body: "B" } }, "a").title === "T");
 ok("explainerFor falls back for an unknown section", CP.explainerFor({}, "none").title === "This section");
 
@@ -36,8 +43,9 @@ ok("mounts the official convai element", js.includes('createElement("elevenlabs-
 ok("sets the agent-id attribute", js.includes('setAttribute("agent-id"'));
 ok("loads the official ElevenLabs widget script", js.includes("@elevenlabs/convai-widget-embed"));
 ok("widget mounts exactly once (id guard)", js.includes('getElementById("cp-convai")') && js.includes("if (!w)"));
-ok("configured state reports active", js.includes('cp-active">active'));
-ok("unconfigured state instructs instead of breaking", js.includes("Paste the ElevenLabs agent ID"));
+ok("voice panel reports active and never asks to sign in", js.includes('cp-active">active') && !js.includes("Paste the ElevenLabs agent ID"));
+ok("the dedicated agent id is embedded for auto-connect", js.includes("agent_8301ky420pc9f4e8ekswyekptnf2"));
+ok("the panel mounts the agent with no Connect step", js.includes("mountWidget(activeAgent())") && !js.includes('id="cp-set"'));
 ok("full teardown when toggled off", js.includes("function teardown()") && js.includes("unmountWidget"));
 ok("print hides the whole kit", js.includes("@media print") && js.includes("cp-convai"));
 ok("presenter.js dash clean", !/[–—]/.test(js));
