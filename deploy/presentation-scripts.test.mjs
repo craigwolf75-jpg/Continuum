@@ -46,7 +46,7 @@ ok("scripts dash clean", !/[–—]/.test(s));
 
 // the agent kit knowledge pack lists the scripts first
 ok("agent kit lists the scripts file first", /1\. Presentation scripts \(CONTINUUM_PRESENTATION_SCRIPTS\.md\)/.test(kit));
-ok("agent kit knowledge pack updated to six documents", kit.includes("six documents to upload"));
+ok("agent kit knowledge pack updated to seven documents", kit.includes("seven documents to upload"));
 
 console.log("\npresentation-scripts suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
