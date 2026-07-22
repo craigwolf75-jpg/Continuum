@@ -199,3 +199,18 @@ vocabulary is allowed off the Nexus surface.
   no red or alarm treatment. The only bridge issue is the 3-writer drift, tracked
   as S-BRIDGE-WRITERS, not an escalation leak.
 - Lead: argus
+
+## Prompt 34a mission (from the chat stream)
+
+### SITE-34a: SIGMA Exchange hub card
+- Add a seventh card to the /hub role select: SIGMA Exchange. Same card component
+  and interaction states as the six existing roles (blue at rest, gold on
+  activation, per the Prompt 33 redesign), icon swap_horiz, subtitle The
+  system-of-record connection, linking to the SIGMA portal artifact
+  (/sigma-portal.html). The card copy follows the plain-language standard and
+  never claims a live integration: the phrase is proposed workflow.
+- Argus patrols the new card under the register scan; Heracles extends the hub
+  suite to seven cards; the human gate does not apply (no consent, legal,
+  pricing, or schema content).
+- Status: QUEUED
+- Lead: hub redesign lane (Apollo design, Heracles suite, Argus patrol)

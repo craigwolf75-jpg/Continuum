@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: SIGMA administrator</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+<style>
+:root{--navy:#16273D;--gold:#E0B658;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;--card:#FFFFFF;
+--bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--notice:#8a5a00;--noticebg:#fff4d6;--noticeline:#e7c975;--ok:#1f6f52;--okbg:#e2f3ea;--okline:#8fceb0;--protect:#8a3a3a;--protectbg:#f6e5e5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
+.msym{font-family:"Material Symbols Outlined";font-weight:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
+header.top{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.wordmark{display:flex;align-items:center;gap:10px}
+.wm-c{width:32px;height:32px;border-radius:8px;background:var(--navy);color:var(--gold);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:16px}
+.wm-t{font-weight:700;font-size:16px}
+.flag{background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:999px;font-size:11.5px;font-weight:700;padding:6px 13px}
+aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);padding-top:84px;display:flex;flex-direction:column}
+.side .brand{padding:0 24px 18px}
+.side .brand b{color:#fff;font-size:17px;display:block}
+.side .brand span{color:#78859a;font-size:11px}
+.side nav{flex:1}
+.side button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:13px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
+.side button:hover{color:#fff;background:#3b475a}
+.side button.on{color:#fff;background:#3b475a;border-left-color:var(--gold)}
+.side .foot{border-top:1px solid #3b475a;padding:16px 24px;color:#9fb0c6;font-size:12px}
+.side .foot a{color:var(--gold);text-decoration:none}
+main{margin-left:240px;padding:92px 32px 60px;min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto}
+.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:700;color:var(--muted);text-transform:uppercase}
+h1{font-size:27px;line-height:34px}
+.sub{color:var(--muted);font-size:14px;margin-top:2px;margin-bottom:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px;box-shadow:0 1px 4px rgba(11,28,48,.05)}
+.card h3{font-size:15px;margin-bottom:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 16px}
+.stat .n{font-size:16px;font-weight:700;color:var(--navy)}
+.stat .l{font-size:11.5px;color:var(--muted);margin-top:3px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.row:last-child{border-bottom:none}
+.row .k{color:var(--muted)}.row .v{font-weight:700}
+.chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px}
+.chip.prop{background:var(--noticebg);color:var(--notice)}
+.chip.ok{background:var(--okbg);color:var(--ok)}
+.chip.pend{background:#eef1f6;color:var(--soft)}
+.banner{background:var(--noticebg);border:1px solid var(--noticeline);border-radius:10px;padding:12px 14px;color:var(--notice);font-size:12.5px;font-weight:600;margin-top:12px}
+.method{background:var(--bright);border:1px solid var(--line);border-radius:9px;font-size:12px;padding:8px 11px;margin-top:8px}
+.col h4{font-size:13px;margin-bottom:6px}
+.privcol{border-radius:11px;padding:14px 15px}
+.privcol.allow{background:var(--okbg);border:1px solid var(--okline)}
+.privcol.protect{background:var(--protectbg);border:1px solid #d9b3b3}
+.privcol .t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.privcol.allow .t{color:var(--ok)}.privcol.protect .t{color:var(--protect)}
+.fld{font-size:12.5px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.fld:last-child{border-bottom:none}
+.map{display:grid;grid-template-columns:1fr 24px 1fr;gap:8px;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.map:last-child{border-bottom:none}
+.map .ar{color:var(--gold);text-align:center;font-weight:700}
+.btn{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:9px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.on{background:var(--gold);color:var(--navy)}
+.disc{margin-top:14px;background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:11px;padding:12px 14px;font-size:12px;line-height:1.55}
+section.view{display:none}section.view.on{display:block}
+@media(max-width:820px){.grid2,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wordmark"><div class="wm-c">C</div><div class="wm-t">Continuum</div></div><div class="flag" id="topflag">Proposed workflow</div></header>
+<aside class="side">
+  <div class="brand"><b id="brandsys">SIGMA</b><span>Administrator seat</span></div>
+  <nav id="sidenav"></nav>
+  <div class="foot"><a href="/hub#roles">&#8592; All portals</a><br><a href="/sigma-crtw-connection.html">Connection page</a></div>
+</aside>
+<main><div class="wrap" id="main"></div></main>
+<script>
+"use strict";
+/* D13: default to SIGMA-RH (GardaWorld's own product, RH for Ressources Humaines).
+   Settings offers the alternate spelling; the name is dynamic everywhere. */
+var LSKEY="continuum_sigma_portal_v1";
+var DEMO={name:"Jordan Miller", claim:"2026-04417", employer:"GardaWorld", coordinator:"Priya Anand, return to work coordinator"};
+var INBOUND=["Claim number","Worker name","Employer","Job title","Injury type","Injury date","Body part","Claim status","Adjuster contact","Benefit start date"];
+var RETURNF=["Functional recovery milestone","Modified duty participation","Projected return to work window (clinician reviewed estimate)","Current functional status","Restriction acknowledgement","Duty plan state","Days on modified duty","Return milestone reached","Case workflow state","Last review date","Prepared document reference"];
+var METHODS=["Secure file exchange","A direct system connection","A workflow connector","A scheduled export"];
+var ALLOWED=["Functional status","Safe duties the worker can do","Modified work participation","Projected return to work window","Case workflow state"];
+var PROTECTED=["Diagnosis","Symptoms","Pain and mobility scores","Clinical notes","Movement video","Consent state","Personal recovery journal entries"];
+var SYNC=[["Prepared: functional update for Jordan Miller","held"],["Prepared: modified duty participation","held"],["Prepared: projected return window (clinician reviewed estimate)","held"]];
+var NAV=[["overview","insights","Overview"],["exchange","swap_horiz","Case exchange"],["mapping","account_tree","Field mapping"],["sync","history","Sync history"],["permissions","shield_person","Permissions"],["settings","settings","Settings"]];
+
+var S;
+function fresh(){return {section:"overview", sys:"SIGMA-RH"};}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.section){S=s;if(!S.sys)S.sys="SIGMA-RH";return;}}}catch(e){}S=fresh();}
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
+function esc(t){return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function go(sec){S.section=sec;save();window.scrollTo(0,0);}
+function setSys(name){S.sys=name;save();}
+function sys(){return S.sys;}
+function head(t,s){return '<div class="eyebrow">SIGMA administrator</div><h1>'+esc(t)+'</h1><div class="sub">'+esc(s)+'</div>';}
+function fldList(a){return a.map(function(x){return '<div class="fld">'+esc(x)+'</div>';}).join("");}
+
+/* reusable field-mapping component, used in both directions and the privacy view */
+function fieldMapping(a){return fldList(a);}
+
+function renderOverview(){
+  var h=head("Overview","The connection between "+sys()+" and Continuum CRTW at a glance.");
+  h+='<div class="card"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><span class="chip prop">Workflow proposed</span><span class="chip pend">Method to be confirmed</span><span class="chip pend">Live connection not yet established</span></div>';
+  h+='<div class="row"><span class="k">System of record</span><span class="v">'+esc(sys())+'</span></div><div class="row"><span class="k">Recovery layer</span><span class="v">Continuum CRTW</span></div><div class="row"><span class="k">Direction</span><span class="v">Reference in, prepared updates out</span></div></div>';
+  h+='<div class="card"><h3>Possible exchange methods</h3><div class="sub">None is final. The method is confirmed in technical discovery.</div>'+METHODS.map(function(m){return '<div class="method">'+esc(m)+'</div>';}).join("")+'</div>';
+  h+='<div class="disc">This is a proposed workflow. No live connection exists. See the <a href="/sigma-crtw-connection.html">connection page</a> for the guided story.</div>';
+  return h;
+}
+function renderExchange(){
+  var h=head("Case exchange","Two queues: what arrived, and what is prepared to return.");
+  h+='<div class="grid2">';
+  h+='<div class="card"><h3>Received from the system of record</h3><div class="sub">'+esc(sys())+' opened this case.</div><div class="row"><span class="k">Demonstration case</span><span class="v">'+esc(DEMO.name)+'</span></div><div class="row"><span class="k">Claim</span><span class="v">'+esc(sys())+'-'+esc(DEMO.claim)+'</span></div><div class="row"><span class="k">Employer</span><span class="v">'+esc(DEMO.employer)+'</span></div><div class="row"><span class="k">Status</span><span class="v"><span class="chip ok">Recovery active</span></span></div></div>';
+  h+='<div class="card"><h3>Approved updates prepared for return</h3><div class="sub">Functional words only. A person authorizes each send.</div>'+SYNC.map(function(e){return '<div class="row"><span class="k">'+esc(e[0])+'</span><span class="v"><span class="chip prop">'+esc(e[1])+'</span></span></div>';}).join("")+'</div>';
+  h+='</div>';
+  h+='<div class="banner">Prepared and held. Nothing transfers until the method is confirmed and a person authorizes the send.</div>';
+  return h;
+}
+function renderMapping(){
+  var h=head("Field mapping","Both directions, field by field, as the object technical discovery confirms.");
+  h+='<div class="grid2">';
+  h+='<div class="card col"><h4>'+esc(sys())+' to Continuum</h4><div class="sub">Ten reference fields</div>'+fieldMapping(INBOUND)+'</div>';
+  h+='<div class="card col"><h4>Continuum to '+esc(sys())+'</h4><div class="sub">Eleven prepared return fields</div>'+fieldMapping(RETURNF)+'</div>';
+  h+='</div>';
+  return h;
+}
+function renderSync(){
+  var h=head("Sync history","Timestamped events, and an honest error state.");
+  h+='<div class="card"><h3>Prepared events</h3>'+SYNC.map(function(e){return '<div class="row"><span class="k">'+esc(e[0])+'</span><span class="v"><span class="chip prop">prepared and held</span></span></div>';}).join("")+'<div class="sub" style="margin-top:8px">Demonstration data. Timestamps appear once a live connection is established.</div></div>';
+  h+='<div class="card"><h3>Integration errors</h3><div class="row"><span class="k">Exchange attempts</span><span class="v">None</span></div><p style="font-size:12px;color:var(--muted);margin-top:8px">No exchange attempted. Error handling is built and ready. An empty result and a broken exchange must never look the same.</p></div>';
+  return h;
+}
+function renderPermissions(){
+  var h=head("Permissions","Who sees what, and the wall that never moves.");
+  h+='<div class="card"><div class="row"><span class="k">Read reference fields from '+esc(sys())+'</span><span class="v"><span class="chip ok">designed</span></span></div><div class="row"><span class="k">Write prepared updates back</span><span class="v"><span class="chip prop">pending technical discovery</span></span></div></div>';
+  h+='<div class="grid2" style="margin-top:14px">';
+  h+='<div class="privcol allow"><div class="t">Travels through the exchange</div>'+fieldMapping(ALLOWED)+'</div>';
+  h+='<div class="privcol protect"><div class="t">Never enters the exchange</div>'+fieldMapping(PROTECTED)+'</div>';
+  h+='</div>';
+  return h;
+}
+function renderSettings(){
+  var h=head("Settings","This seat's configuration.");
+  h+='<div class="card"><h3>System name</h3><div class="sub">GardaWorld runs SIGMA-RH (RH for the French Ressources Humaines). The presentation specification wrote SIGMA-HR. Pick the spelling GardaWorld uses; it flips across every screen.</div>';
+  h+='<div style="display:flex;gap:10px;margin-top:10px">'+
+     '<button class="btn '+(sys()==="SIGMA-RH"?"on":"ghost")+'" onclick="setSys(\'SIGMA-RH\')">SIGMA-RH</button>'+
+     '<button class="btn '+(sys()==="SIGMA-HR"?"on":"ghost")+'" onclick="setSys(\'SIGMA-HR\')">SIGMA-HR</button></div>';
+  h+='<div class="sub" style="margin-top:10px">Current: <b>'+esc(sys())+'</b>. Default is SIGMA-RH per the venture ruling.</div></div>';
+  return h;
+}
+function render(){
+  document.getElementById("sidenav").innerHTML=NAV.map(function(n){return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';}).join("");
+  document.getElementById("brandsys").textContent=sys();
+  var views={overview:renderOverview,exchange:renderExchange,mapping:renderMapping,sync:renderSync,permissions:renderPermissions,settings:renderSettings};
+  document.getElementById("main").innerHTML=(views[S.section]||renderOverview)();
+}
+load();render();
+</script>
+</body>
+</html>

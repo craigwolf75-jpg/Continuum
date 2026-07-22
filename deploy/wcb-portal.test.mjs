@@ -22,5 +22,15 @@ ok("filter chip renders per-status counts", html.includes("ST[k][0]+' ('+c[k]"))
 ok("csort seeded in fresh state", /csort:\{key:null,dir:1\}/.test(html));
 ok("dash audit clean", !/[–—]/.test(html));
 
+// Prompt 34a: SIGMA exchange section
+ok("SIGMA exchange in the nav", html.includes('["sigma","swap_horiz","SIGMA exchange"]'));
+ok("renderSigma wired into views", html.includes("function renderSigma") && html.includes("sigma:renderSigma"));
+ok("doctrine: seat receives the submission itself only", html.includes("receives the submission itself, never the"));
+ok("human-send law", html.includes("a person authorizes every send"));
+ok("channel rollup by plain names", html.includes("Submissions by channel") && html.includes("Business to business (B2B) file") && html.includes("C040 file import"));
+ok("no retrieval, plainly", html.includes("pull claim data back out"));
+ok("links to both SIGMA artifacts", html.includes("/sigma-crtw-connection.html") && html.includes("/sigma-portal.html"));
+ok("honest proposed label", html.includes("Proposed workflow") && html.includes("No live integration exists"));
+
 console.log("\nwcb-portal suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

@@ -152,7 +152,7 @@ var CLAIMS=[
 ];
 
 var LSKEY="continuum_board_portal_v1";
-var NAV=[["dashboard","dashboard","Dashboard"],["claims","description","Claims"],["providers","group","Providers"],["analytics","monitoring","Analytics"],["settings","settings","Settings"]];
+var NAV=[["dashboard","dashboard","Dashboard"],["claims","description","Claims"],["providers","group","Providers"],["analytics","monitoring","Analytics"],["sigma","swap_horiz","SIGMA exchange"],["settings","settings","Settings"]];
 var ST={reported:["REPORTED",20],light_duty:["LIGHT DUTY",60],return_pending:["RETURN PENDING",85],closed:["CLOSED",100]};
 var S;
 function fresh(){return {claims:JSON.parse(JSON.stringify(CLAIMS)),section:"dashboard",filter:null,search:"",csort:{key:null,dir:1}};}
@@ -295,9 +295,18 @@ function renderSettings(){
  '<div class="adminrow"><div><b>Access scope</b><div style="font-size:11.5px;color:var(--muted)">Granted via access controls; this seat sees only claims with submissions addressed to its board</div></div><span class="pillst filed">grant-scoped</span></div>'+
  '</div>';
  return h;}
+/* ---------- SIGMA exchange (Prompt 34a) ---------- */
+function renderSigma(){
+ var h=pagehead("SIGMA exchange","How recovery updates reach this board seat.");
+ h+='<div class="card" style="padding:18px;margin-top:14px"><div class="eyebrow" style="margin-bottom:6px">Where filings come from</div><p style="font-size:12.5px;color:var(--muted);line-height:1.6">The employer\'s system of record holds the incident and the claim record. The Continuum CRTW layer prepares the filing in functional words, and a person authorizes every send. This seat receives the submission itself, never the employer\'s internal record and never the worker\'s private recovery information.</p></div>';
+ var chan={};S.claims.forEach(function(c){var k=(c.board||"").indexOf("WSIB")===0?"Business to business (B2B) file":"C040 file import";chan[k]=(chan[k]||0)+1;});
+ h+='<div class="card" style="padding:18px;margin-top:14px"><div class="eyebrow" style="margin-bottom:6px">Submissions by channel</div>'+Object.keys(chan).map(function(k){return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px"><span>'+esc(k)+'</span><b>'+chan[k]+'</b></div>';}).join("")+'<p style="font-size:11.5px;color:var(--muted);margin-top:8px">Plain channel names, computed from this seat\'s own claims. No board offers a way for software to pull claim data back out.</p></div>';
+ h+='<div class="card" style="padding:18px;margin-top:14px"><div class="eyebrow" style="margin-bottom:8px">See the proposed connection</div><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn ghost" href="/sigma-crtw-connection.html">Connection page</a><a class="btn ghost" href="/sigma-portal.html">SIGMA portal</a></div></div>';
+ h+='<div style="margin-top:14px;background:#fff4d6;border:1px solid #e7c975;color:#8a5a00;border-radius:11px;padding:12px 14px;font-size:12px">Proposed workflow. Demonstration data. No live integration exists today.</div>';
+ return h;}
 function render(){
  renderNav();
- var views={dashboard:renderDashboard,claims:renderClaims,providers:renderProviders,analytics:renderAnalytics,settings:renderSettings};
+ var views={dashboard:renderDashboard,claims:renderClaims,providers:renderProviders,analytics:renderAnalytics,sigma:renderSigma,settings:renderSettings};
  document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
  var si=document.querySelector('input[type=search]');
  if(si&&S.section==="claims"){si.focus();si.setSelectionRange(si.value.length,si.value.length);}
