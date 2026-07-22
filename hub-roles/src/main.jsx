@@ -70,11 +70,13 @@ function styleTag() {
     ".cr-title{font-weight:600;font-size:20px;line-height:1.3;margin-bottom:6px;transition:color 180ms ease}" +
     ".cr-desc{font-weight:400;font-size:14px;line-height:22px;color:" + T.body + "}" +
     ".cr-pillwrap{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px}" +
-    ".cr-pill{background:" + T.gold + ";color:" + T.pageBg + ";border:1.5px solid " + T.gold + ";border-radius:999px;padding:9px 18px;font-family:inherit;font-weight:700;font-size:13px;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:filter 150ms ease,transform 150ms ease}" +
-    ".cr-pill:hover{filter:brightness(1.08);transform:translateY(-1px)}" +
+    // One pill look for all seven cards: blue at rest, highlighting to gold on
+    // activation, the same blue-to-gold state the cards use. The Worker pill is a
+    // live link and the other six are the Phase 2 soon button, but they read the
+    // same so the row stays consistent.
+    ".cr-pill{background:transparent;color:" + T.body + ";border:1.5px solid " + T.borderRest + ";border-radius:999px;padding:9px 18px;font-family:inherit;font-weight:700;font-size:13px;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color 150ms ease,border-color 150ms ease}" +
+    ".cr-pill:hover,.cr-pill:focus-visible{color:" + T.gold + ";border-color:" + T.gold + "}" +
     ".cr-pill:focus-visible{outline:2px solid " + T.gold + ";outline-offset:3px}" +
-    ".cr-pill-soon{background:transparent;color:" + T.body + ";border-color:" + T.borderRest + "}" +
-    ".cr-pill-soon:hover{filter:none;transform:none;color:" + T.titleRest + ";border-color:" + T.body + "}" +
     ".cr-soon{font-size:11px;line-height:1.3;color:" + T.body + ";max-width:130px;text-align:right}" +
     ".cr-foot{margin-top:26px;font-size:15px;color:" + T.body + ";text-align:center}" +
     ".cr-foot a{color:" + T.gold + ";text-decoration:none}" +
