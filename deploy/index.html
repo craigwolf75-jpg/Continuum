@@ -128,14 +128,15 @@
       var v=document.querySelector("#home .hero-vid");
       if(!v) return;
       if(!v.muted) v.muted=true;
-      if(v.paused){ var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); }
+      if(!v.loop) v.loop=true;
+      if(v.paused){ if(v.ended){ try{ v.currentTime=0; }catch(e){} } var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); }
     }
     heal();
     window.addEventListener("DOMContentLoaded",heal);
     window.addEventListener("load",heal);
     document.addEventListener("visibilitychange",function(){ if(!document.hidden) heal(); });
     window.addEventListener("focus",heal);
-    var n=0, iv=setInterval(function(){ heal(); if(++n>40) clearInterval(iv); }, 500); /* heal ~20s past renders */
+    var n=0, fi=setInterval(function(){ heal(); if(++n>40){ clearInterval(fi); setInterval(heal,2000); } }, 500); /* fast heal ~20s, then a 2s heartbeat so loop/muted resets never stick */
   })();
   </script>
 
