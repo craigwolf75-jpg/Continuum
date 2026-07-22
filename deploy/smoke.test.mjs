@@ -43,7 +43,7 @@ ok("smoke surfaces dash clean", !PORTALS.some(p => /[–—]/.test(read(p + ".ht
 
 // Prompt 36: homepage hero background video
 const home = read("index.html");
-ok("hero uses the background video", home.includes('class="hero-vid"') && home.includes("Hero%20Videos/Video%20start.mp4"));
+ok("hero uses the background video", home.includes('class="hero-vid"') && home.includes('src="/hero-video.mp4"'));
 ok("hero mockups removed", !home.includes("Good morning, Marcus") && !home.includes("hub.continuum.ca") && !home.includes("product vignette"));
 ok("hero copy preserved", home.includes("Continuum begins.") && home.includes(">Sign In<") && home.includes(">See How It Works<"));
 ok("hero has overlay and reduced-motion path", home.includes("hero-overlay") && home.includes("prefers-reduced-motion"));

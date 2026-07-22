@@ -104,7 +104,7 @@
   <!-- ================= S1 HERO (navy, background video) ================= -->
   <div id="home" style="position:relative;overflow:hidden;background:linear-gradient(175deg,#0E1B2C 0%,#0A1526 100%);padding:110px 32px 120px">
     <!-- Hero background video (Prompt 36). Single source URL; the Hero Videos bucket is public, so no token and no expiry. -->
-    <video class="hero-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" src="https://agzhnmunodrhsjbogzae.supabase.co/storage/v1/object/public/Hero%20Videos/Video%20start.mp4"></video>
+    <video class="hero-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" src="/hero-video.mp4"></video>
     <div class="hero-overlay" style="position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(14,27,44,.9) 0%,rgba(14,27,44,.58) 30%,rgba(14,27,44,.12) 52%,rgba(14,27,44,0) 66%)"></div>
     <div style="position:relative;z-index:2;max-width:1200px;margin:0 auto">
       <div style="max-width:600px">
@@ -122,8 +122,9 @@
   (function(){
     if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     var v=document.querySelector("#home .hero-vid"); if(!v) return;
-    var play=function(){ var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); };
-    v.addEventListener("pause",play); v.addEventListener("canplay",play);
+    v.muted=true;  /* the muted attribute does not reliably set the property; autoplay needs the property */
+    var play=function(){ v.muted=true; var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); };
+    v.addEventListener("pause",play); v.addEventListener("canplay",play); v.addEventListener("loadeddata",play);
     document.addEventListener("visibilitychange",function(){ if(!document.hidden) play(); });
     window.addEventListener("focus",play); play();
   })();
