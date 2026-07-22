@@ -100,10 +100,14 @@
     document.addEventListener('keydown',function(ev){if(ev.key==='Escape')mnavClose();});
   </script>
 
-  <!-- ================= S1 HERO (navy) ================= -->
-  <div id="home" style="background:linear-gradient(175deg,#0E1B2C 0%,#0A1526 100%);padding:110px 32px 120px">
-    <div style="max-width:1200px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap">
-      <div style="flex:1.2;min-width:420px">
+  <style>@media (prefers-reduced-motion: reduce){ #home .hero-vid{display:none !important} }</style>
+  <!-- ================= S1 HERO (navy, background video) ================= -->
+  <div id="home" style="position:relative;overflow:hidden;background:linear-gradient(175deg,#0E1B2C 0%,#0A1526 100%);padding:110px 32px 120px">
+    <!-- Hero background video (Prompt 36). Single source URL; the Hero Videos bucket is public, so no token and no expiry. -->
+    <video class="hero-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" src="https://agzhnmunodrhsjbogzae.supabase.co/storage/v1/object/public/Hero%20Videos/Video%20start.mp4"></video>
+    <div class="hero-overlay" style="position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(14,27,44,.95) 0%,rgba(14,27,44,.8) 46%,rgba(10,21,38,.52) 100%)"></div>
+    <div style="position:relative;z-index:2;max-width:1200px;margin:0 auto">
+      <div style="max-width:600px">
         <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:22px">The new standard for workplace injury management</div>
         <h1 style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;letter-spacing:-0.025em;line-height:1.06;color:#fff;margin:0 0 26px">Where care ends,<br><span style="color:#C8972F">Continuum begins.</span></h1>
         <p style="font-size:18px;line-height:1.6;color:#AAB6C6;margin:0 0 36px;max-width:540px">The visit gets the worker to a doctor. Continuum manages everything after: daily check-ins, safe duties, and WCB-ready reporting, all the way back to full duty.</p>
@@ -112,77 +116,18 @@
           <a href="#how" style="border:1px solid rgba(255,255,255,.25);color:#fff;font-size:15px;font-weight:600;padding:15px 30px;border-radius:12px;display:inline-block" style-hover="border-color:#E3B968;color:#E3B968">See How It Works</a>
         </div>
       </div>
-
-      <!-- product vignette · SOURCE: real screens, public-safe variants (2c audit). Phone = Worker App Today (Prompt 02 A4). Browser crop = Hub H2 KPI row, demo-cast aggregates only. -->
-      <div style="flex:1;min-width:380px;display:flex;flex-direction:column;gap:22px;align-items:center">
-        <!-- phone · source: Continuum Worker App.dc.html (Today screen) -->
-        <div style="width:280px;background:#0A1424;border-radius:38px;padding:10px;box-shadow:0 30px 70px rgba(0,0,0,.5);flex-shrink:0;transform:rotate(4deg)">
-          <div style="background:#FAF9F6;border-radius:30px;overflow:hidden;padding:18px 16px 14px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-              <div style="display:flex;align-items:center;gap:7px">
-                <div style="width:22px;height:22px;border-radius:7px;background:#0E1B2C;color:#C8972F;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px">C</div>
-                <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#16202E">Continuum</span>
-              </div>
-              <div style="background:rgba(201,150,60,.14);color:#A97C2E;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:20px">Day 9</div>
-            </div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:#16202E;letter-spacing:-0.01em">Good morning, Marcus</div>
-            <div style="font-size:11.5px;color:#5E6B7C;margin:3px 0 12px">Right shoulder strain · recovery day 9</div>
-            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:14px;padding:13px;box-shadow:0 2px 8px rgba(22,32,46,.04)">
-              <div style="font-size:12.5px;font-weight:600;color:#16202E;margin-bottom:10px">How's your pain today?</div>
-              <div style="height:6px;background:#EEEAE1;border-radius:6px;position:relative">
-                <div style="position:absolute;left:0;top:0;height:100%;width:30%;background:#C8972F;border-radius:6px"></div>
-                <div style="position:absolute;left:30%;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:#C8972F;border-radius:50%;box-shadow:0 2px 6px rgba(22,32,46,.25)"></div>
-              </div>
-              <div style="font-size:11px;color:#A97C2E;font-weight:600;margin-top:8px">Down from 5 last week</div>
-            </div>
-            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:14px;padding:12px 13px;margin-top:9px;box-shadow:0 2px 8px rgba(22,32,46,.04)">
-              <div style="display:flex;align-items:center;gap:9px;padding:3px 0;font-size:12px;color:#5E6B7C"><span style="width:16px;height:16px;border-radius:50%;background:#C8972F;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0">✓</span><span style="text-decoration:line-through">Shoulder mobility · 5 min</span></div>
-              <div style="display:flex;align-items:center;gap:9px;padding:3px 0;font-size:12px;color:#16202E"><span style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(22,32,46,.2);box-sizing:border-box;flex-shrink:0"></span>Gentle stretches</div>
-            </div>
-            <div style="background:#0E1B2C;border-radius:12px;padding:10px 13px;margin-top:9px;display:flex;align-items:center;gap:9px">
-              <span style="width:7px;height:7px;border-radius:50%;background:#C8972F;flex-shrink:0"></span>
-              <span style="font-size:11.5px;color:#fff;font-weight:500">Cleared for light duty today</span>
-            </div>
-            <div style="background:#C8972F;color:#0E1B2C;border-radius:12px;padding:12px;text-align:center;font-size:13px;font-weight:600;margin-top:9px">Submit today's check-in</div>
-            <div style="display:flex;align-items:center;gap:11px;padding:12px 2px 2px">
-              <svg width="38" height="38" viewBox="0 0 38 38" style="flex-shrink:0">
-                <circle cx="19" cy="19" r="15" fill="none" stroke="#EEEAE1" stroke-width="4"></circle>
-                <circle cx="19" cy="19" r="15" fill="none" stroke="#C8972F" stroke-width="4" stroke-linecap="round" stroke-dasharray="58.4 94.2" transform="rotate(-90 19 19)"></circle>
-                <text x="19" y="23" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="9.5" font-weight="700" fill="#16202E">62%</text>
-              </svg>
-              <div style="font-size:11px;color:#5E6B7C;line-height:1.4"><b style="color:#16202E">On track</b> · full duty in ~3 weeks</div>
-            </div>
-          </div>
-        </div>
-        <!-- browser crop · source: Hub H2 Overview Dashboard.dc.html (KPI row, employer variant) -->
-        <div style="width:420px;max-width:100%;background:#14243B;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.4)">
-          <div style="display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.08)">
-            <span style="width:8px;height:8px;border-radius:50%;background:#5E6B7C"></span>
-            <span style="width:8px;height:8px;border-radius:50%;background:#5E6B7C;opacity:.6"></span>
-            <span style="width:8px;height:8px;border-radius:50%;background:#5E6B7C;opacity:.35"></span>
-            <span style="font-size:10px;color:#AAB6C6;margin-left:10px">hub.continuum.ca · Overview</span>
-          </div>
-          <div style="background:#F7F7F5;padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:9px;padding:10px">
-              <div style="font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5E6B7C;font-weight:600">Injured workers</div>
-              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#16202E;margin-top:3px">28</div>
-              <div style="font-size:9px;font-weight:600;color:#4C8A6A;margin-top:2px">down 8%</div>
-            </div>
-            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:9px;padding:10px">
-              <div style="font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5E6B7C;font-weight:600">On light duty</div>
-              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#16202E;margin-top:3px">18</div>
-              <div style="font-size:9px;font-weight:600;color:#A97C2E;margin-top:2px">64% of active</div>
-            </div>
-            <div style="background:#fff;border:1px solid rgba(22,32,46,.08);border-radius:9px;padding:10px">
-              <div style="font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5E6B7C;font-weight:600">RTW rate</div>
-              <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#16202E;margin-top:3px">76%</div>
-              <div style="font-size:9px;font-weight:600;color:#4C8A6A;margin-top:2px">up 6%</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+  <script>
+  (function(){
+    if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var v=document.querySelector("#home .hero-vid"); if(!v) return;
+    var play=function(){ var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); };
+    v.addEventListener("pause",play); v.addEventListener("canplay",play);
+    document.addEventListener("visibilitychange",function(){ if(!document.hidden) play(); });
+    window.addEventListener("focus",play); play();
+  })();
+  </script>
 
   <!-- ================= S2 PROBLEM IN NUMBERS (cream) ================= -->
   <div style="background:#F7F4EE;padding:112px 32px">
