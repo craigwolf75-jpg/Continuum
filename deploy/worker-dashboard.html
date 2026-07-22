@@ -507,6 +507,8 @@ function render(){
  renderWizard();
 }
 load();writeBridge();render();
+/* the hub Sign up pill routes here with ?signup=1: open the wizard on arrival */
+try{if(/[?&]signup=1(&|$)/.test(location.search)){startSignup();}}catch(e){}
 </script>
 </body>
 </html>

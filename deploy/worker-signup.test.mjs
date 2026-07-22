@@ -97,6 +97,9 @@ ok("cancel leaves the demonstration untouched", /function cancelSignup\(\)\{wiz=
 ok("bridge write reads the active worker name", /writeBridgeShared\(\{source:"worker-dashboard",name:S\.name/.test(w));
 ok("no hardcoded Marcus in the bridge write path", !/writeBridgeShared\(\{source:"worker-dashboard",name:"Marcus/.test(w));
 
+// -- the hub Sign up pill deep-links here and opens the wizard on arrival --
+ok("worker app opens the wizard on the signup query", /signup=1[\s\S]{0,40}startSignup\(\)/.test(w));
+
 // -- dash rule --
 ok("worker sign-up surfaces dash clean", ![w, js].some(s => /[–—]/.test(s)));
 

@@ -14,14 +14,18 @@ const T = {
 
 // Order per the prompt: Worker, HSE, Employer, Nexus Health, WCB, Platform Admin.
 // Copy is unchanged from the current hub. Nav targets are unchanged.
+// Each card carries a sign-up target. Only Worker has a live wizard today (the
+// worker app opens it on the signup query), so its pill routes there; the other
+// roles have no account flow yet (SITE-12j, Phase 2), so their pill is an honest
+// "soon" state, never a dead link.
 const CARDS = [
-  { title: "Worker", roleKey: "worker", nav: "/worker-dashboard.html", desc: "Your space for recovery. Do a quick check-in, see your duties for today, and follow your plan. Open it to start." },
-  { title: "HSE", roleKey: "hse", nav: "/hse-portal.html", desc: "Light duties workspace. Assign tasks within restrictions. Recovery scores visible." },
-  { title: "Employer", roleKey: "employer", nav: "/employer-dashboard.html", desc: "Employer dashboard. Functional status only, never medical detail." },
-  { title: "Nexus Health", roleKey: "nexus", nav: "/clinical-dashboard.html", desc: "Clinical control center. Full detail, clearance, escalation." },
-  { title: "WCB", roleKey: "wcb", nav: "/wcb-portal.html", desc: "Compensation board portal. Read only claims and milestone notifications." },
-  { title: "Platform Admin", roleKey: "admin", nav: "/admin-portal.html", desc: "Continuum internal. Tenants, users, access grants, and billing." },
-  { title: "SIGMA Exchange", roleKey: "sigma", nav: "/sigma-portal.html", desc: "The system-of-record connection. A proposed workflow, not a live integration." }
+  { title: "Worker", roleKey: "worker", nav: "/worker-dashboard.html", signup: "/worker-dashboard.html?signup=1", desc: "Your space for recovery. Do a quick check-in, see your duties for today, and follow your plan. Open it to start." },
+  { title: "HSE", roleKey: "hse", nav: "/hse-portal.html", signup: null, desc: "Light duties workspace. Assign tasks within restrictions. Recovery scores visible." },
+  { title: "Employer", roleKey: "employer", nav: "/employer-dashboard.html", signup: null, desc: "Employer dashboard. Functional status only, never medical detail." },
+  { title: "Nexus Health", roleKey: "nexus", nav: "/clinical-dashboard.html", signup: null, desc: "Clinical control center. Full detail, clearance, escalation." },
+  { title: "WCB", roleKey: "wcb", nav: "/wcb-portal.html", signup: null, desc: "Compensation board portal. Read only claims and milestone notifications." },
+  { title: "Platform Admin", roleKey: "admin", nav: "/admin-portal.html", signup: null, desc: "Continuum internal. Tenants, users, access grants, and billing." },
+  { title: "SIGMA Exchange", roleKey: "sigma", nav: "/sigma-portal.html", signup: null, desc: "The system-of-record connection. A proposed workflow, not a live integration." }
 ];
 
 // Grid geometry for the swirl. The final settle is a transform of 0 back to the
@@ -60,10 +64,18 @@ function styleTag() {
     ".cr-badge{width:44px;height:44px;border-radius:10px;background:" + T.logoBadge + ";color:" + T.gold + ";display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px}" +
     ".cr-wordmark{font-weight:700;font-size:34px;color:" + T.titleRest + "}" +
     ".cr-grid{display:grid;grid-template-columns:repeat(2,340px);grid-auto-rows:1fr;gap:24px;justify-content:center}" +
-    ".cr-card{background:" + T.cardFill + ";border:1.5px solid " + T.borderRest + ";border-radius:10px;padding:24px;display:block;text-decoration:none;transition:border-color 180ms ease}" +
-    ".cr-card:focus-visible{outline:2px solid " + T.gold + ";outline-offset:3px}" +
+    ".cr-card{background:" + T.cardFill + ";border:1.5px solid " + T.borderRest + ";border-radius:10px;padding:24px;display:flex;gap:16px;align-items:center;justify-content:space-between;transition:border-color 180ms ease}" +
+    ".cr-cardmain{flex:1;min-width:0;display:block;text-decoration:none}" +
+    ".cr-cardmain:focus-visible{outline:2px solid " + T.gold + ";outline-offset:3px}" +
     ".cr-title{font-weight:600;font-size:20px;line-height:1.3;margin-bottom:6px;transition:color 180ms ease}" +
     ".cr-desc{font-weight:400;font-size:14px;line-height:22px;color:" + T.body + "}" +
+    ".cr-pillwrap{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px}" +
+    ".cr-pill{background:" + T.gold + ";color:" + T.pageBg + ";border:1.5px solid " + T.gold + ";border-radius:999px;padding:9px 18px;font-family:inherit;font-weight:700;font-size:13px;line-height:1;text-decoration:none;white-space:nowrap;cursor:pointer;transition:filter 150ms ease,transform 150ms ease}" +
+    ".cr-pill:hover{filter:brightness(1.08);transform:translateY(-1px)}" +
+    ".cr-pill:focus-visible{outline:2px solid " + T.gold + ";outline-offset:3px}" +
+    ".cr-pill-soon{background:transparent;color:" + T.body + ";border-color:" + T.borderRest + "}" +
+    ".cr-pill-soon:hover{filter:none;transform:none;color:" + T.titleRest + ";border-color:" + T.body + "}" +
+    ".cr-soon{font-size:11px;line-height:1.3;color:" + T.body + ";max-width:130px;text-align:right}" +
     ".cr-foot{margin-top:26px;font-size:15px;color:" + T.body + ";text-align:center}" +
     ".cr-foot a{color:" + T.gold + ";text-decoration:none}" +
     "@media (max-width:1023px){.cr-grid{grid-template-columns:1fr;width:100%;padding:0 16px}}";
@@ -71,26 +83,37 @@ function styleTag() {
 }
 
 function Card({ card, index, current, refFn }) {
-  const [hover, setHover] = useState(false), [focus, setFocus] = useState(false), [press, setPress] = useState(false);
+  const [hover, setHover] = useState(false), [focus, setFocus] = useState(false), [press, setPress] = useState(false), [soon, setSoon] = useState(false);
   const active = hover || focus || press || current;
+  const remember = () => { try { sessionStorage.setItem("continuum_hub_current_role", card.roleKey); } catch (e) {} };
   return (
-    <a
+    <div
       ref={refFn}
-      href={card.nav}
-      aria-label={card.title}
       className="cr-card"
       style={{ opacity: 0, borderColor: active ? T.gold : T.borderRest, willChange: "transform, opacity" }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => { setHover(false); setPress(false); }}
-      onFocus={() => setFocus(true)}
-      onBlur={() => setFocus(false)}
-      onMouseDown={() => setPress(true)}
-      onMouseUp={() => setPress(false)}
-      onClick={() => { try { sessionStorage.setItem("continuum_hub_current_role", card.roleKey); } catch (e) {} }}
     >
-      <div className="cr-title" style={{ color: active ? T.gold : T.titleRest }}>{card.title}</div>
-      <div className="cr-desc">{card.desc}</div>
-    </a>
+      <a
+        href={card.nav}
+        aria-label={card.title}
+        className="cr-cardmain"
+        onFocus={() => setFocus(true)}
+        onBlur={() => setFocus(false)}
+        onMouseDown={() => setPress(true)}
+        onMouseUp={() => setPress(false)}
+        onClick={remember}
+      >
+        <div className="cr-title" style={{ color: active ? T.gold : T.titleRest }}>{card.title}</div>
+        <div className="cr-desc">{card.desc}</div>
+      </a>
+      <div className="cr-pillwrap">
+        {card.signup
+          ? <a className="cr-pill" href={card.signup} aria-label={"Sign up as a " + card.title} onClick={e => { e.stopPropagation(); remember(); }}>Sign up</a>
+          : <button type="button" className="cr-pill cr-pill-soon" aria-label={"Sign up for " + card.title + ", arriving in Phase 2"} onClick={() => { setSoon(true); setTimeout(() => setSoon(false), 3000); }}>Sign up</button>}
+        {soon && <div className="cr-soon">Accounts for this role arrive in Phase 2.</div>}
+      </div>
+    </div>
   );
 }
 

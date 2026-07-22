@@ -74,5 +74,17 @@ ok("SIGMA card in the built bundle", bundle.includes('title:"SIGMA Exchange"') &
 ok("SIGMA card in the vanilla fallback", hub.includes("/sigma-portal.html") && hub.includes("SIGMA Exchange"));
 ok("SIGMA card is honest (proposed workflow)", src.includes("proposed workflow, not a live integration"));
 
+// Prompt 12j: a Sign up pill on the right of every hub card
+ok("card body and pill are separate targets (main link is cr-cardmain)", src.includes('className="cr-cardmain"'));
+ok("main link still carries nav and accessible name", src.includes('href={card.nav}') && src.includes('aria-label={card.title}'));
+ok("worker pill routes to the worker sign-up wizard", src.includes('signup: "/worker-dashboard.html?signup=1"'));
+ok("the six other roles have no live sign-up (Phase 2)", (src.match(/signup: null/g) || []).length === 6);
+ok("worker pill is a real link, the rest are the soon button", src.includes('className="cr-pill"') && src.includes('cr-pill cr-pill-soon'));
+ok("every card shows a Sign up pill", src.includes(">Sign up</a>") && src.includes(">Sign up</button>"));
+ok("soon state is honest, not a dead link", src.includes("Accounts for this role arrive in Phase 2"));
+ok("built bundle carries the Sign up pill", bundle.includes("Sign up"));
+ok("built bundle carries the worker sign-up route", bundle.includes("worker-dashboard.html?signup=1"));
+ok("pill did not change routing: nav targets unchanged", Object.keys(navs).every(n => src.includes('nav: "' + n + '"')));
+
 console.log("\nhub-roles suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
