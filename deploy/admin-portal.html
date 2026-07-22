@@ -149,15 +149,15 @@ var ROSTER=[
  {id:"zeus",name:"Zeus",lane:"Obsidian Brain, main thread",status:"coordinating",mission:"Queue clear; Prompt 33 hub and the admin fix shipped",zeus:true},
  {id:"athena",name:"Athena (12a)",lane:"Architecture and code",status:"idle",mission:"Hub bundle built; worker bridge single-sourced"},
  {id:"apollo",name:"Apollo (12b)",lane:"Design and motion",status:"idle",mission:"Hub cards equalized to one size"},
- {id:"calliope",name:"Calliope (12f)",lane:"Content and voice",status:"idle",mission:"Internal docs swept to the dash rule"},
+ {id:"calliope",name:"Calliope (12f)",lane:"Content and voice",status:"idle",mission:"Presentation scripts written for every portal"},
  {id:"heracles",name:"Heracles (12c)",lane:"Quality and tests",status:"working",mission:"11 suites green; watching the next change"},
  {id:"hermes",name:"Hermes (12d)",lane:"Release",status:"idle",mission:"Last ship: the housekeeping sweep"},
  {id:"argus",name:"Argus (12e)",lane:"The watcher",status:"idle",mission:"Dash sweep filed; support.js deferred upstream"}];
 var OLY_BASE=1721480400000;
-function olympusSeed(){var b=OLY_BASE;return {version:4,watermark:0,
+function olympusSeed(){var b=OLY_BASE;return {version:5,watermark:0,
  feed:[
   {ts:b+1,agent:"zeus",type:"handoff",msg:"Decomposed the presenter kit and the hub redesign across the roster."},
-  {ts:b+2,agent:"calliope",type:"update",msg:"Presenter explainer cards written for both portals; grade 7 held, privacy line verbatim."},
+  {ts:b+2,agent:"calliope",type:"update",msg:"Eight presentation scripts written, one per surface, matched to the real seeded numbers."},
   {ts:b+3,agent:"apollo",type:"update",msg:"Hub role cards equalized to one size with grid-auto-rows; swirl entrance intact."},
   {ts:b+4,agent:"athena",type:"update",msg:"package.json approved by Gary; built the React and Framer Motion hub bundle."},
   {ts:b+5,agent:"heracles",type:"gate",msg:"258 assertions across 11 suites, all green."},
@@ -175,7 +175,7 @@ function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.
  section:"dashboard",search:"",roleFilter:null,nextId:100,olympus:olympusSeed(),
  audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
  form:{name:"",role:"worker",org:"Worley Industrial"}};}
-function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==4)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
+function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==5)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}

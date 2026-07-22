@@ -1,0 +1,12 @@
+# CONTINUUM PROMPT 35: Presentation Scripts for Every Portal
+
+**Deliverable:** CONTINUUM_PRESENTATION_SCRIPTS.md: eight spoken-word walkthroughs, one per surface, in presentation order (worker, employer, HSE, clinical, board, SIGMA connection page, SIGMA portal, admin), each 60 to 90 seconds at a natural pace, each matched to the portal's real sections and real seeded numbers so the narration never contradicts the screen, and each closing with the question that room usually asks plus the answer the ElevenLabs agent should give. The Presenter Agent Kit's knowledge pack now lists the scripts file first, so the voice assistant answers in the same words the presenter speaks.
+**Date:** July 21, 2026
+
+## What each script contains, and why it is built this way
+
+Every script has four parts. An opening line that frames the seat in one sentence. A walkthrough that follows the portal's actual section order and quotes its actual numbers (seven open cases on the HSE queue, nineteen open claims and seven to acknowledge on the board seat, twenty-four active clinical cases, Marcus at day nine, Jordan Miller in the exchange), because a voice agent that says a number the screen does not show costs the room's trust in one sentence. The one line to emphasize, which in every case is a trust law made audible: gold never red on the worker app, a better answer from less information on the employer dashboard, the button that refuses on the HSE hub, where medical decisions actually live on the clinical seat, the narrowest view on purpose at the board, nothing replaced on the connection page, prepared and held on the SIGMA portal, and every promise as a switch on admin. And the expected question with its scripted answer, which doubles as the agent's guardrail: the employer-privacy answer, the no-diagnosis answer, the escalation answer, the honest no-live-integration answer, and the no-board-retrieval answer are all pre-written so the agent cannot improvise its way across a vocabulary law.
+
+## Verification summary
+
+Canon numbers asserted present in the scripts by automated probe (seven open cases, nineteen open claims, twenty-four active cases, day nine, Jordan Miller), the routing phrase and the prepared-and-held law asserted verbatim, the employer absences named only as absences, dash audit clean, and the agent kit's knowledge pack updated by anchored patch with the scripts listed first.
