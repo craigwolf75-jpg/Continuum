@@ -1,9 +1,10 @@
 /* Continuum hub role select suite (Prompt 33). node deploy/hub-roles.test.mjs
    Gates the deterministic parts of the React plus Framer Motion redesign: the
-   built bundle exists and exposes its mount, the six cards are in order with
-   unchanged routing and copy, the design tokens are present, gold is a state
-   (hover, focus, press, current role), motion is session-once with a
-   reduced-motion fallback, and accessibility and the no-layout-shift border
+   built bundle exists and exposes its mount, the seven cards are in order with
+   unchanged routing and copy, the design tokens are present, gold is a live
+   interaction state only (hover, focus, press) with nothing sticky, motion
+   plays on every mount with a reduced-motion fallback, and accessibility and
+   the no-layout-shift border
    hold. Visual match to Figma and the motion feel are verified in the browser,
    not here. Hard-fail; no em-dashes anywhere. */
 import { readFileSync, existsSync } from "node:fs";
@@ -41,8 +42,8 @@ ok("employer copy unchanged", src.includes("Functional status only, never medica
 ["#0E1A2F", "#182642", "#26375C", "#E8A33D", "#DFE7F4", "#8FA3C2", "#22314F"].forEach(hex =>
   ok("token present " + hex, src.includes(hex)));
 
-// gold is a state, not static; Worker not special
-ok("gold is a state (hover, focus, press, or current)", /const active = hover \|\| focus \|\| press \|\| current/.test(src));
+// gold is a LIVE-interaction state only, not static and not persisted
+ok("gold is a live state (hover, focus, press), nothing sticky", /const active = hover \|\| focus \|\| press;/.test(src));
 ok("active card uses the gold border and title", src.includes("active ? T.gold : T.borderRest") && src.includes("active ? T.gold : T.titleRest"));
 ok("no per-card hardcoded gold for Worker", !/roleKey: "worker"[\s\S]{0,120}gold/i.test(src));
 ok("worker static gold removed from the hub fallback css", !hub.includes(".role-worker h3{color:var(--gold)}"));
@@ -54,7 +55,7 @@ ok("border-color and color transition over 180ms ease", src.includes("border-col
 // motion: plays every mount, reduced-motion fallback, non-interactive mid flight
 ok("entrance plays on every mount (no session-once gate)", !src.includes("continuum_hub_intro_played"));
 ok("mount is replay-safe (unmounts a prior root before replay)", src.includes("__crRoot") && src.includes(".unmount()"));
-ok("current role remembered via continuum_hub_current_role", src.includes("continuum_hub_current_role"));
+ok("no persisted gold: the hub does not remember a last-opened role", !src.includes("continuum_hub_current_role") && !bundle.includes("continuum_hub_current_role"));
 ok("reduced-motion honored (short fade and rise, no swirl)", src.includes("useReducedMotion") && /if \(reduced\)/.test(src));
 ok("cards non-interactive until landed", src.includes('pointerEvents = "none"') && src.includes('pointerEvents = "auto"'));
 ok("staggered drop (i times 0.07s) with a spring settle", src.includes("i * 70") && src.includes('type: "spring", bounce: 0.35'));

@@ -84,10 +84,12 @@ function styleTag() {
   document.head.appendChild(s);
 }
 
-function Card({ card, index, current, refFn }) {
+function Card({ card, index, refFn }) {
+  // Gold is a live-interaction state only. The card highlights on hover, focus,
+  // or press and returns to blue the moment you let go. There is no persisted
+  // "last opened" gold: returning to the hub shows every card blue again.
   const [hover, setHover] = useState(false), [focus, setFocus] = useState(false), [press, setPress] = useState(false), [soon, setSoon] = useState(false);
-  const active = hover || focus || press || current;
-  const remember = () => { try { sessionStorage.setItem("continuum_hub_current_role", card.roleKey); } catch (e) {} };
+  const active = hover || focus || press;
   return (
     <div
       ref={refFn}
@@ -104,14 +106,13 @@ function Card({ card, index, current, refFn }) {
         onBlur={() => setFocus(false)}
         onMouseDown={() => setPress(true)}
         onMouseUp={() => setPress(false)}
-        onClick={remember}
       >
         <div className="cr-title" style={{ color: active ? T.gold : T.titleRest }}>{card.title}</div>
         <div className="cr-desc">{card.desc}</div>
       </a>
       <div className="cr-pillwrap">
         {card.signup
-          ? <a className="cr-pill" href={card.signup} aria-label={"Sign up as a " + card.title} onClick={e => { e.stopPropagation(); remember(); }}>Sign up</a>
+          ? <a className="cr-pill" href={card.signup} aria-label={"Sign up as a " + card.title} onClick={e => e.stopPropagation()}>Sign up</a>
           : <button type="button" className="cr-pill cr-pill-soon" aria-label={"Sign up for " + card.title + ", arriving in Phase 2"} onClick={() => { setSoon(true); setTimeout(() => setSoon(false), 3000); }}>Sign up</button>}
         {soon && <div className="cr-soon">Accounts for this role arrive in Phase 2.</div>}
       </div>
@@ -124,11 +125,9 @@ function RolesView() {
   const cardRefs = useRef([]);
   const logoRef = useRef(null);
   const footRef = useRef(null);
-  const [current, setCurrent] = useState(null);
 
   useLayoutEffect(() => {
     styleTag();
-    try { setCurrent(sessionStorage.getItem("continuum_hub_current_role")); } catch (e) {}
   }, []);
 
   useEffect(() => {
@@ -166,7 +165,7 @@ function RolesView() {
       </div>
       <div className="cr-grid">
         {CARDS.map((card, i) => (
-          <Card key={card.roleKey} card={card} index={i} current={current === card.roleKey} refFn={el => { cardRefs.current[i] = el; }} />
+          <Card key={card.roleKey} card={card} index={i} refFn={el => { cardRefs.current[i] = el; }} />
         ))}
       </div>
       <div className="cr-foot" ref={footRef} style={{ opacity: 0 }}>
