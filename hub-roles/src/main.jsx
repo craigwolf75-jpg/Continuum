@@ -78,8 +78,6 @@ function styleTag() {
     ".cr-pill:hover,.cr-pill:focus-visible{color:" + T.gold + ";border-color:" + T.gold + "}" +
     ".cr-pill:focus-visible{outline:2px solid " + T.gold + ";outline-offset:3px}" +
     ".cr-soon{font-size:11px;line-height:1.3;color:" + T.body + ";max-width:130px;text-align:right}" +
-    ".cr-foot{margin-top:26px;font-size:15px;color:" + T.body + ";text-align:center}" +
-    ".cr-foot a{color:" + T.gold + ";text-decoration:none}" +
     "@media (max-width:1023px){.cr-grid{grid-template-columns:1fr;width:100%;padding:0 16px}}";
   document.head.appendChild(s);
 }
@@ -124,7 +122,6 @@ function RolesView() {
   const reduced = useReducedMotion();
   const cardRefs = useRef([]);
   const logoRef = useRef(null);
-  const footRef = useRef(null);
 
   useLayoutEffect(() => {
     styleTag();
@@ -138,13 +135,11 @@ function RolesView() {
       // Reduced motion: short fade and 12px rise, 60ms stagger, 0.6s total. No swirl.
       if (logoRef.current) animate(logoRef.current, { opacity: [0, 1] }, { duration: 0.4, ease: "easeOut" });
       cardRefs.current.forEach((n, i) => { if (!n) return; n.style.pointerEvents = "auto"; animate(n, { opacity: [0, 1], y: [12, 0] }, { duration: 0.6, delay: i * 0.06, ease: "easeOut" }); });
-      if (footRef.current) animate(footRef.current, { opacity: [0, 1] }, { duration: 0.6, delay: 0.3 });
       return;
     }
 
-    // Full entrance, 2.8s. Logo leads, cards swirl in and drop, footer trails.
+    // Full entrance, 2.8s. Logo leads, cards swirl in and drop.
     if (logoRef.current) animate(logoRef.current, { opacity: [0, 1], y: [-16, 0] }, { duration: 0.45, ease: "easeOut" });
-    if (footRef.current) animate(footRef.current, { opacity: [0, 0, 1] }, { duration: 2.5, times: [0, 0.84, 1], ease: "easeOut" });
     cardRefs.current.forEach((n, i) => {
       if (!n) return;
       n.style.pointerEvents = "none";
@@ -167,9 +162,6 @@ function RolesView() {
         {CARDS.map((card, i) => (
           <Card key={card.roleKey} card={card} index={i} refFn={el => { cardRefs.current[i] = el; }} />
         ))}
-      </div>
-      <div className="cr-foot" ref={footRef} style={{ opacity: 0 }}>
-        Looking for the worker app? <a href="/app">Open the worker app</a>.
       </div>
     </div>
   );
