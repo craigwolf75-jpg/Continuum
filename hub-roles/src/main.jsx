@@ -20,7 +20,8 @@ const CARDS = [
   { title: "Employer", roleKey: "employer", nav: "/employer-dashboard.html", desc: "Employer dashboard. Functional status only, never medical detail." },
   { title: "Nexus Health", roleKey: "nexus", nav: "/clinical-dashboard.html", desc: "Clinical control center. Full detail, clearance, escalation." },
   { title: "WCB", roleKey: "wcb", nav: "/wcb-portal.html", desc: "Compensation board portal. Read only claims and milestone notifications." },
-  { title: "Platform Admin", roleKey: "admin", nav: "/admin-portal.html", desc: "Continuum internal. Tenants, users, access grants, and billing." }
+  { title: "Platform Admin", roleKey: "admin", nav: "/admin-portal.html", desc: "Continuum internal. Tenants, users, access grants, and billing." },
+  { title: "SIGMA Exchange", roleKey: "sigma", nav: "/sigma-portal.html", desc: "The system-of-record connection. A proposed workflow, not a live integration." }
 ];
 
 // Grid geometry for the swirl. The final settle is a transform of 0 back to the

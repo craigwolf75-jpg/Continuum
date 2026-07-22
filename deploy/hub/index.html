@@ -75,16 +75,10 @@
   .doc{background:#fff;border:1px solid rgba(22,32,46,.1);border-radius:11px;padding:16px;color:var(--ink)}
   .doc h4{font-family:'Space Grotesk',sans-serif;margin:0 0 8px}
   button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-  #sigmaentry{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;flex-direction:column;gap:1px;background:var(--card);border:1px solid var(--hair);border-left:3px solid var(--gold);border-radius:12px;padding:10px 15px;text-decoration:none;box-shadow:0 8px 22px rgba(10,21,38,.5)}
-  #sigmaentry:hover{border-color:var(--gold)}
-  #sigmaentry .se-t{color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px}
-  #sigmaentry .se-s{color:var(--gold2);font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-top:1px}
-  @media(max-width:520px){#sigmaentry{right:12px;bottom:12px;padding:8px 12px}}
 </style>
 </head>
 <body>
 <div id="hub"></div>
-<a id="sigmaentry" href="/sigma-portal.html" title="SIGMA administrator seat"><span class="se-t">SIGMA Exchange</span><span class="se-s">Proposed workflow</span></a>
 <script>
 (function(){
   var S=window.ContinuumStore;
@@ -134,6 +128,7 @@
     var hse='<button type="button" class="role" data-nav="/hse-portal.html"><h3>HSE</h3><p>Light duties workspace. Assign tasks within restrictions. Recovery scores visible.</p></button>';
     var nexus='<button type="button" class="role" data-nav="/clinical-dashboard.html"><h3>Nexus Health</h3><p>Clinical control center. Full detail, clearance, escalation.</p></button>';
     var admin='<button type="button" class="role" data-nav="/admin-portal.html"><h3>Platform Admin</h3><p>Continuum internal. Tenants, users, access grants, and billing.</p></button>';
+    var sigma='<button type="button" class="role" data-nav="/sigma-portal.html"><h3>SIGMA Exchange</h3><p>The system-of-record connection. A proposed workflow, not a live integration.</p></button>';
     return '<div class="center"><div><div class="brand"><div class="cmark">C</div><div class="wordmark">Continuum</div></div>'+
       '<div class="roles">'+
       worker+
@@ -142,6 +137,7 @@
       nexus+
       wcb+
       admin+
+      sigma+
       '</div>'+
       '<p class="note" style="text-align:center;color:var(--mist);margin-top:16px">Looking for the worker app? <a href="/app">Open the worker app</a>.</p>'+
       '</div></div>';

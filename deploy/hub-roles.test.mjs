@@ -28,11 +28,11 @@ ok("hub mounts React for the roles view", hub.includes("ContinuumRolesView.mount
 ok("hub keeps a graceful vanilla fallback", hub.includes("host.innerHTML=rolesView()"));
 ok("hub loads Instrument Sans", hub.includes("Instrument+Sans"));
 
-// six cards, correct order, unchanged routing and copy
-const order = ["Worker", "HSE", "Employer", "Nexus Health", "WCB", "Platform Admin"];
+// seven cards, correct order, unchanged routing and copy
+const order = ["Worker", "HSE", "Employer", "Nexus Health", "WCB", "Platform Admin", "SIGMA Exchange"];
 const idx = order.map(t => src.indexOf('title: "' + t + '"'));
-ok("all six cards present in order", idx.every((v, i) => v > 0 && (i === 0 || v > idx[i - 1])));
-const navs = { "/worker-dashboard.html": 1, "/hse-portal.html": 1, "/employer-dashboard.html": 1, "/clinical-dashboard.html": 1, "/wcb-portal.html": 1, "/admin-portal.html": 1 };
+ok("all seven cards present in order", idx.every((v, i) => v > 0 && (i === 0 || v > idx[i - 1])));
+const navs = { "/worker-dashboard.html": 1, "/hse-portal.html": 1, "/employer-dashboard.html": 1, "/clinical-dashboard.html": 1, "/wcb-portal.html": 1, "/admin-portal.html": 1, "/sigma-portal.html": 1 };
 ok("routing unchanged: each card links to its portal", Object.keys(navs).every(n => src.includes('nav: "' + n + '"')));
 ok("worker copy unchanged", src.includes("Your space for recovery. Do a quick check-in"));
 ok("employer copy unchanged", src.includes("Functional status only, never medical detail"));
@@ -68,9 +68,11 @@ ok("focus is visible", src.includes(":focus-visible"));
 ok("main.jsx dash clean", !/[–—]/.test(src));
 ok("built bundle dash clean", !/[–—]/.test(bundle));
 
-// Prompt 34a stopgap: SIGMA Exchange entry point on the hub (until SITE-34a rebuilds the card)
-ok("hub carries a SIGMA Exchange entry link", hub.includes('id="sigmaentry"') && hub.includes('href="/sigma-portal.html"'));
-ok("SIGMA entry is honest (proposed workflow)", hub.includes("Proposed workflow"));
+// Prompt 34a: SIGMA Exchange is the seventh hub card, in the menu
+ok("SIGMA card in the source", src.includes('title: "SIGMA Exchange"') && src.includes('nav: "/sigma-portal.html"'));
+ok("SIGMA card in the built bundle", bundle.includes('title:"SIGMA Exchange"') && bundle.includes('nav:"/sigma-portal.html"'));
+ok("SIGMA card in the vanilla fallback", hub.includes("/sigma-portal.html") && hub.includes("SIGMA Exchange"));
+ok("SIGMA card is honest (proposed workflow)", src.includes("proposed workflow, not a live integration"));
 
 console.log("\nhub-roles suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
