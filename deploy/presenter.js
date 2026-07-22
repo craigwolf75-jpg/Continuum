@@ -36,13 +36,7 @@
       "#cp-card{position:fixed;left:50%;transform:translateX(-50%);top:74px;z-index:8990;max-width:640px;width:calc(100% - 28px);background:#fff;border:1px solid #C8972F;border-left:5px solid #C8972F;border-radius:12px;box-shadow:0 10px 30px rgba(14,27,44,.25);padding:14px 18px}" +
       "#cp-card .cp-ct{font:800 15px/1.2 system-ui,sans-serif;color:#0E1B2C;margin-bottom:4px}" +
       "#cp-card .cp-cb{font:400 13.5px/1.55 system-ui,sans-serif;color:#26333f}" +
-      "#cp-voice{position:fixed;right:14px;bottom:70px;z-index:8990;width:290px;background:#0E1B2C;color:#eaf1fb;border:1px solid #C8972F;border-radius:12px;padding:14px}" +
-      "#cp-voice .cp-vh{font:800 13px/1 system-ui,sans-serif;margin-bottom:6px}" +
-      "#cp-voice .cp-active{color:#7BD88F;font-weight:800}" +
-      "#cp-voice .cp-vsub{font:400 11.5px/1.5 system-ui,sans-serif;color:#aebfd6;margin-bottom:8px}" +
-      "#cp-voice input{width:100%;height:34px;border-radius:8px;border:1px solid #3b4a63;background:#0a1424;color:#fff;padding:0 10px;font-size:12px;margin-bottom:8px}" +
-      "#cp-voice button{background:#C8972F;color:#0E1B2C;border:none;border-radius:8px;padding:7px 12px;font:700 11.5px/1 system-ui,sans-serif;cursor:pointer}" +
-      "@media print{#cp-card,#cp-voice,#cp-convai,elevenlabs-convai,.cp-present-btn{display:none !important}}";
+      "@media print{#cp-card,#cp-convai,elevenlabs-convai,.cp-present-btn{display:none !important}}";
     document.head.appendChild(s);
   }
 
@@ -59,15 +53,10 @@
   }
   function unmountWidget() { var w = document.getElementById("cp-convai"); if (w) w.remove(); mounted = false; }
 
-  function voice() {
-    var v = document.getElementById("cp-voice");
-    if (!v) { v = document.createElement("div"); v.id = "cp-voice"; document.body.appendChild(v); }
-    // The dedicated assistant auto-connects. No sign in step, so the panel never
-    // blocks the conversation; it mounts the widget straight away.
-    v.innerHTML = '<div class="cp-vh">Voice assistant <span class="cp-active">active</span></div>' +
-      '<div class="cp-vsub">Tap the microphone to ask a question out loud. This portal has its own dedicated assistant.</div>';
-    mountWidget(activeAgent());
-  }
+  // Mount the dedicated assistant widget only. The ElevenLabs launcher is the
+  // voice UI on its own in the bottom-right corner; there is no separate status
+  // card, so nothing overlaps or covers the widget.
+  function voice() { mountWidget(activeAgent()); }
 
   function card() {
     var c = document.getElementById("cp-card");
@@ -77,7 +66,7 @@
   }
 
   function teardown() {
-    ["cp-card", "cp-voice"].forEach(function (id) { var e = document.getElementById(id); if (e) e.remove(); });
+    var e = document.getElementById("cp-card"); if (e) e.remove();
     unmountWidget();
   }
 

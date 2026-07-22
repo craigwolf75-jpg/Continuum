@@ -43,9 +43,10 @@ ok("mounts the official convai element", js.includes('createElement("elevenlabs-
 ok("sets the agent-id attribute", js.includes('setAttribute("agent-id"'));
 ok("loads the official ElevenLabs widget script", js.includes("@elevenlabs/convai-widget-embed"));
 ok("widget mounts exactly once (id guard)", js.includes('getElementById("cp-convai")') && js.includes("if (!w)"));
-ok("voice panel reports active and never asks to sign in", js.includes('cp-active">active') && !js.includes("Paste the ElevenLabs agent ID"));
+ok("no separate status card that overlaps the widget", !js.includes("cp-voice"));
+ok("voice never asks to sign in (no paste or connect step)", !js.includes("Paste the ElevenLabs agent ID") && !js.includes('id="cp-set"'));
 ok("the dedicated agent id is embedded for auto-connect", js.includes("agent_8301ky420pc9f4e8ekswyekptnf2"));
-ok("the panel mounts the agent with no Connect step", js.includes("mountWidget(activeAgent())") && !js.includes('id="cp-set"'));
+ok("the widget mounts straight away (no Connect step)", js.includes("mountWidget(activeAgent())"));
 ok("full teardown when toggled off", js.includes("function teardown()") && js.includes("unmountWidget"));
 ok("print hides the whole kit", js.includes("@media print") && js.includes("cp-convai"));
 ok("presenter.js dash clean", !/[–—]/.test(js));
