@@ -173,7 +173,7 @@ var NAV=[["overview","Overview",null],
 ["_g3","ADMIN",null],
 ["users","Users & Roles","g"],["settings","Settings","g"],["integrations","Integrations","g"]];
 var S;
-function freshState(){return {workers:JSON.parse(JSON.stringify(WORKERS)),returned:[],section:"overview",filter:null,search:"",audit:[],notes:[
+function freshState(){return {workers:JSON.parse(JSON.stringify(WORKERS)),returned:[],section:"overview",filter:null,catFilter:null,search:"",audit:[],notes:[
  {who:"K. Morgan", when:"Jun 27, 2026", worker:"David Martinez", text:"Route adjusted to local deliveries only. Duties confirmed manageable."},
  {who:"Site HSE", when:"Jun 26, 2026", worker:"Kevin O'Brien", text:"Ground-level staging assigned. Hazard check complete."}
 ]};}
@@ -250,7 +250,7 @@ var MONTHS=["May 25","Jun 1","Jun 8","Jun 15","Jun 22","Jun 29"];
 
 /* ---------- navigation ---------- */
 function empAudit(msg){if(!S.audit)S.audit=[];S.audit.unshift({msg:msg,ts:Date.now()});if(S.audit.length>25)S.audit.pop();}
-function go(sec){S.section=sec==="dashboards"?"overview":sec;S.filter=null;if(S.section==="workers")empAudit("Viewed the injured workers functional list");save();window.scrollTo(0,0);}
+function go(sec){S.section=sec==="dashboards"?"overview":sec;S.filter=null;S.catFilter=null;if(S.section==="workers")empAudit("Viewed the injured workers functional list");save();window.scrollTo(0,0);}
 function renderSide(){
  var h='<div class="logo"><div class="mark"><span></span></div><div class="lt"><b>CONTINUUM</b><i>Injury Recovery Platform</i><i style="display:block;margin-top:5px;color:#8b97a9;font-size:10.5px">What work is safe today</i></div></div>';
  NAV.forEach(function(n){
@@ -297,7 +297,8 @@ function renderOverview(){
  h+='<div class="card"><div class="cardhead">Injuries by type <span style="font-weight:400;text-transform:none;letter-spacing:0">'+catT+' total</span></div><div style="display:flex;gap:16px;align-items:center">'+
   donut(Object.keys(CAT_META).map(function(k){return {v:cats[k]||0,c:CAT_META[k][1]};}),catT,128,16,null)+
   '<ul class="legend" style="flex:1">'+Object.keys(CAT_META).map(function(k){var v=cats[k]||0;
-   return '<li><span class="sw" style="background:'+CAT_META[k][1]+'"></span>'+CAT_META[k][0]+'<b>'+v+'</b><span class="pct">('+Math.round(v/Math.max(1,catT)*100)+'%)</span></li>';}).join("")+'</ul></div></div>';
+   return '<li onclick="S.catFilter=\''+k+'\';S.filter=null;S.section=\'workers\';save()"><span class="sw" style="background:'+CAT_META[k][1]+'"></span>'+CAT_META[k][0]+'<b>'+v+'</b><span class="pct">('+Math.round(v/Math.max(1,catT)*100)+'%)</span></li>';}).join("")+'</ul></div>'+
+  '<div style="margin-top:8px"><a href="#" onclick="go(\'workers\');return false" style="font-size:12px">View all injured workers &#8594;</a></div></div>';
  h+='<div class="card"><div class="cardhead">Key insights</div>'+
   '<div class="insight"><span class="ic" style="background:#3E9A64"></span><div><b>Return to work rate improved</b><span>Up 6% compared to last 7 days.</span></div></div>'+
   '<div class="insight"><span class="ic" style="background:#1F3557"></span><div><b>Avg days injured down</b><span>'+avgDays()+' days is 5% lower than last 7 days.</span></div></div>'+
@@ -340,14 +341,16 @@ function peekFirewall(){toast("Not hidden, <b>not present</b>: pain scores, diag
 function renderWorkers(){
  var list=actives().filter(function(w){
   if(S.filter&&w.status!==S.filter)return false;
+  if(S.catFilter&&w.cat!==S.catFilter)return false;
   if(S.search&&(w.name+" "+w.role+" "+w.injury+" "+w.loc).toLowerCase().indexOf(S.search.toLowerCase())<0)return false;
   return true;});
  var h=pagehead("Injury management","Injured Workers","Every active case, functional status only",
   '<button class="btn" onclick="window.print()">Export PDF</button>');
  var c=counts();
  h+='<div class="filterbar"><input type="search" placeholder="Search worker, role, injury, location" value="'+esc(S.search)+'" oninput="S.search=this.value;save()" style="min-width:240px">'+
-  '<span class="fchip'+(S.filter===null?" on":"")+'" onclick="S.filter=null;save()">All ('+actives().length+')</span>'+
-  Object.keys(c).map(function(k){return '<span class="fchip'+(S.filter===k?" on":"")+'" onclick="S.filter=\''+k+'\';save()">'+STATUS_META[k][0]+' ('+c[k]+')</span>';}).join("")+'</div>';
+  '<span class="fchip'+(S.filter===null&&!S.catFilter?" on":"")+'" onclick="S.filter=null;S.catFilter=null;save()">All ('+actives().length+')</span>'+
+  Object.keys(c).map(function(k){return '<span class="fchip'+(S.filter===k?" on":"")+'" onclick="S.filter=\''+k+'\';S.catFilter=null;save()">'+STATUS_META[k][0]+' ('+c[k]+')</span>';}).join("")+
+  (S.catFilter?'<span class="fchip on" onclick="S.catFilter=null;save()">'+CAT_META[S.catFilter][0]+' ('+(catCounts()[S.catFilter]||0)+') &times;</span>':"")+'</div>';
  h+='<div class="card">'+workerTable(list,false)+'</div>';
  var rlist=returnedList(); if(rlist.length){h+='<div class="card" style="margin-top:12px"><div class="cardhead">Returned to full duty this period &middot; '+rlist.length+'</div>'+
   rlist.map(function(w){return '<div class="admin-row"><div><b>'+esc(w.name)+'</b>'+(w.live?'<span class="live-badge">Live</span>':'')+' <span style="color:var(--muted);font-size:12px">'+esc(w.injury)+' &middot; '+w.days+' days</span></div><span class="chip c-returned">Returned</span></div>';}).join("")+'</div>';}
