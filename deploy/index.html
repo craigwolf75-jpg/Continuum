@@ -103,8 +103,8 @@
   <style>@media (prefers-reduced-motion: reduce){ #home .hero-vid{display:none !important} }</style>
   <!-- ================= S1 HERO (navy, background video) ================= -->
   <div id="home" style="position:relative;overflow:hidden;background:linear-gradient(175deg,#0E1B2C 0%,#0A1526 100%);padding:110px 32px 120px">
-    <!-- Hero background video (Prompt 36). Single source URL; the Hero Videos bucket is public, so no token and no expiry. -->
-    <video class="hero-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" src="/hero-video.mp4"></video>
+    <!-- Hero background video (Prompt 36), served same-origin from deploy/hero-video.mp4. object-fit:contain shows the whole 16:9 clip uncropped, sat to the right beside the copy. -->
+    <video class="hero-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:right center;z-index:0" src="/hero-video.mp4"></video>
     <div class="hero-overlay" style="position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(14,27,44,.9) 0%,rgba(14,27,44,.58) 30%,rgba(14,27,44,.12) 52%,rgba(14,27,44,0) 66%)"></div>
     <div style="position:relative;z-index:2;max-width:1200px;margin:0 auto">
       <div style="max-width:600px">
