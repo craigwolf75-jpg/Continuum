@@ -333,9 +333,14 @@ function renderDashboard(){
  '<div class="tile" style="cursor:pointer" onclick="go(\'chat\')"><span class="ic" style="background:var(--gold);color:var(--navy)"><span class="msym">forum</span></span><div><b>Support message</b><span>'+(S.unread?S.unread+" unread from K. Morgan":"You are all caught up")+'</span></div></div>'+
  '</section>';
  return h;}
+/* Shared section header so Present sits top-right on every worker section, the
+   same place it lives on the dashboard. */
+function wkHeader(title,sub){
+ return '<header style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:18px"><div><h2 class="pg" style="margin-bottom:4px">'+title+'</h2><p class="sub" style="margin:0">'+sub+'</p></div>'+
+  '<div style="display:flex;gap:10px"><button class="btn ghost" onclick="startPresent()"><span class="msym" style="font-size:18px">play_arrow</span> Present</button></div></header>';}
 function renderTrend(){
  var f=S.form;
- var h='<h2 class="pg" style="margin-bottom:4px">Recovery Trend</h2><p class="sub" style="margin-bottom:18px">Log how today feels. Short and honest beats long and perfect.</p>';
+ var h=wkHeader("Recovery Trend","Log how today feels. Short and honest beats long and perfect.");
  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="grid2">';
  h+='<div class="card" style="padding:22px"><h3 style="font-size:18px;color:var(--navy);margin-bottom:6px">New recovery log</h3>'+
  (S.checkedInToday?'<p class="sub" style="margin-bottom:10px">You already logged today. Another one is fine if something changed.</p>':"")+
@@ -360,7 +365,7 @@ function saveLog(ev){
  save();}
 function renderDuties(){
  var acked=S.ackDay===S.day;
- var h='<h2 class="pg" style="margin-bottom:4px">My Duties</h2><p class="sub" style="margin-bottom:18px">Only duties your clinician\'s restrictions allow ever reach this list. You accept them; nobody accepts for you.</p>';
+ var h=wkHeader("My Duties","Only duties your clinician\'s restrictions allow ever reach this list. You accept them; nobody accepts for you.");
  h+='<div class="card" style="padding:20px;max-width:640px;margin-bottom:16px"><b style="font-size:15px;color:var(--navy)">Today\'s restrictions</b> <span class="prov clin">Clinician entered</span>'+
   '<div class="m" style="margin:6px 0 12px">No lifting above shoulder height &middot; breaks every 60 minutes.</div>'+
   (acked?'<span class="pillst ok">Acknowledged today at '+fmtTime(S.ackTs)+'</span>':'<button class="btn" onclick="ackDuties(event)">I understand my duties today</button>')+
@@ -385,7 +390,7 @@ function acceptDuty(id){var d=S.duties.find(function(x){return x.id===id;});if(d
 function doneDuty(id,ev){var d=S.duties.find(function(x){return x.id===id;});if(d&&d.status==="accepted"){d.status="completed";toast("Nice work. Duty <b>completed</b>.");if(ev)burst(ev.clientX,ev.clientY);save();}}
 function doActivity(id,status){var a=(S.activities||[]).find(function(x){return x.id===id;});if(!a)return;a.status=status;if(status==="missed"){S.logs.unshift({t:"Today",title:"Activity skipped",x:"Skipped a prescribed activity: "+a.name+". Your care team can see this.",tag:"notified"});toast("Marked <b>skipped</b>. Your care team sees it.");}else{toast("Nice work. Activity <b>done</b>.");}save();}
 function renderChat(){
- var h='<h2 class="pg" style="margin-bottom:4px">Chat</h2><p class="sub" style="margin-bottom:18px">A private line to your coordinator. Text alerts only ever say you have an update; the content stays here, behind your login.</p>';
+ var h=wkHeader("Chat","A private line to your coordinator. Text alerts only ever say you have an update; the content stays here, behind your login.");
  h+='<div class="card" style="padding:20px;max-width:640px">'+
  S.msgs.map(function(m){return '<div class="msg '+(m.who==="me"?"me":"them")+'">'+esc(m.x)+'<div class="mt">'+esc(m.t)+'</div></div>';}).join("")+
  '<div style="display:flex;gap:10px;margin-top:12px"><input type="text" id="chatline" placeholder="Write a message" style="flex:1;height:46px;border:1px solid var(--line);border-radius:10px;padding:0 14px;font:inherit" onkeydown="if(event.key===\'Enter\')sendMsg()"><button class="btn" onclick="sendMsg()">Send</button></div></div>';
@@ -396,7 +401,7 @@ function sendMsg(){
  S.msgs.push({who:"them",x:"Got it, thanks Marcus. I will follow up today.",t:"K. Morgan, just now"});
  toast("Message <b>sent</b>");save();}
 function renderSettings(){
- var h='<h2 class="pg" style="margin-bottom:4px">Settings</h2><p class="sub" style="margin-bottom:18px">Your data, your choices. Changing these never affects your care or your job.</p>';
+ var h=wkHeader("Settings","Your data, your choices. Changing these never affects your care or your job.");
  h+='<div class="card" style="padding:20px;max-width:640px">'+
  '<div class="adminrow"><div><b>Daily check-ins</b><div class="sub" style="font-size:11.5px">Pain, movement, and your words. Seen by your care team, never your employer.</div></div>'+
  '<button class="btn ghost" style="padding:8px 14px;font-size:12px" onclick="toggleConsent()">'+(S.consented?"Turn off":"Turn on")+'</button></div>'+

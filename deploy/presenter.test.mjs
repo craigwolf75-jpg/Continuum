@@ -79,5 +79,18 @@ ok("employer names clinical detail only as absences", !/\b(diagnos|pain|medical|
 
 ok("patched portals dash clean", !/[–—]/.test(emp) && !/[–—]/.test(hse));
 
+// ---- Present control lives in the page header, not a fixed corner pill ----
+ok("presenter no longer paints a fixed corner pill", !js.includes("cp-pill"));
+ok("present button is print-hidden", js.includes(".cp-present-btn"));
+ok("employer renders a header Present button in pagehead", emp.includes("cp-present-btn") && emp.includes("function presentToggle") && /function pagehead\([\s\S]*?presentBtn\(\)/.test(emp));
+ok("hse renders a header Present button in pagehead", hse.includes("cp-present-btn") && hse.includes("function presentToggle") && /function pagehead\([\s\S]*?presentBtn\(\)/.test(hse));
+ok("header Present toggles the shared presenter", /presentToggle\(\)\{[^}]*ContinuumPresenter\.toggle\(\)/.test(emp) && /presentToggle\(\)\{[^}]*ContinuumPresenter\.toggle\(\)/.test(hse));
+
+// ---- worker portal: Present on every section, top of page ----
+const wk = read("worker-dashboard.html");
+ok("worker dashboard header has Present", /startPresent\(\)[\s\S]{0,80}Present/.test(wk));
+ok("worker non-dashboard sections share a header with Present", wk.includes("function wkHeader") && /wkHeader\([\s\S]*?startPresent\(\)/.test(wk));
+ok("worker Present reaches Trend, Duties, Chat, and Settings", wk.includes('wkHeader("Recovery Trend"') && wk.includes('wkHeader("My Duties"') && wk.includes('wkHeader("Chat"') && wk.includes('wkHeader("Settings"'));
+
 console.log("\npresenter suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

@@ -2,7 +2,8 @@
    Employer and HSE portals. It wraps nothing on its own: a portal attaches its
    own section map and a getSection hook, then wraps its render to call refresh.
    The module owns its styles and elements and touches nothing else. Off is the
-   default; the only visible trace is a small Present pill; print hides it all.
+   default; the Present control lives in each portal's page header (the module no
+   longer paints a corner pill); print hides the whole kit.
    The voice panel mounts the official ElevenLabs Conversational AI widget once an
    agent id is pasted; the id is shared across both portals through one storage
    key. No em-dashes anywhere. */
@@ -24,8 +25,6 @@
     if (document.getElementById("cp-style")) return;
     var s = document.createElement("style"); s.id = "cp-style";
     s.textContent =
-      "#cp-pill{position:fixed;left:14px;bottom:14px;z-index:9000;background:#0E1B2C;color:#fff;border:1px solid #C8972F;border-radius:999px;padding:8px 16px;font:600 12px/1 system-ui,sans-serif;cursor:pointer}" +
-      "#cp-pill.on{background:#C8972F;color:#0E1B2C}" +
       "#cp-card{position:fixed;left:50%;transform:translateX(-50%);top:74px;z-index:8990;max-width:640px;width:calc(100% - 28px);background:#fff;border:1px solid #C8972F;border-left:5px solid #C8972F;border-radius:12px;box-shadow:0 10px 30px rgba(14,27,44,.25);padding:14px 18px}" +
       "#cp-card .cp-ct{font:800 15px/1.2 system-ui,sans-serif;color:#0E1B2C;margin-bottom:4px}" +
       "#cp-card .cp-cb{font:400 13.5px/1.55 system-ui,sans-serif;color:#26333f}" +
@@ -35,15 +34,8 @@
       "#cp-voice .cp-vsub{font:400 11.5px/1.5 system-ui,sans-serif;color:#aebfd6;margin-bottom:8px}" +
       "#cp-voice input{width:100%;height:34px;border-radius:8px;border:1px solid #3b4a63;background:#0a1424;color:#fff;padding:0 10px;font-size:12px;margin-bottom:8px}" +
       "#cp-voice button{background:#C8972F;color:#0E1B2C;border:none;border-radius:8px;padding:7px 12px;font:700 11.5px/1 system-ui,sans-serif;cursor:pointer}" +
-      "@media print{#cp-pill,#cp-card,#cp-voice,#cp-convai,elevenlabs-convai{display:none !important}}";
+      "@media print{#cp-card,#cp-voice,#cp-convai,elevenlabs-convai,.cp-present-btn{display:none !important}}";
     document.head.appendChild(s);
-  }
-
-  function pill() {
-    var p = document.getElementById("cp-pill");
-    if (!p) { p = document.createElement("button"); p.id = "cp-pill"; p.type = "button"; p.onclick = toggle; document.body.appendChild(p); }
-    p.textContent = on ? "Presenting" : "Present";
-    p.className = on ? "on" : "";
   }
 
   function mountWidget(agentId) {
@@ -92,9 +84,12 @@
   }
 
   function build() { css(); card(); voice(); }
-  function toggle() { on = !on; if (on) build(); else teardown(); pill(); }
-  function refresh() { pill(); if (on) build(); }
-  function attach(config) { cfg = config; css(); pill(); }
+  // The Present control now lives in each portal's page header (class
+  // cp-present-btn), so the module no longer paints a fixed corner pill. The
+  // header button calls toggle(); refresh() reruns after every host render.
+  function toggle() { on = !on; if (on) build(); else teardown(); }
+  function refresh() { if (on) build(); }
+  function attach(config) { cfg = config; css(); }
 
   g.ContinuumPresenter = {
     attach: attach, refresh: refresh, toggle: toggle,

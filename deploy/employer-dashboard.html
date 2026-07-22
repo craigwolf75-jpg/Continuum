@@ -263,9 +263,12 @@ function renderSide(){
  h+='<div class="cpy">&copy; 2026 Continuum<br>All rights reserved. &nbsp;<a href="#" onclick="resetAll();return false" style="color:var(--sidemut)">Reset demo</a></div>';
  document.getElementById("side").innerHTML=h;}
 /* ---------- shared header ---------- */
+function presentBtn(){var on=(window.ContinuumPresenter&&ContinuumPresenter.isOn&&ContinuumPresenter.isOn())||false;
+ return '<button type="button" class="btn cp-present-btn" onclick="presentToggle()"'+(on?' style="background:#C8972F;color:#0E1B2C;border-color:#C8972F"':'')+'>'+(on?'Presenting':'Present')+'</button>';}
+function presentToggle(){if(window.ContinuumPresenter){ContinuumPresenter.toggle();render();}}
 function pagehead(kick,title,sub,tools){
  return '<div class="pagehead"><div><div class="kicker">'+kick+'</div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+
- '<div class="htools">'+(LIVE?'<div class="livechip">Worker feed: Live</div>':'')+'<div class="range">Jun 22 to Jun 29, 2026</div><div class="who">K. Morgan &middot; Sample Employer Co.</div>'+(tools||"")+'</div></div>';}
+ '<div class="htools">'+(LIVE?'<div class="livechip">Worker feed: Live</div>':'')+'<div class="range">Jun 22 to Jun 29, 2026</div><div class="who">K. Morgan &middot; Sample Employer Co.</div><div class="hbtns" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px">'+presentBtn()+(tools||"")+'</div></div></div>';}
 function chipFor(st){return '<span class="chip c-'+st+'">'+STATUS_META[st][0]+'</span>';}
 function rtwBar(v){return '<div style="display:flex;align-items:center;gap:8px"><div class="pbar'+(v>=100?" full":"")+'" style="flex:1"><i style="width:'+v+'%"></i></div><span style="font-size:11px;color:var(--muted);width:32px">'+v+'%</span></div>';}
 /* ---------- overview ---------- */

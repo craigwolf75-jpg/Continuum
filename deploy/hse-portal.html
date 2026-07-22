@@ -211,8 +211,12 @@ function renderNav(){
 function stchip(w){
  var escd=S.escalations.some(function(e){return e.w===w.id&&!e.resolved;});
  return '<span class="stchip s-'+w.status+'">'+ST[w.status]+'</span>'+(escd?' <span class="stchip s-escalated">Escalated</span>':"");}
+function presentBtn(){var on=(window.ContinuumPresenter&&ContinuumPresenter.isOn&&ContinuumPresenter.isOn())||false;
+ return '<button type="button" class="btn ghost cp-present-btn" onclick="presentToggle()"'+(on?' style="background:#C8972F;color:var(--navy);border-color:#C8972F"':'')+'>'+(on?'Presenting':'Present')+'</button>';}
+function presentToggle(){if(window.ContinuumPresenter){ContinuumPresenter.toggle();render();}}
 function pagehead(title,sub,extra){
- return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px"><div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+(extra||"")+'</div>';}
+ return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px"><div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+
+ '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">'+presentBtn()+(extra||"")+'</div></div>';}
 /* ---------- dashboard ---------- */
 function renderDashboard(){
  var h=pagehead("Return to Work (RTW) Coordination","Who needs my attention today. Every open case, sorted by attention needed.",
