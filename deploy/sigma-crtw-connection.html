@@ -159,7 +159,7 @@
 
   function renderHome(){
     var d=DATA, h="";
-    h+='<div class="top"><div class="brand">Continuum <span>x '+esc(SYS)+'</span></div><div class="flag">Proposed workflow</div></div>';
+    h+='<div class="top"><div class="brand" style="display:flex;align-items:center;gap:10px"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="height:38px;width:auto;display:block"> <span>x '+esc(SYS)+'</span></div><div class="flag">Proposed workflow</div></div>';
     h+='<div class="kick">The connected journey</div>';
     h+='<p class="lead">'+esc(SYS)+' manages the incident and claim record. Continuum CRTW manages the <b>active recovery</b> and the <b>safe return to work</b>. Together, one connected journey.</p>';
     h+='<div class="metrics">'+d.metrics.map(function(m){return '<div class="metric"><div class="n">'+esc(m.n)+'</div><div class="l">'+esc(m.l)+'</div></div>';}).join("")+'</div>';

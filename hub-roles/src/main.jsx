@@ -157,7 +157,7 @@ function RolesView() {
     <div className="cr-root">
       <div className="cr-brand" ref={logoRef} style={{ opacity: 0 }}>
         <div className="cr-badge">C</div>
-        <div className="cr-wordmark">Continuum</div>
+        <img className="cr-logo" src="/continuum-logo.svg" alt="Continuum Return to Work" style={{ height: 60, width: "auto", display: "block", margin: "0 auto" }} />
       </div>
       <div className="cr-grid">
         {CARDS.map((card, i) => (
