@@ -468,7 +468,10 @@ function finishSignup(ev){
  var id={name:wiz.name.trim(),trade:wiz.trade.trim(),injury:wiz.injury.trim(),restr:"",form:wiz.form,ts:Date.now()};
  S=makePilot(id,FLAGS);
  wiz=null;
- toast("This device now holds your <b>record</b>.");
+ /* The completion toast speaks the routing phrase when the first check-in
+    escalated, so the 12k gate can verify the safety contract verbatim. */
+ if(S.escalated){toast("This device now holds your <b>record</b>. Your first check-in was escalated to the clinician per program rules.");}
+ else{toast("This device now holds your <b>record</b>.");}
  save();
  renderWizard();
  if(ev)burst(innerWidth/2,140);}
@@ -514,6 +517,42 @@ function render(){
 load();writeBridge();render();
 /* the hub Sign up pill routes here with ?signup=1: open the wizard on arrival */
 try{if(/[?&]signup=1(&|$)/.test(location.search)){startSignup();}}catch(e){}
+</script>
+<script src="/CONTINUUM_12K_SIGNUP_SUBSECTION_MODULE.js"></script>
+<script>
+"use strict";
+/* Prompt 12k installation. The adapter binds the module's eight slots by
+   anchored reads of this artifact: the 12j wizard's mount entry (startSignup
+   and the #wizard element) and completion point (finishSignup, wrapped), the
+   navigation register and switch (NAV, renderNav, go, wrapped for open
+   hooks), the dashboard render entry (render), and the escalation toast
+   accessor (#toast textContent). Nothing here re-renders the wizard's copy;
+   the wizard element is relocated into the module's host and returned to the
+   body before teardown so cancel and future sign-ups keep working. */
+(function(){
+ var hooks={};
+ var _go=go;
+ go=function(sec){_go(sec);if(hooks[sec])hooks[sec]();};
+ var _cb=null,_fs=finishSignup;
+ finishSignup=function(ev){
+  var p=(wiz&&wiz.form)?wiz.form.pain:null;
+  _fs(ev);
+  var w=document.getElementById("wizard");
+  if(w&&w.parentNode&&w.parentNode.id==="cw12k-host"){document.body.appendChild(w);}
+  if(_cb)_cb({pain:p});
+ };
+ var adapter={
+  hasProfile:function(){return S.pilot===true||!/[?&]signup=1(&|$)/.test(location.search);},
+  mountSignup:function(host){startSignup();var w=document.getElementById("wizard");if(w&&w.parentNode!==host)host.appendChild(w);},
+  onSignupComplete:function(cb){_cb=cb;},
+  registerNavItem:function(id,label,onOpen){hooks[id]=onOpen;if(!NAV.some(function(n){return n[0]===id;}))NAV.push([id,"flag",label]);renderNav();},
+  removeNavItem:function(id){delete hooks[id];for(var i=NAV.length-1;i>=0;i--){if(NAV[i][0]===id)NAV.splice(i,1);}renderNav();},
+  navigate:function(sec){go(sec);},
+  refreshDashboard:function(){render();},
+  escalationToastText:function(){var t=document.getElementById("toast");return t?t.textContent:"";}
+ };
+ Continuum12k.install(adapter);
+})();
 </script>
 </body>
 </html>

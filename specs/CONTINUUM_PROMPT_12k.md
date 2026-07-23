@@ -25,4 +25,26 @@ Tomorrow is the pilot, and 12k touches the surface a real worker uses in the mor
 
 Both files pass the node syntax gate. The module suite is green in this session: seven tests carrying ten hard-failing assertions, window and document shims per the standing test law (install refusal names refreshDashboard and escalationToastText when unbound; unboarded install registers the sub-section, navigates to it, and mounts once; onboarded install registers nothing; pain-8 completion halts without the verbatim routing phrase and proceeds with it, removing the sub-section and navigating to the populated dashboard; ordinary completion never consults the toast; a second open reuses the single host). Dash audit clean on the module, the suite, and this companion; issued as markdown and JavaScript in the repository only. Numbering: 12k is the next free letter under 12 (ledger: 12j taken).
 
+## 6. Installation record (added at install, July 22, 2026)
+
+Installed into deploy/worker-dashboard.html on Gary's instruction, the four
+anchored steps as written: the module script block sits before the closing
+body tag (single anchor), the adapter binds all eight slots by anchored reads
+(startSignup and the wizard element for mount, finishSignup wrapped for
+completion, NAV plus renderNav plus a wrapped go for the navigation slots,
+render for the dashboard refresh, the toast element for the escalation text),
+install runs with no console refusal, and the wizard element returns to the
+body before the module tears its host down so cancel and future sign-ups keep
+working. One contract completion surfaced by the gate and made at install:
+the artifact spoke no routing phrase anywhere, so the escalated completion
+toast now carries "escalated to the clinician per program rules" verbatim
+while the ordinary completion toast is unchanged and the worker timeline copy
+stays encouraging. Unboarded means arriving on the sign-up route without a
+pilot record; the demonstration and any existing pilot record see no Get
+started entry at all. All four gates green at install: the module suite (ten
+assertions), the full worker suite (forty one), the six-portal canon
+regression (eleven), and the dash audit, plus the whole suite family and a
+live browser pass of the demonstration, the unboarded landing, the ordinary
+completion, and the pain-nine completion with the phrase on the toast.
+
 Where care ends, Continuum begins.
