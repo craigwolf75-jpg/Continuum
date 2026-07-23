@@ -85,7 +85,11 @@ answers to the draft's global name CONTINUUM_37. Kept against the draft: the
 employee band wording stays in the companion's spoken form (1 to 49), the
 wall refusal keeps the functional-only promise verbatim, and the draft's
 unvalidated setData path, per-open commitments remounting, and unguarded
-completion were not adopted. The suite grows to nineteen tests, forty seven
-assertions, locking every adopted delta.
+completion were not adopted. The suite grows to nineteen tests, forty eight
+assertions, locking every adopted delta. The draft's companion suite was
+reviewed the same way: it exercises the draft's unadopted surface and cannot
+run against this repository, its intents are otherwise covered, and its one
+novel case, a header-only injuries file accepted as the same honest empty
+state, is folded into the suite here.
 
 Where care ends, Continuum begins.

@@ -184,6 +184,7 @@ function onboardTo(mod, a, upTo) {
   ok("t13c injuries bad category refused", mod.submit("injuries", INJURIES_OK.replace("strain_or_sprain", "backache")).errors.some(e => e.includes("backache")));
   ok("t13d injuries negative lost time refused", mod.submit("injuries", INJURIES_OK.replace(",4,", ",-2,")).errors.some(e => e.includes("lost_time_days")));
   ok("t13e the empty upload is accepted", mod.submit("injuries", "").ok === true);
+  ok("t13f a header-only injuries file is the same honest empty state", (function () { const r = mod.submit("injuries", "incident_id,employee_id,incident_date,site_id,incident_category,work_status,lost_time_days,claim_number"); return r.ok === true && r.rows.length === 0; })());
 }
 
 // ---- test 14: organization validation ----
