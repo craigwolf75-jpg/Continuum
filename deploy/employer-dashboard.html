@@ -220,9 +220,9 @@ function locCounts(){var c={};actives().forEach(function(w){c[w.loc]=(c[w.loc]||
 function totalVisits(){return actives().reduce(function(a,w){return a+w.visits;},0)+S.returned.reduce(function(a,w){return a+w.visits;},0);}
 function avgDays(){var a=actives();return a.length?Math.round(a.reduce(function(x,w){return x+w.days;},0)/a.length):0;}
 function newThisWeek(){return actives().filter(function(w){return w.days<=5;}).length;}
-function rtwRate(){var base=76,bump=S.returned.length+((LIVE&&LIVE.status==="returned")?1:0);return Math.min(99,base+bump);}
+function rtwRate(){if(S.org){var r=returnedList().length,t=actives().length+r;return t?Math.round(r/t*100):0;}var base=76,bump=S.returned.length+((LIVE&&LIVE.status==="returned")?1:0);return Math.min(99,base+bump);}
 function costEst(){return 142680-S.returned.length*4980;}
-function timeLoss(){return 624-S.returned.length*22;}
+function timeLoss(){if(S.org)return S.org.injuries.reduce(function(a,x){return a+(Number(x.lost_time_days)||0);},0)*8;return 624-S.returned.length*22;}
 /* ---------- svg helpers ---------- */
 function donut(segs,total,size,hole,center){
  var r=(size-hole)/2-2,cx=size/2,cy=size/2,C=2*Math.PI*r,acc=0,paths="";
@@ -268,22 +268,23 @@ function presentBtn(){var on=(window.ContinuumPresenter&&ContinuumPresenter.isOn
 function presentToggle(){if(window.ContinuumPresenter){ContinuumPresenter.toggle();render();}}
 function pagehead(kick,title,sub,tools){
  return '<div class="pagehead"><div><div class="kicker">'+kick+'</div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+
- '<div class="htools">'+(LIVE?'<div class="livechip">Worker feed: Live</div>':'')+'<div class="range">Jun 22 to Jun 29, 2026</div><div class="who">K. Morgan &middot; Sample Employer Co.</div><div class="hbtns" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px">'+presentBtn()+(tools||"")+'</div></div></div>';}
+ '<div class="htools">'+(LIVE?'<div class="livechip">Worker feed: Live</div>':'')+''+(S.org?'<div class="range">Pilot period</div><div class="who">'+esc(S.org.contacts.coordinatorName)+' &middot; '+esc(S.org.organization.commonName||S.org.organization.legalName)+'</div>':'<div class="range">Jun 22 to Jun 29, 2026</div><div class="who">K. Morgan &middot; Sample Employer Co.</div>')+'<div class="hbtns" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px">'+presentBtn()+(tools||"")+'</div></div></div>';}
 function chipFor(st){return '<span class="chip c-'+st+'">'+STATUS_META[st][0]+'</span>';}
 function rtwBar(v){return '<div style="display:flex;align-items:center;gap:8px"><div class="pbar'+(v>=100?" full":"")+'" style="flex:1"><i style="width:'+v+'%"></i></div><span style="font-size:11px;color:var(--muted);width:32px">'+v+'%</span></div>';}
 /* ---------- overview ---------- */
 function kpiCard(label,big,delta,extra){return '<div class="card kpi"><div class="cardhead">'+label+'</div><div style="display:flex;justify-content:space-between;align-items:flex-end;gap:8px"><div><div class="n">'+big+'</div><div class="d">'+delta+'</div></div><div>'+(extra||"")+'</div></div></div>';}
 function renderOverview(){
  var c=counts(),tot=actives().length,cats=catCounts(),bk=bucketCounts(),locs=locCounts();
+ var DEM=!S.org;var FLAT=function(v){return [v,v,v,v,v,v];};
  var h=pagehead("The employer view",'Every recovery on <span class="g">one screen.</span>',"What work is safe today &middot; live functional status of injured workers and return-to-work progress",
   '<button class="btn" onclick="window.print()">Export PDF</button> <button class="btn" onclick="go(\'workers\')">Filters</button>');
  h+='<div class="grid kpis">'+
- kpiCard("Total injured workers",tot,'<span class="down">&#8595; 8% vs last 7 days</span>',spark([31,30,29,30,29,28],64,34,"#3E9A64"))+
- kpiCard("New injuries, 7 days",newThisWeek(),'<span class="down">&#8595; 17% vs last 7 days</span>',spark([7,6,7,6,5,5],64,34,"#3E9A64"))+
+ kpiCard("Total injured workers",tot,DEM?'<span class="down">&#8595; 8% vs last 7 days</span>':"pilot period",spark(DEM?[31,30,29,30,29,28]:FLAT(tot),64,34,"#3E9A64"))+
+ kpiCard("New injuries, 7 days",newThisWeek(),DEM?'<span class="down">&#8595; 17% vs last 7 days</span>':"pilot period",spark(DEM?[7,6,7,6,5,5]:FLAT(newThisWeek()),64,34,"#3E9A64"))+
  kpiCard("Currently on light duty",c.light_duty,Math.round(c.light_duty/Math.max(1,tot)*100)+"% of active cases",donut([{v:c.light_duty,c:"#C8972F"},{v:tot-c.light_duty,c:"#E4E8F0"}],tot,54,8,[Math.round(c.light_duty/Math.max(1,tot)*100)+"%",""]))+
- kpiCard("Avg days injured",avgDays(),'<span class="down">&#8595; 5% vs last 7 days</span>',spark([27,26,25,25,24,24],64,34,"#3E9A64"))+
- kpiCard("Total doctor visits",totalVisits(),"this period",spark([6,9,7,12,10,14],64,34,"#1F3557"))+
- kpiCard("Return to work rate",rtwRate()+"%",'<span class="up">&#8593; 6% vs last 7 days</span>',spark([70,71,72,73,75,rtwRate()],64,34,"#3E9A64",true))+
+ kpiCard("Avg days injured",avgDays(),DEM?'<span class="down">&#8595; 5% vs last 7 days</span>':"pilot period",spark(DEM?[27,26,25,25,24,24]:FLAT(avgDays()),64,34,"#3E9A64"))+
+ kpiCard("Total doctor visits",totalVisits(),"this period",spark(DEM?[6,9,7,12,10,14]:FLAT(totalVisits()),64,34,"#1F3557"))+
+ kpiCard("Return to work rate",rtwRate()+"%",DEM?'<span class="up">&#8593; 6% vs last 7 days</span>':"pilot period",spark(DEM?[70,71,72,73,75,rtwRate()]:FLAT(rtwRate()),64,34,"#3E9A64",true))+
  '</div>';
  /* row 2 */
  var segs=Object.keys(c).map(function(k){return {v:c[k],c:STATUS_META[k][1].indexOf("var")===0?{light_duty:"#C8972F",treating:"#1F3557",modified:"#3E9A64",awaiting:"#9AA5B4"}[k]:STATUS_META[k][1]};});
@@ -303,21 +304,24 @@ function renderOverview(){
    return '<li onclick="S.catFilter=\''+k+'\';S.filter=null;S.section=\'workers\';save()"><span class="sw" style="background:'+CAT_META[k][1]+'"></span>'+CAT_META[k][0]+'<b>'+v+'</b><span class="pct">('+Math.round(v/Math.max(1,catT)*100)+'%)</span></li>';}).join("")+'</ul></div>'+
   '<div style="margin-top:8px"><a href="#" onclick="go(\'workers\');return false" style="font-size:12px">View all injured workers &#8594;</a></div></div>';
  h+='<div class="card"><div class="cardhead">Key insights</div>'+
-  '<div class="insight"><span class="ic" style="background:#3E9A64"></span><div><b>Return to work rate improved</b><span>Up 6% compared to last 7 days.</span></div></div>'+
+  (DEM?'<div class="insight"><span class="ic" style="background:#3E9A64"></span><div><b>Return to work rate improved</b><span>Up 6% compared to last 7 days.</span></div></div>'+
   '<div class="insight"><span class="ic" style="background:#1F3557"></span><div><b>Avg days injured down</b><span>'+avgDays()+' days is 5% lower than last 7 days.</span></div></div>'+
-  '<div class="insight"><span class="ic" style="background:#C8972F"></span><div><b>New injuries decreased</b><span>'+newThisWeek()+' new injuries this week, down 17%.</span></div></div></div>';
+  '<div class="insight"><span class="ic" style="background:#C8972F"></span><div><b>New injuries decreased</b><span>'+newThisWeek()+' new injuries this week, down 17%.</span></div></div>'
+  :'<div class="insight"><span class="ic" style="background:#1F3557"></span><div><b>Baseline being established</b><span>Trends appear after the first weeks of check-ins.</span></div></div>')+'</div>';
  h+='</div>';
  /* row 3 */
  h+='<div class="grid row3" style="margin-top:12px">';
  h+='<div class="card"><div class="cardhead">Injuries over time <span style="text-transform:none;letter-spacing:0;font-weight:400"><span style="color:#C8972F">&#9632;</span> New &nbsp;<span style="color:#1F3557">&#9632;</span> Active &nbsp;<span style="color:#3E9A64">&#9632;</span> Returned</span></div>'+
-  multiline([{v:[8,7,7,6,5,5],c:"#C8972F"},{v:[33,32,31,30,29,28],c:"#1F3557"},{v:[10,13,16,19,22,25],c:"#3E9A64"}],420,150,MONTHS)+'</div>';
+  multiline(DEM?[{v:[8,7,7,6,5,5],c:"#C8972F"},{v:[33,32,31,30,29,28],c:"#1F3557"},{v:[10,13,16,19,22,25],c:"#3E9A64"}]:[{v:FLAT(newThisWeek()),c:"#C8972F"},{v:FLAT(tot),c:"#1F3557"},{v:FLAT(returnedList().length),c:"#3E9A64"}],420,150,MONTHS)+'</div>';
  h+='<div class="card"><div class="cardhead">Return to work rate over time <b style="font-family:\'Space Grotesk\';font-size:18px;color:#16202E">'+rtwRate()+'%</b></div>'+
-  multiline([{v:[64,67,70,72,74,rtwRate()],c:"#3E9A64",fill:true}],420,150,MONTHS)+'</div>';
+  multiline([{v:DEM?[64,67,70,72,74,rtwRate()]:FLAT(rtwRate()),c:"#3E9A64",fill:true}],420,150,MONTHS)+'</div>';
  h+='<div class="card"><div class="cardhead">Avg days injured over time <b style="font-family:\'Space Grotesk\';font-size:18px;color:#16202E">'+avgDays()+' days</b></div>'+
-  multiline([{v:[29,28,27,26,25,avgDays()],c:"#1F3557"}],420,150,MONTHS)+'</div>';
+  multiline([{v:DEM?[29,28,27,26,25,avgDays()]:FLAT(avgDays()),c:"#1F3557"}],420,150,MONTHS)+'</div>';
  h+='<div style="display:grid;gap:12px">'+
-  '<div class="card"><div class="cardhead">Cost impact (est.)</div><div class="money">$'+costEst().toLocaleString("en-CA")+'</div><div class="d down" style="font-size:11px">&#8595; 9% vs last period ($156,890)</div></div>'+
-  '<div class="card"><div class="cardhead">Time loss (est.)</div><div class="money">'+timeLoss()+'</div><div class="d down" style="font-size:11px">hours &middot; &#8595; 11% vs last period (701)</div></div>'+
+  (DEM?'<div class="card"><div class="cardhead">Cost impact (est.)</div><div class="money">$'+costEst().toLocaleString("en-CA")+'</div><div class="d down" style="font-size:11px">&#8595; 9% vs last period ($156,890)</div></div>'
+   :'<div class="card"><div class="cardhead">Cost impact (est.)</div><div class="money" style="font-size:15px;color:var(--muted)">Builds with claim history</div></div>')+
+  (DEM?'<div class="card"><div class="cardhead">Time loss (est.)</div><div class="money">'+timeLoss()+'</div><div class="d down" style="font-size:11px">hours &middot; &#8595; 11% vs last period (701)</div></div>'
+   :'<div class="card"><div class="cardhead">Time loss (est.)</div><div class="money">'+timeLoss()+'</div><div class="d" style="font-size:11px">hours, an estimate from reported lost time days</div></div>')+
   '</div>';
  h+='</div>';
  /* locations + table */
@@ -609,6 +613,27 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
    unonboarded=false;
    payload.commitments.acks=[{text:ACK1,ts:acks.a1},{text:ACK2,ts:acks.a2}];
    S.org=payload;
+   /* Project the onboarding into the dashboard state: every open injury
+      becomes a case row with roster identity and site names; full duty
+      cases land in the returned list. Functional facts only. */
+   var byId={};payload.roster.forEach(function(e){byId[e.employee_id]=e;});
+   var siteName={};payload.sites.forEach(function(st){siteName[st.site_id]=st.site_name;});
+   var CATMAP={strain_or_sprain:"strain",slip_trip_fall:"other",struck_by_object:"other",cut_or_laceration:"other",burn:"other",repetitive_motion:"other",vehicle_incident:"other",other:"other"};
+   S.workers=[];S.returned=[];
+   payload.injuries.forEach(function(x){
+    var e=byId[x.employee_id]||{};
+    var days=Math.max(0,Math.round((Date.now()-new Date(x.incident_date+"T00:00:00").getTime())/86400000));
+    if(!isFinite(days))days=0;
+    var w={name:((e.first_name||"")+" "+(e.last_name||"")).trim()||x.employee_id,
+     role:e.position_title||"",
+     injury:String(x.incident_category||"other").replace(/_/g," ").replace(/^./,function(ch){return ch.toUpperCase();}),
+     cat:CATMAP[x.incident_category]||"other",days:days,
+     status:x.work_status==="modified_duties"?"modified":x.work_status==="full_duties"?"returned":"treating",
+     restr:"Awaiting clinical restrictions",review:"To be scheduled",
+     rtw:x.work_status==="full_duties"?100:0,visits:0,
+     loc:siteName[x.site_id]||x.site_id,claim:x.claim_number||""};
+    if(w.status==="returned"){S.returned.push(w);}else{S.workers.push(w);}
+   });
    empAudit("Organization set up completed: "+payload.organization.legalName);
    save();
   }
