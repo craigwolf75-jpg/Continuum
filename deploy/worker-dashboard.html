@@ -531,12 +531,36 @@ try{if(/[?&]signup=1(&|$)/.test(location.search)){startSignup();}}catch(e){}
    body before teardown so cancel and future sign-ups keep working. */
 (function(){
  var hooks={};
+ /* Unboarded means the sign-up route with no pilot record. While unboarded,
+    the sidebar carries only the Get started tab and the main area shows a
+    neutral welcome instead of the demonstration, so a new worker's first
+    screen offers nothing that is not theirs. Completion flips the flag and
+    the full tabs return with the worker's own day one. */
+ var unboarded=!(S.pilot===true)&&/[?&]signup=1(&|$)/.test(location.search);
+ var _renderNav=renderNav;
+ renderNav=function(){
+  if(!unboarded){_renderNav();return;}
+  var hold=NAV;
+  NAV=NAV.filter(function(n){return n[0]==="getstarted";});
+  try{_renderNav();}finally{NAV=hold;}
+ };
+ var _render=render;
+ render=function(){
+  _render();
+  if(unboarded){
+   document.getElementById("main").innerHTML=
+    '<div style="max-width:520px;margin:60px auto;text-align:center">'+
+    '<h2 style="font-family:\'Space Grotesk\',sans-serif;margin:0 0 10px">Welcome to Continuum</h2>'+
+    '<p style="color:var(--muted);line-height:1.6;margin:0">Your app starts after sign-up. About thirty seconds of honesty a day, and your first day appears here.</p></div>';
+  }
+ };
  var _go=go;
  go=function(sec){_go(sec);if(hooks[sec])hooks[sec]();};
  var _cb=null,_fs=finishSignup;
  finishSignup=function(ev){
   var p=(wiz&&wiz.form)?wiz.form.pain:null;
   _fs(ev);
+  if(S.pilot===true){unboarded=false;}
   var w=document.getElementById("wizard");
   if(w&&w.parentNode&&w.parentNode.id==="cw12k-host"){document.body.appendChild(w);}
   if(_cb)_cb({pain:p});
