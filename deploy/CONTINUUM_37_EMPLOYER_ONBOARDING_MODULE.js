@@ -13,7 +13,7 @@
    No em-dashes anywhere. */
 (function (g) {
   var PROMISE = "This is a functional-only view: Continuum never asks for or accepts medical information from an employer.";
-  var FORBIDDEN = ["diagnosis", "prognosis", "pain", "restriction", "treatment", "medical", "symptom", "medication", "prescription", "clinical", "disability", "icd"];
+  var FORBIDDEN = ["diagnosis", "prognosis", "pain", "restriction", "treatment", "medical", "symptom", "medication", "prescription", "clinical", "disability", "icd", "condition", "mental", "injury_description"];
   var SLOTS = [
     "hasOrganization",   // () -> boolean: an organization profile exists
     "mountCommitments",  // (hostEl, onAccepted) -> void: mount the 13c commitments step; call onAccepted({acceptedTs}) when both acks are timestamped
@@ -29,6 +29,7 @@
   var SITE_TYPES = ["office", "warehouse", "plant", "field", "retail", "healthcare", "mixed"];
   var CATEGORIES = ["strain_or_sprain", "slip_trip_fall", "struck_by_object", "cut_or_laceration", "burn", "repetitive_motion", "vehicle_incident", "other"];
   var WORK_STATUS = ["off_work", "modified_duties", "full_duties"];
+  var EMPLOYMENT_TYPES = ["full_time", "part_time", "casual", "contract"];
   var BANDS = ["1 to 49", "50 to 199", "200 to 499", "500 to 999", "1000 to 4999", "5000 plus"];
   var GOALS = ["fewer lost time days", "faster first safe duties", "fewer unacknowledged claims", "a better premium or rebate position", "a better experience for injured workers"];
   var GATED = ["organization", "sites", "roster", "injuries", "dutyMapping", "program", "contacts"];
@@ -129,7 +130,7 @@
       else if (seen[r.site_id]) errors.push("row " + r._row + ": duplicate site_id " + r.site_id);
       else seen[r.site_id] = true;
       if (!r.site_name) errors.push("row " + r._row + ": site_name is required");
-      if (PROVINCES.indexOf(r.province) < 0) errors.push("row " + r._row + ": province " + r.province + " is not a Canadian province or territory code");
+      if (PROVINCES.indexOf(String(r.province).toUpperCase()) < 0) errors.push("row " + r._row + ": province " + r.province + " is not a Canadian province or territory code");
       if (SITE_TYPES.indexOf(r.site_type) < 0) errors.push("row " + r._row + ": site_type " + r.site_type + " is not one of " + SITE_TYPES.join(", "));
     });
     if (!parsed.rows.length && !errors.length) errors.push("at least one work site is required");
@@ -149,6 +150,7 @@
       else seen[r.employee_id] = true;
       if (!r.first_name || !r.last_name) errors.push("row " + r._row + ": first_name and last_name are required");
       if (!siteIds[r.home_site_id]) errors.push("row " + r._row + ": home_site_id " + r.home_site_id + " does not name an uploaded site");
+      if (EMPLOYMENT_TYPES.indexOf(r.employment_type) < 0) errors.push("row " + r._row + ": employment_type " + r.employment_type + " is not one of " + EMPLOYMENT_TYPES.join(", "));
       if (!r.position_title) errors.push("row " + r._row + ": position_title is required, it feeds duty mapping");
     });
     if (!parsed.rows.length && !errors.length) errors.push("at least one employee is required");
@@ -188,7 +190,7 @@
     if (!o.legalName || !String(o.legalName).trim()) errors.push("legal name is required");
     if (BANDS.indexOf(o.employeeBand) < 0) errors.push("employee count band must be one of: " + BANDS.join("; "));
     if (!o.provinces || !o.provinces.length) errors.push("at least one province is required");
-    else o.provinces.forEach(function (p) { if (PROVINCES.indexOf(p) < 0) errors.push("province " + p + " is not a Canadian province or territory code"); });
+    else o.provinces.forEach(function (p) { if (PROVINCES.indexOf(String(p).toUpperCase()) < 0) errors.push("province " + p + " is not a Canadian province or territory code"); });
     return errors.length ? { ok: false, errors: errors } : { ok: true };
   }
 
@@ -298,6 +300,7 @@
     });
     if (broken.length) return refuse("37 finish refused, cross-references no longer hold: " + broken.join("; "));
     var payload = {
+      version: "37-1",
       commitments: { acceptedTs: accepted },
       organization: data.organization,
       sites: data.sites,
@@ -317,7 +320,7 @@
     return { ok: true, payload: payload };
   }
 
-  g.Continuum37 = {
+  g.CONTINUUM_37 = g.Continuum37 = {
     install: install, submit: submit, finish: finish,
     PROMISE: PROMISE, FORBIDDEN: FORBIDDEN.slice(), SLOTS: SLOTS.slice(),
     NAV_ID: NAV_ID, NAV_LABEL: NAV_LABEL, BANDS: BANDS.slice(), GOALS: GOALS.slice(),

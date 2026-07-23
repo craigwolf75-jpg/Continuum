@@ -7,7 +7,7 @@ Ten steps, three uploads with the privacy wall as code, and the strategic questi
 
 ## 1. The design, and the two walls it is built on
 
-The flow mirrors 12k exactly where it should: the sub-section (Set up your organization) exists only while no organization profile exists, a blank employer app lands directly on it, and completion populates and loads the portal while hiding setup from navigation. Two walls shape everything else. First, the commitments gate: the two 13c acknowledgments (functional-only view; participation voluntary and never a performance matter) are the second step and an absolute lock; the module refuses to accept data for any later step until acceptance is timestamped, so no employer can upload a single row before agreeing to the deal, on the record. Second, the wall as code: the three uploads carry incident facts and workforce facts, never medical facts, and this is enforced in the validator rather than the documentation: a column named diagnosis, pain_score, restrictions, or any of twelve forbidden tokens is refused with the promise itself as the error message. There is deliberately no free-text incident description column, because narratives are where clinical content leaks; incident detail lives in HSE case records behind the wall, not in employer bulk files.
+The flow mirrors 12k exactly where it should: the sub-section (Set up your organization) exists only while no organization profile exists, a blank employer app lands directly on it, and completion populates and loads the portal while hiding setup from navigation. Two walls shape everything else. First, the commitments gate: the two 13c acknowledgments (functional-only view; participation voluntary and never a performance matter) are the second step and an absolute lock; the module refuses to accept data for any later step until acceptance is timestamped, so no employer can upload a single row before agreeing to the deal, on the record. Second, the wall as code: the three uploads carry incident facts and workforce facts, never medical facts, and this is enforced in the validator rather than the documentation: a column named diagnosis, pain_score, restrictions, or any of fifteen forbidden tokens is refused with the promise itself as the error message. There is deliberately no free-text incident description column, because narratives are where clinical content leaks; incident detail lives in HSE case records behind the wall, not in employer bulk files.
 
 ## 2. The onboarding, step by step, with the questions and why each changes the game
 
@@ -70,5 +70,22 @@ demonstration silence, the unonboarded single-tab landing, the commitments
 gate locking uploads, a quoted address surviving the parser, a diagnosis
 column refused mid-flow with the promise rendered, the review counts, the
 completion writing both timestamps, and the onboarded revisit hiding setup.
+
+## 7. Reconciliation with the series module draft (July 23, 2026)
+
+The prompt series later delivered its own draft of the module. Reconciled by
+adoption rather than replacement, because the installed module carries
+hardening the draft lacks (validated submits, a single commitments mount, a
+single write, session reset on install, and finish-time cross-reference
+checks). Adopted from the draft: the wall grows to fifteen tokens (condition,
+mental, and injury_description join the twelve), employment_type is enforced
+against its four values on the roster, province codes are accepted in either
+case, the payload carries a version marker (37-1), and the module also
+answers to the draft's global name CONTINUUM_37. Kept against the draft: the
+employee band wording stays in the companion's spoken form (1 to 49), the
+wall refusal keeps the functional-only promise verbatim, and the draft's
+unvalidated setData path, per-open commitments remounting, and unguarded
+completion were not adopted. The suite grows to nineteen tests, forty seven
+assertions, locking every adopted delta.
 
 Where care ends, Continuum begins.

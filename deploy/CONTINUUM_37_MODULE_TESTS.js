@@ -302,5 +302,31 @@ function onboardTo(mod, a, upTo) {
   ok("t18d more than three goals is refused", res4.ok === false && res4.errors.some(e => e.includes("up to three")));
 }
 
+// ---- test 19: reconciliation with the series module draft ----
+{
+  const { mod } = load();
+  ok("t19a the wall carries fifteen tokens including the draft's additions", mod.FORBIDDEN.length === 15 && ["condition", "mental", "injury_description"].every(t => mod.FORBIDDEN.includes(t)) && ["prognosis", "prescription", "clinical"].every(t => mod.FORBIDDEN.includes(t)));
+  const a = fullAdapter(); mod.install(a); a._accept("ts");
+  const walled = mod.submit("sites", SITES_OK.replace("site_type", "site_type,condition_notes") + ",x");
+  ok("t19b a condition column is refused with the promise verbatim", walled.ok === false && walled.errors[0].includes(PROMISE) && walled.errors[0].includes("condition_notes"));
+  mod.submit("sites", SITES_OK);
+  const badEmp = mod.submit("roster", ROSTER_OK.replace("full_time,2022-03-01", "gig,2022-03-01"));
+  ok("t19c an unknown employment_type is refused with the row number", badEmp.ok === false && badEmp.errors.some(e => e.includes("row 2") && e.includes("gig")));
+  const lower = mod.submit("sites", SITES_OK.replace("Calgary,AB", "Calgary,ab"));
+  ok("t19d a lowercase province code is accepted", lower.ok === true);
+}
+{
+  const { mod, doc } = load();
+  const a = fullAdapter(); mod.install(a);
+  onboardTo(mod, a);
+  const done = mod.finish();
+  ok("t19e the payload carries the version marker", done.ok === true && done.payload.version === "37-1");
+}
+{
+  const win = {};
+  new Function("window", "document", "console", src)(win, freshDoc(), { error: () => {} });
+  ok("t19f the series global name CONTINUUM_37 resolves to the same module", win.CONTINUUM_37 === win.Continuum37 && !!win.Continuum37);
+}
+
 console.log("\n37 module suite: " + pass + " passed, " + fail + " failed");
 if (fail) process.exit(1);
