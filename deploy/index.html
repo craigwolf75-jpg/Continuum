@@ -101,6 +101,36 @@
   </script>
 
   <style>@media (prefers-reduced-motion: reduce){ #home .hero-vid{display:none !important} }</style>
+  <style>
+  /* Mobile responsive sweep. Every rule is scoped to narrow viewports, so the
+     desktop path is untouched. On a phone the hero's 16:9 aspect ratio loses to
+     min-height:520px and CSS resolves the conflict by widening the box to
+     924px, which is why the whole page scrolled sideways; releasing the ratio
+     on small screens lets the hero take the viewport width instead. */
+  @media (max-width:920px){
+    #home{aspect-ratio:auto !important}
+  }
+  @media (max-width:640px){
+    #home{padding:72px 20px !important;min-height:0 !important}
+    #home h1{font-size:38px !important}
+    #home p{font-size:16px !important}
+    /* The page runtime rewrites style attributes with a space after each
+       colon, so every attribute selector below carries both spellings. */
+    h2[style*="font-size:42px"],h2[style*="font-size: 42px"]{font-size:31px !important}
+    [style*="font-size:96px"],[style*="font-size: 96px"]{font-size:64px !important}
+    /* Side-by-side flex columns stack at phone width: released min-width plus
+       a full-width basis, so no column gets starved next to a wide sibling. */
+    [style*="min-width:400px"],[style*="min-width: 400px"],
+    [style*="min-width:320px"],[style*="min-width: 320px"],
+    [style*="min-width:300px"],[style*="min-width: 300px"]{min-width:0 !important;flex-basis:100% !important}
+    [style*="padding:112px 32px"],[style*="padding: 112px 32px"]{padding:72px 20px !important}
+    [style*="padding:48px 44px"],[style*="padding: 48px 44px"]{padding:34px 24px !important}
+    [style*="padding:38px 36px"],[style*="padding: 38px 36px"]{padding:28px 22px !important}
+    /* Footer link grid: four fixed columns cannot fit a phone, stack them. */
+    [style*="grid-template-columns:1.4fr 1fr 1fr 1fr"],
+    [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:1fr !important;gap:28px !important}
+  }
+  </style>
   <!-- ================= S1 HERO (navy, background video) ================= -->
   <div id="home" style="box-sizing:border-box;position:relative;overflow:hidden;background:linear-gradient(175deg,#0E1B2C 0%,#0A1526 100%);aspect-ratio:16/9;min-height:520px;display:flex;align-items:center;padding:40px 32px">
     <!-- Hero background video (Prompt 36), served same-origin from deploy/hero-video.mp4. The hero is 16:9 to match the clip, so object-fit:cover fills the whole hero edge to edge with no cropping. -->
