@@ -1,0 +1,2 @@
+incident_id,employee_id,incident_date,site_id,incident_category,work_status,lost_time_days,claim_number
+I500,E101,2026-06-30,S2,strain_or_sprain,modified_duties,4,CL-2026-0042
