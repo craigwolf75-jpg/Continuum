@@ -48,6 +48,9 @@ ok("voice never asks to sign in (no paste or connect step)", !js.includes("Paste
 ok("the dedicated agent id is embedded for auto-connect", js.includes("agent_8301ky420pc9f4e8ekswyekptnf2"));
 ok("the widget mounts straight away (no Connect step)", js.includes("mountWidget(activeAgent())"));
 ok("full teardown when toggled off", js.includes("function teardown()") && js.includes("unmountWidget"));
+ok("explainer card sits bottom center, never over the page top", js.includes("bottom:24px") && !js.includes("top:74px"));
+ok("explainer card carries a corner close control", js.includes('class="cp-cx"') && js.includes('aria-label="Hide this explainer"'));
+ok("close hides one section only and Present on brings the card back", js.includes("dismissedFor = id") && js.includes("dismissedFor = undefined"));
 ok("print hides the whole kit", js.includes("@media print") && js.includes("cp-convai"));
 ok("presenter.js dash clean", !/[–—]/.test(js));
 

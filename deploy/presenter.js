@@ -15,7 +15,7 @@
   // public embed identifier, meant to live client side in the widget attribute.
   var DEFAULT_AGENT = "agent_8301ky420pc9f4e8ekswyekptnf2";
   var SCRIPT_SRC = "https://unpkg.com/@elevenlabs/convai-widget-embed";
-  var cfg = null, on = false, mounted = false;
+  var cfg = null, on = false, mounted = false, dismissedFor;
 
   function getAgent() { try { return localStorage.getItem(AGENT_KEY) || ""; } catch (e) { return ""; } }
   function setAgent(v) { try { if (v) localStorage.setItem(AGENT_KEY, v); else localStorage.removeItem(AGENT_KEY); } catch (e) {} }
@@ -33,9 +33,11 @@
     if (document.getElementById("cp-style")) return;
     var s = document.createElement("style"); s.id = "cp-style";
     s.textContent =
-      "#cp-card{position:fixed;left:50%;transform:translateX(-50%);top:74px;z-index:8990;max-width:640px;width:calc(100% - 28px);background:#fff;border:1px solid #C8972F;border-left:5px solid #C8972F;border-radius:12px;box-shadow:0 10px 30px rgba(14,27,44,.25);padding:14px 18px}" +
+      "#cp-card{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:8990;max-width:640px;width:calc(100% - 28px);background:#fff;border:1px solid #C8972F;border-left:5px solid #C8972F;border-radius:12px;box-shadow:0 10px 30px rgba(14,27,44,.25);padding:14px 34px 14px 18px}" +
       "#cp-card .cp-ct{font:800 15px/1.2 system-ui,sans-serif;color:#0E1B2C;margin-bottom:4px}" +
       "#cp-card .cp-cb{font:400 13.5px/1.55 system-ui,sans-serif;color:#26333f}" +
+      "#cp-card .cp-cx{position:absolute;top:6px;right:8px;border:0;background:transparent;color:#5E6B7C;font:700 16px/1 system-ui,sans-serif;padding:4px 7px;cursor:pointer}" +
+      "#cp-card .cp-cx:hover{color:#0E1B2C}" +
       "@media print{#cp-card,#cp-convai,elevenlabs-convai,.cp-present-btn{display:none !important}}";
     document.head.appendChild(s);
   }
@@ -58,11 +60,17 @@
   // card, so nothing overlaps or covers the widget.
   function voice() { mountWidget(activeAgent()); }
 
+  // The card sits bottom center so it never covers the page content, and its
+  // corner x hides the current section's explainer only: the next section
+  // change (or toggling Present off and on) brings the card back.
   function card() {
+    var id = cfg && cfg.getSection ? cfg.getSection() : null;
     var c = document.getElementById("cp-card");
+    if (dismissedFor === id) { if (c) c.remove(); return; }
     if (!c) { c = document.createElement("div"); c.id = "cp-card"; document.body.appendChild(c); }
-    var ex = explainerFor(cfg && cfg.sections, cfg && cfg.getSection ? cfg.getSection() : null);
-    c.innerHTML = '<div class="cp-ct">' + ex.title + '</div><div class="cp-cb">' + ex.body + '</div>';
+    var ex = explainerFor(cfg && cfg.sections, id);
+    c.innerHTML = '<button type="button" class="cp-cx" aria-label="Hide this explainer">&#215;</button><div class="cp-ct">' + ex.title + '</div><div class="cp-cb">' + ex.body + '</div>';
+    c.querySelector(".cp-cx").onclick = function () { dismissedFor = id; c.remove(); };
   }
 
   function teardown() {
@@ -74,7 +82,7 @@
   // The Present control now lives in each portal's page header (class
   // cp-present-btn), so the module no longer paints a fixed corner pill. The
   // header button calls toggle(); refresh() reruns after every host render.
-  function toggle() { on = !on; if (on) build(); else teardown(); }
+  function toggle() { on = !on; if (on) { dismissedFor = undefined; build(); } else teardown(); }
   function refresh() { if (on) build(); }
   function attach(config) { cfg = config; css(); }
 
