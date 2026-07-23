@@ -555,5 +555,141 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
  ContinuumPresenter.refresh();
 })();
 </script>
+<script src="/CONTINUUM_37_EMPLOYER_ONBOARDING_MODULE.js"></script>
+<script>
+"use strict";
+/* Prompt 37 installation. The adapter binds the module's seven slots by
+   anchored reads of this artifact: NAV plus renderSide plus a wrapped go for
+   the navigation slots, render for the dashboard refresh, and the employer
+   storage write path (S plus save) for writeOrganization. The commitments
+   step renders the two 13c acknowledgments with their canon wording from the
+   shipped presentation scripts, each accepted separately with its own
+   timestamp, on the record. Unonboarded means arriving on the setup route
+   (?setup=1) with no organization on file; the demonstration and an
+   onboarded organization see no setup entry at all. While unonboarded the
+   sidebar carries only the setup tab and the main area hosts the steps, so a
+   new employer's first screen offers nothing that is not theirs. */
+(function(){
+ var ACK1="This is a functional-only view. You will never see medical details.";
+ var ACK2="A worker's participation is voluntary and never a performance matter.";
+ var hooks={};
+ var unonboarded=false;
+ var acks={a1:null,a2:null};
+ var ui={step:0,f:{},sites:null,roster:null,injuries:[],duties:null,errs:[]};
+ var onAcceptedCb=null;
+
+ var _renderSide=renderSide;
+ renderSide=function(){
+  if(!unonboarded){_renderSide();return;}
+  var hold=NAV;
+  NAV=NAV.filter(function(n){return n[0]==="setup";});
+  try{_renderSide();}finally{NAV=hold;}
+ };
+ var _render=render;
+ render=function(){
+  _render();
+  if(unonboarded){
+   var m=document.getElementById("main");
+   m.innerHTML='<div class="pagehead"><div><div class="kicker">Welcome to Continuum</div><h1>Set up your <span class="g">organization.</span></h1><div class="sub">A better answer from less information. Nothing medical will ever be asked for or accepted.</div></div></div>';
+   var h=document.getElementById("cw37-host");
+   if(h)m.appendChild(h);
+  }
+ };
+ var _go=go;
+ go=function(sec){_go(sec);if(hooks[sec])hooks[sec]();};
+
+ var adapter={
+  hasOrganization:function(){return !!(S&&S.org)||!/[?&]setup=1(&|$)/.test(location.search);},
+  mountCommitments:function(el,onAccepted){onAcceptedCb=onAccepted;el.id="cw37-commitments";},
+  registerNavItem:function(id,label,onOpen){hooks[id]=onOpen;if(!NAV.some(function(n){return n[0]===id;}))NAV.push([id,label,null]);renderSide();},
+  removeNavItem:function(id){delete hooks[id];for(var i=NAV.length-1;i>=0;i--){if(NAV[i][0]===id)NAV.splice(i,1);}renderSide();},
+  navigate:function(sec){go(sec);},
+  refreshDashboard:function(){render();},
+  writeOrganization:function(payload){
+   unonboarded=false;
+   payload.commitments.acks=[{text:ACK1,ts:acks.a1},{text:ACK2,ts:acks.a2}];
+   S.org=payload;
+   empAudit("Organization set up completed: "+payload.organization.legalName);
+   save();
+  }
+ };
+
+ /* ---------- the step UI (renders into the module's host) ---------- */
+ var STEPS=[["welcome","Welcome"],["commitments","The commitments"],["organization","Your organization"],["sites","Work sites"],["roster","Employee roster"],["injuries","Open injuries"],["duties","Duty mapping"],["program","Program and goals"],["contacts","People and notifications"],["review","Review and finish"]];
+ function ein(k,label,ph){return '<label style="display:block;font-size:12px;font-weight:700;margin:10px 0 4px">'+label+'</label><input style="width:100%;max-width:420px;padding:9px 10px;border:1px solid #d5dbe4;border-radius:8px;font:inherit" value="'+(ui.f[k]||"")+'" placeholder="'+(ph||"")+'" oninput="C37UI.f.'+k+'=this.value">';}
+ function esel(k,label,opts){return '<label style="display:block;font-size:12px;font-weight:700;margin:10px 0 4px">'+label+'</label><select style="padding:9px 10px;border:1px solid #d5dbe4;border-radius:8px;font:inherit" onchange="C37UI.f.'+k+'=this.value"><option value=""></option>'+opts.map(function(o){return '<option'+(ui.f[k]===o?" selected":"")+'>'+o+'</option>';}).join("")+'</select>';}
+ function ecsv(k,label,tpl){return '<label style="display:block;font-size:12px;font-weight:700;margin:10px 0 4px">'+label+' <a href="/'+tpl+'" download style="font-weight:400">Download the template</a></label><textarea style="width:100%;min-height:110px;padding:9px 10px;border:1px solid #d5dbe4;border-radius:8px;font:12px/1.5 monospace" placeholder="Paste your CSV here, first line is the header" oninput="C37UI.f.'+k+'=this.value">'+(ui.f[k]||"")+'</textarea>';}
+ function errsHtml(){return ui.errs.length?'<div style="background:#fdf2f0;border:1px solid #e6b8ad;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12.5px;color:#7a2e1d">'+ui.errs.map(function(e){return '<div>'+e+'</div>';}).join("")+'</div>':"";}
+ function stepBody(id){
+  if(id==="welcome")return '<p>Setup collects your sites, your people, and your goals, in about fifteen minutes. It never collects medical information: not a diagnosis, not a pain score, not a note. That is the deal, and the next step puts it on the record.</p>';
+  if(id==="commitments")return '<p>Two commitments, one at a time, each on the record with a timestamp.</p>'+
+   '<div style="border:1px solid #d5dbe4;border-radius:8px;padding:12px;margin:8px 0"><b>1.</b> '+ACK1+'<div style="margin-top:8px">'+(acks.a1?'<span class="pill">Accepted '+acks.a1+'</span>':'<button class="btn" onclick="C37UI.accept(1)">I acknowledge</button>')+'</div></div>'+
+   '<div style="border:1px solid #d5dbe4;border-radius:8px;padding:12px;margin:8px 0"><b>2.</b> '+ACK2+'<div style="margin-top:8px">'+(acks.a2?'<span class="pill">Accepted '+acks.a2+'</span>':'<button class="btn" onclick="C37UI.accept(2)">I acknowledge</button>')+'</div></div>';
+  if(id==="organization")return ein("legalName","Legal name")+ein("commonName","The name your people actually use")+ein("industry","Closest industry")+ein("provinces","Provinces where you employ people, comma separated codes","AB,BC")+esel("employeeBand","How many employees",Continuum37.BANDS)+esel("collective","Any collective agreement",["yes","no","some sites"])+esel("modifiedDuties","A modified duties program today",["yes","informal","no"])+ein("avgLostTimeDays","Rough average lost time per claim, in days (optional)");
+  if(id==="sites")return ecsv("sitesCsv","Work sites","employer_work_sites_template.csv");
+  if(id==="roster")return ecsv("rosterCsv","Employee roster","employer_roster_template.csv");
+  if(id==="injuries")return '<p>Optional. If you have no open cases, skip this honestly.</p>'+ecsv("injuriesCsv","Open injuries","employer_open_injuries_template.csv");
+  if(id==="duties"){
+   var titles={};(ui.roster||[]).forEach(function(r){titles[r.position_title]=true;});
+   ui.duties=ui.duties||Object.keys(titles).map(function(t){return {position_title:t,matched:t};});
+   return '<p>For each of your position titles, confirm the closest match in the duty library.</p>'+ui.duties.map(function(d,i){return '<div style="margin:6px 0"><span style="display:inline-block;width:200px;font-size:12.5px">'+d.position_title+'</span><input style="padding:7px 9px;border:1px solid #d5dbe4;border-radius:8px;font:inherit" value="'+d.matched+'" oninput="C37UI.duties['+i+'].matched=this.value"></div>';}).join("");
+  }
+  if(id==="program")return '<p>Pick up to three goals.</p>'+Continuum37.GOALS.map(function(gl,i){return '<label style="display:block;margin:5px 0;font-size:13px"><input type="checkbox" '+((ui.f.goals||[]).indexOf(gl)>=0?"checked":"")+' onchange="C37UI.goal(\''+gl.replace(/'/g,"")+'\',this.checked)"> '+gl+'</label>';}).join("")+ein("targetDays","A target for days from restrictions received to first safe onsite duties (optional)")+ein("monthlyViewers","Who should see the monthly numbers, comma separated emails");
+  if(id==="contacts")return ein("coordinatorName","Return to work coordinator, name")+ein("coordinatorEmail","Coordinator work email")+ein("hseLead","Who leads health and safety (optional)")+ein("claimsAdmin","Who administers claims (optional)")+'<p style="font-size:12.5px;color:#5c6875;margin-top:12px">Text message defaults, confirmed by continuing: sign-in codes and neutral reminders only, never case content, quiet hours in each worker\'s own time zone.</p>';
+  if(id==="review")return '<p>Sites: <b>'+(ui.sites||[]).length+'</b> &middot; Employees: <b>'+(ui.roster||[]).length+'</b> &middot; Open cases: <b>'+(ui.injuries||[]).length+'</b> &middot; Mapped positions: <b>'+(ui.duties||[]).length+'</b></p><p>Finish writes your organization and opens the portal.</p>';
+  return "";
+ }
+ function renderSetup(){
+  var h=document.getElementById("cw37-host");if(!h)return;
+  var id=STEPS[ui.step][0];
+  h.innerHTML='<div class="card" style="max-width:680px;margin:14px 0;padding:18px 20px">'+
+   '<div class="kicker">Step '+(ui.step+1)+' of '+STEPS.length+'</div><h2 style="margin:4px 0 10px">'+STEPS[ui.step][1]+'</h2>'+
+   stepBody(id)+errsHtml()+
+   '<div style="display:flex;gap:8px;margin-top:14px">'+
+   (ui.step>0?'<button class="btn" onclick="C37UI.back()">Back</button>':"")+
+   (id==="injuries"?'<button class="btn" onclick="C37UI.skipInjuries()">Skip, no open cases</button>':"")+
+   (id==="review"?'<button class="btn" style="background:var(--gold);border-color:var(--gold);color:#0E1B2C" onclick="C37UI.finish()">Finish and open the portal</button>':'<button class="btn" style="background:var(--gold);border-color:var(--gold);color:#0E1B2C" onclick="C37UI.next()">Continue</button>')+
+   '</div></div>';
+ }
+ function fail(res){ui.errs=res.errors||["Something did not validate."];renderSetup();return false;}
+ function pass(){ui.errs=[];ui.step++;renderSetup();return true;}
+ window.C37UI={
+  f:ui.f,duties:null,
+  accept:function(n){
+   var ts=new Date().toISOString();
+   if(n===1&&!acks.a1)acks.a1=ts;
+   if(n===2&&!acks.a2)acks.a2=ts;
+   if(acks.a1&&acks.a2&&onAcceptedCb){onAcceptedCb({acceptedTs:acks.a2});}
+   renderSetup();
+  },
+  back:function(){if(ui.step>0){ui.errs=[];ui.step--;renderSetup();}},
+  goal:function(gl,onNow){ui.f.goals=ui.f.goals||[];var i=ui.f.goals.indexOf(gl);if(onNow&&i<0)ui.f.goals.push(gl);if(!onNow&&i>=0)ui.f.goals.splice(i,1);},
+  skipInjuries:function(){var r=Continuum37.submit("injuries","");if(!r.ok)return fail(r);ui.injuries=[];pass();},
+  next:function(){
+   var id=STEPS[ui.step][0],r;
+   if(id==="welcome")return pass();
+   if(id==="commitments"){if(!(acks.a1&&acks.a2)){ui.errs=["Both commitments are accepted one at a time before setup continues."];renderSetup();return;}return pass();}
+   if(id==="organization"){r=Continuum37.submit("organization",{legalName:ui.f.legalName,commonName:ui.f.commonName,industry:ui.f.industry,provinces:String(ui.f.provinces||"").split(",").map(function(p){return p.trim();}).filter(Boolean),employeeBand:ui.f.employeeBand,collective:ui.f.collective,modifiedDuties:ui.f.modifiedDuties,avgLostTimeDays:ui.f.avgLostTimeDays});return r.ok?pass():fail(r);}
+   if(id==="sites"){r=Continuum37.submit("sites",ui.f.sitesCsv||"");if(!r.ok)return fail(r);ui.sites=r.rows;return pass();}
+   if(id==="roster"){r=Continuum37.submit("roster",ui.f.rosterCsv||"");if(!r.ok)return fail(r);ui.roster=r.rows;C37UI.duties=null;ui.duties=null;return pass();}
+   if(id==="injuries"){r=Continuum37.submit("injuries",ui.f.injuriesCsv||"");if(!r.ok)return fail(r);ui.injuries=r.rows;return pass();}
+   if(id==="duties"){r=Continuum37.submit("dutyMapping",ui.duties||[]);return r.ok?pass():fail(r);}
+   if(id==="program"){r=Continuum37.submit("program",{goals:ui.f.goals||[],targetDays:ui.f.targetDays,monthlyViewers:String(ui.f.monthlyViewers||"").split(",").map(function(v){return v.trim();}).filter(Boolean)});return r.ok?pass():fail(r);}
+   if(id==="contacts"){r=Continuum37.submit("contacts",{coordinatorName:ui.f.coordinatorName,coordinatorEmail:ui.f.coordinatorEmail,hseLead:ui.f.hseLead,claimsAdmin:ui.f.claimsAdmin,smsDefaultsConfirmed:true});return r.ok?pass():fail(r);}
+  },
+  finish:function(){
+   var r=Continuum37.finish();
+   if(!r.ok){ui.errs=r.errors||[];renderSetup();return;}
+   toast("Your organization is <b>set up</b>.");
+  }
+ };
+ C37UI.duties=ui.duties;
+ Object.defineProperty(C37UI,"duties",{get:function(){return ui.duties;},set:function(v){ui.duties=v;}});
+
+ unonboarded=!(S&&S.org)&&/[?&]setup=1(&|$)/.test(location.search);
+ Continuum37.install(adapter);
+ if(unonboarded){render();renderSetup();}
+})();
+</script>
 </body>
 </html>

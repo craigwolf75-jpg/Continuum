@@ -43,4 +43,32 @@ Seven slots: hasOrganization, mountCommitments, registerNavItem, removeNavItem, 
 
 Both code files pass the node syntax gate. The suite is green this session: eighteen hard-failing tests carrying forty one assertions, window and document shims per the standing test law (install refusal with named slots; the unonboarded landing with commitments mounted; the onboarded silence; the absolute commitments gate with the locked step named in the refusal; sites validation three ways with row numbers; roster validation three ways with cross-referenced sites; both wall-as-code refusals, a diagnosis column on the roster and a pain_score column on the injuries, each carrying the functional-only promise verbatim; injuries validation five ways including the empty upload accepted; organization band and province enforcement; and the completion path refusing with the missing steps named, then writing the payload with the commitments timestamp, injuries defaulting to zero, teardown, refresh, and navigation to the populated dashboard). An adversarial review pass then hardened the build, and the last three tests lock the fixes: quoted CSV cells are data, not column breaks, so an address with a comma survives; a ragged row is refused by its physical file line, never silently padded; row numbers count real file lines across interior blanks; an empty lost_time_days is refused; a missing column is refused by name; reopening the sub-section never remounts the counsel-owned commitments step; a second finish is refused and never writes twice; a fresh install resets the whole session so no acceptance or data carries across bindings; finish re-verifies every cross-reference against the final uploads; an acceptance without a timestamp is refused; the medical wall also covers field names on the question steps, promise verbatim; duty mapping accepts only confirmed match objects; and more than three goals is refused. The three templates are proven against the module's own validators. Dash audit clean on the module, the suite, the three templates, and this companion; issued as markdown, JavaScript, and CSV in the repository only. Numbering: 37 per the collision law as stated in section 4.
 
+## 6. Installation record (added at install, July 23, 2026)
+
+Installed into deploy/employer-dashboard.html on Gary's instruction, the 12k
+path: the module script block before the closing body tag (single anchor), the
+seven slot adapter bound by anchored reads (NAV plus renderSide plus a wrapped
+go for the navigation slots, render for the dashboard refresh, S plus save on
+the continuum_employer_v1 key for writeOrganization), install with no console
+refusal, and a compact step UI rendering the ten steps into the module's host
+inside the main area. One contract completion surfaced at install and made
+here: the 13c commitments step existed nowhere in the artifact (the S13c
+mission in specs is an unrelated smoke gate), so the commitments step renders
+the two acknowledgments with their canon wording from the shipped presentation
+scripts (functional-only view, never medical details; participation voluntary
+and never a performance matter), each accepted separately with its own
+timestamp, both carried into the organization record. Unonboarded means
+arriving on the setup route (?setup=1) with no organization on file; while
+unonboarded the sidebar carries only the setup tab; the demonstration and an
+onboarded organization see no setup entry, and completion returns the full
+navigation with the demonstration dashboard, the organization on the record,
+and an audit line written. The uploaded roster driving the workers table is a
+future numbered prompt by design; the demonstration presents. All gates green
+at install: the module suite (forty one assertions), the twelve k suite, the
+whole deploy family, the dash audit, and a live browser pass of the
+demonstration silence, the unonboarded single-tab landing, the commitments
+gate locking uploads, a quoted address surviving the parser, a diagnosis
+column refused mid-flow with the promise rendered, the review counts, the
+completion writing both timestamps, and the onboarded revisit hiding setup.
+
 Where care ends, Continuum begins.
