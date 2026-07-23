@@ -1,0 +1,28 @@
+# CONTINUUM PROMPT 12k: The Worker Sign-Up as Its Own Sub-Section, Loading the Portal on Completion
+
+The relocation module built and proven headless; installation into worker-dashboard.html held for the artifact, by law.
+
+**Deliverable:** Prompt 12k pre-build, stated plainly as such: worker-dashboard.html was not in the authoring session, and the anchored-patch law forbids regenerating an artifact or inventing anchors, so 12k ships as everything provable without the file. CONTINUUM_12K_SIGNUP_SUBSECTION_MODULE.js is a self-contained module in the house piggyback pattern that relocates the existing 12j wizard into a dedicated Get started sub-section, lands a blank (unboarded) app directly on it, and on completion verifies the escalation contract, removes the sub-section, refreshes the dashboard from the worker storage key, and navigates to the populated portal. The module refuses to install until all eight slots of its adapter contract are bound to the real artifact, so a partial binding can never half-run on the pilot surface, and it never re-renders the wizard's copy, so the consent text (a counsel item) cannot drift by construction. CONTINUUM_12K_MODULE_TESTS.js is the headless suite, run green in this session: seven hard-failing tests covering the install refusal with named missing slots, the unboarded landing, the onboarded silence, the pain-8 routing phrase verification in both directions, the ordinary completion path, and host idempotence. Portal installation, the full worker suite, the six-portal canon regression, and final staging remain open until the installation session, and the ledger records 12k as pre-built, not shipped into the portal. Both files live in deploy/ beside the suite family, inert until installed.
+**Date:** July 22, 2026
+
+## 1. The design, as built
+
+The sub-section exists only for an unboarded worker: install checks hasProfile, and when a profile exists (including a restored demo) no sign-up entry appears at all. When the app opens blank, the module registers the Get started item, navigates to it, and mounts the existing 12j wizard into its host, so a new worker's first screen tomorrow is the beginning of onboarding, not an empty dashboard. Completion is a handoff, not a rewrite: the 12j wizard writes the profile and the day one check-in through its own storage path exactly as it does today, and the module then acts on the result: if the first check-in reported pain of eight or more, the module reads the escalation toast and halts the portal load unless the routing phrase (escalated to the clinician per program rules) is present verbatim, making the safety contract a tested gate rather than an assumption; then it tears down the sub-section, refreshes the dashboard, and navigates to it populated with the worker's single lived day, gold never red from minute one.
+
+## 2. The adapter contract, and why it refuses
+
+Eight slots bind the module to the artifact: hasProfile, mountSignup, onSignupComplete, registerNavItem, removeNavItem, navigate, refreshDashboard, and escalationToastText. Install validates all eight and refuses with the missing slots named in the console error, proven by the first test. This is the honest translation of inspect-before-patching into a deferred build: the inspection happens at install time against the real artifact, each binding is an anchored read of code that exists, and nothing in the module guesses at the worker storage schema, the wizard's internals, or the navigation implementation.
+
+## 3. Installation, when the artifact is in session
+
+Four steps, each anchored. First, insert the module as one script block before the closing body tag (a single anchor asserted to occur exactly once). Second, bind the adapter by anchored reads: locate the 12j wizard's mount entry and completion point, the navigation register and switch functions, the dashboard render entry, and the escalation toast accessor, and construct the adapter object beside the module call. Third, call install with the adapter and confirm the console carries no refusal. Fourth, run the gates in order: this module suite against the live bindings, the full worker suite, the six-portal canon regression, and the dash audit, all green before staging. Consent copy requires no step because the module relocates the wizard rather than re-rendering it; the counsel text is the same characters in a new place.
+
+## 4. Sequencing caution, restated for the record
+
+Tomorrow is the pilot, and 12k touches the surface a real worker uses in the morning. The standing recommendation from commissioning holds: installation can land tonight before pre-flight only with all four gates green, or land after the pilot's first day at zero risk. The pre-build changes nothing about that choice; it only makes installation a matter of minutes when the file arrives.
+
+## 5. Verification summary
+
+Both files pass the node syntax gate. The module suite is green in this session: seven tests carrying ten hard-failing assertions, window and document shims per the standing test law (install refusal names refreshDashboard and escalationToastText when unbound; unboarded install registers the sub-section, navigates to it, and mounts once; onboarded install registers nothing; pain-8 completion halts without the verbatim routing phrase and proceeds with it, removing the sub-section and navigating to the populated dashboard; ordinary completion never consults the toast; a second open reuses the single host). Dash audit clean on the module, the suite, and this companion; issued as markdown and JavaScript in the repository only. Numbering: 12k is the next free letter under 12 (ledger: 12j taken).
+
+Where care ends, Continuum begins.
