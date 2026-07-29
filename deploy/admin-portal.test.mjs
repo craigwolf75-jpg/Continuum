@@ -109,5 +109,11 @@ ok("pose enable sets the flag and audits", /function poseEnable\(id\)\{[\s\S]*?t
 /* ================= dash audit ================= */
 ok("dash audit clean", !/[–—]/.test(html));
 
+/* ================= compliance scrub: Nexus/Worley/NX- (Task 7) ================= */
+ok("admin has no Nexus", !/Nexus/.test(html));
+ok("admin has no Worley", !/Worley/.test(html));
+ok("admin has no NX- case refs", !/NX-/.test(html));
+// Mount Olympus intentionally REMAINS (admin-only panel); do NOT assert its absence.
+
 console.log("\nadmin-portal suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
