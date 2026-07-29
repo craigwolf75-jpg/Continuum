@@ -232,7 +232,7 @@
     return save(state);
   }
 
-  // ---- clinical actions (nexus only) ----
+  // ---- clinical actions (clinic only) ----
   function publishRestrictions(restrictions, actor) {
     if (actor !== 'clinic_physician') return { ok: false, error: 'Only the clinical partner sets restrictions' };
     var state = load();
@@ -243,7 +243,7 @@
     return { ok: true, state: state };
   }
 
-  // escalated -> prior_status, nexus only (reassess)
+  // escalated -> prior_status, clinic only (reassess)
   function reassess(actor) {
     if (actor !== 'clinic_physician') return { ok: false, error: 'Only the clinical partner reassesses' };
     var state = load();
@@ -359,7 +359,7 @@
     state.case.prior_status = state.case.status;
     state.case.status = 'escalated';
     syncCaseWorker(state);
-    state.escalations.push({ id: 'esc_' + (state.escalations.length + 1), injury_id: marcus(state).id, trigger: triggerText, notified: 'nexus', open: true, at: iso() });
+    state.escalations.push({ id: 'esc_' + (state.escalations.length + 1), injury_id: marcus(state).id, trigger: triggerText, notified: 'clinic', open: true, at: iso() });
     audit(state, { actor: 'system', action: 'escalation', from: state.case.prior_status, to: 'escalated' });
   }
 
