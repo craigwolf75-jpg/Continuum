@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continuum: Coordinated Workplace Injury Recovery</title>
+<meta name="description" content="Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.">
+<link rel="canonical" href="https://continuumrtw.com/">
+<link rel="icon" href="/continuum-logo.svg" type="image/svg+xml">
+
+<meta property="og:title" content="Continuum: Workplace injury recovery, coordinated.">
+<meta property="og:description" content="Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://continuumrtw.com/">
+<!-- BLOCKER: og-image.png 1200x630 to be added -->
+<meta property="og:image" content="https://continuumrtw.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Continuum: Workplace injury recovery, coordinated.">
+<meta name="twitter:description" content="Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.">
+<meta name="twitter:image" content="https://continuumrtw.com/og-image.png">
+
+<style>
+:root{
+  --navy:#0E1B2C;
+  --panel:#16243B;
+  --line:#27395A;
+  --ink:#E9EEF6;
+  --muted:#9AA9BF;
+  --gold:#C8972F;
+  --bg:var(--navy);
+  --fg:var(--ink);
+  --fg-muted:var(--muted);
+  --border:var(--line);
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#F6F4EE;
+    --fg:#101B2C;
+    --fg-muted:#5B6B82;
+    --border:#DCD6C6;
+    --gold:#A9791F;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font:16px/1.6 -apple-system,"Segoe UI",Roboto,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:32px 20px;
+}
+.wrap{
+  width:100%;
+  max-width:560px;
+  text-align:center;
+}
+.logo{height:34px;width:auto;margin:0 auto 44px;display:block}
+.logo-light{display:none}
+@media (prefers-color-scheme: light){
+  .logo-dark{display:none}
+  .logo-light{display:block}
+}
+h1{
+  font-family:"Segoe UI",-apple-system,system-ui,sans-serif;
+  font-weight:700;
+  font-size:clamp(28px,5vw,40px);
+  letter-spacing:-0.01em;
+  line-height:1.2;
+  margin-bottom:14px;
+}
+.locked{
+  color:var(--gold);
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-bottom:26px;
+}
+.desc{
+  color:var(--fg-muted);
+  font-size:16px;
+  line-height:1.65;
+  max-width:440px;
+  margin:0 auto 36px;
+}
+.actions{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:56px;
+}
+.btn{
+  display:inline-block;
+  padding:13px 26px;
+  border-radius:999px;
+  font-size:14.5px;
+  font-weight:600;
+  text-decoration:none;
+  transition:opacity .15s ease;
+}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--gold);color:#12140E}
+.btn-secondary{background:transparent;color:var(--fg);border:1px solid var(--border)}
+footer{
+  border-top:1px solid var(--border);
+  padding-top:22px;
+  color:var(--fg-muted);
+  font-size:12.5px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+footer a{color:var(--fg-muted);text-decoration:none}
+footer a:hover{color:var(--fg)}
+.dot{color:var(--border)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo logo-dark" src="/continuum-logo.svg" alt="Continuum" width="240" height="86">
+  <img class="logo logo-light" src="/continuum-logo-dark.svg" alt="Continuum" width="240" height="86">
+
+  <h1>Where care ends, Continuum begins.</h1>
+  <div class="locked">THE NEW STANDARD FOR WORKPLACE INJURY MANAGEMENT</div>
+
+  <p class="desc">Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.</p>
+
+  <div class="actions">
+    <a class="btn btn-primary" href="mailto:craig@continuumrtw.com?subject=Request%20access">Request access</a>
+    <!-- BLOCKER: replace with the Continuum booking page URL (30/45/60 min) -->
+    <a class="btn btn-secondary" href="#booking-url-pending">Book a demo</a>
+  </div>
+
+  <footer>
+    <a href="mailto:craig@continuumrtw.com">craig@continuumrtw.com</a>
+    <span class="dot">&middot;</span>
+    <a href="/privacy">Privacy</a>
+    <span class="dot">&middot;</span>
+    <a href="/terms">Terms</a>
+  </footer>
+</div>
+</body>
+</html>
