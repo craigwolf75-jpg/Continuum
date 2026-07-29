@@ -26,7 +26,7 @@ ok("dash audit clean", !/[–—]/.test(html));
 ok("SIGMA exchange in the nav", html.includes('["sigma","swap_horiz","SIGMA exchange"]'));
 ok("renderSigma wired into views", html.includes("function renderSigma") && html.includes("sigma:renderSigma"));
 ok("doctrine: seat receives the submission itself only", html.includes("receives the submission itself, never the"));
-ok("human-send law", html.includes("a person authorizes every send"));
+ok("human-send law", html.includes("a person approves every send"));
 ok("channel rollup by plain names", html.includes("Submissions by channel") && html.includes("Business to business (B2B) file") && html.includes("C040 file import"));
 ok("no retrieval, plainly", html.includes("pull claim data back out"));
 ok("links to both SIGMA artifacts", html.includes("/sigma-crtw-connection.html") && html.includes("/sigma-portal.html"));

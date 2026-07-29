@@ -430,7 +430,7 @@ var BEATS=[
  {say:"Marcus acknowledges today's restrictions. His HSE coordinator sees the time he confirmed, and nothing else.",run:function(){S.ackDay=S.day;S.ackTs=Date.now();}},
  {say:"Days pass. Every morning check-in nudges the ring forward and keeps all four portals current, live across the bridge.",run:function(){advanceDays(6);}},
  {say:"HSE assigns a duty inside his restrictions. Marcus accepts it himself. Nobody accepts for him.",run:function(){var d=S.duties.filter(function(x){return x.status!=="completed";})[0];if(d)d.status="completed";}},
- {say:"Day 21. Dr. Owusu reviews the recovery signal and presses Clearance. The sign-off crosses the bridge.",run:function(){advanceDays(Math.max(0,PROG-S.day));S.status="signed_off";S.logs.unshift({t:"Day "+S.day,title:"Cleared for full duty",x:"Dr. A. Owusu signed off your return. Welcome back.",tag:"optimal"});}},
+ {say:"Day 21. Dr. Owusu reviews the recovery signal and presses Sign off. The sign-off crosses the bridge.",run:function(){advanceDays(Math.max(0,PROG-S.day));S.status="signed_off";S.logs.unshift({t:"Day "+S.day,title:"Cleared for full duty",x:"Dr. A. Owusu signed off your return. Welcome back.",tag:"optimal"});}},
  {say:"The worker app celebrates. Employer and HSE retire him. The board closes the claim with the full duty package. Everyone made better decisions because everyone had better information.",run:function(){}}
 ];
 function startPresent(){goBeat(0);}

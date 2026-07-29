@@ -402,6 +402,7 @@ function openLiveDrawer(){
  var h='<div class="kicker">Live from the worker app</div><h1 style="font-size:21px">'+esc(w.name)+'<span class="live-badge">Live</span></h1>'+
  '<div class="sub">'+esc(w.role)+' &middot; '+esc(w.loc)+'</div>'+
  '<div style="margin:12px 0">'+chipFor(w.status)+(w.clinicianReviewing?'<span class="rev-tag">Awaiting clinical review</span>':'')+'</div>'+
+ (w.clinicianReviewing?'<p style="font-size:12px;color:var(--muted);margin-bottom:10px">The treating physician makes every medical and return-to-work decision.</p>':'')+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Case (functional only)</div>'+
  '<table><tbody><tr><td>Injury</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
  '<tr><td>Days injured</td><td><b>'+w.days+'</b></td></tr>'+
@@ -520,7 +521,7 @@ function renderSettings(){
  '<div class="card"><div class="cardhead">Access log</div><p style="font-size:12.5px;margin-bottom:8px">Reads of the functional worker list are recorded here, in symmetry with the clinical and admin trails.</p>'+((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-top:1px solid var(--line)"><span>'+esc(a.msg)+'</span><span style="color:var(--muted)">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p style="font-size:12px;color:var(--muted)">No reads yet. Open the Injured Workers view to record one.</p>')+'</div>';}
 function renderIntegrations(){
  return pagehead("Admin","Integrations","Works with the systems you already run")+
- adminCard("Connected",[["Safety platform intake","Incident opens the case automatically",true],["Clinical provider","Nexus Health clearances and restrictions",true]])+
+ adminCard("Connected",[["Safety platform intake","Incident opens the case automatically",true],["Clinical provider","Clinical Partner sign-offs and restrictions",true]])+
  adminCard("Available",[["Payroll export","Time loss to payroll codes",false],["SSO","Single sign on for dashboard roles",false]])+
  '<div class="card"><div class="cardhead">Posture</div><p style="font-size:12.5px">Continuum runs standalone; integration adds value without being required.</p></div>';}
 /* ---------- render ---------- */
@@ -547,7 +548,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
   visits:{title:"Doctor visits",body:"Doctor visits as a schedule: when an appointment happened and whether the worker is cleared for duties. The employer sees that a visit occurred and the work outcome, never what was discussed."},
   notes:{title:"Case notes",body:"Case notes about the return-to-work plan. These are functional notes, never medical notes."},
   reports:{title:"Reports",body:"Reports you can export and share, built from the functional data only."},
-  trends:{title:"Trends",body:"How the caseload moves over time, as totals and rates. Descriptive, not predictive."},
+  trends:{title:"Trends",body:"How the caseload moves over time, as totals and rates. Descriptive, not forecasted."},
   benchmarking:{title:"Benchmarking",body:"How this workplace compares to similar ones, at the aggregate level, with no individual identified."},
   users:{title:"Users and roles",body:"Who has access and what each role can see. Roles decide the view; the walls decide what stays off limits."},
   settings:{title:"Settings",body:"Configuration for this employer workspace."},
