@@ -36,8 +36,9 @@ ok("dash audit clean", !/[–—]/.test(html));
 const clin = html;
 const banned = /clearance|authoriz|readiness|regression detected|vs prognosis|intelligence layer|\bpredict/i;
 ok("clinical has no banned clinical terms", !banned.test(clin));
-ok("clinical is not branded Nexus", !/Nexus/.test(clin));
-ok("clinical carries the physician-decides line", clin.includes("The treating physician makes every medical and return-to-work decision."));
+ok("clinical is not branded Nexus", !/nexus/i.test(clin));
+const physDecidesCount = (clin.match(/The treating physician makes every medical and return-to-work decision\./g) || []).length;
+ok("clinical carries the physician-decides line on both escalation cards", physDecidesCount >= 2);
 ok("recovery card reads progress estimate", /Recovery progress estimate/.test(clin));
 ok("escalation insight is flagged for the doctor", /Flagged for the doctor to review/.test(clin));
 
