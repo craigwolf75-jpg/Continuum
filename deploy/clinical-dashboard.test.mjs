@@ -32,5 +32,14 @@ ok("clear filter link", html.includes("S.wfilter=null;save();return false"));
 ok("legality matrix intact", /TRANSITIONS\[p\.status\]/.test(html));
 ok("dash audit clean", !/[–—]/.test(html));
 
+// 39a: clinical regulatory-language scrub
+const clin = html;
+const banned = /clearance|authoriz|readiness|regression detected|vs prognosis|intelligence layer|\bpredict/i;
+ok("clinical has no banned clinical terms", !banned.test(clin));
+ok("clinical is not branded Nexus", !/Nexus/.test(clin));
+ok("clinical carries the physician-decides line", clin.includes("The treating physician makes every medical and return-to-work decision."));
+ok("recovery card reads progress estimate", /Recovery progress estimate/.test(clin));
+ok("escalation insight is flagged for the doctor", /Flagged for the doctor to review/.test(clin));
+
 console.log("\nclinical-dashboard suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
