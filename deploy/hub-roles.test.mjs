@@ -30,7 +30,7 @@ ok("hub keeps a graceful vanilla fallback", hub.includes("host.innerHTML=rolesVi
 ok("hub loads Instrument Sans", hub.includes("Instrument+Sans"));
 
 // seven cards, correct order, unchanged routing and copy
-const order = ["Worker", "HSE", "Employer", "Nexus Health", "WCB", "Platform Admin", "SIGMA Exchange"];
+const order = ["Worker", "HSE", "Employer", "Clinical Partner", "WCB", "Platform Admin", "SIGMA Exchange"];
 const idx = order.map(t => src.indexOf('title: "' + t + '"'));
 ok("all seven cards present in order", idx.every((v, i) => v > 0 && (i === 0 || v > idx[i - 1])));
 const navs = { "/worker-dashboard.html": 1, "/hse-portal.html": 1, "/employer-dashboard.html": 1, "/clinical-dashboard.html": 1, "/wcb-portal.html": 1, "/admin-portal.html": 1, "/sigma-portal.html": 1 };

@@ -12,7 +12,7 @@ const T = {
   titleRest: "#DFE7F4", body: "#8FA3C2", logoBadge: "#22314F"
 };
 
-// Order per the prompt: Worker, HSE, Employer, Nexus Health, WCB, Platform Admin.
+// Order per the prompt: Worker, HSE, Employer, Clinical Partner, WCB, Platform Admin.
 // Copy is unchanged from the current hub. Nav targets are unchanged.
 // Each card carries a sign-up target. Worker has a live wizard (the worker app
 // opens it on the signup query) and Employer has the Prompt 37 organization
@@ -23,7 +23,7 @@ const CARDS = [
   { title: "Worker", roleKey: "worker", nav: "/worker-dashboard.html", signup: "/worker-dashboard.html?signup=1", desc: "Your space for recovery. Do a quick check-in, see your duties for today, and follow your plan. Open it to start." },
   { title: "HSE", roleKey: "hse", nav: "/hse-portal.html", signup: null, desc: "Light duties workspace. Assign tasks within restrictions. Recovery scores visible." },
   { title: "Employer", roleKey: "employer", nav: "/employer-dashboard.html", signup: "/employer-dashboard.html?setup=1", desc: "Employer dashboard. Functional status only, never medical detail." },
-  { title: "Nexus Health", roleKey: "nexus", nav: "/clinical-dashboard.html", signup: null, desc: "Clinical control center. Full detail, clearance, escalation." },
+  { title: "Clinical Partner", roleKey: "clinic", nav: "/clinical-dashboard.html", signup: null, desc: "Clinical control center. Full detail, sign-off, escalation." },
   { title: "WCB", roleKey: "wcb", nav: "/wcb-portal.html", signup: null, desc: "Compensation board portal. Read only claims and milestone notifications." },
   { title: "Platform Admin", roleKey: "admin", nav: "/admin-portal.html", signup: null, desc: "Continuum internal. Tenants, users, access grants, and billing." },
   { title: "SIGMA Exchange", roleKey: "sigma", nav: "/sigma-portal.html", signup: null, desc: "The system-of-record connection. A proposed workflow, not a live integration." }
