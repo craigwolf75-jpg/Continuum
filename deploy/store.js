@@ -1,10 +1,10 @@
 /* Continuum demo engine. Plain vanilla JS, no dependencies, no build step.
-   Shared by /app (worker) and /hub (HSE, Employer, Nexus, WCB).
+   Shared by /app (worker) and /hub (HSE, Employer, Clinic, WCB).
    Source of truth: specs/Continuum_MVP_Wireframe_Reference_v2.md and
    specs/CONTINUUM_PROMPT_06.md. Governed by Prompt 05.
 
    Design law enforced here, not just in the UI:
-   - Five roles: worker, hse, employer_admin, wcb_officer, nexus_physician.
+   - Five roles: worker, hse, employer_admin, wcb_officer, clinic_physician.
    - viewModel(role) is a projection that strips forbidden fields BEFORE
      returning, so a render bug cannot leak a field a role may not see.
    - Status machine transitions are guarded by (from, caller role); every
@@ -28,8 +28,8 @@
   // reassess are handled by dedicated guarded calls below.
   var TRANSITIONS = [
     { from: 'reported', to: 'off_work', actor: 'system' },
-    { from: 'off_work', to: 'light_duty', actor: 'nexus_physician' },
-    { from: 'light_duty', to: 'full_duty_pending', actor: 'nexus_physician' },
+    { from: 'off_work', to: 'light_duty', actor: 'clinic_physician' },
+    { from: 'light_duty', to: 'full_duty_pending', actor: 'clinic_physician' },
     { from: 'full_duty_pending', to: 'signed_off', actor: 'employer_admin' }
   ];
 
@@ -53,8 +53,8 @@
     // Clinical fields exist ONLY on Marcus, so nothing clinical can leak.
     var workers = [
       {
-        id: marcusId, name: 'Marcus Bedard', job_title: 'Scaffolder', company: 'Worley',
-        nexus_case_ref: 'NX-2026-00481',
+        id: marcusId, name: 'Marcus Bedard', job_title: 'Scaffolder', company: 'Northgate Industrial Services',
+        case_ref: 'CT-2026-0481',
         // functional (visible per matrix)
         body_part: 'Right shoulder', injury_type: 'msk_strain', status: 'light_duty',
         days_off: 2, doctor_visits: 2, rtw_progress: 0.43, restriction: restriction,
@@ -67,10 +67,10 @@
           physician: 'Dr. A. Owusu'
         }
       },
-      { id: 'w_okafor', name: 'D. Okafor', job_title: 'Pipefitter', company: 'Worley', nexus_case_ref: 'NX-2026-00463', body_part: 'Lower back', injury_type: 'msk_strain', status: 'off_work', days_off: 5, doctor_visits: 1, rtw_progress: 0.12, restriction: 'Awaiting assessment' },
-      { id: 'w_tremblay', name: 'S. Tremblay', job_title: 'Welder', company: 'Worley', nexus_case_ref: 'NX-2026-00470', body_part: 'Left wrist', injury_type: 'msk_strain', status: 'light_duty', days_off: 1, doctor_visits: 2, rtw_progress: 0.68, restriction: 'No repetitive gripping' },
-      { id: 'w_novak', name: 'R. Novak', job_title: 'Electrician', company: 'Worley', nexus_case_ref: 'NX-2026-00452', body_part: 'Right knee', injury_type: 'msk_strain', status: 'full_duty_pending', days_off: 0, doctor_visits: 3, rtw_progress: 0.9, restriction: 'Cleared, pending employer confirm' },
-      { id: 'w_singh_p', name: 'P. Singh', job_title: 'Rigger', company: 'Worley', nexus_case_ref: 'NX-2026-00448', body_part: 'Right ankle', injury_type: 'msk_strain', status: 'signed_off', days_off: 0, doctor_visits: 4, rtw_progress: 1, restriction: 'None' }
+      { id: 'w_okafor', name: 'D. Okafor', job_title: 'Pipefitter', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0463', body_part: 'Lower back', injury_type: 'msk_strain', status: 'off_work', days_off: 5, doctor_visits: 1, rtw_progress: 0.12, restriction: 'Awaiting assessment' },
+      { id: 'w_tremblay', name: 'S. Tremblay', job_title: 'Welder', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0470', body_part: 'Left wrist', injury_type: 'msk_strain', status: 'light_duty', days_off: 1, doctor_visits: 2, rtw_progress: 0.68, restriction: 'No repetitive gripping' },
+      { id: 'w_novak', name: 'R. Novak', job_title: 'Electrician', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0452', body_part: 'Right knee', injury_type: 'msk_strain', status: 'full_duty_pending', days_off: 0, doctor_visits: 3, rtw_progress: 0.9, restriction: 'Cleared, pending employer confirm' },
+      { id: 'w_singh_p', name: 'P. Singh', job_title: 'Rigger', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0448', body_part: 'Right ankle', injury_type: 'msk_strain', status: 'signed_off', days_off: 0, doctor_visits: 4, rtw_progress: 1, restriction: 'None' }
     ];
 
     return {
@@ -98,13 +98,13 @@
         { id: 'ld_2', injury_id: marcusId, task_description: 'Site walk permit checks', medical_restrictions: restriction, assigned_by: 'hse', assigned_date: daysAgoIso(1), completed_date: null, worker_feedback: null }
       ],
       wcb_notifications: [
-        { id: 'wcb_1', injury_id: marcusId, type: 'initial', status: 'acknowledged', wcb_claim_number: 'NX-2026-00481', generated_at: daysAgoIso(9), submitted_at: daysAgoIso(9), acknowledged_at: daysAgoIso(8) },
-        { id: 'wcb_2', injury_id: marcusId, type: 'light_duty', status: 'submitted', wcb_claim_number: 'NX-2026-00481', generated_at: daysAgoIso(4), submitted_at: daysAgoIso(4), acknowledged_at: null }
+        { id: 'wcb_1', injury_id: marcusId, type: 'initial', status: 'acknowledged', wcb_claim_number: 'CT-2026-0481', generated_at: daysAgoIso(9), submitted_at: daysAgoIso(9), acknowledged_at: daysAgoIso(8) },
+        { id: 'wcb_2', injury_id: marcusId, type: 'light_duty', status: 'submitted', wcb_claim_number: 'CT-2026-0481', generated_at: daysAgoIso(4), submitted_at: daysAgoIso(4), acknowledged_at: null }
       ],
       escalations: [],
       audit_log: [
         { actor: 'system', action: 'transition', from: 'reported', to: 'off_work', at: daysAgoIso(9) },
-        { actor: 'nexus_physician', action: 'transition', from: 'off_work', to: 'light_duty', at: daysAgoIso(4) }
+        { actor: 'clinic_physician', action: 'transition', from: 'off_work', to: 'light_duty', at: daysAgoIso(4) }
       ]
     };
   }
@@ -198,7 +198,7 @@
     var m = marcus(state);
     return {
       title: 'Fitness for Work',
-      case_ref: m.nexus_case_ref,
+      case_ref: m.case_ref,
       worker: m.name,
       employer: m.company,
       physician: (m.clinical && m.clinical.physician) || 'Dr. A. Owusu',
@@ -214,7 +214,7 @@
     var id = 'wcb_' + (state.wcb_notifications.length + 1);
     state.wcb_notifications.push({
       id: id, injury_id: marcus(state).id, type: type, status: 'generated',
-      wcb_claim_number: marcus(state).nexus_case_ref, generated_at: iso(),
+      wcb_claim_number: marcus(state).case_ref, generated_at: iso(),
       submitted_at: null, acknowledged_at: null, attachment: attachment || null
     });
   }
@@ -234,7 +234,7 @@
 
   // ---- clinical actions (nexus only) ----
   function publishRestrictions(restrictions, actor) {
-    if (actor !== 'nexus_physician') return { ok: false, error: 'Only Nexus Health sets restrictions' };
+    if (actor !== 'clinic_physician') return { ok: false, error: 'Only the clinical partner sets restrictions' };
     var state = load();
     state.case.restrictions_published = restrictions.slice();
     marcus(state).restriction = restrictions[0] || marcus(state).restriction;
@@ -245,7 +245,7 @@
 
   // escalated -> prior_status, nexus only (reassess)
   function reassess(actor) {
-    if (actor !== 'nexus_physician') return { ok: false, error: 'Only Nexus Health reassesses' };
+    if (actor !== 'clinic_physician') return { ok: false, error: 'Only the clinical partner reassesses' };
     var state = load();
     if (state.case.status !== 'escalated') return { ok: false, error: 'Case is not escalated' };
     var to = state.case.prior_status || 'light_duty';
@@ -397,7 +397,7 @@
   function functionalWorker(w) {
     return {
       id: w.id, name: w.name, job_title: w.job_title, company: w.company,
-      nexus_case_ref: w.nexus_case_ref, body_part: w.body_part, injury_type: w.injury_type,
+      case_ref: w.case_ref, body_part: w.body_part, injury_type: w.injury_type,
       status: w.status, days_off: w.days_off, doctor_visits: w.doctor_visits,
       rtw_progress: w.rtw_progress, restriction: w.restriction, estimated_return_date: w.estimated_return_date
     };
@@ -426,7 +426,7 @@
   function viewModel(role) {
     var s = load();
     var m = marcus(s);
-    // WCB notifications are NOT in the shared base: only the WCB and Nexus
+    // WCB notifications are NOT in the shared base: only the WCB and Clinic
     // view-models carry them, on a need-to-know basis.
     var base = { role: role, day: s.day, case_status: s.case.status, restrictions: s.case.restrictions_published.slice() };
 
@@ -461,7 +461,7 @@
         notifications: s.wcb_notifications.slice()
       });
     }
-    if (role === 'nexus_physician') {
+    if (role === 'clinic_physician') {
       // full medical detail.
       return Object.assign(base, {
         patient: { name: m.name, body_part: m.body_part, injury_type: m.injury_type, clinical: m.clinical, status: s.case.status, prior_status: s.case.prior_status },
