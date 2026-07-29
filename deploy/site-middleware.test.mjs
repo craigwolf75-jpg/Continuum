@@ -28,6 +28,13 @@ ok(
 // -- ALWAYS_PUBLIC exact paths allow without a cookie (gate on) --
 ok("/privacy allows without a cookie", decideSiteAccess("/privacy", false, undefined) === "allow");
 ok("/terms allows without a cookie", decideSiteAccess("/terms", false, undefined) === "allow");
+// -- Prompt 40 hygiene fix: privacy.html and terms.html footers link to the
+// literal ./privacy.html and ./terms.html paths, which resolve to
+// /privacy.html and /terms.html, not /privacy and /terms. Both must be
+// allowlisted exactly, same as the extensionless paths, or those footer
+// links hold under the gate. --
+ok("/privacy.html allows without a cookie", decideSiteAccess("/privacy.html", false, undefined) === "allow");
+ok("/terms.html allows without a cookie", decideSiteAccess("/terms.html", false, undefined) === "allow");
 ok("/robots.txt allows without a cookie", decideSiteAccess("/robots.txt", false, undefined) === "allow");
 ok("/sitemap.xml allows without a cookie", decideSiteAccess("/sitemap.xml", false, undefined) === "allow");
 ok("/api/site-access allows without a cookie", decideSiteAccess("/api/site-access", false, undefined) === "allow");
@@ -53,6 +60,13 @@ for (const gatedPath of ["/hub", "/admin-portal", "/continuum_workflow_app"]) {
   ok(gatedPath + " without a cookie holds", decideSiteAccess(gatedPath, false, undefined) === "holding");
   ok(gatedPath + " with a valid cookie allows", decideSiteAccess(gatedPath, true, undefined) === "allow");
 }
+
+// -- Prompt 40 hygiene fix regression: /admin-portal.html (a real gated
+// page, unlike the allowlisted /privacy.html and /terms.html) is still held
+// without a cookie, confirming the new exact allowlist entries above did
+// not accidentally widen into a broader prefix. --
+ok("/admin-portal.html without a cookie still holds", decideSiteAccess("/admin-portal.html", false, undefined) === "holding");
+ok("/admin-portal.html with a valid cookie allows", decideSiteAccess("/admin-portal.html", true, undefined) === "allow");
 
 // -- the kill switch only fires on the exact string "false"; any other
 // gateEnabledEnv value (including unset) keeps the gate on, the secure

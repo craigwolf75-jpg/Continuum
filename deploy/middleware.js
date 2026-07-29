@@ -46,7 +46,9 @@ const config = {
 // continuum-logo-evil.
 const ALWAYS_PUBLIC_EXACT = new Set([
   "/privacy",
+  "/privacy.html",
   "/terms",
+  "/terms.html",
   "/robots.txt",
   "/sitemap.xml",
   "/api/site-access",
