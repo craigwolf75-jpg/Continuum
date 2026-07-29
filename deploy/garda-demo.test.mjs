@@ -64,9 +64,9 @@ ok("device-boundary line present",
   low.includes("tracking and visualization with independent clinician review") &&
   low.includes("no scoring, no forecasting, no alerts that alter treatment"));
 
-/* 6. Predictive badged as roadmap / illustrative (scene 11) */
+/* 6. Forecasting badged as roadmap / illustrative (scene 11) */
 const exec = region('"executive":', '"sigma":');
-ok("executive predictive badged roadmap and illustrative",
+ok("executive forecasting badged roadmap and illustrative",
   /roadmap/i.test(exec) && /illustrative/i.test(exec));
 
 /* 7. SIGMA double-labeled: illustrative mock + intake level (scene 12) */
