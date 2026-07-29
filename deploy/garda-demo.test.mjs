@@ -62,7 +62,7 @@ ok("routing sentence in the escalation scene", ROUTING.test(escalation));
 /* 5. Device-boundary disclaimer verbatim (scene 10) */
 ok("device-boundary line present",
   low.includes("tracking and visualization with independent clinician review") &&
-  low.includes("no scoring, no prediction, no alerts that alter treatment"));
+  low.includes("no scoring, no forecasting, no alerts that alter treatment"));
 
 /* 6. Predictive badged as roadmap / illustrative (scene 11) */
 const exec = region('"executive":', '"sigma":');
@@ -97,7 +97,7 @@ ok("closing line verbatim",
 /* 12. Cast canon */
 ok("cast: Marcus Bedard", html.includes("Marcus Bedard"));
 ok("cast: Dr. A. Owusu", html.includes("Dr. A. Owusu") || html.includes("Dr. Owusu"));
-ok("cast: claim NX-2026-00481", html.includes("NX-2026-00481"));
+ok("cast: claim CT-2026-0481", html.includes("CT-2026-0481"));
 ok("cast: day twenty one / 21", /day (twenty one|21)/i.test(html));
 ok("cast: expected full duty Jul 31", /jul 31/i.test(low));
 
