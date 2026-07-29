@@ -12,43 +12,85 @@
    (deploy/site-middleware.test.mjs). The default export below, and the
    x-middleware-rewrite / x-middleware-next header contract it relies on to
    rewrite to the holding page without a redirect, can only be proven inside
-   an actual Vercel Edge deployment, which is not available yet.
+   an actual Vercel Edge deployment, which is not available yet. That
+   includes whether Vercel's frameworkless Edge Middleware contract accepts a
+   path relative x-middleware-rewrite value (used below) the same way it
+   accepts an absolute one; CONFIRM ON FIRST PREVIEW DEPLOY.
 
-   No dashes anywhere. */
+   SECURITY FIX (post review): the matcher below used to exclude requests by
+   file extension (.js, .css, .json, .map, .svg, and friends). That let
+   gated static bundles (for example /hub/roles.js, /store.js, /config.js)
+   bypass the middleware entirely, since the middleware function never even
+   ran for them. The matcher now excludes ONLY the two paths that must never
+   be intercepted (_next/static, _next/image); every other request, static
+   asset or not, goes through decideSiteAccess, whose allowlist is the ONLY
+   thing that can mark a path public. No dashes anywhere. */
 
 import { verifySession, parseCookies } from "./api/_site_session.js";
 
-// Vercel Edge Middleware matcher: this is a hard, build time exclusion so the
-// middleware function does not even run for literal static asset requests
-// (fonts, images, _next internals). It is intentionally broader than the
-// ALWAYS_PUBLIC allowlist below: paths like /gate/ and /api/site-access still
-// pass through the matcher and are handled by decideSiteAccess instead, since
-// they are ordinary routes, not static files.
+// Vercel Edge Middleware matcher. Deliberately minimal: it excludes only the
+// two paths Vercel itself expects to bypass this way (_next internals). It
+// does NOT exclude by file extension. Every gated static bundle (roles.js,
+// store.js, config.js, hub HTML, admin HTML, etc.) MUST pass through this
+// middleware and be evaluated by decideSiteAccess; only decideSiteAccess's
+// allowlist may mark a path public.
 const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|mjs|map|woff|woff2|ttf|mp4|txt|xml|json)$).*)"
-  ]
+  matcher: ["/((?!_next/static|_next/image).*)"]
 };
 
 // Exact path matches that are always reachable without a ct_site cookie.
+// Anything with a hyphen or other non boundary character right after a
+// bounded prefix (see ALWAYS_PUBLIC_PREFIX below) belongs here instead of in
+// the prefix list, so a real filename like continuum-logo-dark.svg does not
+// force the prefix rule to also accept an attacker suffix like
+// continuum-logo-evil.
 const ALWAYS_PUBLIC_EXACT = new Set([
   "/privacy",
   "/terms",
   "/robots.txt",
   "/sitemap.xml",
-  "/api/site-access"
+  "/api/site-access",
+  "/continuum-logo-dark.svg",
+  "/favicon-16x16.png",
+  "/favicon-32x32.png",
+  "/apple-touch-icon.png"
 ]);
 
-// Prefix matches that are always reachable without a ct_site cookie. "/" is
-// deliberately NOT here: it is handled as a normal gated path below (holding
-// unless a valid cookie is present), it is just called out separately in the
-// spec because it is the path most people will hit first.
-const ALWAYS_PUBLIC_PREFIX = [
-  "/favicon",
-  "/og-image",
-  "/continuum-logo",
-  "/gate/"
-];
+// Bounded prefix matches: pathname must start with the prefix AND the
+// character immediately after the prefix must be a real path boundary
+// ("." starting an extension, "/" starting a subpath, or end of string),
+// never an ordinary word character. This is what stops /continuum-logo from
+// also matching /continuum-logout, and /og-image from also matching
+// /og-image-x: in both bad cases the character right after the prefix is a
+// letter (or a hyphen introducing a different token), not a boundary.
+const ALWAYS_PUBLIC_BOUNDED_PREFIX = ["/favicon", "/og-image", "/continuum-logo"];
+
+// Raw prefix match: "/gate/" already ends in "/", so the boundary is baked
+// into the string itself; anything under it is the holding page or its
+// assets. Path traversal into or through this prefix is blocked separately,
+// before any allowlist check runs (see isSuspiciousPath below).
+const ALWAYS_PUBLIC_RAW_PREFIX = ["/gate/"];
+
+function isBoundedPrefixMatch(pathname, prefix) {
+  if (!pathname.startsWith(prefix)) return false;
+  const nextChar = pathname.charAt(prefix.length);
+  return nextChar === "" || nextChar === "." || nextChar === "/";
+}
+
+// SECURITY FIX (post review, I3): reject any pathname carrying a directory
+// traversal sequence, raw or percent encoded, BEFORE it is checked against
+// the allowlist. Without this, a path like /gate/%2e%2e/admin-portal.html
+// would pass the /gate/ prefix check here, and could then resolve (once let
+// through) against a static file resolver that decodes %2e%2e back to ..
+// and walks up out of /gate/ to a gated file. Suspicious paths are not
+// specially blocked outright; they simply never qualify for the allowlist,
+// so they fall through to the same holding-unless-cookie rule as any other
+// gated path.
+function isSuspiciousPath(pathname) {
+  if (typeof pathname !== "string") return true;
+  const lower = pathname.toLowerCase();
+  return lower.includes("..") || lower.includes("%2e") || lower.includes("%2f") || lower.includes("%5c");
+}
 
 // Pure decision function: no I/O, no crypto, no globals. Given a pathname, a
 // pre computed "is the cookie valid" boolean, and the raw SITE_GATE_ENABLED
@@ -61,8 +103,11 @@ function decideSiteAccess(pathname, hasValidCookie, gateEnabledEnv) {
   if (gateEnabledEnv === "false") return "allow";
 
   const isAlwaysPublic =
+    !isSuspiciousPath(pathname) &&
     pathname !== "/" &&
-    (ALWAYS_PUBLIC_EXACT.has(pathname) || ALWAYS_PUBLIC_PREFIX.some((p) => pathname.startsWith(p)));
+    (ALWAYS_PUBLIC_EXACT.has(pathname) ||
+      ALWAYS_PUBLIC_BOUNDED_PREFIX.some((p) => isBoundedPrefixMatch(pathname, p)) ||
+      ALWAYS_PUBLIC_RAW_PREFIX.some((p) => pathname.startsWith(p)));
 
   if (isAlwaysPublic) return "allow";
 
@@ -94,14 +139,14 @@ async function middleware(request) {
     const decision = decideSiteAccess(url.pathname, hasValidCookie, gateEnabledEnv);
 
     if (decision === "holding") {
-      return rewriteToHolding(url);
+      return rewriteToHolding();
     }
 
     return passThrough();
   } catch (e) {
     // Fail closed on any unexpected error: show the holding page rather than
     // risk leaking a gated route.
-    return rewriteToHolding(url);
+    return rewriteToHolding();
   }
 }
 
@@ -109,13 +154,20 @@ async function middleware(request) {
 // stays on the originally requested path, and no gated asset is ever served
 // under it. Uses the documented low level Vercel Edge Middleware contract
 // (the x-middleware-rewrite response header) so this works without a
-// framework specific helper like next/server's NextResponse. UNTESTED
-// pending an actual Vercel Edge deployment; see the file header.
-function rewriteToHolding(requestUrl) {
-  const holdingUrl = new URL("/gate/holding.html", requestUrl);
+// framework specific helper like next/server's NextResponse.
+//
+// SECURITY FIX (post review, I4): the rewrite target is now the path
+// "/gate/holding.html" rather than an absolute URL built from the incoming
+// request, in case Vercel's frameworkless contract expects a path (an
+// absolute URL built from attacker-influenced request data is also simply
+// more surface than necessary for a fixed, known destination). UNTESTED
+// pending an actual Vercel Edge deployment; see the file header. If a first
+// preview deploy shows Vercel requires an absolute URL here instead, this is
+// the line to change back.
+function rewriteToHolding() {
   return new Response(null, {
     status: 200,
-    headers: { "x-middleware-rewrite": holdingUrl.toString() }
+    headers: { "x-middleware-rewrite": "/gate/holding.html" }
   });
 }
 
@@ -128,5 +180,5 @@ function passThrough() {
   });
 }
 
-export { config, decideSiteAccess };
+export { config, decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch };
 export default middleware;

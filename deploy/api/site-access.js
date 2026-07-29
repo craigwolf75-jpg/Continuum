@@ -24,6 +24,11 @@
    deployed database. Only the pure rateDecision function below is unit
    tested (deploy/site-access.test.mjs).
 
+   SECURITY FIXES (post review): getClientIp now reads x-real-ip first and
+   only falls back to the LAST entry of x-forwarded-for (not the first,
+   attacker controllable, entry); the handler now rejects cross site POSTs
+   via isCrossSiteRequest before doing anything else.
+
    No dashes anywhere. */
 
 import { signSession, serializeSiteCookie } from "./_site_session.js";
@@ -48,12 +53,61 @@ function rateDecision(attemptsInWindow, lockedUntil, now) {
   return { blocked: false, retryAfter: 0 };
 }
 
+// SECURITY FIX (post review, I1): x-real-ip is the single value Vercel's own
+// edge network sets and is trustworthy. x-forwarded-for is a comma
+// separated chain that a client can prepend arbitrary fake entries onto;
+// Vercel APPENDS the real client IP as the LAST entry, so the correct
+// (and previously wrong) read of that header is the last entry, never the
+// first (the leftmost entry is fully attacker controlled and would let a
+// caller claim any IP to dodge the per-IP rate limit).
 function getClientIp(req) {
-  const xff = req.headers && req.headers["x-forwarded-for"];
-  if (typeof xff === "string" && xff.length) return xff.split(",")[0].trim();
-  if (Array.isArray(xff) && xff.length) return String(xff[0]).split(",")[0].trim();
+  const headers = req.headers || {};
+
+  const realIp = headers["x-real-ip"];
+  if (typeof realIp === "string" && realIp.trim()) return realIp.trim();
+  if (Array.isArray(realIp) && realIp.length && realIp[0]) return String(realIp[0]).trim();
+
+  const xff = headers["x-forwarded-for"];
+  const xffValue = typeof xff === "string" ? xff : Array.isArray(xff) && xff.length ? String(xff[xff.length - 1]) : "";
+  if (xffValue) {
+    const parts = xffValue.split(",").map((p) => p.trim()).filter(Boolean);
+    if (parts.length) return parts[parts.length - 1];
+  }
+
   const sock = req.socket || req.connection;
   return sock && sock.remoteAddress ? sock.remoteAddress : "unknown";
+}
+
+// SECURITY FIX (post review, M3): a cheap CSRF guard on the code entry POST.
+// Rejects when the browser reports this as a cross site fetch (Sec-Fetch-Site,
+// sent by all modern browsers on fetch requests) or when an Origin header is
+// present and its host does not match the request's own Host header. Absent
+// signals (no Sec-Fetch-Site, no Origin, e.g. very old browsers or non
+// browser first party callers) are not treated as cross site on their own;
+// this guard is a cheap extra layer, not the endpoint's only defense (the
+// code itself must still match, and attempts are still rate limited either
+// way).
+function isCrossSiteRequest(req) {
+  const headers = req.headers || {};
+
+  const secFetchSite = headers["sec-fetch-site"];
+  if (typeof secFetchSite === "string" && secFetchSite.toLowerCase() === "cross-site") {
+    return true;
+  }
+
+  const origin = headers["origin"];
+  const host = headers["host"];
+  if (typeof origin === "string" && origin && typeof host === "string" && host) {
+    try {
+      const originHost = new URL(origin).host.toLowerCase();
+      if (originHost !== host.toLowerCase()) return true;
+    } catch (e) {
+      // an Origin header present but unparsable is itself suspicious
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function getUserAgent(req) {
@@ -145,6 +199,11 @@ async function handler(req, res) {
       return;
     }
 
+    if (isCrossSiteRequest(req)) {
+      res.status(403).json({ ok: false, error: "cross site request rejected" });
+      return;
+    }
+
     const baseUrl = process.env.CONTINUUM_SUPABASE_URL;
     const serviceKey = process.env.CONTINUUM_SUPABASE_SERVICE_KEY;
     const sessionSecret = process.env.CONTINUUM_SITE_SESSION_SECRET;
@@ -197,5 +256,5 @@ async function handler(req, res) {
   }
 }
 
-export { rateDecision, MAX_ATTEMPTS, WINDOW_SECONDS };
+export { rateDecision, MAX_ATTEMPTS, WINDOW_SECONDS, getClientIp, isCrossSiteRequest };
 export default handler;

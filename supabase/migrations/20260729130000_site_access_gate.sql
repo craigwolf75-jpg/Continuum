@@ -47,6 +47,14 @@ alter table public.access_log enable row level security;
 -- these tables, and only from the code entry endpoint. There is no client
 -- side path to either table.
 
+-- SECURITY FIX (post review, M2): the original version of this function did
+-- a plain select of use_count, checked it in application logic, then did a
+-- separate update. Two concurrent calls against the same near exhausted code
+-- could both pass the select check before either update committed, letting
+-- use_count exceed max_uses. The fix folds the check and the increment into
+-- one update statement, so the WHERE clause is evaluated atomically against
+-- the current row: once a code is at max_uses, every concurrent caller's
+-- update simply matches zero rows, not just the first one to arrive.
 create or replace function public.validate_and_log_access(
   p_code text,
   p_ip text,
@@ -63,20 +71,27 @@ declare
   v_label text;
   v_matched boolean := false;
 begin
-  select ac.id, ac.label
-    into v_id, v_label
+  select ac.id
+    into v_id
     from public.access_codes ac
     where ac.code = p_code
       and ac.revoked_at is null
       and (ac.expires_at is null or ac.expires_at > now())
-      and (ac.max_uses is null or ac.use_count < ac.max_uses)
     limit 1;
 
   if v_id is not null then
-    v_matched := true;
+    -- atomic check and increment: use_count < max_uses is re-checked as
+    -- part of the same statement that increments it, so concurrent callers
+    -- cannot together push use_count past max_uses
     update public.access_codes
       set use_count = use_count + 1
-      where id = v_id;
+      where id = v_id
+        and (max_uses is null or use_count < max_uses)
+      returning label into v_label;
+
+    if v_label is not null then
+      v_matched := true;
+    end if;
   end if;
 
   -- every attempt is logged, matched or not; this is the only write path for
@@ -95,11 +110,15 @@ $$;
 revoke all on function public.validate_and_log_access(text, text, text, text) from public;
 grant execute on function public.validate_and_log_access(text, text, text, text) to service_role;
 
--- Seed one shared fallback code so the gate has at least one working code the
--- moment this migration is applied. This is a placeholder, not a real
--- secret: the controller rotates this code before the site goes live.
-insert into public.access_codes (label, code, category)
-values ('shared demo', 'CHANGE-ME-BEFORE-DEPLOY', 'internal')
-on conflict (code) do nothing;
+-- SECURITY FIX (post review, I2): this migration used to seed a shared
+-- fallback code ('shared demo', 'CHANGE-ME-BEFORE-DEPLOY'). A working code
+-- checked into the repo, even an obviously named placeholder, is a
+-- permanent credential in git history the moment this file is committed.
+-- No seed is inserted here. The controller inserts the real, rotated shared
+-- demo code directly against the live database, out of band, after this
+-- migration has been applied and before the gate is enabled, for example:
+--   insert into public.access_codes (label, code, category)
+--   values ('shared demo', '<a real generated code>', 'internal');
+-- That statement is intentionally not part of any migration file.
 
 commit;
