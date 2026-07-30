@@ -12,10 +12,10 @@
    identity is a pure read of the existing session, not a session mutation.
 
    group is reported straight from the verified payload, not recomputed:
-   isAuthorizedAdmin (deploy/api/_hub_session.js) is a forward hook that
-   fails OPEN on a session with no email claim, which is the wrong shape for
-   a read that a caller may use to decide what to render; a caller that
-   wants to know if this is the admin can compare group === 'admin' itself.
+   isAuthorizedAdmin (deploy/api/_hub_session.js) is a deny by default check
+   scoped to the admin surface guard, which is a different question than
+   this read; a caller that wants to know if this is the admin can compare
+   group === 'admin' itself.
 
    HARD WALL vs the SITE gate: only ever reads ct_session, via
    deploy/api/_hub_session.js's parseCookies/verifyHubSession, using

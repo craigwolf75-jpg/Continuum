@@ -1,7 +1,7 @@
 /* Continuum Prompt 40 ADMIN code view suite. node deploy/site-codes-admin.test.mjs
    Proves the pure logic behind the admin API (deploy/api/site-codes-admin.js)
    and its hub session codec (deploy/api/_hub_session.js): the ct_session
-   sign/verify round trip, isAuthorizedAdmin's forward hook behavior,
+   sign/verify round trip, isAuthorizedAdmin's deny by default behavior,
    deriveCodeStatus's precedence rules, validateCreateInput's field checks,
    isCrossSiteRequest's CSRF guard, and a mocked req/res integration test
    proving the handler itself fails closed (401, zero Supabase calls) when
@@ -86,10 +86,10 @@ async function main() {
   ok("null hub token returns null", (await verifyHubSession(null, SECRET, now)) === null);
   ok("three part hub token returns null", (await verifyHubSession("a.b.c", SECRET, now)) === null);
 
-  // -- isAuthorizedAdmin: forward hook behavior --
+  // -- isAuthorizedAdmin: deny by default behavior --
   ok(
-    "a session with no email claim is authorized (shared passcode era)",
-    isAuthorizedAdmin({ iat: now, exp: now + 100 }) === true
+    "a session with no email claim is not authorized (deny by default)",
+    isAuthorizedAdmin({ iat: now, exp: now + 100 }) === false
   );
   ok(
     "a session with the allowlisted admin email is authorized",
@@ -102,8 +102,12 @@ async function main() {
   ok("a null session is not authorized", isAuthorizedAdmin(null) === false);
   ok("an undefined session is not authorized", isAuthorizedAdmin(undefined) === false);
   ok(
-    "an empty string email is treated as no email claim (authorized)",
-    isAuthorizedAdmin({ iat: now, exp: now + 100, email: "" }) === true
+    "an empty string email is not authorized (deny by default)",
+    isAuthorizedAdmin({ iat: now, exp: now + 100, email: "" }) === false
+  );
+  ok(
+    "an empty object with no email claim is not authorized (deny by default)",
+    isAuthorizedAdmin({}) === false
   );
 
   // -- deriveCodeStatus: precedence and each terminal status --

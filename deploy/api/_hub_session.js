@@ -26,12 +26,10 @@ const ALGO = { name: "HMAC", hash: "SHA-256" };
 // callers never need to hardcode the literal string themselves.
 const HUB_COOKIE_NAME = "ct_session";
 
-// Forward hook allowlist for Prompt 40's admin guard. The current Prompt 39
-// hub gate is a single shared demo passcode with no per-user identity, so a
-// session issued today carries no email claim; isAuthorizedAdmin below
-// treats that as authorized (see its own comment). Once Prompt 39 (or a
-// later hub auth revision) attaches a real identity/email claim to the
-// session payload, this allowlist becomes the active gate.
+// Deny by default admin allowlist. The hub now issues a real ct_session
+// carrying an actual email claim on every sign in, so isAuthorizedAdmin
+// below requires that email to be present in this list; a missing or empty
+// email claim is never treated as authorized.
 const ADMIN_EMAILS = ["gary@farmceuticawellness.com"];
 
 function getSubtle() {
@@ -150,20 +148,13 @@ function parseCookies(header) {
 // separately, in deploy/api/site-codes-admin.js's requireHubAdmin, using
 // verifyHubSession above).
 //
-// The Prompt 39 hub gate today issues sessions from a single shared demo
-// passcode: there is no per-user login, so a real session payload has no
-// email claim to check. Treating a missing email claim as NOT authorized
-// would make every admin endpoint permanently unusable until a future hub
-// auth revision adds identity, which is not what is wanted right now. So:
-//   - session has no email claim (today's shared-passcode era) -> authorized
-//   - session has an email claim -> authorized only if it is in ADMIN_EMAILS
-// In other words the active gate today is "holds a valid ct_session"; the
-// email allowlist is a forward hook that becomes the active gate
-// automatically the moment a session payload starts carrying an email
-// claim, with no code change required here.
+// Deny by default: a session is authorized only when it is an object, its
+// email claim is a non empty string, AND that email is in ADMIN_EMAILS. A
+// missing session, a session with no email claim, or an empty email claim
+// is never authorized.
 function isAuthorizedAdmin(session) {
   if (!session || typeof session !== "object") return false;
-  if (typeof session.email !== "string" || session.email.length === 0) return true;
+  if (typeof session.email !== "string" || session.email.length === 0) return false;
   return ADMIN_EMAILS.includes(session.email);
 }
 
