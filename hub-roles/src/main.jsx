@@ -119,7 +119,7 @@ function Card({ card, index, refFn }) {
   );
 }
 
-function RolesView() {
+function RolesView({ isAdmin }) {
   const reduced = useReducedMotion();
   const cardRefs = useRef([]);
   const logoRef = useRef(null);
@@ -160,7 +160,7 @@ function RolesView() {
         <img className="cr-logo" src="/continuum-logo.svg" alt="Continuum Return to Work" style={{ height: 60, width: "auto", display: "block", margin: "0 auto" }} />
       </div>
       <div className="cr-grid">
-        {CARDS.map((card, i) => (
+        {CARDS.filter(c => c.roleKey !== "admin" || isAdmin).map((card, i) => (
           <Card key={card.roleKey} card={card} index={i} refFn={el => { cardRefs.current[i] = el; }} />
         ))}
       </div>
@@ -168,12 +168,13 @@ function RolesView() {
   );
 }
 
-export function mount(el) {
+export function mount(el, opts) {
   if (!el) return;
   // Replay-safe: unmount any prior root on this node before mounting again, so
   // returning to the hub re-runs the entrance cleanly without a duplicate root.
   if (el.__crRoot) { try { el.__crRoot.unmount(); } catch (e) {} }
+  const isAdmin = !!(opts && opts.isAdmin);
   const root = createRoot(el);
   el.__crRoot = root;
-  root.render(<RolesView />);
+  root.render(<RolesView isAdmin={isAdmin} />);
 }

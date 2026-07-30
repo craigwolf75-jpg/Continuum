@@ -26,7 +26,7 @@ ok("bundle exposes ContinuumRolesView", bundle.includes("ContinuumRolesView"));
 ok("bundle is non-trivial (React + Framer Motion inlined)", bundle.length > 50000);
 ok("hub loads the bundle", hub.includes('src="/hub/roles.js"'));
 ok("hub mounts React for the roles view", hub.includes("ContinuumRolesView.mount"));
-ok("hub keeps a graceful vanilla fallback", hub.includes("host.innerHTML=rolesView()"));
+ok("hub keeps a graceful vanilla fallback", hub.includes("host.innerHTML=rolesView(session.isAdmin)"));
 ok("hub loads Instrument Sans", hub.includes("Instrument+Sans"));
 
 // seven cards, correct order, unchanged routing and copy
@@ -88,6 +88,11 @@ ok("built bundle carries the Sign up pill", bundle.includes("Sign up"));
 ok("built bundle carries the worker sign-up route", bundle.includes("worker-dashboard.html?signup=1"));
 ok("built bundle carries the employer setup route", bundle.includes("employer-dashboard.html?setup=1"));
 ok("pill did not change routing: nav targets unchanged", Object.keys(navs).every(n => src.includes('nav: "' + n + '"')));
+
+// Prompt 40 hub auth: the Platform Admin card is admin only
+ok("mount accepts an isAdmin option", src.includes("mount(el, opts)") && src.includes("isAdmin"));
+ok("RolesView filters the Platform Admin card when isAdmin is false", src.includes('CARDS.filter(c => c.roleKey !== "admin" || isAdmin)'));
+ok("built bundle carries the isAdmin filter", bundle.includes("isAdmin"));
 
 console.log("\nhub-roles suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

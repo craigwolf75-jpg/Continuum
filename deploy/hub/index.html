@@ -32,6 +32,8 @@
   .presenter{width:360px;max-width:100%;margin-top:16px;border:1px dashed rgba(200,151,47,.4);border-radius:12px;padding:14px}
   .presenter .kick{color:var(--gold2)}
   .presenter .prow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .errbox{background:rgba(200,60,60,.14);border:1px solid rgba(200,60,60,.35);border-radius:10px;padding:9px 12px;font-size:12.5px;color:#f3b9b9;margin-top:8px;display:none}
+  .errbox.on{display:block}
   .roles{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:520px;max-width:100%}
   .role{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:20px;cursor:pointer;text-align:left;transition:transform 200ms ease,border-color 200ms ease,box-shadow 200ms ease;animation:roleIn 280ms ease backwards}
   .role:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 18px rgba(14,27,44,.35)}
@@ -81,20 +83,24 @@
 <div id="hub"></div>
 <script>
 (function(){
-  var S=window.ContinuumStore;
-  var rolesMounted=false;
   var ROLES={hse:'HSE',employer:'Employer',clinic:'Clinical Partner',wcb:'WCB'};
+  var session={authenticated:false,group:null,isAdmin:false};
 
   function view(){ return (location.hash||'#login').replace('#',''); }
 
   function render(){
     var v=view(), host=document.getElementById('hub');
-    if(v!=='roles') rolesMounted=false;
     if(v==='login') return host.innerHTML=loginView();
+    if(v==='signup') return host.innerHTML=signupView();
+    if(v==='awaiting') return host.innerHTML=awaitingView();
     if(v==='roles'){
-      if(rolesMounted) return;
-      if(window.ContinuumRolesView&&window.ContinuumRolesView.mount){ host.innerHTML=''; window.ContinuumRolesView.mount(host); rolesMounted=true; return; }
-      return host.innerHTML=rolesView(); /* graceful fallback if the bundle fails to load */
+      if(!session.authenticated){ location.hash='#login'; return; }
+      if(window.ContinuumRolesView&&window.ContinuumRolesView.mount){
+        host.innerHTML='';
+        window.ContinuumRolesView.mount(host, { isAdmin: session.isAdmin });
+        return;
+      }
+      return host.innerHTML=rolesView(session.isAdmin); /* graceful fallback if the bundle fails to load */
     }
     if(v==='employer'){ location.href='/employer-dashboard.html'; return; }
     if(v==='wcb'){ location.href='/wcb-portal.html'; return; }
@@ -104,61 +110,132 @@
     if(!ROLES[v]) { location.hash='#login'; return; }
   }
 
+  function brand(){
+    return '<div class="brand"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="height:64px;width:auto;display:block;margin:0 auto"></div>';
+  }
+
   function loginView(){
-    return '<div class="center"><div><div class="brand"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="height:64px;width:auto;display:block;margin:0 auto"></div>'+
+    return '<div class="center"><div>'+brand()+
       '<div class="loginbox"><div class="kick">Continuum Hub</div><h1 style="font-size:20px;margin:8px 0 4px">Sign in</h1>'+
       '<p class="note" style="color:var(--mist)">Dashboard access for HSE, employer, Clinical Partner, and WCB.</p>'+
-      '<input class="txt" placeholder="Work email"><input class="txt" placeholder="One time code"><button class="btn" data-action="signin" style="margin-top:12px">Sign in</button>'+
+      '<div class="errbox" id="loginErr"></div>'+
+      '<input class="txt" id="loginEmail" type="email" placeholder="Work email" autocomplete="username">'+
+      '<input class="txt" id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">'+
+      '<button class="btn" id="loginBtn" data-action="signin" style="margin-top:12px">Sign in</button>'+
       '<p class="note" style="font-size:12px;color:var(--mist);text-align:center;margin-top:12px">By continuing you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>'+
-      '<p class="note" style="color:var(--mist);margin-top:12px">Workers use the <a href="/app">worker app</a> with an SMS code.</p></div>'+
-      presenter()+'</div></div>';
+      '<p class="note" style="color:var(--mist);margin-top:12px">New here? <a href="#signup" data-hashlink="signup">Create an account</a>.</p>'+
+      '<p class="note" style="color:var(--mist);margin-top:6px">Workers use the <a href="/app">worker app</a> with an SMS code.</p></div>'+
+      '</div></div>';
   }
-  function presenter(){
-    return '<div class="presenter"><div class="kick">Presenter controls</div>'+
-      '<div class="prow"><button class="btn ghost sm" data-action="seed9">Seed day 9 baseline</button>'+
-      '<button class="btn ghost sm" data-action="seedesc">Seed escalation ready history</button>'+
-      '<button class="btn ghost sm" data-action="advday">Advance day</button></div>'+
-      '<p class="note" style="color:var(--mist);margin-top:8px">These change the demo store only. Compressed time for a live walkthrough.</p></div>';
+
+  function signupView(){
+    return '<div class="center"><div>'+brand()+
+      '<div class="loginbox"><div class="kick">Continuum Hub</div><h1 style="font-size:20px;margin:8px 0 4px">Create an account</h1>'+
+      '<p class="note" style="color:var(--mist)">Your account is reviewed before it can reach a dashboard.</p>'+
+      '<div class="errbox" id="signupErr"></div>'+
+      '<input class="txt" id="signupEmail" type="email" placeholder="Work email" autocomplete="username">'+
+      '<input class="txt" id="signupPassword" type="password" placeholder="Password (8+ characters)" autocomplete="new-password">'+
+      '<button class="btn" id="signupBtn" data-action="signup" style="margin-top:12px">Create account</button>'+
+      '<p class="note" style="color:var(--mist);margin-top:12px">Already have an account? <a href="#login" data-hashlink="login">Sign in</a>.</p>'+
+      '</div></div></div>';
   }
-  function rolesView(){
-    function card(k,desc){ return '<div class="role" data-role="'+k+'"><h3>'+ROLES[k]+'</h3><p>'+desc+'</p></div>'; }
+
+  function awaitingView(){
+    return '<div class="center"><div>'+brand()+
+      '<div class="loginbox"><div class="kick">Continuum Hub</div><h1 style="font-size:20px;margin:8px 0 4px">Awaiting approval</h1>'+
+      '<p class="note" style="color:var(--mist)">Your account is awaiting approval. Check back once an administrator has reviewed it.</p>'+
+      '<button class="btn ghost" data-action="backtologin" style="margin-top:12px">Back to sign in</button>'+
+      '</div></div></div>';
+  }
+
+  function rolesView(isAdmin){
     var worker='<button type="button" class="role role-worker" data-nav="/worker-dashboard.html"><h3>Worker</h3><p>Your space for recovery. Do a quick check-in, see your duties for today, and follow your plan. Open it to start.</p></button>';
     var employer='<button type="button" class="role" data-nav="/employer-dashboard.html"><h3>Employer</h3><p>Employer dashboard. Functional status only, never medical detail.</p></button>';
     var wcb='<button type="button" class="role" data-nav="/wcb-portal.html"><h3>WCB</h3><p>Compensation board portal. Read only claims and milestone notifications.</p></button>';
     var hse='<button type="button" class="role" data-nav="/hse-portal.html"><h3>HSE</h3><p>Light duties workspace. Assign tasks within restrictions. Recovery scores visible.</p></button>';
     var clinic='<button type="button" class="role" data-nav="/clinical-dashboard.html"><h3>Clinical Partner</h3><p>Clinical control center. Full detail, sign-off, escalation.</p></button>';
-    var admin='<button type="button" class="role" data-nav="/admin-portal.html"><h3>Platform Admin</h3><p>Continuum internal. Tenants, users, access grants, and billing.</p></button>';
+    var admin=isAdmin?'<button type="button" class="role" data-nav="/admin-portal.html"><h3>Platform Admin</h3><p>Continuum internal. Tenants, users, access grants, and billing.</p></button>':'';
     var sigma='<button type="button" class="role" data-nav="/sigma-portal.html"><h3>SIGMA Exchange</h3><p>The system-of-record connection. A proposed workflow, not a live integration.</p></button>';
-    return '<div class="center"><div><div class="brand"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="height:64px;width:auto;display:block;margin:0 auto"></div>'+
-      '<div class="roles">'+
-      worker+
-      hse+
-      employer+
-      clinic+
-      wcb+
-      admin+
-      sigma+
-      '</div>'+
+    return '<div class="center"><div>'+brand()+
+      '<div class="roles">'+worker+hse+employer+clinic+wcb+admin+sigma+'</div>'+
       '</div></div>';
   }
 
+  async function postJson(url, body){
+    var res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    var data=null;
+    try { data=await res.json(); } catch(e) { data=null; }
+    return { status:res.status, ok:res.ok, data:data };
+  }
+
+  async function checkSession(){
+    try {
+      var res=await fetch('/api/hub-whoami');
+      var data=await res.json();
+      if(res.ok&&data&&data.ok){
+        session={authenticated:true,group:data.group,isAdmin:data.group==='admin'};
+      } else {
+        session={authenticated:false,group:null,isAdmin:false};
+      }
+    } catch(e) {
+      session={authenticated:false,group:null,isAdmin:false};
+    }
+  }
+
+  function showErr(id,msg){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.textContent=msg;
+    el.classList.add('on');
+  }
+  function clearErr(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.textContent='';
+    el.classList.remove('on');
+  }
+
+  async function doSignin(){
+    clearErr('loginErr');
+    var email=document.getElementById('loginEmail').value.trim();
+    var password=document.getElementById('loginPassword').value;
+    var result=await postJson('/api/hub-signin',{email:email,password:password});
+    if(result.ok&&result.data&&result.data.ok){
+      if(result.data.group){ await checkSession(); location.hash='#roles'; return; }
+      if(result.data.status==='pending'){ location.hash='#awaiting'; return; }
+    }
+    var msg=(result.data&&(result.data.error||(result.data.errors&&result.data.errors[0])))||'Sign in failed.';
+    showErr('loginErr',msg);
+  }
+
+  async function doSignup(){
+    clearErr('signupErr');
+    var email=document.getElementById('signupEmail').value.trim();
+    var password=document.getElementById('signupPassword').value;
+    var result=await postJson('/api/hub-signup',{email:email,password:password});
+    if(result.ok&&result.data&&result.data.ok){ location.hash='#awaiting'; return; }
+    var msg=(result.data&&result.data.errors&&result.data.errors[0])||'Could not create account.';
+    showErr('signupErr',msg);
+  }
+
   document.addEventListener('click', function(ev){
-    var t=ev.target.closest('[data-action],[data-role],[data-nav]'); if(!t) return;
+    var t=ev.target.closest('[data-action],[data-role],[data-nav],[data-hashlink]'); if(!t) return;
+    if(t.hasAttribute('data-hashlink')){ location.hash='#'+t.getAttribute('data-hashlink'); return; }
     if(t.hasAttribute('data-nav')){ location.href=t.getAttribute('data-nav'); return; }
     if(t.hasAttribute('data-role')){ location.hash='#'+t.getAttribute('data-role'); return; }
     var a=t.getAttribute('data-action');
-    if(a==='signin') location.hash='#roles';
-    else if(a==='switch') location.hash='#roles';
-    else if(a==='reset'){ S.reset(); render(); }
-    else if(a==='seed9'){ S.seedDay9(); render(); }
-    else if(a==='seedesc'){ S.seedEscalationReady(); render(); }
-    else if(a==='advday'){ S.advanceDay(); render(); }
+    if(a==='signin') doSignin();
+    else if(a==='signup') doSignup();
+    else if(a==='backtologin') location.hash='#login';
   });
 
   window.addEventListener('hashchange', render);
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden) render(); });
-  S.subscribe(function(){ render(); });
-  render();
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden){ checkSession().then(render); } });
+  (async function init(){
+    await checkSession();
+    if(session.authenticated && (view()==='login'||!location.hash)) location.hash='#roles';
+    render();
+  })();
 })();
 </script>
 </body>
