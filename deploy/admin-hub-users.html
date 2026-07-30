@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: Hub Users</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#16273D;--gold:#E0B658;--goldbg:#fdf3dd;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;
+--card:#FFFFFF;--low:#eff4ff;--red:#ba1a1a;--alert:#C0453B;--redbg:#ffdad6;--teal:#508c9c;--tealbg:#dce9ff;--green:#2c6e46;--greenbg:#e4efe8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif;padding:32px 24px 80px}
+.wrap{max-width:1040px;margin:0 auto}
+header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.brandline{display:flex;align-items:center;gap:12px}
+.brandline b{font-size:20px;color:var(--navy)}
+.tagchip{background:var(--goldbg);color:#735200;border:1px solid var(--gold);border-radius:5px;padding:3px 9px;font-size:10.5px;font-weight:700;letter-spacing:.08em}
+.gatenote{background:var(--low);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--muted);margin:16px 0 24px;display:flex;gap:10px;align-items:flex-start}
+.gatenote b{color:var(--navy)}
+h1{font-size:26px;color:var(--navy);margin-bottom:2px}
+h2{font-size:17px;color:var(--navy);margin-bottom:12px}
+.sub{color:var(--muted);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(14,27,44,.06);padding:20px;margin-bottom:24px}
+select{height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font:inherit;font-size:12.5px;background:var(--card)}
+.btn{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.btn:hover{background:#3b475a}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.danger{background:var(--card);border:1px solid var(--alert);color:var(--alert)}
+table{width:100%;border-collapse:collapse}
+th{background:var(--low);font-size:10.5px;letter-spacing:.08em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);font-size:12.5px;vertical-align:middle}
+tr:hover td{background:#fafbfe}
+.tablewrap{overflow-x:auto}
+.pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.pillst.pending{background:var(--goldbg);color:#735200}
+.pillst.approved{background:var(--greenbg);color:var(--green)}
+.pillst.rejected{background:var(--redbg);color:#93000a}
+.rowbtns{display:flex;gap:6px;align-items:center}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:90;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{color:var(--soft);font-size:12.5px;padding:16px;text-align:center}
+.statusline{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.statusline.err{color:var(--alert)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brandline"><b>Continuum</b><span class="tagchip">HUB USERS</span></div>
+  </header>
+  <h1>Hub accounts</h1>
+  <p class="sub">Approve or reject accounts created at the Continuum Hub, and set each one's access group.</p>
+
+  <div class="gatenote">
+    <span>&#128274;</span>
+    <span>This page is gated by the Continuum hub sign in and is only usable by gary@farmceuticawellness.com. Every action below
+    goes through deploy/api/hub-admin.js, which fails closed for any other signed in visitor.</span>
+  </div>
+
+  <div id="gateStatus" class="statusline">Checking hub session&hellip;</div>
+
+  <div class="card">
+    <h2>Accounts</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Email</th><th>Status</th><th>Group</th><th>Created</th><th>Approved</th><th></th></tr></thead>
+        <tbody id="usersBody"><tr><td colspan="6" class="empty">No accounts loaded yet.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* Continuum Hub users admin UI. Calls /api/hub-admin, gated by the ct_session
+   cookie server side. This file never reads or sets a cookie itself; the
+   browser sends ct_session automatically (HttpOnly, same origin). No dashes
+   anywhere. */
+const API = "/api/hub-admin";
+
+function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function fmtDate(iso){ if(!iso) return "none"; try { return new Date(iso).toLocaleString(); } catch(e) { return iso; } }
+function showToast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("on"); setTimeout(()=>t.classList.remove("on"),2600); }
+function statusPill(status){ const cls=["pending","approved","rejected"].includes(status)?status:"pending"; return '<span class="pillst '+cls+'">'+escapeHtml(status)+"</span>"; }
+
+async function callApi(action, opts){
+  opts = opts || {};
+  const method = opts.method || "POST";
+  const init = { method, headers: { "Content-Type": "application/json" } };
+  if (method !== "GET") init.body = JSON.stringify(Object.assign({ action }, opts.body || {}));
+  const res = await fetch(API, init);
+  let data = null;
+  try { data = await res.json(); } catch(e) { data = null; }
+  return { status: res.status, ok: res.ok, data };
+}
+
+function renderGateStatus(result){
+  const el = document.getElementById("gateStatus");
+  if (result.status === 401) { el.textContent = "No valid hub session. Sign in through the hub first."; el.classList.add("err"); }
+  else if (result.status === 403) { el.textContent = "Hub session present but not authorized for admin access."; el.classList.add("err"); }
+  else if (result.status === 503) { el.textContent = "Admin API is not configured (missing environment variables)."; el.classList.add("err"); }
+  else if (result.ok) { el.textContent = "Hub session verified. Showing live data."; el.classList.remove("err"); }
+  else { el.textContent = "Could not load data (status " + result.status + ")."; el.classList.add("err"); }
+}
+
+function renderUsers(profiles){
+  const body = document.getElementById("usersBody");
+  if (!Array.isArray(profiles) || profiles.length === 0) { body.innerHTML = '<tr><td colspan="6" class="empty">No accounts yet.</td></tr>'; return; }
+  body.innerHTML = profiles.map(p => {
+    const isPending = p.status === "pending";
+    const groupControl = isPending
+      ? '<select data-role="groupSelect" data-id="'+escapeHtml(p.id)+'"><option value="group1">Group 1</option><option value="group2">Group 2</option></select>'
+      : escapeHtml(p.access_group || "none");
+    const actions = isPending
+      ? '<div class="rowbtns">'+
+          '<button class="btn" data-action="approve" data-id="'+escapeHtml(p.id)+'">Approve</button>'+
+          '<button class="btn danger" data-action="reject" data-id="'+escapeHtml(p.id)+'">Reject</button>'+
+        '</div>'
+      : (p.status === "approved" ? '<button class="btn danger" data-action="reject" data-id="'+escapeHtml(p.id)+'">Reject</button>' : "");
+    return "<tr>"+
+      "<td>"+escapeHtml(p.email)+"</td>"+
+      "<td>"+statusPill(p.status)+"</td>"+
+      "<td>"+groupControl+"</td>"+
+      "<td>"+fmtDate(p.created_at)+"</td>"+
+      "<td>"+(p.approved_at?fmtDate(p.approved_at)+(p.approved_by?" by "+escapeHtml(p.approved_by):""):"none")+"</td>"+
+      "<td>"+actions+"</td>"+
+    "</tr>";
+  }).join("");
+}
+
+async function loadAll(){
+  const result = await callApi("list", { method: "GET" });
+  renderGateStatus(result);
+  if (result.ok && result.data && result.data.ok) renderUsers(result.data.profiles);
+  else renderUsers([]);
+}
+
+document.getElementById("usersBody").addEventListener("click", async (e) => {
+  const btn = e.target.closest("button[data-action]"); if (!btn) return;
+  const action = btn.getAttribute("data-action");
+  const id = btn.getAttribute("data-id");
+  const row = btn.closest("tr");
+  const select = row ? row.querySelector('[data-role="groupSelect"]') : null;
+  const body = { id };
+  if (action === "approve") body.access_group = select ? select.value : "group1";
+  btn.disabled = true;
+  try {
+    const result = await callApi(action, { body });
+    if (result.ok && result.data && result.data.ok) { showToast(action === "approve" ? "Account approved." : "Account rejected."); await loadAll(); }
+    else { showToast("Could not " + action + " account (" + result.status + ")."); btn.disabled = false; }
+  } catch (err) {
+    showToast("Request failed."); btn.disabled = false;
+  }
+});
+
+loadAll();
+</script>
+</body>
+</html>
