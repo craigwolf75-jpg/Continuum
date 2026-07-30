@@ -81,6 +81,37 @@ async function main() {
     ok("verifyPassword returns invalid on a bad password", result.outcome === "invalid");
   });
 
+  // -- fetch throws (DNS error, connection refused, timeout): must resolve, never reject --
+  async function withThrowingFetch(fn) {
+    const original = globalThis.fetch;
+    globalThis.fetch = async () => { throw new Error("network error"); };
+    try { await fn(); } finally { globalThis.fetch = original; }
+  }
+
+  await withThrowingFetch(async () => {
+    let threw = false;
+    let result;
+    try {
+      result = await createAuthUser("https://x.supabase.co", "svc-key", "a@b.com", "longenough1");
+    } catch (e) {
+      threw = true;
+    }
+    ok("createAuthUser does not throw when fetch throws", threw === false);
+    ok("createAuthUser resolves to outcome error when fetch throws", result && result.outcome === "error");
+  });
+
+  await withThrowingFetch(async () => {
+    let threw = false;
+    let result;
+    try {
+      result = await verifyPassword("https://x.supabase.co", "svc-key", "a@b.com", "pw");
+    } catch (e) {
+      threw = true;
+    }
+    ok("verifyPassword does not throw when fetch throws", threw === false);
+    ok("verifyPassword resolves to outcome error when fetch throws", result && result.outcome === "error");
+  });
+
   console.log("\nhub-auth suite: " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
 }

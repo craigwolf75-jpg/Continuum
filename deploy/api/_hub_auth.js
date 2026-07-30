@@ -19,9 +19,13 @@
      side, just not exposed to the browser here).
 
    Fails closed throughout: any missing config, any unexpected shape in a
-   GoTrue response, or a network error surfaces as a typed { outcome: "error" }
-   result, never a thrown exception the caller forgot to catch and never a
-   silent success. No dashes anywhere. */
+   GoTrue response, or a network error (DNS failure, connection refused,
+   timeout, or anything else fetch or response handling can throw) surfaces
+   as a typed { outcome: "error" } result, never a thrown exception the
+   caller forgot to catch and never a silent success. createAuthUser and
+   verifyPassword each wrap their entire fetch plus response handling in a
+   try/catch so a network failure resolves to { outcome: "error" } instead
+   of rejecting. No dashes anywhere. */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
@@ -94,36 +98,48 @@ function parseTokenResponse(status, body) {
 }
 
 // PENDING CREDS: cannot run without a live Supabase project. Creates a
-// Supabase Auth user via the GoTrue admin API.
+// Supabase Auth user via the GoTrue admin API. The whole fetch plus
+// response handling is inside the try so a network failure (DNS, connection
+// refused, timeout) resolves to { outcome: "error" } instead of throwing.
 async function createAuthUser(baseUrl, serviceKey, email, password) {
-  const res = await fetch(baseUrl + "/auth/v1/admin/users", {
-    method: "POST",
-    headers: {
-      apikey: serviceKey,
-      Authorization: "Bearer " + serviceKey,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password, email_confirm: true })
-  });
-  let data = null;
-  try { data = await res.json(); } catch (e) { data = null; }
-  return parseAuthUserResponse(res.status, data);
+  try {
+    const res = await fetch(baseUrl + "/auth/v1/admin/users", {
+      method: "POST",
+      headers: {
+        apikey: serviceKey,
+        Authorization: "Bearer " + serviceKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password, email_confirm: true })
+    });
+    let data = null;
+    try { data = await res.json(); } catch (e) { data = null; }
+    return parseAuthUserResponse(res.status, data);
+  } catch (e) {
+    return { outcome: "error", detail: e && e.message ? e.message : "network error calling create user" };
+  }
 }
 
 // PENDING CREDS: cannot run without a live Supabase project. Verifies an
-// email/password pair via the GoTrue password grant.
+// email/password pair via the GoTrue password grant. The whole fetch plus
+// response handling is inside the try so a network failure (DNS, connection
+// refused, timeout) resolves to { outcome: "error" } instead of throwing.
 async function verifyPassword(baseUrl, serviceKey, email, password) {
-  const res = await fetch(baseUrl + "/auth/v1/token?grant_type=password", {
-    method: "POST",
-    headers: {
-      apikey: serviceKey,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password })
-  });
-  let data = null;
-  try { data = await res.json(); } catch (e) { data = null; }
-  return parseTokenResponse(res.status, data);
+  try {
+    const res = await fetch(baseUrl + "/auth/v1/token?grant_type=password", {
+      method: "POST",
+      headers: {
+        apikey: serviceKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+    let data = null;
+    try { data = await res.json(); } catch (e) { data = null; }
+    return parseTokenResponse(res.status, data);
+  } catch (e) {
+    return { outcome: "error", detail: e && e.message ? e.message : "network error calling token endpoint" };
+  }
 }
 
 export {
