@@ -204,8 +204,8 @@ async function handler(req, res) {
       return;
     }
 
-    const baseUrl = process.env.CONTINUUM_SUPABASE_URL;
-    const serviceKey = process.env.CONTINUUM_SUPABASE_SERVICE_KEY;
+    const baseUrl = process.env.CONTINUUM_SUPABASE_URL || process.env.SUPABASE_URL;
+    const serviceKey = process.env.CONTINUUM_SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
     const sessionSecret = process.env.CONTINUUM_SITE_SESSION_SECRET;
 
     // Fail closed: any missing configuration denies access. This endpoint

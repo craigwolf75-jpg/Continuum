@@ -391,8 +391,8 @@ async function handler(req, res) {
       return;
     }
 
-    const baseUrl = process.env.CONTINUUM_SUPABASE_URL;
-    const serviceKey = process.env.CONTINUUM_SUPABASE_SERVICE_KEY;
+    const baseUrl = process.env.CONTINUUM_SUPABASE_URL || process.env.SUPABASE_URL;
+    const serviceKey = process.env.CONTINUUM_SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
     // Fail closed: without live Supabase config, no action can proceed,
     // authorized session or not.
     if (!baseUrl || !serviceKey) {
