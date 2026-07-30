@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Continuum: Access Codes</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#16273D;--gold:#E0B658;--goldbg:#fdf3dd;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;
+--card:#FFFFFF;--low:#eff4ff;--red:#ba1a1a;--alert:#C0453B;--redbg:#ffdad6;--teal:#508c9c;--tealbg:#dce9ff;--green:#2c6e46;--greenbg:#e4efe8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif;padding:32px 24px 80px}
+.wrap{max-width:1180px;margin:0 auto}
+header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.brandline{display:flex;align-items:center;gap:12px}
+.brandline b{font-size:20px;color:var(--navy)}
+.tagchip{background:var(--goldbg);color:#735200;border:1px solid var(--gold);border-radius:5px;padding:3px 9px;font-size:10.5px;font-weight:700;letter-spacing:.08em}
+.gatenote{background:var(--low);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--muted);margin:16px 0 24px;display:flex;gap:10px;align-items:flex-start}
+.gatenote b{color:var(--navy)}
+h1{font-size:26px;color:var(--navy);margin-bottom:2px}
+h2{font-size:17px;color:var(--navy);margin-bottom:12px}
+.sub{color:var(--muted);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(14,27,44,.06);padding:20px;margin-bottom:24px}
+.grid2{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+label.fl{font-size:11px;letter-spacing:.06em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+.field{margin-bottom:14px}
+select,input[type=text],input[type=date],input[type=number]{width:100%;height:40px;border:1px solid var(--line);border-radius:9px;padding:0 12px;font:inherit;font-size:13.5px;background:var(--card);outline:none}
+select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
+.btn{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:10px 16px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:#3b475a}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.gold{background:var(--gold);color:#0f1c2d}
+.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:6px 12px;font-size:11.5px}
+.btn.danger{background:var(--card);border:1px solid var(--alert);color:var(--alert);padding:6px 12px;font-size:11.5px}
+.btn.small{padding:6px 12px;font-size:11.5px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--low);font-size:10.5px;letter-spacing:.08em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);font-size:12.5px;vertical-align:middle}
+td.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+tr:hover td{background:#fafbfe}
+.tablewrap{overflow-x:auto}
+.pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.pillst.active{background:var(--greenbg);color:var(--green)}
+.pillst.expired{background:#eef1f6;color:#5E6B7C}
+.pillst.revoked{background:var(--redbg);color:#93000a}
+.pillst.exhausted{background:var(--goldbg);color:#735200}
+.rowbtns{display:flex;gap:6px}
+.errbox{background:var(--redbg);color:#93000a;border-radius:9px;padding:10px 12px;font-size:12px;margin-top:8px;display:none}
+.errbox.on{display:block}
+.errbox ul{margin:4px 0 0 18px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:90;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{color:var(--soft);font-size:12.5px;padding:16px;text-align:center}
+.statusline{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.statusline.err{color:var(--alert)}
+.matchtrue{color:var(--green);font-weight:700}
+.matchfalse{color:var(--alert);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brandline">
+      <b>Continuum</b>
+      <span class="tagchip">ACCESS CODES</span>
+    </div>
+  </header>
+  <h1>Site access codes</h1>
+  <p class="sub">Manage the codes that unlock the Layer 0 site gate, and read the access log.</p>
+
+  <div class="gatenote">
+    <span>&#128274;</span>
+    <span>This page is gated by the Continuum hub sign in. It only functions once a valid hub session (<b>ct_session</b>) is
+    present; without one, every action below returns not authorized and no data loads. The hub sign in itself is a
+    separate, upcoming piece of work; until it ships, this page cannot be used outside of local testing with a
+    manually issued session.</span>
+  </div>
+
+  <div id="gateStatus" class="statusline">Checking hub session…</div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Create a code</h2>
+      <form id="createForm">
+        <div class="field">
+          <label class="fl" for="fLabel">Label</label>
+          <input type="text" id="fLabel" placeholder="e.g. Acme Capital, Q3 tour" autocomplete="off">
+        </div>
+        <div class="field">
+          <label class="fl" for="fCategory">Category</label>
+          <select id="fCategory">
+            <option value="">Select a category</option>
+            <option value="prospect">Prospect</option>
+            <option value="investor">Investor</option>
+            <option value="partner">Partner</option>
+            <option value="internal">Internal</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="fl" for="fExpires">Expires (optional)</label>
+          <input type="date" id="fExpires">
+        </div>
+        <div class="field">
+          <label class="fl" for="fMaxUses">Max uses (optional)</label>
+          <input type="number" id="fMaxUses" min="1" step="1" placeholder="unlimited">
+        </div>
+        <button type="submit" class="btn gold" id="createBtn">Create code</button>
+        <div class="errbox" id="createErr"></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Codes</h2>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Label</th><th>Category</th><th>Code</th><th>Created</th><th>Expires</th><th>Uses</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="codesBody">
+            <tr><td colspan="8" class="empty">No codes loaded yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Access log</h2>
+    <p class="sub" style="margin-bottom:12px">Most recent attempts against the site gate, matched or not.</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Timestamp</th><th>Label</th><th>Matched</th><th>IP</th><th>User agent</th><th>Path</th></tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="6" class="empty">No log entries loaded yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* Continuum Prompt 40 ADMIN code view UI. Calls /api/site-codes-admin, which
+   is gated by the hub session cookie (ct_session), verified server side by
+   deploy/api/_hub_session.js. This file never reads or sets a cookie
+   itself; the browser sends ct_session automatically because it is
+   HttpOnly and same-origin. If no hub session exists yet (Prompt 39 not
+   built), every fetch below returns 401/403 and the page shows that state
+   rather than any code or log data. No dashes anywhere. */
+
+const API = "/api/site-codes-admin";
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function fmtDate(iso) {
+  if (!iso) return "none";
+  try {
+    return new Date(iso).toLocaleString();
+  } catch (e) {
+    return iso;
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  setTimeout(() => t.classList.remove("on"), 2600);
+}
+
+function statusPill(status) {
+  const cls = ["active", "expired", "revoked", "exhausted"].includes(status) ? status : "expired";
+  return '<span class="pillst ' + cls + '">' + escapeHtml(status) + "</span>";
+}
+
+async function callApi(action, opts) {
+  opts = opts || {};
+  const method = opts.method || "POST";
+  const init = { method, headers: { "Content-Type": "application/json" } };
+  if (method !== "GET") init.body = JSON.stringify(Object.assign({ action }, opts.body || {}));
+  const url = method === "GET" ? API + "?action=" + encodeURIComponent(action) + (opts.query || "") : API;
+  const res = await fetch(url, init);
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (e) {
+    data = null;
+  }
+  return { status: res.status, ok: res.ok, data };
+}
+
+function renderGateStatus(result) {
+  const el = document.getElementById("gateStatus");
+  if (result.status === 401) {
+    el.textContent = "No valid hub session. Sign in through the hub first (or, before Prompt 39 ships, this page cannot load data).";
+    el.classList.add("err");
+  } else if (result.status === 403) {
+    el.textContent = "Hub session present but not authorized for admin access.";
+    el.classList.add("err");
+  } else if (result.status === 503) {
+    el.textContent = "Admin API is not configured (missing environment variables).";
+    el.classList.add("err");
+  } else if (result.ok) {
+    el.textContent = "Hub session verified. Showing live data.";
+    el.classList.remove("err");
+  } else {
+    el.textContent = "Could not load data (status " + result.status + ").";
+    el.classList.add("err");
+  }
+}
+
+function renderCodes(codes) {
+  const body = document.getElementById("codesBody");
+  if (!Array.isArray(codes) || codes.length === 0) {
+    body.innerHTML = '<tr><td colspan="8" class="empty">No codes yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = codes.map((c) => {
+    const uses = (typeof c.use_count === "number" ? c.use_count : 0) + " / " + (c.max_uses == null ? "∞" : c.max_uses);
+    const disableBtns = c.status === "revoked" || c.status === "expired";
+    return "<tr>" +
+      "<td>" + escapeHtml(c.label) + "</td>" +
+      "<td>" + escapeHtml(c.category) + "</td>" +
+      "<td class=\"mono\">" + escapeHtml(c.code) + "</td>" +
+      "<td>" + fmtDate(c.created_at) + "</td>" +
+      "<td>" + (c.expires_at ? fmtDate(c.expires_at) : "none") + "</td>" +
+      "<td>" + uses + "</td>" +
+      "<td>" + statusPill(c.status) + "</td>" +
+      "<td><div class=\"rowbtns\">" +
+        "<button class=\"btn ghost small\" data-action=\"expire\" data-id=\"" + escapeHtml(c.id) + "\"" + (disableBtns ? " disabled" : "") + ">Expire</button>" +
+        "<button class=\"btn danger small\" data-action=\"revoke\" data-id=\"" + escapeHtml(c.id) + "\"" + (c.status === "revoked" ? " disabled" : "") + ">Revoke</button>" +
+      "</div></td>" +
+    "</tr>";
+  }).join("");
+}
+
+function renderLog(log) {
+  const body = document.getElementById("logBody");
+  if (!Array.isArray(log) || log.length === 0) {
+    body.innerHTML = '<tr><td colspan="6" class="empty">No access attempts logged yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = log.map((row) => {
+    const matchedHtml = row.matched
+      ? '<span class="matchtrue">matched</span>'
+      : '<span class="matchfalse">no match</span>';
+    return "<tr>" +
+      "<td>" + fmtDate(row.ts) + "</td>" +
+      "<td>" + (row.code_label ? escapeHtml(row.code_label) : "none") + "</td>" +
+      "<td>" + matchedHtml + "</td>" +
+      "<td class=\"mono\">" + escapeHtml(row.ip || "none") + "</td>" +
+      "<td>" + escapeHtml(row.user_agent || "none") + "</td>" +
+      "<td>" + escapeHtml(row.path || "none") + "</td>" +
+    "</tr>";
+  }).join("");
+}
+
+async function loadAll() {
+  const result = await callApi("list", { method: "GET" });
+  renderGateStatus(result);
+  if (result.ok && result.data && result.data.ok) {
+    renderCodes(result.data.codes);
+    renderLog(result.data.log);
+  } else {
+    renderCodes([]);
+    renderLog([]);
+  }
+}
+
+document.getElementById("createForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const errBox = document.getElementById("createErr");
+  errBox.classList.remove("on");
+  errBox.innerHTML = "";
+
+  const label = document.getElementById("fLabel").value.trim();
+  const category = document.getElementById("fCategory").value;
+  const expiresRaw = document.getElementById("fExpires").value;
+  const maxUsesRaw = document.getElementById("fMaxUses").value;
+
+  const body = { label, category };
+  if (expiresRaw) body.expires_at = new Date(expiresRaw + "T00:00:00Z").toISOString();
+  if (maxUsesRaw) body.max_uses = Number(maxUsesRaw);
+
+  const btn = document.getElementById("createBtn");
+  btn.disabled = true;
+  try {
+    const result = await callApi("create", { body });
+    if (result.ok && result.data && result.data.ok) {
+      showToast("Code created.");
+      document.getElementById("createForm").reset();
+      await loadAll();
+    } else {
+      const errors = (result.data && (result.data.errors || [result.data.error])) || ["request failed"];
+      errBox.innerHTML = "<b>Could not create code:</b><ul>" + errors.map((x) => "<li>" + escapeHtml(x) + "</li>").join("") + "</ul>";
+      errBox.classList.add("on");
+    }
+  } catch (err) {
+    errBox.innerHTML = "<b>Request failed.</b>";
+    errBox.classList.add("on");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById("codesBody").addEventListener("click", async (e) => {
+  const btn = e.target.closest("button[data-action]");
+  if (!btn) return;
+  const action = btn.getAttribute("data-action");
+  const id = btn.getAttribute("data-id");
+  btn.disabled = true;
+  try {
+    const result = await callApi(action, { body: { id } });
+    if (result.ok && result.data && result.data.ok) {
+      showToast(action === "revoke" ? "Code revoked." : "Code expired.");
+      await loadAll();
+    } else {
+      showToast("Could not " + action + " code (" + result.status + ").");
+      btn.disabled = false;
+    }
+  } catch (err) {
+    showToast("Request failed.");
+    btn.disabled = false;
+  }
+});
+
+loadAll();
+</script>
+</body>
+</html>
