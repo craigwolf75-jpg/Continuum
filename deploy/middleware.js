@@ -174,7 +174,7 @@ async function middleware(request) {
 // the incoming request's own origin, never from any attacker influenced
 // path segment.
 function rewriteToHolding(request) {
-  return rewrite(new URL("/gate/holding.html", request.url));
+  return rewrite(new URL("/gate/holding", request.url));
 }
 
 // Lets the request continue to its originally requested destination, via the
