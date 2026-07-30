@@ -21,6 +21,12 @@ ok("contact email present", holding.includes("craig@continuumrtw.com"));
 ok("privacy link present", /href="\/privacy"/.test(holding));
 ok("terms link present", /href="\/terms"/.test(holding));
 
+// -- discreet access code entry (Prompt 40 site gate) --
+ok("access code input present", /name="code"/.test(holding));
+ok("access code entry link text present", holding.includes("Have an access code?"));
+ok("posts to the site access endpoint", holding.includes("/api/site-access"));
+ok("submits the code field to the endpoint", /body:\s*JSON\.stringify\(\{\s*code:\s*code/.test(holding));
+
 // -- link preview / unfurl tags --
 ok("og:title present", /property="og:title"/.test(holding));
 ok("og:image present", /property="og:image"/.test(holding));

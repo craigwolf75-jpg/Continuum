@@ -124,6 +124,62 @@ footer a{color:var(--fg-muted);text-decoration:none}
 footer a:hover{color:var(--fg)}
 .dot{color:var(--border)}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.gate{margin-bottom:56px}
+.gate-toggle{
+  background:none;
+  border:none;
+  color:var(--fg-muted);
+  font-size:13px;
+  text-decoration:underline;
+  cursor:pointer;
+  padding:0;
+}
+.gate-toggle:hover{color:var(--fg)}
+.gate-form{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  max-width:320px;
+  margin:0 auto;
+}
+.gate-form input{
+  flex:1;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--fg);
+  font-size:14px;
+}
+.gate-submit{
+  padding:10px 20px;
+  border-radius:999px;
+  border:none;
+  background:var(--gold);
+  color:#12140E;
+  font-size:13.5px;
+  font-weight:600;
+  cursor:pointer;
+  transition:opacity .15s ease;
+}
+.gate-submit:hover{opacity:.85}
+.gate-submit:disabled{opacity:.5;cursor:default}
+.gate-msg{
+  color:var(--fg-muted);
+  font-size:12.5px;
+  margin-top:12px;
+}
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
 </style>
 </head>
 <body>
@@ -142,6 +198,16 @@ footer a:hover{color:var(--fg)}
     <a class="btn btn-secondary" href="#booking-url-pending">Book a demo</a>
   </div>
 
+  <div class="gate">
+    <button type="button" class="gate-toggle" id="gateToggle">Have an access code?</button>
+    <form class="gate-form" id="gateForm" hidden>
+      <label for="gateCode" class="sr-only">Access code</label>
+      <input type="text" id="gateCode" name="code" autocomplete="off" spellcheck="false" placeholder="Access code">
+      <button type="submit" class="gate-submit" id="gateSubmit">Enter</button>
+    </form>
+    <p class="gate-msg" id="gateMsg" role="status" aria-live="polite" hidden></p>
+  </div>
+
   <footer>
     <a href="mailto:craig@continuumrtw.com">craig@continuumrtw.com</a>
     <span class="dot">&middot;</span>
@@ -150,5 +216,60 @@ footer a:hover{color:var(--fg)}
     <a href="/terms">Terms</a>
   </footer>
 </div>
+<script>
+(function(){
+  var toggle = document.getElementById("gateToggle");
+  var form = document.getElementById("gateForm");
+  var input = document.getElementById("gateCode");
+  var submitBtn = document.getElementById("gateSubmit");
+  var msg = document.getElementById("gateMsg");
+
+  toggle.addEventListener("click", function(){
+    toggle.hidden = true;
+    form.hidden = false;
+    input.focus();
+  });
+
+  function setMsg(text){
+    if (!text) {
+      msg.hidden = true;
+      msg.textContent = "";
+      return;
+    }
+    msg.hidden = false;
+    msg.textContent = text;
+  }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var code = input.value.trim();
+    if (!code) return;
+    setMsg("");
+    submitBtn.disabled = true;
+
+    fetch("/api/site-access", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ code: code, path: "/" })
+    }).then(function(res){
+      if (res.status === 200) {
+        location.reload();
+        return;
+      }
+      if (res.status === 401) {
+        setMsg("That code was not recognized.");
+      } else if (res.status === 429) {
+        setMsg("Too many attempts. Please try again later.");
+      } else {
+        setMsg("Something went wrong. Please try again later.");
+      }
+      submitBtn.disabled = false;
+    }).catch(function(){
+      setMsg("Something went wrong. Please try again later.");
+      submitBtn.disabled = false;
+    });
+  });
+})();
+</script>
 </body>
 </html>
