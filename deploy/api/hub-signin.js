@@ -8,9 +8,11 @@
      status='rejected' -> 403 neutral, no cookie
    gary@farmceuticawellness.com (deploy/api/_hub_session.js ADMIN_EMAILS) is
    never decided by the stored row: every successful sign in for that email
-   self heals hub_profiles to status='approved', access_group='admin'
-   regardless of whatever the row currently says, so the admin can never be
-   locked out by data drift. A non admin whose signup profile insert failed
+   self heals hub_profiles to status='approved', access_group='admin' unless
+   it is already exactly that (the upsert write is skipped once the row is
+   already in that state, so approved_at/approved_by are not rewritten on
+   every login), so the admin can never be locked out by data drift. A non
+   admin whose signup profile insert failed
    (an orphaned auth user with no hub_profiles row at all) is also self
    healed here, to a pending row, using an idempotent insert (ignore on
    conflict) so a concurrent write never overwrites a row that already
@@ -82,9 +84,11 @@ async function loadProfile(baseUrl, serviceKey, id) {
 
 // PENDING CREDS: cannot run without a live Supabase project. Upserts the
 // admin row (status='approved', access_group='admin') on the user's primary
-// key, on every successful admin email sign in, regardless of what the row
-// currently says: a missing row, a pending row, a rejected row, or a stale
-// group all converge to the same admin state.
+// key, on every successful admin email sign in where it is not already in
+// that state, regardless of what the row currently says: a missing row, a
+// pending row, a rejected row, or a stale group all converge to the same
+// admin state. Returns the upserted row (Prefer: return=representation) so
+// the caller can carry it forward instead of the stale pre-upsert value.
 async function upsertAdminProfile(baseUrl, serviceKey, id, email) {
   const res = await fetch(baseUrl + "/rest/v1/hub_profiles", {
     method: "POST",
@@ -105,6 +109,8 @@ async function upsertAdminProfile(baseUrl, serviceKey, id, email) {
     })
   });
   if (res.status !== 200 && res.status !== 201) throw new Error("hub_profiles admin upsert failed with status " + res.status);
+  const data = await res.json();
+  return Array.isArray(data) && data.length ? data[0] : (data || null);
 }
 
 // PENDING CREDS: cannot run without a live Supabase project. Self heals a
@@ -193,7 +199,10 @@ async function handler(req, res) {
     let profile = await loadProfile(baseUrl, serviceKey, verified.id);
 
     if (isAdmin) {
-      await upsertAdminProfile(baseUrl, serviceKey, verified.id, verified.email);
+      const alreadyAdmin = profile && profile.status === "approved" && profile.access_group === "admin";
+      if (!alreadyAdmin) {
+        profile = await upsertAdminProfile(baseUrl, serviceKey, verified.id, verified.email);
+      }
     } else if (!profile) {
       await insertPendingProfile(baseUrl, serviceKey, verified.id, verified.email);
       profile = { id: verified.id, email: verified.email, status: "pending", access_group: null };

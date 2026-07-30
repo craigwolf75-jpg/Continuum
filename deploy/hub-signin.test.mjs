@@ -9,9 +9,13 @@
    admin orphan (verified user with no hub_profiles row) self heals a
    pending row with an idempotent insert, and gary@ always resolves to an
    active admin session (with a self healed hub_profiles row) whether the
-   stored row is pending or missing entirely. Every issued cookie is
+   stored row is pending or missing entirely. upsertAdminProfile is also
+   unit tested directly to prove it returns the parsed upserted row (so the
+   handler never carries a stale pre-upsert profile forward), and an
+   already-approved-admin stored row is proven to skip the upsert write
+   entirely while still issuing the admin session. Every issued cookie is
    asserted to be ct_session, never ct_site. No dashes anywhere. */
-import handler, { isCrossSiteRequest, resolveAccess } from "./api/hub-signin.js";
+import handler, { isCrossSiteRequest, resolveAccess, upsertAdminProfile } from "./api/hub-signin.js";
 import { verifyHubSession, ADMIN_EMAILS } from "./api/_hub_session.js";
 
 let pass = 0, fail = 0;
@@ -224,6 +228,38 @@ async function main() {
     const token = cookie.split("ct_session=")[1].split(";")[0];
     const payload = await verifyHubSession(token, SECRET, Math.floor(Date.now() / 1000));
     ok("gary@'s issued token carries the admin group", payload && payload.group === "admin" && payload.email === "gary@farmceuticawellness.com");
+  } finally { globalThis.fetch = originalFetch; }
+
+  // -- upsertAdminProfile returns the parsed upserted row, not just performs
+  //    a write, so the caller can carry it forward instead of a stale value --
+  globalThis.fetch = async (url, init) => {
+    if (url.includes("/rest/v1/hub_profiles") && init.method === "POST") {
+      return { status: 200, json: async () => ([{ id: "u-x", email: "gary@farmceuticawellness.com", status: "approved", access_group: "admin" }]) };
+    }
+    throw new Error("unexpected fetch: " + url);
+  };
+  try {
+    const row = await upsertAdminProfile(BASE_URL, SERVICE_KEY, "u-x", "gary@farmceuticawellness.com");
+    ok("upsertAdminProfile returns the parsed upserted row (the caller reassigns profile from this, not the stale pre-upsert value)", row && row.id === "u-x" && row.status === "approved" && row.access_group === "admin");
+  } finally { globalThis.fetch = originalFetch; }
+
+  // -- gary@ already an approved admin row: the upsert write is skipped
+  //    entirely, but the admin session is still issued --
+  let garyAlreadyAdminCalls = [];
+  globalThis.fetch = async (url, init) => {
+    garyAlreadyAdminCalls.push({ url, init });
+    if (url.includes("/auth/v1/token")) return { status: 200, json: async () => ({ user: { id: "u-gary", email: "gary@farmceuticawellness.com" } }) };
+    if (url.includes("/rest/v1/hub_profiles") && init.method === "GET") return { status: 200, json: async () => ([{ id: "u-gary", email: "gary@farmceuticawellness.com", status: "approved", access_group: "admin" }]) };
+    if (url.includes("/rest/v1/hub_profiles") && init.method === "POST") return { status: 200, json: async () => ([{}]) }; // should never be reached
+    throw new Error("unexpected fetch: " + url);
+  };
+  try {
+    const res = mockRes();
+    await handler({ method: "POST", headers: { host: "continuumrtw.com" }, body: { email: "gary@farmceuticawellness.com", password: "longenough1" } }, res);
+    ok("gary@ already an approved admin row returns 200 active admin", res._status === 200 && res._body.group === "admin");
+    ok("gary@ already an approved admin row triggers zero upsert POSTs", garyAlreadyAdminCalls.filter((c) => c.url.includes("/rest/v1/hub_profiles") && c.init.method === "POST").length === 0);
+    const cookie = res._headers["set-cookie"];
+    ok("gary@ already an approved admin row still gets a ct_session cookie", typeof cookie === "string" && cookie.startsWith("ct_session="));
   } finally { globalThis.fetch = originalFetch; }
 
   delete process.env.CONTINUUM_SUPABASE_URL;
