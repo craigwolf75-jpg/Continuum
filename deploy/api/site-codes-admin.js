@@ -112,17 +112,36 @@ function validateCreateInput(body) {
   return { ok: errors.length === 0, errors };
 }
 
-// Random access code generator. Uses node:crypto randomBytes (a real CSPRNG,
-// not Math.random) rejection free by taking bytes mod alphabet length; the
-// alphabet is 32 characters and 256 % 32 === 0, so the modulo introduces no
-// bias. Grouped with ASCII hyphens (not em/en dashes) purely for human
-// readability when an operator reads a code off the admin table.
+// Random access code generator. Uses node:crypto randomBytes (a real
+// CSPRNG, not Math.random). CODE_ALPHABET is 31 characters (0, O, 1, I, L
+// excluded as ambiguous), and 31 does not evenly divide 256, so a plain
+// "byte % 31" would be biased: the first 256 % 31 = 8 characters of the
+// alphabet (A through H) would be drawn slightly more often than the rest.
+// This uses rejection sampling instead: the largest multiple of 31 that is
+// <= 256 is 248 (31 * 8), so any drawn byte >= 248 is discarded and another
+// byte is drawn in its place; only accepted bytes (0 to 247) are mapped
+// through "% 31". Every one of the 31 characters then has exactly 8 ways to
+// be produced from an accepted byte, so the result is uniform over the
+// alphabet with no bias. CODE_LENGTH stays 16, giving 31^16 possibilities,
+// about 79 bits of entropy (comfortably >= the ~77 bit floor). Grouped with
+// ASCII hyphens (not em/en dashes) purely for human readability when an
+// operator reads a code off the admin table.
 function generateAccessCode() {
-  const bytes = randomBytes(CODE_LENGTH);
-  let raw = "";
-  for (let i = 0; i < CODE_LENGTH; i++) {
-    raw += CODE_ALPHABET[bytes[i] % CODE_ALPHABET.length];
+  const alphabetLen = CODE_ALPHABET.length;
+  const acceptCeiling = Math.floor(256 / alphabetLen) * alphabetLen; // 248 for a 31 char alphabet
+  const chars = [];
+  while (chars.length < CODE_LENGTH) {
+    const draw = randomBytes(CODE_LENGTH - chars.length);
+    for (let i = 0; i < draw.length && chars.length < CODE_LENGTH; i++) {
+      const b = draw[i];
+      if (b < acceptCeiling) {
+        chars.push(CODE_ALPHABET[b % alphabetLen]);
+      }
+      // b >= acceptCeiling is rejected and simply not used; the loop draws
+      // more bytes on its next iteration until CODE_LENGTH is reached.
+    }
   }
+  const raw = chars.join("");
   return raw.slice(0, 4) + "-" + raw.slice(4, 8) + "-" + raw.slice(8, 12) + "-" + raw.slice(12, 16);
 }
 
@@ -445,6 +464,7 @@ export {
   insertAccessCode,
   expireAccessCode,
   revokeAccessCode,
-  CATEGORIES
+  CATEGORIES,
+  CODE_ALPHABET
 };
 export default handler;

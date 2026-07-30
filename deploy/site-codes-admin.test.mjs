@@ -32,7 +32,8 @@ import handler, {
   validateCreateInput,
   generateAccessCode,
   isCrossSiteRequest,
-  CATEGORIES
+  CATEGORIES,
+  CODE_ALPHABET
 } from "./api/site-codes-admin.js";
 
 let pass = 0, fail = 0;
@@ -229,6 +230,36 @@ async function main() {
   ok("generateAccessCode is grouped into 4 blocks of 4", /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(codeA));
   ok("generateAccessCode never uses ambiguous characters 0, O, 1, I, L", !/[0O1IL]/.test(codeA));
   ok("two successive calls to generateAccessCode differ", codeA !== codeB);
+
+  // -- generateAccessCode: rejection sampling correctness (post review fix) --
+  // CODE_ALPHABET is 31 characters (0, O, 1, I, L excluded as ambiguous).
+  // 256 is not evenly divisible by 31, so a plain "byte % 31" would bias the
+  // first 256 % 31 = 8 letters (A through H). generateAccessCode now uses
+  // rejection sampling (discard any byte >= 248, the largest multiple of 31
+  // that is <= 256) to stay uniform. This suite cannot observe the
+  // distribution directly, but it can and does prove every generated code
+  // is built only from CODE_ALPHABET characters (nothing outside that set
+  // ever leaks through, which a broken modulo or an unrejected byte could
+  // otherwise produce) across many draws.
+  ok("CODE_ALPHABET is exactly 31 characters", CODE_ALPHABET.length === 31);
+  ok(
+    "CODE_ALPHABET itself excludes every ambiguous character",
+    !/[0O1IL]/.test(CODE_ALPHABET)
+  );
+  const alphabetCharClass = "[" + CODE_ALPHABET.split("").join("") + "]";
+  const manyCodes = Array.from({ length: 500 }, () => generateAccessCode());
+  const allCodesOnlyAlphabetChars = manyCodes.every((c) =>
+    new RegExp("^(?:" + alphabetCharClass + "|-)+$").test(c) && !/[0O1IL]/.test(c)
+  );
+  ok("500 generated codes contain only CODE_ALPHABET characters (plus hyphens)", allCodesOnlyAlphabetChars);
+  ok(
+    "500 generated codes never contain any of 0, O, 1, I, L",
+    manyCodes.every((c) => !/[0O1IL]/.test(c))
+  );
+  ok(
+    "500 generated codes are each 19 characters long (16 alphabet chars + 3 hyphens)",
+    manyCodes.every((c) => c.length === 19)
+  );
 
   // -- isCrossSiteRequest: the CSRF guard, mirrors deploy/api/site-access.js --
   ok(
