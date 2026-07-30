@@ -22,7 +22,7 @@ function resolveRegion() {
   }
 }
 
-module.exports = function handler(req, res) {
+function handler(req, res) {
   var body;
   try {
     var count = SURFACES.length > 0 ? SURFACES.length : "UNKNOWN";
@@ -43,7 +43,13 @@ module.exports = function handler(req, res) {
     res.setHeader("cache-control", "no-store");
   } catch (e) {}
   return res.status(200).json(body);
-};
+}
 
-module.exports.SURFACES = SURFACES;
-module.exports.resolveRegion = resolveRegion;
+// ESM function export for Vercel (package.json declares "type": "module"). The
+// two helpers stay attached to the default export so callers and the suite can
+// reach handler.SURFACES / handler.resolveRegion exactly as before.
+handler.SURFACES = SURFACES;
+handler.resolveRegion = resolveRegion;
+
+export default handler;
+export { SURFACES, resolveRegion };
