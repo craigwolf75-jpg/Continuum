@@ -28,6 +28,8 @@ ok("rejected profile is rejected", resolveAccess("worker@example.com", { status:
 ok("approved group1 is active with group1", (() => { const a = resolveAccess("worker@example.com", { status: "approved", access_group: "group1" }); return a.state === "active" && a.group === "group1"; })());
 ok("approved group2 is active with group2", (() => { const a = resolveAccess("clinic@example.com", { status: "approved", access_group: "group2" }); return a.state === "active" && a.group === "group2"; })());
 ok("approved with an unrecognized group fails closed to pending", resolveAccess("x@example.com", { status: "approved", access_group: "bogus" }).state === "pending");
+ok("approved with access_group admin on a non admin email fails closed to pending, no session minted (I1)", resolveAccess("notadmin@example.com", { status: "approved", access_group: "admin" }).state === "pending");
+ok("approved with a null access_group fails closed to pending (I1)", resolveAccess("x@example.com", { status: "approved", access_group: null }).state === "pending");
 ok("an unrecognized status fails closed to pending", resolveAccess("x@example.com", { status: "weird" }).state === "pending");
 ok("ADMIN_EMAILS resolves active admin even with no profile at all", (() => { const a = resolveAccess("gary@farmceuticawellness.com", null); return a.state === "active" && a.group === "admin"; })());
 ok("ADMIN_EMAILS resolves active admin even over a pending profile", (() => { const a = resolveAccess("gary@farmceuticawellness.com", { status: "pending" }); return a.state === "active" && a.group === "admin"; })());
@@ -260,6 +262,57 @@ async function main() {
     ok("gary@ already an approved admin row triggers zero upsert POSTs", garyAlreadyAdminCalls.filter((c) => c.url.includes("/rest/v1/hub_profiles") && c.init.method === "POST").length === 0);
     const cookie = res._headers["set-cookie"];
     ok("gary@ already an approved admin row still gets a ct_session cookie", typeof cookie === "string" && cookie.startsWith("ct_session="));
+  } finally { globalThis.fetch = originalFetch; }
+
+  // -- I1 end to end: an approved row with access_group='admin' on a non
+  //    admin email must never mint an admin (or any) session --
+  globalThis.fetch = async (url) => {
+    if (url.includes("/auth/v1/token")) return { status: 200, json: async () => ({ user: { id: "u5", email: "notadmin@example.com" } }) };
+    if (url.includes("/rest/v1/hub_profiles")) return { status: 200, json: async () => ([{ id: "u5", email: "notadmin@example.com", status: "approved", access_group: "admin" }]) };
+    throw new Error("unexpected fetch: " + url);
+  };
+  try {
+    const res = mockRes();
+    await handler({ method: "POST", headers: { host: "continuumrtw.com" }, body: { email: "notadmin@example.com", password: "longenough1" } }, res);
+    ok("approved access_group admin on a non admin email returns 200 pending, not an admin session (I1)", res._status === 200 && res._body.status === "pending");
+    ok("approved access_group admin on a non admin email sets no cookie (I1)", !res._headers["set-cookie"]);
+  } finally { globalThis.fetch = originalFetch; }
+
+  // -- M4 end to end: a mixed case GoTrue verified.email still resolves the
+  //    correct non admin group, and the issued session email claim is
+  //    normalized lowercase --
+  globalThis.fetch = async (url) => {
+    if (url.includes("/auth/v1/token")) return { status: 200, json: async () => ({ user: { id: "u6", email: "Employer@Example.com" } }) };
+    if (url.includes("/rest/v1/hub_profiles")) return { status: 200, json: async () => ([{ id: "u6", email: "employer@example.com", status: "approved", access_group: "group1" }]) };
+    throw new Error("unexpected fetch: " + url);
+  };
+  try {
+    const res = mockRes();
+    await handler({ method: "POST", headers: { host: "continuumrtw.com" }, body: { email: "Employer@Example.com", password: "longenough1" } }, res);
+    ok("mixed case verified.email still resolves active group1 (M4)", res._status === 200 && res._body.group === "group1");
+    const cookie = res._headers["set-cookie"];
+    const token = cookie.split("ct_session=")[1].split(";")[0];
+    const payload = await verifyHubSession(token, SECRET, Math.floor(Date.now() / 1000));
+    ok("the issued session email claim is normalized lowercase (M4)", payload && payload.email === "employer@example.com");
+  } finally { globalThis.fetch = originalFetch; }
+
+  // -- M4 end to end: a mixed case GoTrue verified.email for the admin
+  //    address still hits the ADMIN_EMAILS allowlist (which is stored
+  //    lowercase) and still resolves active admin --
+  let garyMixedCaseCalls = [];
+  globalThis.fetch = async (url, init) => {
+    garyMixedCaseCalls.push({ url, init });
+    if (url.includes("/auth/v1/token")) return { status: 200, json: async () => ({ user: { id: "u-gary", email: "Gary@FarmceuticaWellness.com" } }) };
+    if (url.includes("/rest/v1/hub_profiles") && init.method === "GET") return { status: 200, json: async () => ([]) };
+    if (url.includes("/rest/v1/hub_profiles") && init.method === "POST") return { status: 201, json: async () => ([{ id: "u-gary", email: "gary@farmceuticawellness.com", status: "approved", access_group: "admin" }]) };
+    throw new Error("unexpected fetch: " + url);
+  };
+  try {
+    const res = mockRes();
+    await handler({ method: "POST", headers: { host: "continuumrtw.com" }, body: { email: "Gary@FarmceuticaWellness.com", password: "longenough1" } }, res);
+    ok("a mixed case gary@ verified.email still resolves active admin (M4)", res._status === 200 && res._body.group === "admin");
+    const upsertCall = garyMixedCaseCalls.find((c) => c.url.includes("/rest/v1/hub_profiles") && c.init.method === "POST");
+    ok("the admin self heal upsert writes the normalized lowercase email (M4)", upsertCall && JSON.parse(upsertCall.init.body).email === "gary@farmceuticawellness.com");
   } finally { globalThis.fetch = originalFetch; }
 
   delete process.env.CONTINUUM_SUPABASE_URL;

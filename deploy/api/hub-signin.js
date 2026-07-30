@@ -36,7 +36,7 @@
 import { validateSigninInput, verifyPassword } from "./_hub_auth.js";
 import { signHubSession, serializeHubCookie, ADMIN_EMAILS } from "./_hub_session.js";
 
-const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days, matches the site gate's session TTL
+const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days (final review, I2: shortened from 30 days)
 
 function isCrossSiteRequest(req) {
   const headers = (req && req.headers) || {};
@@ -139,6 +139,17 @@ async function insertPendingProfile(baseUrl, serviceKey, id, email) {
 // isolation from Supabase and Supabase Auth. Admin is decided by session
 // email (ADMIN_EMAILS), never by the data column, so it is checked first and
 // short circuits regardless of the profile shape.
+//
+// SECURITY FIX (final review, I1): the approved branch below is reached only
+// for a non admin email (ADMIN_EMAILS already short circuited above). It now
+// grants a session ONLY when access_group is exactly "group1" or "group2".
+// An approved row whose access_group is "admin", null, or anything else is
+// treated as NOT grantable and falls through to the same fail closed pending
+// outcome as an unrecognized status: no write path reaches
+// access_group="admin" on a non admin email today, and the middleware's
+// decideHubAccess also requires the email to be in ADMIN_EMAILS before
+// honoring an admin claim, but this closes the primitive at its source so an
+// approved-admin row can never mint an admin session for a non admin email.
 function resolveAccess(email, profile) {
   if (ADMIN_EMAILS.includes(email)) {
     return { state: "active", group: "admin" };
@@ -151,11 +162,13 @@ function resolveAccess(email, profile) {
   }
   if (
     profile.status === "approved" &&
-    (profile.access_group === "group1" || profile.access_group === "group2" || profile.access_group === "admin")
+    (profile.access_group === "group1" || profile.access_group === "group2")
   ) {
     return { state: "active", group: profile.access_group };
   }
-  // any other status/group combination is unrecognized: fail closed
+  // any other status/group combination (including an approved row whose
+  // access_group is "admin", null, or unrecognized) is not grantable here:
+  // fail closed to the same outcome as a non approved row
   return { state: "pending" };
 }
 
@@ -195,20 +208,30 @@ async function handler(req, res) {
       return;
     }
 
-    const isAdmin = ADMIN_EMAILS.includes(verified.email);
+    // HARDENING (final review, M4): pin the case of the verified email once,
+    // here, and use this normalized value for every downstream decision (the
+    // ADMIN_EMAILS check, the profile writes, resolveAccess, and the session
+    // email claim) rather than the raw GoTrue verified.email. Signup already
+    // lowercases at input (see _hub_auth.js validateSignupInput), but GoTrue
+    // itself is the source of verified.email on sign in, so a mixed case
+    // GoTrue response could otherwise miss the admin allowlist or mismatch a
+    // stored lowercase profile row.
+    const email = verified.email.toLowerCase();
+
+    const isAdmin = ADMIN_EMAILS.includes(email);
     let profile = await loadProfile(baseUrl, serviceKey, verified.id);
 
     if (isAdmin) {
       const alreadyAdmin = profile && profile.status === "approved" && profile.access_group === "admin";
       if (!alreadyAdmin) {
-        profile = await upsertAdminProfile(baseUrl, serviceKey, verified.id, verified.email);
+        profile = await upsertAdminProfile(baseUrl, serviceKey, verified.id, email);
       }
     } else if (!profile) {
-      await insertPendingProfile(baseUrl, serviceKey, verified.id, verified.email);
-      profile = { id: verified.id, email: verified.email, status: "pending", access_group: null };
+      await insertPendingProfile(baseUrl, serviceKey, verified.id, email);
+      profile = { id: verified.id, email, status: "pending", access_group: null };
     }
 
-    const access = resolveAccess(verified.email, profile);
+    const access = resolveAccess(email, profile);
 
     if (access.state === "pending") {
       res.status(200).json({ ok: true, status: "pending" });
@@ -221,7 +244,7 @@ async function handler(req, res) {
 
     const iat = Math.floor(Date.now() / 1000);
     const exp = iat + SESSION_TTL_SECONDS;
-    const token = await signHubSession({ sub: verified.id, email: verified.email, group: access.group, iat, exp }, sessionSecret);
+    const token = await signHubSession({ sub: verified.id, email, group: access.group, iat, exp }, sessionSecret);
     res.setHeader("set-cookie", serializeHubCookie(token));
     res.status(200).json({ ok: true, group: access.group });
   } catch (e) {

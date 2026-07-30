@@ -44,5 +44,24 @@ for (const p of ["/hub", "/hub/", "/api/hub-signin", "/api/hub-signup", "/privac
   ok(p + " is not a hub gated path", decideHubAccess(p, null) === "allow");
 }
 
+// -- C1: path normalization defense, mirroring the SITE gate's
+//    isSuspiciousPath. A group1 session must never reach a group2 or admin
+//    portal via an encoded or traversal path, and a suspicious path is
+//    blocked outright before any prefix check runs, even off a portal path
+//    entirely. --
+const GROUP1_SESSION = session("e@x.com", "group1");
+
+ok("/clinical-dashboard%2ehtml blocked for group1 (encoded dot traversal)", decideHubAccess("/clinical-dashboard%2ehtml", GROUP1_SESSION) === "blocked");
+ok("/employer-dashboard/..%2fclinical-dashboard.html blocked for group1 (traversal out of own prefix)", decideHubAccess("/employer-dashboard/..%2fclinical-dashboard.html", GROUP1_SESSION) === "blocked");
+ok("/admin-portal%2ehtml blocked for group1 (encoded dot into admin)", decideHubAccess("/admin-portal%2ehtml", GROUP1_SESSION) === "blocked");
+ok("/CLINICAL-dashboard.html blocked for group1 (case variant still gated)", decideHubAccess("/CLINICAL-dashboard.html", GROUP1_SESSION) === "blocked");
+ok("/%2e%2e/secret blocked outright (suspicious, non portal path)", decideHubAccess("/%2e%2e/secret", GROUP1_SESSION) === "blocked");
+ok("/%2e%2e/secret blocked outright even with no session at all", decideHubAccess("/%2e%2e/secret", null) === "blocked");
+
+// -- clean path assertions still pass after the C1 change (case normalized
+//    matching does not break the legitimate lowercase paths) --
+for (const p of GROUP1_PATHS) ok(p + " still allowed for group1 after C1", decideHubAccess(p, GROUP1_SESSION) === "allow");
+ok("/CLINICAL-dashboard.html allowed for a group2 session (case variant still matches its own prefix)", decideHubAccess("/CLINICAL-dashboard.html", session("e@x.com", "group2")) === "allow");
+
 console.log("\nhub-middleware-access suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

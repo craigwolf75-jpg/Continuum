@@ -115,17 +115,29 @@ function matchesAnyBoundedPrefix(pathname, prefixes) {
 // all: the SITE gate already governed it, and /hub plus /api/hub-* must
 // stay reachable to any site gated visitor so they can sign up and sign in.
 function decideHubAccess(pathname, hubSession) {
+  // SECURITY FIX (final review, C1): mirror decideSiteAccess's own defense
+  // against directory traversal, raw or percent encoded, before any prefix
+  // check runs. Without this, a visitor holding a valid ct_site cookie but
+  // no (or the wrong) ct_session group could reach a portal outside their
+  // group via an encoded/traversal path (for example
+  // /employer-dashboard/..%2fclinical-dashboard.html or
+  // /clinical-dashboard%2ehtml), because such a path would not literally
+  // start with a gated prefix and would fall through to the permissive
+  // "not a hub gated path" return below.
+  if (isSuspiciousPath(pathname)) return "blocked";
+
+  const lowerPathname = typeof pathname === "string" ? pathname.toLowerCase() : pathname;
   const email = hubSession && typeof hubSession.email === "string" ? hubSession.email : null;
   const group = hubSession && typeof hubSession.group === "string" ? hubSession.group : null;
   const isAdmin = email !== null && ADMIN_EMAILS.includes(email) && group === "admin";
 
-  if (matchesAnyBoundedPrefix(pathname, HUB_ADMIN_PREFIXES)) {
+  if (matchesAnyBoundedPrefix(lowerPathname, HUB_ADMIN_PREFIXES)) {
     return isAdmin ? "allow" : "blocked";
   }
-  if (matchesAnyBoundedPrefix(pathname, HUB_GROUP1_PREFIXES)) {
+  if (matchesAnyBoundedPrefix(lowerPathname, HUB_GROUP1_PREFIXES)) {
     return isAdmin || group === "group1" ? "allow" : "blocked";
   }
-  if (matchesAnyBoundedPrefix(pathname, HUB_GROUP2_PREFIXES)) {
+  if (matchesAnyBoundedPrefix(lowerPathname, HUB_GROUP2_PREFIXES)) {
     return isAdmin || group === "group2" ? "allow" : "blocked";
   }
   return "allow";
