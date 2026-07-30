@@ -83,11 +83,11 @@ begin
     -- atomic check and increment: use_count < max_uses is re-checked as
     -- part of the same statement that increments it, so concurrent callers
     -- cannot together push use_count past max_uses
-    update public.access_codes
-      set use_count = use_count + 1
-      where id = v_id
-        and (max_uses is null or use_count < max_uses)
-      returning label into v_label;
+    update public.access_codes as ac
+      set use_count = ac.use_count + 1
+      where ac.id = v_id
+        and (ac.max_uses is null or ac.use_count < ac.max_uses)
+      returning ac.label into v_label;
 
     if v_label is not null then
       v_matched := true;
