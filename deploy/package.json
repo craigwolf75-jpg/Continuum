@@ -1,0 +1,8 @@
+{
+  "name": "continuum-site-gate",
+  "private": true,
+  "description": "Continuum Prompt 40 site gate. No build step; this is a static site (Framework preset: Other, per README.txt). This package.json exists only so Vercel places deploy/middleware.js at the same level as package.json, as required by Vercel Routing Middleware, and so @vercel/functions can be installed as a dependency for the gate's rewrite()/next() helpers.",
+  "dependencies": {
+    "@vercel/functions": "3.7.6"
+  }
+}

@@ -1,5 +1,9 @@
-/* Continuum Prompt 40 SITE gate edge middleware. Vercel Edge Middleware
-   (Edge runtime: Web APIs only, no node built ins). Verifies the ct_site
+/* Continuum Prompt 40 SITE gate Routing Middleware. This is a zero config,
+   no framework static Vercel project (Root Directory = deploy, Framework
+   preset "Other"), so it runs on Vercel's platform level Routing Middleware
+   (docs.vercel.com/docs/routing-middleware), not inside any framework's own
+   middleware layer. Default runtime for Routing Middleware is Edge (no
+   node built ins); this file only uses Web APIs. Verifies the ct_site
    cookie LOCALLY via HMAC (no database call happens here); only the code
    entry endpoint (deploy/api/site-access.js) touches Supabase.
 
@@ -8,14 +12,20 @@
    reads, sets, or references ct_session (the hub gate's cookie) or the hub
    gate's secret.
 
-   PENDING CREDS: decideSiteAccess is pure and is unit tested directly
-   (deploy/site-middleware.test.mjs). The default export below, and the
-   x-middleware-rewrite / x-middleware-next header contract it relies on to
-   rewrite to the holding page without a redirect, can only be proven inside
-   an actual Vercel Edge deployment, which is not available yet. That
-   includes whether Vercel's frameworkless Edge Middleware contract accepts a
-   path relative x-middleware-rewrite value (used below) the same way it
-   accepts an absolute one; CONFIRM ON FIRST PREVIEW DEPLOY.
+   PACKAGING FIX (Prompt 40 follow up): this file used to return raw
+   x-middleware-rewrite / x-middleware-next response headers by hand. That is
+   an internal contract of Next.js's own middleware runtime, not part of the
+   documented Vercel Routing Middleware API for non framework ("Other")
+   projects; for a no framework project Vercel's build never recognized this
+   file's intent from those headers, and it was also never placed at the
+   project root alongside a package.json, which the docs state is where
+   Vercel looks for Routing Middleware. Both are fixed here: deploy/
+   package.json now exists (see that file), and this file now uses the
+   documented @vercel/functions rewrite()/next() helpers instead of raw
+   headers. decideSiteAccess is pure and is unit tested directly
+   (deploy/site-middleware.test.mjs) and is UNCHANGED by this fix. The
+   default export's actual interception by the platform can only be proven
+   on a real deploy; CONFIRM ON FIRST PREVIEW DEPLOY.
 
    SECURITY FIX (post review): the matcher below used to exclude requests by
    file extension (.js, .css, .json, .map, .svg, and friends). That let
@@ -26,6 +36,7 @@
    asset or not, goes through decideSiteAccess, whose allowlist is the ONLY
    thing that can mark a path public. No dashes anywhere. */
 
+import { rewrite, next } from "@vercel/functions";
 import { verifySession, parseCookies } from "./api/_site_session.js";
 
 // Vercel Edge Middleware matcher. Deliberately minimal: it excludes only the
@@ -141,45 +152,35 @@ async function middleware(request) {
     const decision = decideSiteAccess(url.pathname, hasValidCookie, gateEnabledEnv);
 
     if (decision === "holding") {
-      return rewriteToHolding();
+      return rewriteToHolding(request);
     }
 
     return passThrough();
   } catch (e) {
     // Fail closed on any unexpected error: show the holding page rather than
     // risk leaking a gated route.
-    return rewriteToHolding();
+    return rewriteToHolding(request);
   }
 }
 
 // Rewrites (not redirects) to the Layer 0 holding page: the browser URL bar
 // stays on the originally requested path, and no gated asset is ever served
-// under it. Uses the documented low level Vercel Edge Middleware contract
-// (the x-middleware-rewrite response header) so this works without a
-// framework specific helper like next/server's NextResponse.
+// under it. Uses the documented @vercel/functions rewrite() helper, which is
+// the supported mechanism for non framework ("Other") Routing Middleware
+// (see file header PACKAGING FIX note).
 //
-// SECURITY FIX (post review, I4): the rewrite target is now the path
-// "/gate/holding.html" rather than an absolute URL built from the incoming
-// request, in case Vercel's frameworkless contract expects a path (an
-// absolute URL built from attacker-influenced request data is also simply
-// more surface than necessary for a fixed, known destination). UNTESTED
-// pending an actual Vercel Edge deployment; see the file header. If a first
-// preview deploy shows Vercel requires an absolute URL here instead, this is
-// the line to change back.
-function rewriteToHolding() {
-  return new Response(null, {
-    status: 200,
-    headers: { "x-middleware-rewrite": "/gate/holding.html" }
-  });
+// SECURITY FIX (post review, I4, preserved): the rewrite target is built
+// from the fixed, known destination "/gate/holding.html" resolved against
+// the incoming request's own origin, never from any attacker influenced
+// path segment.
+function rewriteToHolding(request) {
+  return rewrite(new URL("/gate/holding.html", request.url));
 }
 
-// Lets the request continue to its originally requested destination.
-// UNTESTED pending an actual Vercel Edge deployment; see the file header.
+// Lets the request continue to its originally requested destination, via the
+// documented @vercel/functions next() helper.
 function passThrough() {
-  return new Response(null, {
-    status: 200,
-    headers: { "x-middleware-next": "1" }
-  });
+  return next();
 }
 
 export { config, decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch };
