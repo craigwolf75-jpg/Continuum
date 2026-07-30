@@ -10,13 +10,10 @@
    sibling module for that separate session; the two never share a secret or
    a cookie name.
 
-   PENDING PROMPT 39: the hub LOGIN endpoint that calls signHubSession and
-   issues the ct_session cookie from the shared demo passcode is Prompt 39
-   (the HUB gate), which is not built yet. This file provides only the
-   VERIFY side, used by deploy/api/site-codes-admin.js to check an already
-   issued ct_session before it will do anything. Until Prompt 39 ships a real
-   login, no request can ever present a valid ct_session, so every admin
-   endpoint fails closed for lack of one; that is the intended, safe state.
+   The HUB login (deploy/api/hub-signin.js) issues ct_session via
+   signHubSession above, then serializeHubCookie below. Approval status and
+   access group come from public.hub_profiles (see that file); this module
+   stays a pure codec with no knowledge of the approval layer itself.
 
    Token shape mirrors _site_session.js: base64url(JSON payload) + "." +
    base64url(HMAC SHA256 of the base64url payload string).
@@ -170,4 +167,16 @@ function isAuthorizedAdmin(session) {
   return ADMIN_EMAILS.includes(session.email);
 }
 
-export { signHubSession, verifyHubSession, parseCookies, HUB_COOKIE_NAME, ADMIN_EMAILS, isAuthorizedAdmin };
+// Set-Cookie value for the ct_session hub cookie. Own cookie, own name,
+// never ct_site (the site gate's cookie). 30 day Max-Age, mirroring
+// deploy/api/_site_session.js's serializeSiteCookie.
+function serializeHubCookie(token) {
+  return "ct_session=" + token + "; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=2592000";
+}
+
+// Clears the ct_session cookie on sign out (Max-Age=0 expires it immediately).
+function clearHubCookie() {
+  return "ct_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0";
+}
+
+export { signHubSession, verifyHubSession, parseCookies, HUB_COOKIE_NAME, ADMIN_EMAILS, isAuthorizedAdmin, serializeHubCookie, clearHubCookie };
