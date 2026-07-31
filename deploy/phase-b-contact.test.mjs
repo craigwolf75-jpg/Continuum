@@ -28,7 +28,7 @@ test("Book a demo and Start a Pilot use anchor text, not a raw URL as the label"
 test("footer carries the contact email", () => {
   assert.ok(home.includes("craig@continuumrtw.com"));
 });
-test("contact page is em-dash clean", () => { assert.ok(!/[–—]/.test(home)); });
+test("contact page is em-dash clean", () => { assert.ok(!Array.from(home).some((c) => c.charCodeAt(0) === 8211 || c.charCodeAt(0) === 8212)); });
 
 test("every Book a demo and Start a Pilot anchor resolves to the single-sourced booking URL", () => {
   const cfg = readFileSync(join(dir, "site-links.js"), "utf8");
