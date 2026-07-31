@@ -1,5 +1,7 @@
 User-agent: *
 Disallow: /
+Disallow: /continuum_workflow_app
+Disallow: /worker-embed.html
 Allow: /$
 Allow: /privacy
 Allow: /privacy.html

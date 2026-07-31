@@ -99,6 +99,12 @@ const HUB_GROUP1_PREFIXES = ["/employer-dashboard", "/hse-portal", "/worker-dash
 const HUB_GROUP2_PREFIXES = ["/clinical-dashboard", "/wcb-portal", "/sigma-portal"];
 const HUB_ADMIN_PREFIXES = ["/admin-portal", "/admin-hub-users", "/admin-site-codes"];
 
+// Phase B Task 6 addition: the two mechanism demo pages. These require ANY
+// authenticated hub session (any group, including admin), not a specific
+// group, so they are checked separately from the three group prefix sets
+// above rather than being folded into one of them.
+const HUB_AUTHED_PREFIXES = ["/continuum_workflow_app", "/worker-embed"];
+
 function matchesAnyBoundedPrefix(pathname, prefixes) {
   return prefixes.some((p) => isBoundedPrefixMatch(pathname, p));
 }
@@ -139,6 +145,12 @@ function decideHubAccess(pathname, hubSession) {
   }
   if (matchesAnyBoundedPrefix(lowerPathname, HUB_GROUP2_PREFIXES)) {
     return isAdmin || group === "group2" ? "allow" : "blocked";
+  }
+  // Phase B Task 6: the mechanism demo pages require any valid hub session,
+  // regardless of group. isSuspiciousPath above already blocks encoded or
+  // traversal variants of these paths before this check runs.
+  if (matchesAnyBoundedPrefix(lowerPathname, HUB_AUTHED_PREFIXES)) {
+    return hubSession !== null ? "allow" : "blocked";
   }
   return "allow";
 }
