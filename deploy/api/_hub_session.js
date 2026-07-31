@@ -159,10 +159,12 @@ function isAuthorizedAdmin(session) {
 }
 
 // Set-Cookie value for the ct_session hub cookie. Own cookie, own name,
-// never ct_site (the site gate's cookie). 30 day Max-Age, mirroring
-// deploy/api/_site_session.js's serializeSiteCookie.
+// never ct_site (the site gate's cookie). 7 day Max-Age (final review, I2:
+// aligned to the hub-signin.js SESSION_TTL_SECONDS token expiry, shortened
+// from 30 days), independent of deploy/api/_site_session.js's
+// serializeSiteCookie, which keeps its own 30 day Max-Age unchanged.
 function serializeHubCookie(token) {
-  return "ct_session=" + token + "; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=2592000";
+  return "ct_session=" + token + "; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=604800";
 }
 
 // Clears the ct_session cookie on sign out (Max-Age=0 expires it immediately).

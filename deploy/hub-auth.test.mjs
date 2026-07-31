@@ -14,7 +14,7 @@ const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + 
 // -- cookie helpers --
 ok("serializeHubCookie names the ct_session cookie", serializeHubCookie("tok").startsWith("ct_session=tok;"));
 ok("serializeHubCookie is HttpOnly, Secure, SameSite=Lax", /HttpOnly.*Secure.*SameSite=Lax/.test(serializeHubCookie("tok")));
-ok("serializeHubCookie is 30 days (Max-Age=2592000)", serializeHubCookie("tok").includes("Max-Age=2592000"));
+ok("serializeHubCookie is 7 days (Max-Age=604800)", serializeHubCookie("tok").includes("Max-Age=604800"));
 ok("clearHubCookie empties the value and sets Max-Age=0", clearHubCookie() === "ct_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0");
 ok("clearHubCookie never touches ct_site", !clearHubCookie().includes("ct_site"));
 ok("HUB_COOKIE_NAME still ct_session", HUB_COOKIE_NAME === "ct_session");
