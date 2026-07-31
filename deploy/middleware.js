@@ -148,10 +148,13 @@ function decideHubAccess(pathname, hubSession) {
 // the allowlist. Without this, a path like /gate/%2e%2e/admin-portal.html
 // would pass the /gate/ prefix check here, and could then resolve (once let
 // through) against a static file resolver that decodes %2e%2e back to ..
-// and walks up out of /gate/ to a gated file. Suspicious paths are not
-// specially blocked outright; they simply never qualify for the allowlist,
-// so they fall through to the same holding-unless-cookie rule as any other
-// gated path.
+// and walks up out of /gate/ to a gated file. In the SITE gate
+// (decideSiteAccess) a suspicious path is not blocked outright; it simply
+// never qualifies for the public allowlist, so it falls through to the same
+// holding-unless-cookie rule as any other gated path. The HUB gate
+// (decideHubAccess) is stricter: it treats a suspicious path as blocked
+// outright, since no legitimate portal route needs traversal or percent
+// encoding.
 function isSuspiciousPath(pathname) {
   if (typeof pathname !== "string") return true;
   const lower = pathname.toLowerCase();
