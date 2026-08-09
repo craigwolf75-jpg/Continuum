@@ -51,9 +51,48 @@ async function main() {
     ok("a fresh signup inserts exactly one hub_profiles row", calls.filter((c) => c.url.includes("/rest/v1/hub_profiles")).length === 1);
     ok("the inserted row is status pending", JSON.parse(calls.find((c) => c.url.includes("/rest/v1/hub_profiles")).init.body).status === "pending");
     ok("no cookie is ever set on signup", !resCreate._headers["set-cookie"]);
+    ok("no notification is sent when notify is unconfigured", calls.filter((c) => c.url.includes("api.resend.com")).length === 0);
   } finally {
     globalThis.fetch = originalFetch;
   }
+
+  // -- signup notification (best effort), notify configured --
+  process.env.RESEND_API_KEY = "re_test";
+  process.env.SIGNUP_NOTIFY_TO = "info@continuumrtw.com";
+
+  let notifyCalls = [];
+  globalThis.fetch = async (url, init) => {
+    notifyCalls.push({ url, init });
+    if (url.includes("/auth/v1/admin/users")) return { status: 201, json: async () => ({ id: "u9", email: "notify@example.com" }) };
+    if (url.includes("/rest/v1/hub_profiles")) return { status: 201, json: async () => ([{ id: "u9", email: "notify@example.com", status: "pending" }]) };
+    if (url.includes("api.resend.com")) return { status: 200, json: async () => ({ id: "email_1" }) };
+    throw new Error("unexpected fetch: " + url);
+  };
+  try {
+    const resNotify = mockRes();
+    await handler({ method: "POST", headers: { host: "continuumrtw.com" }, body: { email: "notify@example.com", password: "longenough1" } }, resNotify);
+    ok("a fresh signup still returns 200 pending with notify configured", resNotify._status === 200 && resNotify._body.status === "pending");
+    ok("a configured fresh signup posts exactly one notification to Resend", notifyCalls.filter((c) => c.url.includes("api.resend.com")).length === 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  globalThis.fetch = async (url) => {
+    if (url.includes("/auth/v1/admin/users")) return { status: 201, json: async () => ({ id: "u10", email: "notifyfail@example.com" }) };
+    if (url.includes("/rest/v1/hub_profiles")) return { status: 201, json: async () => ([{ id: "u10", email: "notifyfail@example.com", status: "pending" }]) };
+    if (url.includes("api.resend.com")) return { status: 500, json: async () => ({ message: "down" }) };
+    throw new Error("unexpected fetch: " + url);
+  };
+  try {
+    const resNotifyFail = mockRes();
+    await handler({ method: "POST", headers: { host: "continuumrtw.com" }, body: { email: "notifyfail@example.com", password: "longenough1" } }, resNotifyFail);
+    ok("a failed notification never breaks signup (still 200 pending)", resNotifyFail._status === 200 && resNotifyFail._body.status === "pending");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  delete process.env.RESEND_API_KEY;
+  delete process.env.SIGNUP_NOTIFY_TO;
 
   globalThis.fetch = async (url) => {
     if (url.includes("/auth/v1/admin/users")) return { status: 422, json: async () => ({ msg: "Email address already registered" }) };
