@@ -22,6 +22,7 @@
    never falls open. No dashes anywhere. */
 
 import { validateSignupInput, createAuthUser } from "./_hub_auth.js";
+import { sendSignupNotification } from "./_notify.js";
 
 function isCrossSiteRequest(req) {
   const headers = (req && req.headers) || {};
@@ -111,6 +112,12 @@ async function handler(req, res) {
     }
 
     await insertPendingProfile(baseUrl, serviceKey, created.id, created.email);
+
+    // Best effort admin notification for a freshly created account only (never
+    // on the neutral duplicate path above). sendSignupNotification never throws
+    // and is a silent no op unless RESEND_API_KEY and SIGNUP_NOTIFY_TO are set,
+    // so it cannot fail or delay a signup once the account and profile exist.
+    await sendSignupNotification(created.email, process.env);
 
     res.status(200).json({ ok: true, status: "pending" });
   } catch (e) {
