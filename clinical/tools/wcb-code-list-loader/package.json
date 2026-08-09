@@ -1,0 +1,10 @@
+{
+  "name": "wcb-code-list-loader",
+  "private": true,
+  "type": "module",
+  "description": "Continuum Prompt 40 increment 1. Faithful loader of the WCB Alberta accreditation mapping workbook into clinical.wcb_code_value and friends. Reads every code cell as text, trims on load, never curates the worksheet set. No dashes anywhere.",
+  "bin": { "wcb-load": "loader.mjs" },
+  "dependencies": {
+    "xlsx": "0.18.5"
+  }
+}
