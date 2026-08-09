@@ -1,7 +1,8 @@
 # Continuum Node suite gate (Prompt B2). Runs every deploy/*.test.mjs on push and
 # pull_request to main, so a failing portal suite or a canon drift fails the build.
-# These suites read the static artifacts and need no secrets. Runs alongside the
-# exposure-proof SQL gate. No em-dashes anywhere.
+# These suites need no secrets, but middleware.js imports @vercel/functions, so the
+# deploy dependencies are installed with npm ci before the suites run. Runs
+# alongside the exposure-proof SQL gate. No em-dashes anywhere.
 
 name: suites
 
@@ -20,6 +21,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Install deploy dependencies (middleware.js imports @vercel/functions)
+        working-directory: deploy
+        run: npm ci
 
       - name: Run all Node suites (canon drift fails the build)
         run: |
