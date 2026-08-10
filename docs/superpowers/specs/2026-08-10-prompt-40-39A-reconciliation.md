@@ -56,11 +56,13 @@ is complete. Listed so none is lost.
    weight LIMITED can never be assigned to a capability element and a restriction LIMITED can never be
    assigned to a weight element (acceptance criterion 14). The capability resolver's list names are the
    same strings as the code namespaces, so the two modules compose without wiring.
-3. **PHN length and check digit** (39A Section 1.4, 1.5, board enquiry B1). The validation schema types
-   PID.3/CX.1 as `\d{0,9}`, so it permits a short PHN. Enforce length exactly 9 in application code (a
-   P1 format of `^\d{9}$` on the PHN element, sourced from the workbook format `#########`). Ship the
-   nine digit check now; add a configurable, default off check digit validator. The check digit
-   algorithm is in no board file. Craig to ask the board.
+3. DONE (except the board enquiry). **PHN length and check digit** (39A Section 1.4, 1.5, board enquiry
+   B1). Built as `clinical/engine/phn.mjs`: `phnLength` enforces exactly nine digits in application code
+   (the schema `\d{0,9}` permits a short PHN, criterion 8), `phnCheckDigit` is a default off, pluggable
+   stage that refuses to guess an algorithm when enabled without a board confirmed validator, `phnGate`
+   runs both, and `claimReferenceFormat` handles the PID.2/CX.1 max seven trap. The nine digit check
+   ships now; the check digit validator stays off until the board publishes the algorithm (B1 open,
+   Craig to ask the board).
 4. **Date defect passthrough** (39A Section 4, board enquiry B2). Run the validation schema, but when
    the only failure is the February or leap year regex defect, log it as a known board schema defect and
    do not block the batch. Whether the live board application shares the defect is unverified.
