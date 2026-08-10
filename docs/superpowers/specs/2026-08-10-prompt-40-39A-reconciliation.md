@@ -63,9 +63,14 @@ is complete. Listed so none is lost.
    runs both, and `claimReferenceFormat` handles the PID.2/CX.1 max seven trap. The nine digit check
    ships now; the check digit validator stays off until the board publishes the algorithm (B1 open,
    Craig to ask the board).
-4. **Date defect passthrough** (39A Section 4, board enquiry B2). Run the validation schema, but when
-   the only failure is the February or leap year regex defect, log it as a known board schema defect and
-   do not block the batch. Whether the live board application shares the defect is unverified.
+4. DONE (except the board enquiry). **Date defect passthrough** (39A Section 4, board enquiry B2). Built
+   as `clinical/engine/date_defect.mjs`: `reconcileDate` treats Continuum's real calendar check
+   (`isRealCalendarDate`, now exported from p1.mjs) as authoritative. A date that never existed is
+   blocked regardless of either schema (criterion 16: 29 February 1900 and 31 September 2026); a real
+   date the schema wrongly rejects (9 and 19 February every year, and a real 29 February the schema's
+   leap list omits) passes and is logged as the known B2 defect without blocking (criterion 15); a real
+   date the schema rejects outside the four documented patterns is raised as a discrepancy, not silently
+   passed. Whether the live board application shares the defect stays unverified (B2 open).
 5. **Error catalogue maps code to element only** (39A Section 5). Never infer a required value or a
    polarity from the board's message text. The 2007 sample rejection wording has inverted polarity
    versus the current field and must not seed a value.
