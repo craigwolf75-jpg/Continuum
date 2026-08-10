@@ -363,8 +363,12 @@ Client side validation is a courtesy. Server side validation is the contract. Ne
 ### 6.1 P3 checks, in order. Collect all failures, never stop at the first (acceptance criterion 12).
 
 1. Every always_required element present and non empty, except those exempted under 5.6.
-2. Every conditionally_available_required element whose condition is met is present, and every one
-   whose condition is not met is ABSENT from the payload (absent, not empty).
+2. CORRECTED by Prompt 39A Section 3 (facts read from the board samples; that file wins). Every
+   conditionally_available_required OBX observation whose condition is met is present and non empty, and
+   every one whose condition is not met is CLEARED (present and empty, `<OBX.5 />`), which is the
+   board's own convention. A stale non empty value on an unmet element is the violation, not the
+   presence of an empty element. Only a whole container not applicable to the form is absent (C569 and
+   C570 carry no attachment container). The old "absent, not empty" instruction is withdrawn.
 3. Every coded value is a current member of its list for THAT form.
 4. Every dataset respects min_occurs and max_occurs, including invoice lines 1 to 25.
 5. Every length and format matches the element definition.
@@ -436,7 +440,10 @@ mapping, invert deliberately, add a test. Acceptance criterion 15.
    including the Basic code list on E14, E16, E18, E20, E22.
 10. Answering no change does not remove the capability block unless modified duties and modified hours
     are both No.
-11. A hidden field's data is cleared and absent from the payload, verified in the XML.
+11. CORRECTED by Prompt 39A Section 3. A hidden OBX observation is CLEARED and present with an empty
+    value (`<OBX.5 />`), not absent, matching the board samples (5.03 C050E Min carries the same 98 OBX
+    as the Max sample, 73 empty). Verified in the XML. A whole container not applicable to the form is
+    absent. Emitting the HL7 null `""` is never correct (39A Section 3.1 item 4).
 12. A run with five distinct errors reports all five, each against its element.
 13. Two identical part, side, nature injury rows are rejected under VAL-X04.
 14. Dominant hand enabled for Shoulder, disabled for Back, per VAL-X07.
