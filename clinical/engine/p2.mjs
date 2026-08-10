@@ -5,9 +5,18 @@
    P2 does not re invent the named cross field rules; those live in
    validation.mjs (VAL-X01 to X12) and are folded in through runP2. What P2 adds
    is the machinery validation.mjs deliberately left out: the conditional
-   present versus ABSENT check (engine spec Section 5.4 and P3 check 2, where a
-   gated element must be absent, not merely empty, when its condition is unmet),
-   and the board date rules BR1 and BR4.
+   requirement check, and the board date rules BR1 and BR4.
+
+   Correction (Prompt 39A Section 3, facts read from the board samples, this file
+   wins over Prompt 39): the board's own convention for OBX observations is
+   PRESENT and EMPTY, not absent. Every board sample emits the form's full OBX
+   skeleton in fixed order and leaves unused observations present with an empty
+   value; 5.03 C050E Min carries the same 98 OBX as the Max sample with 73 empty.
+   So an unmet conditional observation must be CLEARED (present and empty), and
+   the violation is a stale value that was not cleared, never the presence of an
+   empty element. Only whole containers not applicable to a form are absent
+   (5.15 C569, 5.16 C570 carry no attachment container); that is the "absent"
+   mode below.
 
    Pure functions only, no database or clock dependency beyond deterministic
    calendar math. ISO yyyy-mm-dd dates are compared as strings, which is
@@ -23,24 +32,33 @@ const fail = (id, element, message) => ({ id, element, message });
 const isIsoDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(norm(v)); // shape only; P1 owns validity
 
 // ---------------------------------------------------------------------------
-// Conditional requirement (engine spec Section 5.4, P3 check 2). A
-// conditionally_available_required element must be:
+// Conditional requirement (engine spec Section 5.4, corrected by Prompt 39A
+// Section 3). A conditionally_available_required element must be:
 //   present and non empty when its condition is met, and
-//   ABSENT (the key not in the payload) when its condition is not met.
+//   CLEARED (present and empty) when its condition is not met, per the board's
+//   present and empty OBX convention. A stale non empty value on an unmet
+//   element is the violation, not the presence of an empty element.
 // present is whether the key exists in the payload at all; value is its content.
-// A cleared but still present key (present with a blank value) is a violation
-// when the condition is unmet, because mandatory clearing removes the key.
+// mode "clear" (default) is the OBX observation convention above. mode "absent"
+// is for a whole container not applicable to a form (Prompt 39A Section 3.1
+// item 2): it must be absent, and a present container is the violation.
 // ---------------------------------------------------------------------------
-export function conditionalRequirement(element, conditionMet, present, value) {
+export function conditionalRequirement(element, conditionMet, present, value, mode = "clear") {
   const name = (element && element.name) || "(field)";
   if (conditionMet) {
-    if (!present || isBlank(value))
+    if (isBlank(value))
       return [fail("VAL-P2-COND", name, name + " is required when its condition is met")];
     return [];
   }
-  // condition not met: the element must be absent, not present and empty.
-  if (present)
-    return [fail("VAL-P2-COND", name, name + " must be absent from the payload when its condition is not met")];
+  // condition not met
+  if (mode === "absent") {
+    if (present)
+      return [fail("VAL-P2-COND", name, name + " must be absent from the payload when it is not applicable to this form")];
+    return [];
+  }
+  // OBX observation convention: present and empty is correct; a stale value is not.
+  if (!isBlank(value))
+    return [fail("VAL-P2-COND", name, name + " must be cleared (present and empty) when its condition is not met")];
   return [];
 }
 

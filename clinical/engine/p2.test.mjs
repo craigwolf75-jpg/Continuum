@@ -13,14 +13,18 @@ import { valX04, valX01 } from "./validation.mjs";
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
-// -- conditional requirement: present when met, ABSENT when not met --
+// -- conditional requirement: present-and-non-empty when met, present-and-EMPTY
+//    when not met (Prompt 39A Section 3, the board's OBX convention) --
 const presc = { name: "Prescription name" };
 ok("conditional: met and present is accepted", conditionalRequirement(presc, true, true, "Codeine").length === 0);
-ok("conditional: met but absent is rejected", conditionalRequirement(presc, true, false, "").length === 1);
+ok("conditional: met but blank is rejected (required when met)", conditionalRequirement(presc, true, false, "").length === 1);
 ok("conditional: met but present and blank is rejected", conditionalRequirement(presc, true, true, "").length === 1);
-ok("conditional: not met and absent is accepted", conditionalRequirement(presc, false, false, "").length === 0);
-ok("conditional: not met but present (even empty) is rejected, must be ABSENT", conditionalRequirement(presc, false, true, "").length === 1);
-ok("conditional: not met but present with a value is rejected", conditionalRequirement(presc, false, true, "leftover").length === 1);
+ok("conditional: not met and cleared (present and empty) is ACCEPTED per the board convention", conditionalRequirement(presc, false, true, "").length === 0);
+ok("conditional: not met and absent is also accepted (no stale value)", conditionalRequirement(presc, false, false, "").length === 0);
+ok("conditional: not met with a stale value is rejected (must be cleared)", conditionalRequirement(presc, false, true, "leftover").length === 1);
+// absent mode: a whole container not applicable to the form must be absent (39A 3.1 item 2)
+ok("conditional absent mode: not applicable and present is rejected", conditionalRequirement({ name: "attachment container" }, false, true, "", "absent").length === 1);
+ok("conditional absent mode: not applicable and absent is accepted", conditionalRequirement({ name: "attachment container" }, false, false, "", "absent").length === 0);
 
 // -- date primitives --
 ok("dateOnOrBefore: after the bound is rejected", dateOnOrBefore("BR1", "d", "2026-08-10", "2026-08-09", "today").length === 1);
