@@ -1,0 +1,2685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ZRPT_P03 xmlns="urn:WCBhl7_v231-schema_modern_v100" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:WCBhl7_v231-schema_modern_v100 ./WCBhl7_v231_modern_v100.xsd">
+	<!--FHS - FILE HEADER SEGMENT; BEGINNING OF-->
+	<FHS>
+		<!--FHS.1 - FILE FIELD SEPERATOR-->
+		<FHS.1>|</FHS.1>
+		<!--FHS.2 - FILE ENCODING CHARACTERS-->
+		<FHS.2>&gt;^~\&amp;</FHS.2>
+		<!--FHS.3 - FILE SENDING APPLICATION-->
+		<FHS.3>SUBMITTERAPP</FHS.3>
+		<!--FHS.4 - FILE SENDING FACILITY-->
+		<FHS.4>SUBID001</FHS.4>
+		<!--FHS.5 - FILE RECEIVING APPLICATION-->
+		<FHS.5>WCB-EDM</FHS.5>
+		<!--FHS.6 - FILE RECEIVING FACILITY-->
+		<FHS.6>RAPID-RPT</FHS.6>
+		<!--FHS.7 - FILE CREATION DATE AND TIME-->
+		<FHS.7>201401011000</FHS.7>
+		<!--FHS.8 - FILE SECURITY - NOT IN USE-->
+		<FHS.8 />
+		<!--FHS.9 - FILE NAME | FILE ID-->
+		<FHS.9>5.02 - C050E - Max Fields without Attachments.xml</FHS.9>
+		<!--FHS.10 - FILE COMMENT-->
+		<FHS.10>THIS FILE CONTAINS TESTABLE REPORTS</FHS.10>
+		<!--FHS.11 - FILE CONTROL ID-->
+		<FHS.11>INTFILE112</FHS.11>
+		<!--FHS.12 - REFERENCE FILE CONTROL ID - NOT IN USE-->
+		<FHS.12 />
+	</FHS>
+	<!--FHS - FILE HEADER SEGMENT; END OF-->
+	<ZRPT_P03.LST.6>
+		<ZRPT_P03.GRP.4>
+			<!--BHS - BATCH HEADER SEGMENT; BEGINNING OF-->
+			<BHS>
+				<!--BHS.1 - BATCH FIELD SEPERATOR-->
+				<BHS.1>|</BHS.1>
+				<!--BHS.2 - BATCH ENCODING CHARACTERS-->
+				<BHS.2>&gt;^~\&amp;</BHS.2>
+				<!--BHS.3 - BATCH SENDING APPLICATION-->
+				<BHS.3>SUBMITTERAPP</BHS.3>
+				<!--BHS.4 - BATCH SENDING FACILITY-->
+				<BHS.4>SUBID001</BHS.4>
+				<!--BHS.5 - BATCH RECEIVING APPLICATION-->
+				<BHS.5>WCB-EDM</BHS.5>
+				<!--BHS.6 - BATCH RECEIVING FACILITY-->
+				<BHS.6>RAPID-RPT</BHS.6>
+				<!--BHS.7 - BATCH CREATION DATE AND TIME-->
+				<BHS.7>201401011000</BHS.7>
+				<!--BHS.8 - BATCH SECURITY - NOT IN USE-->
+				<BHS.8 />
+				<!--BHS.9 - BATCH NAME | BATCH ID | BATCH TYPE, NOT IN USE-->
+				<BHS.9 />
+				<!--BHS.10 - BATCH COMMENT-->
+				<BHS.10>THIS IS A TEST BATCH</BHS.10>
+				<!--BHS.11 - BATCH CONTROL ID-->
+				<!--The value contained in the BATCH CONTROL ID element is used to identify the batch file that was processed when the batch return file is emailed to the submitter-->
+				<BHS.11>C050E Sample-Max</BHS.11>
+				<!--BHS.12 - REFERENCE BATCH CONTROL ID - NOT IN USE-->
+				<BHS.12 />
+			</BHS>
+			<!--BHS - BATCH HEADER SEGMENT; END OF-->
+			<ZRPT_P03.LST.5>
+				<ZRPT_P03.GRP.3>
+					<ZRPT_P03.GRP.2>
+						<!--MSH - MESSAGE SEGMENT; BEGINNING OF-->
+						<MSH>
+							<!--MSH.1 - FIELD SEPERATOR-->
+							<MSH.1>|</MSH.1>
+							<!--MSH.2 - ENCODING CHARACTERS-->
+							<MSH.2>&gt;^~\&amp;</MSH.2>
+							<MSH.3>
+								<!--MSH.3/HD.1 - SENDING APPLICATION-->
+								<HD.1>SUBMITTERAPP</HD.1>
+								<HD.2 />
+								<HD.3 />
+							</MSH.3>
+							<MSH.4>
+								<!--MSH.4/HD.1 - SENDING FACILITY-->
+								<HD.1>SUBID001</HD.1>
+								<HD.2 />
+								<HD.3 />
+							</MSH.4>
+							<MSH.5>
+								<!--MSH.5/HD.1 - RECEIVING APPLICATION-->
+								<HD.1>BATCHRPT</HD.1>
+								<HD.2 />
+								<HD.3 />
+							</MSH.5>
+							<MSH.6>
+								<!--MSH.6/HD.1 - RECEIVING FACILITY-->
+								<HD.1>WCBEDM</HD.1>
+								<HD.2 />
+								<HD.3 />
+							</MSH.6>
+							<!--MSH.7 - MESSAGE CREATION DATE AND TIME-->
+							<MSH.7>201401011000</MSH.7>
+							<!--MSH.8 - MESSAGE SECURITY, NOT IN USE-->
+							<MSH.8 />
+							<MSH.9>
+								<!--MSH.9/CM_MSG_TYPE.1 - MESSAGE TYPE 1-->
+								<CM_MSG_TYPE.1>RPT</CM_MSG_TYPE.1>
+								<!--MSH.9/CM_MSG_TYPE.2 - MESSAGE TYPE 2-->
+								<CM_MSG_TYPE.2>P03</CM_MSG_TYPE.2>
+								<!--MSH.9/CM_MSG_TYPE.3 - MESSAGE TYPE 3-->
+								<CM_MSG_TYPE.3 />
+							</MSH.9>
+							<!--MSH.10 - SUBMITTER TRANSACTION ID-->
+							<MSH.10>C050E Sample</MSH.10>
+							<MSH.11>
+								<!--MSH.11/PT.1 - PROCESSING ID-->
+								<PT.1>P</PT.1>
+								<PT.2 />
+							</MSH.11>
+							<MSH.12>
+								<!--MSH.12/VID.1 - VERSION ID-->
+								<VID.1>2.3.1</VID.1>
+								<VID.2>
+									<CE.1 />
+									<CE.2 />
+									<CE.3 />
+									<CE.4 />
+									<CE.5 />
+									<CE.6 />
+								</VID.2>
+								<VID.3>
+									<CE.1 />
+									<CE.2 />
+									<CE.3 />
+									<CE.4 />
+									<CE.5 />
+									<CE.6 />
+								</VID.3>
+							</MSH.12>
+							<!--MSH.13 - SEQUENCE NUMBER-->
+							<MSH.13>01</MSH.13>
+						</MSH>
+						<!--MSH - MESSAGE SEGMENT; END OF-->
+						<!--EVN - EVENT SEGMENT; BEGINNING OF-->
+						<EVN>
+							<!--EVN.1 - EVENT TYPE CODE-->
+							<EVN.1>P03</EVN.1>
+							<!--EVN.2 - RECORDED DATE AND TIME-->
+							<EVN.2>201401011000</EVN.2>
+							<!--EVN.4 -  FORM ID-->
+							<EVN.4>C050E</EVN.4>
+							<!--EVN.6 -  REPORT COMPLETION DATE-->
+							<EVN.6>20140101</EVN.6>
+						</EVN>
+						<!--EVN - EVENT SEGMENT; END OF-->
+						<!--PID - PATIENT IDENTIFICATION SEGMENT; BEGINNING OF-->
+						<PID>
+							<PID.1>1</PID.1>
+							<PID.2>
+								<!--CX.1 - WCB CLAIM NUMBER-->
+								<CX.1>1243686</CX.1>
+							</PID.2>
+							<PID.3.LST>
+								<PID.3>
+									<!--PID.3/CX.1 - PATIENT PERSONAL HEALTH NUMBER (PHN)-->
+									<CX.1/>
+									<!--PID.3/CX.5 - PATIENT DOES NOT HAVE AN ALBERTA PHN? ENTER 'Y or 'N'-->
+									<CX.5>Y</CX.5>
+								</PID.3>
+							</PID.3.LST>
+							<PID.5.LST>
+								<PID.5>
+									<!--XPN.1 - PATIENT LAST NAME-->
+									<XPN.1>Smith</XPN.1>
+									<!--XPN.2 - PATIENT FIRST NAME-->
+									<XPN.2>John</XPN.2>
+									<!--XPN.3 - PATIENT MIDDLE NAME-->
+									<XPN.3>D</XPN.3>
+									<XPN.4 />
+									<XPN.5 />
+									<XPN.7 />
+								</PID.5>
+							</PID.5.LST>
+							<!--PID.7 - PATIENT DATE OF BIRTH (YYYYMMDD)-->
+							<PID.7>19750101</PID.7>
+							<!--PID.8 - PATIENT GENDER-->
+							<PID.8>F</PID.8>
+							<PID.11.LST>
+								<PID.11>
+									<!--XAD.1 - PATIENT ADDRESS LINE 1-->
+									<XAD.1>8822 111 ST NW</XAD.1>
+									<!--XAD.2 - PATIENT ADDRESS LINE 2-->
+									<XAD.2>P.O. Box 10 Station Main</XAD.2>
+									<!--XAD.3 - PATIENT CITY-->
+									<XAD.3>Edmonton</XAD.3>
+									<!--XAD.4 - PATIENT PROVINCE | PATIENT STATE-->
+									<XAD.4>AB</XAD.4>
+									<!--XAD.5 - PATIENT POSTAL CODE | PATIENT ZIP CODE-->
+									<XAD.5>T5T5T5</XAD.5>
+									<XAD.6 />
+								</PID.11>
+							</PID.11.LST>
+							<PID.13.LST>
+								<PID.13>
+									<XTN.1 />
+									<XTN.2 />
+									<XTN.3 />
+									<XTN.4 />
+									<!--XTN.5 - PATIENT TELEPHONE COUNTRY CODE-->
+									<XTN.5>CN</XTN.5>
+									<!--XTN.6 - PATIENT TELEPHONE AREA CODE-->
+									<XTN.6>780</XTN.6>
+									<!--XTN.7 - PATIENT TELEPHONE NUMBER-->
+									<XTN.7>4441000</XTN.7>
+									<!--XTN.8 - PATIENT TELEPHONE EXTENSION NUMBER-->
+									<XTN.8 />
+									<XTN.9 />
+								</PID.13>
+							</PID.13.LST>
+						</PID>
+						<!--PID - PATIENT IDENTIFICATION SEGMENT; END OF-->
+						<!--ACC - ACCIDENT SEGMENT; BEGINNING OF-->
+						<ACC>
+							<!--ACC.1 - ACCIDENT DATE | DATE OF INJURY | DATE OF ACCIDENT (YYYYMMDD)-->
+							<ACC.1>20140101</ACC.1>
+						</ACC>
+						<!--ACC - ACCIDENT SEGMENT; END OF-->
+						<ZRPT_P03.LST.3>
+							<ZRPT_P03.GRP.1>
+								<!--PV1 - PATIENT VISIT SEGMENT; BEGINNING OF-->
+								<PV1>
+									<!--PV1.1 - SET ID-->
+									<PV1.1 />
+									<!--PV1.2 - PATIENT CLASS-->
+									<PV1.2 />
+									<PV1.8.LST>
+										<!--PV1.8 - REFERRING MEDICAL PROVIDER | REFERRING DOCTOR | MEDICAL REFERRAL FORM-->
+										<!--Only nodes XCN.2, XCN.3, XCN.4, XCN.5, and XCN.6 are used to capture information regarding the Medical Referral Provider Name-->
+										<!--The Medical Referral Provider Name is built by concatenating the values in the following order: XCN.3 {space} XCN.4 {space} XCN.2 {space} XCN.5 {space} XCN.6-->
+										<PV1.8>
+											<XCN.1 />
+											<!--XCN.2 - IN USE-->
+											<XCN.2 />
+											<!--XCN.3 - IN USE-->
+											<XCN.3 />
+											<!--XCN.4 - IN USE-->
+											<XCN.4 />
+											<!--XCN.5 - IN USE-->
+											<XCN.5 />
+											<!--XCN.6 - IN USE-->
+											<XCN.6 />
+											<XCN.7 />
+										</PV1.8>
+									</PV1.8.LST>
+									<PV1.19>
+										<!--PV1.19/CX.1- CLINIC REFERENCE NUMBER-->
+										<CX.1>12345678</CX.1>
+									</PV1.19>
+									<!--PV1.47 - TOTAL INVOICE AMOUNT | TOTAL CHARGES-->
+									<PV1.47 />
+								</PV1>
+								<!--PV1 - PATIENT VISIT SEGMENT; END OF-->
+								<!--PRD - PROVIDER DATA SEGMENT; BEGINNING OF-->
+								<PRD>
+									<PRD.1.LST>
+										<PRD.1>
+											<!--PRD.1/CE_TAB_0131.1 - PROVIDER SKILL CODE-->
+											<CE_TAB_0131.1>GP</CE_TAB_0131.1>
+										</PRD.1>
+									</PRD.1.LST>
+									<PRD.2.LST>
+										<PRD.2>
+											<!--PRD.2/XPN.1 - PRACTITIONER LAST NAME-->
+											<XPN.1>Black</XPN.1>
+											<!--PRD.2/XPN.2 - PRACTITIONER FIRST NAME-->
+											<XPN.2>Allen</XPN.2>
+											<!--PRD.2/XPN.3 - PRACTITIONER MIDDLE NAME-->
+											<XPN.3/>
+											<XPN.4 />
+											<XPN.5 />
+											<XPN.6 />
+										</PRD.2>
+									</PRD.2.LST>
+									<PRD.3.LST>
+										<PRD.3>
+											<!--PRD.3/XAD.1 - PROVIDER ADDRESS LINE 1-->
+											<XAD.1 />
+											<!--PRD.3/XAD.2 - PROVIDER ADDRESS LINE 2-->
+											<XAD.2 />
+											<!--PRD.3/XAD.3 - PROVIDER CITY-->
+											<XAD.3 />
+											<!--PRD.3/XAD.4 - PROVIDER PROVINCE | PROVIDER STATE-->
+											<XAD.4 />
+											<!--PRD.3/XAD.5 - PROVIDER POSTAL CODE | PROVIDER ZIP CODE-->
+											<XAD.5 />
+											<XAD.6 />
+										</PRD.3>
+									</PRD.3.LST>
+									<PRD.5.LST>
+										<PRD.5>
+											<XTN.1 />
+											<XTN.2 />
+											<XTN.3 />
+											<XTN.4 />
+											<!--PRD.5/XTN.5 - BILLING CONTACT FAX COUNTRY CODE-->
+											<XTN.5>CN</XTN.5>
+											<!--PRD.5/XTN.6 - BILLING CONTACT FAX AREA CODE-->
+											<XTN.6>780</XTN.6>
+											<!--PRD.5/XTN.7 - BILLING CONTACT FAX NUMBER-->
+											<XTN.7>4441000</XTN.7>
+											<XTN.8 />
+											<XTN.9 />
+										</PRD.5>
+									</PRD.5.LST>
+								</PRD>
+								<!--PRD - PROVIDER DATA SEGMENT; END OF-->
+								<ZRPT_P03.LST.1>
+									<!--FT1 -  FINANCIAL TRANSACTION SEGMENT; BEGINNING OF-->
+									<!--	One complete Financial Transaction could contain 1 or more invoice detail lines which are represented by the opening and closing <FT1> </FT1> tags.-->
+									<!-- In order to add invoice detail lines reiterate the <FT1></FT1> tags equal to the allowed number of invoice detail lines for a C050E Report.-->
+									<FT1>
+										<!--FT1.1 - SET ID | INVOICE DETAIL IDENTIFIER-->
+										<FT1.1>1</FT1.1>
+										<!--FT1.2 - TRANSACTION ID-->
+										<FT1.2 />
+										<!--FT1.3 - BILLING NUMBER/PRACTITIONER ID-->
+										<FT1.3>G00602</FT1.3>
+										<!--FT1.4 - TRANSACTION DATE | DATE OF SERVICE | DATE OF EXAM | DATE RECEIVED  (YYYYMMDD)-->
+										<FT1.4>20140101</FT1.4>
+										<!--FT1.6 - TRANSACTION TYPE-->
+										<FT1.6 />
+										<!--FT1.7 - TRANSACTION CODE-->
+										<FT1.7>
+											<CE.1 />
+											<CE.2 />
+										</FT1.7>
+										<!--FT1.8 - TRANSACTION DESCRIPTION-->
+										<FT1.8 />
+										<!--FT1.10 - ENCOUNTERS-->
+										<FT1.10>1</FT1.10>
+										<FT1.14>
+											<!--FT1.14/CE.1 - CONTRACT ID-->
+											<CE.1>000001</CE.1>
+										</FT1.14>
+										<FT1.15>
+											<CP.1>
+												<!--FT1.15/CP.1/MO.1 - BILLING AMOUNT FOR THE INVOICED SERVICE ITEM-->
+												<MO.1 />
+											</CP.1>
+											<!--FT1.15/CP.3 - CALLS-->
+											<CP.3>1</CP.3>
+										</FT1.15>
+										<FT1.16>
+											<PL.4>
+												<!-- FT1.16/PL.4/HD.2 - FACILITY TYPE | IDENTIFIES THE LOCATION OF WHERE THE SERVICE WAS PERFORMED-->
+												<HD.2>H</HD.2>
+											</PL.4>
+										</FT1.16>
+										<FT1.19.LST>
+											<!-- A FT.19 node represents one of the following codes: Diagnosis, Diagnosis Codes, Part of Body Code, Side of Body Code, or Nature of Injury Code-->
+											<FT1.19>
+												<CE.1 />
+												<!--FT1.19/CE.2 - TREATMENT ASSESSMENT DIAGNOSIS DESCRIPTION-->
+												<CE.2>Current diagnosis go here.</CE.2>
+												<!--FT1.19/CE.3 - TREATMENT ASSESSMENT DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGNOSIS</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY DIAGNOSIS CODE-->
+												<CE.1>800.1</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY DIAGNOSIS CODE-->
+												<CE.1>800.2</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY DIAGNOSIS CODE-->
+												<CE.1>800.3</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY PART OF BODY CODE-->
+												<CE.1>33000</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY SIDE OF BODY CODE-->
+												<CE.1>R</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY NATURE OF INJURY CODE-->
+												<CE.1>07110</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY PART OF BODY CODE-->
+												<CE.1>42000</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY SIDE OF BODY CODE-->
+												<CE.1>B</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY NATURE OF INJURY CODE-->
+												<CE.1>04300</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY PART OF BODY CODE-->
+												<CE.1>00000</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY SIDE OF BODY CODE-->
+												<CE.1/>
+												<!--FT1.19/CE.2 - TERTIARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY NATURE OF INJURY CODE-->
+												<CE.1>09510</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY PART OF BODY CODE-->
+												<CE.1>03000</CE.1>
+												<!--FT1.19/CE.2 - QUATERNARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY SIDE OF BODY CODE-->
+												<CE.1/>
+												<!--FT1.19/CE.2 - QUATERNARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY NATURE OF INJURY CODE-->
+												<CE.1>04300</CE.1>
+												<!--FT1.19/CE.2 - QUATERNARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY PART OF BODY CODE-->
+												<CE.1>41000</CE.1>
+												<!--FT1.19/CE.2 - QUINARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY SIDE OF BODY CODE-->
+												<CE.1>L</CE.1>
+												<!--FT1.19/CE.2 - QUINARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY NATURE OF INJURY CODE-->
+												<CE.1>01200</CE.1>
+												<!--FT1.19/CE.2 - QUINARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+										</FT1.19.LST>
+										<FT1.25>
+											<!--FT1.25/CE.1 - PROCEDURE TYPE CODE | HEALTH SERVICE TYPE CODE-->
+											<CE.1>03.02A</CE.1>
+										</FT1.25>
+										<FT1.26.LST>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - PRIMARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1>HEPA</CE.1>
+											</FT1.26>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - SECONDARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1>GP</CE.1>
+											</FT1.26>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - TERTIARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1>NPM</CE.1>
+											</FT1.26>
+										</FT1.26.LST>
+									</FT1>
+									<FT1>
+										<!--FT1.1 - SET ID | INVOICE DETAIL IDENTIFIER-->
+										<FT1.1>2</FT1.1>
+										<!--FT1.2 - TRANSACTION ID-->
+										<FT1.2 />
+										<!--FT1.3 - BILLING NUMBER/PRACTITIONER ID-->
+										<FT1.3>G00602</FT1.3>
+										<!--FT1.4 - TRANSACTION DATE | DATE OF SERVICE | DATE OF EXAM | DATE RECEIVED  (YYYYMMDD)-->
+										<FT1.4>20140101</FT1.4>
+										<!--FT1.6 - TRANSACTION TYPE-->
+										<FT1.6 />
+										<!--FT1.7 - TRANSACTION CODE-->
+										<FT1.7>
+											<CE.1 />
+											<CE.2 />
+										</FT1.7>
+										<!--FT1.8 - TRANSACTION DESCRIPTION-->
+										<FT1.8 />
+										<!--FT1.10 - ENCOUNTERS-->
+										<FT1.10>1</FT1.10>
+										<FT1.14>
+											<!--FT1.14/CE.1 - CONTRACT ID-->
+											<CE.1>000001</CE.1>
+										</FT1.14>
+										<FT1.15>
+											<CP.1>
+												<!--FT1.15/CP.1/MO.1 - BILLING AMOUNT FOR THE INVOICED SERVICE ITEM-->
+												<MO.1 />
+											</CP.1>
+											<!--FT1.15/CP.3 - CALLS-->
+											<CP.3>1</CP.3>
+										</FT1.15>
+										<FT1.16>
+											<PL.4>
+												<!-- FT1.16/PL.4/HD.2 - FACILITY TYPE | IDENTIFIES THE LOCATION OF WHERE THE SERVICE WAS PERFORMED-->
+												<HD.2>H</HD.2>
+											</PL.4>
+										</FT1.16>
+										<FT1.19.LST>
+											<!-- A FT.19 node represents one of the following codes: Diagnosis, Diagnosis Codes, Part of Body Code, Side of Body Code, or Nature of Injury Code-->
+											<FT1.19>
+												<CE.1 />
+												<!--FT1.19/CE.2 - TREATMENT ASSESSMENT DIAGNOSIS DESCRIPTION-->
+												<CE.2>Current diagnosis go here.</CE.2>
+												<!--FT1.19/CE.3 - TREATMENT ASSESSMENT DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGNOSIS</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY DIAGNOSIS CODE-->
+												<CE.1>800.1</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY DIAGNOSIS CODE-->
+												<CE.1>800.2</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY DIAGNOSIS CODE-->
+												<CE.1>800.3</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY PART OF BODY CODE-->
+												<CE.1>33000</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY SIDE OF BODY CODE-->
+												<CE.1>R</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY NATURE OF INJURY CODE-->
+												<CE.1>07110</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY PART OF BODY CODE-->
+												<CE.1>42000</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY SIDE OF BODY CODE-->
+												<CE.1>B</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY NATURE OF INJURY CODE-->
+												<CE.1>04300</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY PART OF BODY CODE-->
+												<CE.1>00000</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY SIDE OF BODY CODE-->
+												<CE.1/>
+												<!--FT1.19/CE.2 - TERTIARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY NATURE OF INJURY CODE-->
+												<CE.1>09510</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY PART OF BODY CODE-->
+												<CE.1>03000</CE.1>
+												<!--FT1.19/CE.2 - QUATERNARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY SIDE OF BODY CODE-->
+												<CE.1/>
+												<!--FT1.19/CE.2 - QUATERNARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY NATURE OF INJURY CODE-->
+												<CE.1>04300</CE.1>
+												<!--FT1.19/CE.2 - QUATERNARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY PART OF BODY CODE-->
+												<CE.1>41000</CE.1>
+												<!--FT1.19/CE.2 - QUINARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY SIDE OF BODY CODE-->
+												<CE.1>L</CE.1>
+												<!--FT1.19/CE.2 - QUINARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY NATURE OF INJURY CODE-->
+												<CE.1>01200</CE.1>
+												<!--FT1.19/CE.2 - QUINARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+										</FT1.19.LST>
+										<FT1.25>
+											<!--FT1.25/CE.1 - PROCEDURE TYPE CODE | HEALTH SERVICE TYPE CODE-->
+											<CE.1>03.03A</CE.1>
+										</FT1.25>
+										<FT1.26.LST>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - PRIMARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1/>
+											</FT1.26>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - SECONDARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1/>
+											</FT1.26>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - TERTIARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1/>
+											</FT1.26>
+										</FT1.26.LST>
+									</FT1>
+									<FT1>
+										<!--FT1.1 - SET ID | INVOICE DETAIL IDENTIFIER-->
+										<FT1.1>3</FT1.1>
+										<!--FT1.2 - TRANSACTION ID-->
+										<FT1.2 />
+										<!--FT1.3 - BILLING NUMBER/PRACTITIONER ID-->
+										<FT1.3>G00602</FT1.3>
+										<!--FT1.4 - TRANSACTION DATE | DATE OF SERVICE | DATE OF EXAM | DATE RECEIVED  (YYYYMMDD)-->
+										<FT1.4>20140101</FT1.4>
+										<!--FT1.6 - TRANSACTION TYPE-->
+										<FT1.6 />
+										<!--FT1.7 - TRANSACTION CODE-->
+										<FT1.7>
+											<CE.1 />
+											<CE.2 />
+										</FT1.7>
+										<!--FT1.8 - TRANSACTION DESCRIPTION-->
+										<FT1.8 />
+										<!--FT1.10 - ENCOUNTERS-->
+										<FT1.10>1</FT1.10>
+										<FT1.14>
+											<!--FT1.14/CE.1 - CONTRACT ID-->
+											<CE.1>000001</CE.1>
+										</FT1.14>
+										<FT1.15>
+											<CP.1>
+												<!--FT1.15/CP.1/MO.1 - BILLING AMOUNT FOR THE INVOICED SERVICE ITEM-->
+												<MO.1 />
+											</CP.1>
+											<!--FT1.15/CP.3 - CALLS-->
+											<CP.3>1</CP.3>
+										</FT1.15>
+										<FT1.16>
+											<PL.4>
+												<!-- FT1.16/PL.4/HD.2 - FACILITY TYPE | IDENTIFIES THE LOCATION OF WHERE THE SERVICE WAS PERFORMED-->
+												<HD.2>H</HD.2>
+											</PL.4>
+										</FT1.16>
+										<FT1.19.LST>
+											<!-- A FT.19 node represents one of the following codes: Diagnosis, Diagnosis Codes, Part of Body Code, Side of Body Code, or Nature of Injury Code-->
+											<FT1.19>
+												<CE.1 />
+												<!--FT1.19/CE.2 - TREATMENT ASSESSMENT DIAGNOSIS DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TREATMENT ASSESSMENT DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGNOSIS</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY DIAGNOSIS CODE-->
+												<CE.1>800.1</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY DIAGNOSIS CODE-->
+												<CE.1>800.2</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY DIAGNOSIS CODE-->
+												<CE.1>800.3</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY DIAGNOSIS CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY DIAGNOSIS ASSIGNMENT ID-->
+												<CE.3>DIAGCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY PART OF BODY CODE-->
+												<CE.1>33000</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY SIDE OF BODY CODE-->
+												<CE.1>R</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - PRIMARY NATURE OF INJURY CODE-->
+												<CE.1>07110</CE.1>
+												<!--FT1.19/CE.2 - PRIMARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - PRIMARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY PART OF BODY CODE-->
+												<CE.1>42000</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY SIDE OF BODY CODE-->
+												<CE.1>B</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - SECONDARY NATURE OF INJURY CODE-->
+												<CE.1>04300</CE.1>
+												<!--FT1.19/CE.2 - SECONDARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - SECONDARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY PART OF BODY CODE-->
+												<CE.1>00000</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY SIDE OF BODY CODE-->
+												<CE.1/>
+												<!--FT1.19/CE.2 - TERTIARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - TERTIARY NATURE OF INJURY CODE-->
+												<CE.1>09510</CE.1>
+												<!--FT1.19/CE.2 - TERTIARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - TERTIARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY PART OF BODY CODE-->
+												<CE.1>03000</CE.1>
+												<!--FT1.19/CE.2 - QUATERNARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY SIDE OF BODY CODE-->
+												<CE.1/>
+												<!--FT1.19/CE.2 - QUATERNARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUATERNARY NATURE OF INJURY CODE-->
+												<CE.1>04300</CE.1>
+												<!--FT1.19/CE.2 - QUATERNARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUATERNARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY PART OF BODY CODE-->
+												<CE.1>41000</CE.1>
+												<!--FT1.19/CE.2 - QUINARY PART OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY PART OF BODY ASSIGNMENT ID-->
+												<CE.3>POBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY SIDE OF BODY CODE-->
+												<CE.1>L</CE.1>
+												<!--FT1.19/CE.2 - QUINARY SIDE OF BODY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY SIDE OF BODY ASSIGNMENT ID-->
+												<CE.3>SOBCD</CE.3>
+											</FT1.19>
+											<FT1.19>
+												<!--FT1.19/CE.1 - QUINARY NATURE OF INJURY CODE-->
+												<CE.1>01200</CE.1>
+												<!--FT1.19/CE.2 - QUINARY NATURE OF INJURY CODE DESCRIPTION-->
+												<CE.2 />
+												<!--FT1.19/CE.3 - QUINARY NATURE OF INJURY ASSIGNMENT ID-->
+												<CE.3>TOICD</CE.3>
+											</FT1.19>
+										</FT1.19.LST>
+										<FT1.25>
+											<!--FT1.25/CE.1 - PROCEDURE TYPE CODE | HEALTH SERVICE TYPE CODE-->
+											<CE.1>03.07A</CE.1>
+										</FT1.25>
+										<FT1.26.LST>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - PRIMARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1/>
+											</FT1.26>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - SECONDARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1/>
+											</FT1.26>
+											<FT1.26>
+												<!--FT1.26.LST/FT1.26/CE.1 - TERTIARY MODIFIER - INVOICE DETAIL FEE MODIFIER TYPE CODE-->
+												<CE.1/>
+											</FT1.26>
+										</FT1.26.LST>
+									</FT1>
+									<!--FT1 - FINANCIAL TRANSACTION SEGMENT; END OF-->
+								</ZRPT_P03.LST.1>
+								<ZRPT_P03.LST.2>
+									<!--OBX - OBSERVATION & RESULT SEGMENT; BEGINNING OF-->
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--WORKER JOB TITLE/OCCUPATION-->
+											<CE.1>JOBTITLE</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Contractor</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--EMPLOYER NAME-->
+											<CE.1>EMPNAME</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Company A</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>3</OBX.1>
+										<OBX.2>ST</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--EMPLOYER CITY-->
+											<CE.1>EMPCITY</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Edmonton</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>4</OBX.1>
+										<OBX.2>ST</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--EMPLOYER PROVINCE-->
+											<CE.1>EMPPROV</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>AB</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>34</OBX.1>
+										<OBX.2>NM</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--EMPLOYER COUNTRY CODE-->
+											<CE.1>EMPTELCOUNTRYCD</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>CN</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>36</OBX.1>
+										<OBX.2>NM</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--EMPLOYER AREA CODE-->
+											<CE.1>EMPTELAREACD</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>780</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>29</OBX.1>
+										<OBX.2>ST</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--EMPLOYER TELEPHONE NUMBER-->
+											<CE.1>EMPTELPHONE</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>4444444</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--EMPLOYER EXTENSION NUMBER-->
+											<CE.1>EMPTELEXT</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>17</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>6</OBX.1>
+										<OBX.2>FT</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--DESCRIBE HOW AND WHEN THE INJURY/CONDITION OCCURRED-->
+											<CE.1>INJDESC</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Fell Down</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>10</OBX.1>
+										<OBX.2>FT</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--OBJECTIVE FINDINGS-->
+											<CE.1>OBJFIND</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Bruise Ankles</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>11</OBX.1>
+										<OBX.2>FT</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--TREATMENT PLAN AND NON-OPIOID MEDICATIONS-->
+											<CE.1>TREATPLANMED</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Medication</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT 1-->
+											<CE.1>FILEATTACHMENTNAME1</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT REPORT TYPE 1-->
+											<CE.1>FILEATTACHMENTREPORTTYPE1</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT CONTENT 1-->
+											<CE.1>FILEATTACHMENTCONTENT1</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT DESCRIPTION 1-->
+											<CE.1>FILEATTACHMENTDESCRIPTION1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT 2-->
+											<CE.1>FILEATTACHMENTNAME2</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT REPORT TYPE 2-->
+											<CE.1>FILEATTACHMENTREPORTTYPE2</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT CONTENT 2-->
+											<CE.1>FILEATTACHMENTCONTENT2</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT DESCRIPTION 2-->
+											<CE.1>FILEATTACHMENTDESCRIPTION2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT 3-->
+											<CE.1>FILEATTACHMENTNAME3</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT REPORT TYPE 3-->
+											<CE.1>FILEATTACHMENTREPORTTYPE3</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT CONTENT 3-->
+											<CE.1>FILEATTACHMENTCONTENT3</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--FILE ATTACHMENT DESCRIPTION 3-->
+											<CE.1>FILEATTACHMENTDESCRIPTION3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>19</OBX.1>
+										<OBX.2>ID</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--REQUEST FOR WCB RESOURCES - CONTACT WITH WCB CASE MANAGER-->
+											<CE.1>RQSTRESRSCM</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>22</OBX.1>
+										<OBX.2>ID</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--REQUEST FOR WCB RESOURCES - CONTACT WITH WCB PHYSICIAN-->
+											<CE.1>RQSTRESRSPHYS</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--REFERRAL TO RETURN TO WORK PROVIDER-->
+											<CE.1>TRPLREFERRALTORTWPROVIDER</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>23</OBX.1>
+										<OBX.2>ID</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--WILL/HAS THE PATIENT MISS(ED) WORK BEYOND THE DATE OF ACCIDENT?-->
+											<CE.1>PREVINJJOBIND</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--HAS THE PATIENT RETURNED TO WORK?-->
+											<CE.1>RTWPATIENTRETURNEDTOWORK</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>25</OBX.1>
+										<OBX.2>DT</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--DATE THE PATIENT RETURNED TO WORK-->
+											<CE.1>ESTDTRTRNACCWRK</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>20140101</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--IS THE PATIENT WORKING MODIFIED HOURS?-->
+											<CE.1>RTWPATIENTWORKINGMODIFIEDHOURS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--NUMBER OF HOURS PATIENT IS CAPABLE OF WORKING PER DAY?-->
+											<CE.1>RTWHOURSPATIENTCAPABLEOFWORKINGPERDAY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>4</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<OBX.1>26</OBX.1>
+										<OBX.2>ID</OBX.2>
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!-- IS THE PATIENT CURRENTLY WORKING MODIFIED DUTIES-->
+											<CE.1>MODALTWRKPERF</CE.1>
+										</OBX.3>
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRACTITIONER ROLE-->
+											<CE.1>PRACTITIONERROLE</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>GP</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--LOCATION OF OPERATIONS-->
+											<CE.1>EMPLOCATIONOFOPERATIONS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Firebag North - Camp 2</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--DID THE INJURY DEVELOP OVER TIME?-->
+											<CE.1>ACCINJURYDELEVOPOVERTIME</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>N</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--INJURY SYMPTOMS-->
+											<CE.1>INJSYMPTOMS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Purple Ankle</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--DESCRIBE ANY ADDITIONAL INJURIES-->
+											<CE.1>INJADDITIONALINJURIES</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Additional injury description go here.</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--DOMINANT HAND-->
+											<CE.1>INJDOMINANTHAND</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>R</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--ANY PRIOR CONDITIONS IN THE SAME ANATOMICAL AREA?-->
+											<CE.1>INJPRIORCONDINSAMEANATOMICALAREA</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--DIAGNOSIS AND TREATMENT(S) FOR PRIOR CONDITIONS-->
+											<CE.1>INJDIAGNOSISTREATMENTFORPRIORCONDITIONS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Diagnosis for prior conditions go here.</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--WERE NARCOTICS/OPIOIDS PRESCRIBED ON THIS VISIT?-->
+											<CE.1>TRPLNARCOTICSOPIOIDSPRESCRIBED</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION NAME 1-->
+											<CE.1>TRPLPRESCRIPTIONNAME1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Medication 1</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION STRENGTH 1-->
+											<CE.1>TRPLPRESCRIPTIONSTRENGTH1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>1</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION DAILY INTAKE 1-->
+											<CE.1>TRPLPRESCRIPTIONDAILYINTAKE1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>10</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION NAME 2-->
+											<CE.1>TRPLPRESCRIPTIONNAME2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Medication 2</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION STRENGTH 2-->
+											<CE.1>TRPLPRESCRIPTIONSTRENGTH2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>0.8</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION DAILY INTAKE 2-->
+											<CE.1>TRPLPRESCRIPTIONDAILYINTAKE2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>4</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION NAME 3-->
+											<CE.1>TRPLPRESCRIPTIONNAME3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Medication 3</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION STRENGTH 3-->
+											<CE.1>TRPLPRESCRIPTIONSTRENGTH3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>0.1</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION DAILY INTAKE 3-->
+											<CE.1>TRPLPRESCRIPTIONDAILYINTAKE3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>5</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION NAME 4-->
+											<CE.1>TRPLPRESCRIPTIONNAME4</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Medication 4</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION STRENGTH 4-->
+											<CE.1>TRPLPRESCRIPTIONSTRENGTH4</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>1</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION DAILY INTAKE 4-->
+											<CE.1>TRPLPRESCRIPTIONDAILYINTAKE4</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>0.5</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION NAME 5-->
+											<CE.1>TRPLPRESCRIPTIONNAME5</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Medication 5</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION STRENGTH 5-->
+											<CE.1>TRPLPRESCRIPTIONSTRENGTH5</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>0.1</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PRESCRIPTION DAILY INTAKE 5-->
+											<CE.1>TRPLPRESCRIPTIONDAILYINTAKE5</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>1</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Category 1-->
+											<CE.1>TRPLCATEGORY1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>CONREF</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Type 1-->
+											<CE.1>TRPLTYPE1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ORTHO</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Details 1-->
+											<CE.1>TRPLDETAILS1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Expedite 1-->
+											<CE.1>TRPLEXPEDITE1</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Category 2-->
+											<CE.1>TRPLCATEGORY2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>INVE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Type 2-->
+											<CE.1>TRPLTYPE2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>MRI</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Details 2-->
+											<CE.1>TRPLDETAILS2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Expedite 2-->
+											<CE.1>TRPLEXPEDITE2</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>EXPDEFAULT</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Category 3-->
+											<CE.1>TRPLCATEGORY3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>INVE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Type 3-->
+											<CE.1>TRPLTYPE3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ULTRA</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Details 3-->
+											<CE.1>TRPLDETAILS3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Expedite 3-->
+											<CE.1>TRPLEXPEDITE3</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>EXPEDITE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Category 4-->
+											<CE.1>TRPLCATEGORY4</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>CONREF</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Type 4-->
+											<CE.1>TRPLTYPE4</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>OTHER</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Details 4-->
+											<CE.1>TRPLDETAILS4</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Treatment type details go here.</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Expedite 4-->
+											<CE.1>TRPLEXPEDITE4</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Category 5-->
+											<CE.1>TRPLCATEGORY5</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>CONREF</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Type 5-->
+											<CE.1>TRPLTYPE5</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>NEURO</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Details 5-->
+											<CE.1>TRPLDETAILS5</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5/>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--Treatment Plan Expedite 5-->
+											<CE.1>TRPLEXPEDITE5</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5 />
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENT'S CURRENT CAPABILITY IN PERFORMING A SITTING ACTIVITY-->
+											<CE.1>RTWPATIENTSITTINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>LIMITEDTO</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--NUMBER OF HOURS PATIENT LIMITED TO FOR SITTING-->
+											<CE.1>RTWPATIENTSITTINGHOURS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>2</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENT'S CURRENT CAPABILITY IN PERFORMING A STANDING ACTIVITY-->
+											<CE.1>RTWPATIENTSTANDINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>LIMITEDTO</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--NUMBER OF HOURS PATIENT LIMITED TO FOR STANDING-->
+											<CE.1>RTWPATIENTSTANDINGHOURS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>3</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A WALKING ACTIVITY-->
+											<CE.1>RTWPATIENTWALKINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>LIMITEDTO</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--NUMBER OF HOURS PATIENT LIMITED TO FOR WALKING-->
+											<CE.1>RTWPATIENTWALKINGHOURS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>3</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A BENDING ACTIVITY-->
+											<CE.1>RTWPATIENTBENDINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ABLE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A TWISTING ACTIVITY-->
+											<CE.1>RTWPATIENTTWISTINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ABLE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A KNEELING/SQUATTING ACTIVITY-->
+											<CE.1>RTWPATIENTKNEELINGSQUATTINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ABLE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A CLIMBING ACTIVITY-->
+											<CE.1>RTWPATIENTCLIMBINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ABLE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A LIFTING ACTIVITY-->
+											<CE.1>RTWPATIENTLIFTINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>LIMITEDTO</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--APPROXIMATE WEIGHT THAT THE PATIENT IS LIMITED TO IN LIFTING-->
+											<CE.1>RTWPATIENTLIFTINGMAXOF</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>LIMITED</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A PUSHING/PULLING ACTIVITY-->
+											<CE.1>RTWPATIENTPUSHINGPULLINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ABLE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN PERFORMING A OVERHEAD REACHING ACTIVITY-->
+											<CE.1>RTWPATIENTOVERHEADREACHINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>ABLE</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENTS CURRENT CAPABILITY IN DRIVING-->
+											<CE.1>RTWPATIENTDRIVINGCAPABILITY</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>LIMITEDTO</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--APPROXIMATE NUMBER OF HOURS PATIENT LIMITED TO DRIVING-->
+											<CE.1>RTWPATIENTDRIVINGHOURS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>5</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENT IS HOSPITALIZED-->
+											<CE.1>RTWPATIENTHOSPITALIZED</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENT HAS SELF-REPORTED PAIN-->
+											<CE.1>RTWPATIENTSELFREPORTEDPAIN</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Y</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--PATIENT HAS OPIOIDS/MEDICATION SIDE EFFECTS-->
+											<CE.1>RTWPATIENTOPIOIDSMEDICATIONSIDEEFFECTS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>N</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--ADDITIONAL COMMENTS OR RESTRICTIONS ON PATIENTS CURRENT CAPABILITIES-->
+											<CE.1>RTWOTHERRESTRICTIONSORCOMMENTS</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>No additional comments.</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--ESTIMATED DATE PATIENT ABLE TO PERFORM PRE-ACCIDENT WORK-->
+											<CE.1>RTWEXPECTEDDATEPATIENTPERFORMPREACCIDENTWORK</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>20140101</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<OBX>
+										<!--OBX.1 - SET ID -->
+										<OBX.1 />
+										<OBX.2 />
+										<!--OBX.3/CE.1 - OBSERVATION IDENTIFIER -->
+										<OBX.3>
+											<!--BILLING CONTACT NAME-->
+											<CE.1>INVOSUBMITTERNAME</CE.1>
+										</OBX.3>
+										<!--OBX.4 - OBSERVATION SUB ID -->
+										<OBX.4 />
+										<!--OBX.5.LST/OBX.5 - OBSERVATION VALUE -->
+										<OBX.5.LST>
+											<OBX.5>Jim Smith</OBX.5>
+										</OBX.5.LST>
+										<!--OBX.11 - OBSERVATION RESULT STATUS (This is an empty node) -->
+										<OBX.11 />
+									</OBX>
+									<!--OBX - OBSERVATION & RESULT SEGMENT; END OF-->
+								</ZRPT_P03.LST.2>
+							</ZRPT_P03.GRP.1>
+						</ZRPT_P03.LST.3>
+						<ZRPT_P03.LST.4>
+							<NTE>
+								<NTE.1>1</NTE.1>
+								<!-- NTE.3.LST/NTE.3 - ADDITIONAL COMMENTS -->
+								<NTE.3.LST>
+									<NTE.3>Additional Comments Go Here</NTE.3>
+								</NTE.3.LST>
+							</NTE>
+						</ZRPT_P03.LST.4>
+					</ZRPT_P03.GRP.2>
+				</ZRPT_P03.GRP.3>
+			</ZRPT_P03.LST.5>
+			<!--BTS - BATCH TRAILER SEGMENT; BEGINNING OF-->
+			<BTS>
+				<!--BTS.1 - BATCH MESSAGE COUNT-->
+				<BTS.1>001</BTS.1>
+				<!--BTS.2 - BATCH COMMENT-->
+				<BTS.2>END OF BATCH</BTS.2>
+				<BTS.3.LST>
+					<!--BTS.3.LST/BTS.3 - BATCH TOTALS-->
+					<BTS.3>001</BTS.3>
+				</BTS.3.LST>
+			</BTS>
+			<!--BTS - BATCH TRAILER SEGMENT; END OF-->
+		</ZRPT_P03.GRP.4>
+	</ZRPT_P03.LST.6>
+	<!--FTS - FILE TRAILER SEGMENT; BEGINNING OF-->
+	<FTS>
+		<!--FTS.1 - FILE BATCH COUNT-->
+		<FTS.1>001</FTS.1>
+		<!--FTS.2 - FILE TRAILER COMMENT-->
+		<FTS.2>ONE BATCH IN THIS FILE</FTS.2>
+	</FTS>
+	<!--FTS - FILE TRAILER SEGMENT; END OF-->
+</ZRPT_P03>
