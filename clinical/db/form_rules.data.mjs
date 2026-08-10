@@ -11,11 +11,19 @@
      pages), plus the full OIS Return to Work block (pages 5 to 7). Its SR2 and
      SR3 gate rules carry unresolvable = true because they reference field names
      absent from the C050S element list (spec open item 9.4); not dropped.
+   - C151: complete. Shares most sections with C050E (re-stated explicitly, C151
+     source document and pages). Differences the doc calls out: no Accident
+     develop over time warning (SR4 absent there), a new Injury BR4 (valid
+     diagnostic codes) and SR2 (diagnosis changed show_hide, in addition to
+     IBR2), and the two step opioid and Medication Management module in Treatment
+     (SR12 gate at 60 plus days, SR2 the D8 to D27 block, SR3 the reduction text).
+     The ui_mapping bracket shift on C151 does not affect form_rule, which keys on
+     element name, not the bracket.
    - C151S: the no change chain (SR30, SR28, E1 code_list_switch) plus the RTW
      gate chain (SR1, SR2, SR3). Criteria 9 and 10; an earlier spec had it WRONG.
-   The remaining forms' rules (C151, invoice forms, and C151S's shared sections)
-   are the follow up: add them here from their transcription docs, then
-   regenerate. See clinical/db/README.md.
+   The remaining forms' rules (invoice forms and C151S's shared sections) are the
+   follow up: add them here from their transcription docs, then regenerate. See
+   clinical/db/README.md.
 
    verified_against_sample_xml is TRUE only where the verification pass confirmed
    the rule against the board 5.xx samples (so far: BR5 page 1 / VAL-X01, the PHN
@@ -32,6 +40,7 @@ const r = (o) => ({
 
 const C050E = "2.01 - C050E - User Interface Design.pdf";
 const C050S = "2.02 - C050S - User Interface Design.pdf";
+const C151 = "2.03 - C151 - User Interface Design.pdf";
 const C151S = "2.04 - C151S - User Interface Design.pdf";
 
 export const RULES = [
@@ -415,6 +424,151 @@ export const RULES = [
   r({ form_id: "C050S", rule_code: "SR11", ordinal: 2, rule_type: "business", source_document: C050S, source_page: 9, trigger_element_name: "Practitioner Role; Skill code", trigger_condition: { description: "if a role to skill relationship exists, default Skill code to it" }, affected_element_names: ["Skill code"] }),
   r({ form_id: "C050S", rule_code: "SR13", ordinal: 3, rule_type: "business", source_document: C050S, source_page: 9, trigger_element_name: "Submit Report", trigger_condition: { description: "copy Facility type, Date of exam (From and To), Skill code to each completed invoice line" }, affected_element_names: ["invoice line tabular fields"] }),
   r({ form_id: "C050S", rule_code: "SR17", ordinal: 2, rule_type: "help_text", source_document: C050S, source_page: 9, trigger_element_name: "invoice section", trigger_condition: { description: "3 invoice lines displayed by default" }, affected_element_names: ["invoice lines default count"] }),
+
+  // ================= C151 (Physician Progress Report) =================
+  // Shares most sections with C050E; differs by Injury BR4/SR2 and the opioid module. No Accident SR4.
+
+  // C151: Participant Details (page 1)
+  r({ form_id: "C151", rule_code: "BR5", ordinal: 1, rule_type: "business", source_document: C151, source_page: 1,
+    trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN",
+    trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion source; does NOT hide" },
+    affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+
+  // C151: Accident Details (page 2). No develop over time warning on C151 (SR4 absent here).
+  r({ form_id: "C151", rule_code: "BR1", ordinal: 1, rule_type: "business", source_document: C151, source_page: 2,
+    trigger_element_name: "Date of Injury", trigger_condition: { description: "Date of Injury <= current date and >= patient date of birth" },
+    affected_element_names: ["Date of Injury"] }),
+
+  // C151: Injury Details (pages 2 to 3). Differs from C050E by BR4 (valid diagnostic codes) and SR2 (diagnosis changed).
+  r({ form_id: "C151", rule_code: "BR1", ordinal: 2, rule_type: "business", source_document: C151, source_page: 2,
+    trigger_element_name: "Date of Examination", trigger_condition: { description: "Date of Examination <= current date and >= Date of Injury" },
+    affected_element_names: ["Date of Examination"] }),
+  r({ form_id: "C151", rule_code: "BR2", ordinal: 1, rule_type: "business", source_document: C151, source_page: 2,
+    trigger_element_name: "Part of body; Nature of injury", trigger_condition: { description: "must be a valid combination (POB-NOI Validations)", realizes: "VAL-X03" },
+    affected_element_names: ["Part of body", "Nature of injury"] }),
+  r({ form_id: "C151", rule_code: "BR3", ordinal: 1, rule_type: "business", source_document: C151, source_page: 2,
+    trigger_element_name: "Part of body; Side of body; Nature of injury (tabular)", trigger_condition: { description: "each combination in the table must be unique", realizes: "VAL-X04" },
+    affected_element_names: ["injury table"] }),
+  r({ form_id: "C151", rule_code: "BR4", ordinal: 1, rule_type: "business", source_document: C151, source_page: 2,
+    trigger_element_name: "Diagnostic codes", trigger_condition: { description: "must be valid diagnostic codes", note: "C151 specific; not present on C050E" },
+    affected_element_names: ["Diagnostic code 1", "Diagnostic code 2", "Diagnostic code 3"] }),
+  r({ form_id: "C151", rule_code: "BR5", ordinal: 2, rule_type: "business", source_document: C151, source_page: 3,
+    trigger_element_name: "Part of body; Side of body (tabular)", trigger_condition: { description: "must be a valid combination", realizes: "VAL-X02", note: "open item 3: cites nonexistent SOB POB Relations tab; use the Side of Body Required flag" },
+    affected_element_names: ["Side of body"] }),
+  r({ form_id: "C151", rule_code: "BR6", ordinal: 1, rule_type: "business", source_document: C151, source_page: 3,
+    trigger_element_name: "Diagnostic code 2; Diagnostic code 3", trigger_condition: { description: "code 2 requires code 1; code 3 requires codes 1 and 2", realizes: "VAL-X05" },
+    affected_element_names: ["Diagnostic code 2", "Diagnostic code 3"] }),
+  r({ form_id: "C151", rule_code: "BR8", ordinal: 1, rule_type: "business", source_document: C151, source_page: 3,
+    trigger_element_name: "injury table", trigger_condition: { description: "at least one valid row" },
+    affected_element_names: ["injury table"] }),
+  r({ form_id: "C151", rule_code: "BR9", ordinal: 1, rule_type: "business", source_document: C151, source_page: 3,
+    trigger_element_name: "injury row", trigger_condition: { description: "if any of Part/Side/Nature populated the others must be", realizes: "VAL-X06" },
+    affected_element_names: ["injury row"] }),
+  r({ form_id: "C151", rule_code: "SR1", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 2,
+    trigger_element_name: "Are you aware of any prior conditions in the same anatomical area", trigger_condition: { description: "= Yes" },
+    affected_element_names: ["Please provide diagnosis and treatment(s) for prior conditions"] }),
+  r({ form_id: "C151", rule_code: "SR2", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 2,
+    trigger_element_name: "Has the diagnosis changed", trigger_condition: { description: "Yes -> enable Describe what has changed and include current diagnosis. No -> hide it", note: "on C151 diagnosis changed is BOTH an SR2 show_hide and an IBR2 conditional requirement" },
+    affected_element_names: ["Describe what has changed and include current diagnosis"] }),
+  r({ form_id: "C151", rule_code: "SR3", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 3,
+    trigger_element_name: "Part of body", trigger_condition: { description: "in {Arm, Elbow, Finger, Hand, Shoulder, Wrist, Thumb, Neck}", realizes: "VAL-X07" },
+    affected_element_names: ["Dominant hand"] }),
+  r({ form_id: "C151", rule_code: "SR4", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 3,
+    trigger_element_name: "injury table row count", trigger_condition: { description: "= 5 rows enabled", realizes: "VAL-X08" },
+    affected_element_names: ["If more than 5 parts of body, please describe any additional injuries"] }),
+  r({ form_id: "C151", rule_code: "IBR1", ordinal: 1, rule_type: "business", source_document: C151, source_page: 2,
+    trigger_element_name: "prior conditions", trigger_condition: { description: "blank or No -> dependent blank; Yes -> dependent not blank" },
+    affected_element_names: ["Please provide diagnosis and treatment(s) for prior conditions"] }),
+  r({ form_id: "C151", rule_code: "IBR2", ordinal: 1, rule_type: "business", source_document: C151, source_page: 3,
+    trigger_element_name: "Has the diagnosis changed", trigger_condition: { description: "blank or No -> dependent blank; Yes -> dependent not blank" },
+    affected_element_names: ["Describe what has changed and include current diagnosis"] }),
+
+  // C151: Treatment Plan Details (pages 4 to 5). Standard consultation and prescription rules (page 4).
+  r({ form_id: "C151", rule_code: "BR1", ordinal: 3, rule_type: "business", source_document: C151, source_page: 4,
+    trigger_element_name: "Consultations Type", trigger_condition: { description: "= Other -> Details (same row) required" },
+    affected_element_names: ["Details (same row)"] }),
+  r({ form_id: "C151", rule_code: "BR2", ordinal: 2, rule_type: "business", source_document: C151, source_page: 4,
+    trigger_element_name: "Prescription name; Strength; Daily intake (row)", trigger_condition: { description: "any one populated -> other two required" },
+    affected_element_names: ["Prescription name", "Strength", "Daily intake"] }),
+  r({ form_id: "C151", rule_code: "BR3", ordinal: 2, rule_type: "business", source_document: C151, source_page: 4,
+    trigger_element_name: "Category; Type; Details (row)", trigger_condition: { description: "Category or Type populated -> other required; Details -> Category and Type required" },
+    affected_element_names: ["Category", "Type"] }),
+  r({ form_id: "C151", rule_code: "SR1", ordinal: 2, rule_type: "show_hide", source_document: C151, source_page: 4,
+    trigger_element_name: "Were narcotics/opioids prescribed on this visit", trigger_condition: { description: "= Yes", realizes: "VAL-X09" },
+    affected_element_names: ["Prescription name", "Strength", "Daily intake (tab/ml)"] }),
+  r({ form_id: "C151", rule_code: "SR5", ordinal: 1, rule_type: "business", source_document: C151, source_page: 4,
+    trigger_element_name: "Consultations Type", trigger_condition: { description: "validate expedite eligibility (Category Type Expedite Codes)", realizes: "VAL-X10" },
+    affected_element_names: ["expedite flag"] }),
+  r({ form_id: "C151", rule_code: "SR7", ordinal: 1, rule_type: "help_text", source_document: C151, source_page: 4,
+    trigger_element_name: "expedite checkbox", trigger_condition: { description: "checked" },
+    affected_element_names: ["Your request for expedited service will be reviewed by WCB and your patient will be advised accordingly."] }),
+  r({ form_id: "C151", rule_code: "SR13", ordinal: 1, rule_type: "code_list_switch", source_document: C151, source_page: 4,
+    trigger_element_name: "Category", trigger_condition: { description: "options from Category Type Expedite Codes", realizes: "VAL-X11" },
+    affected_element_names: ["Category options"], switches_code_list_to: "Category Type Expedite Codes" }),
+  r({ form_id: "C151", rule_code: "SR17", ordinal: 1, rule_type: "help_text", source_document: C151, source_page: 4,
+    trigger_element_name: "Category", trigger_condition: { description: "= Investigation" },
+    affected_element_names: ["Please attach the appropriate diagnostic requisition form when requesting an Investigation."] }),
+
+  // C151: the opioid and Medication Management module (page 5). Two step gate: SR12 reveals the three
+  // screening questions; SR2 (all three No) reveals the D8 to D27 block; SR3 gates the reduction text.
+  r({ form_id: "C151", rule_code: "SR12", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 5,
+    trigger_element_name: "Were narcotics/opioids prescribed on this visit; Date of Examination; Date of Injury",
+    trigger_condition: { description: "if opioids = Yes AND Date of Examination >= 60 days after Date of Injury, enable the three screening questions" },
+    affected_element_names: ["Has the patient undergone surgery in the past 60 days", "Is the patient being treated for malignant pain", "Has WCB advised you not to submit a Medication Management Report"] }),
+  r({ form_id: "C151", rule_code: "SR2", ordinal: 3, rule_type: "show_hide", source_document: C151, source_page: 5,
+    trigger_element_name: "Has the patient undergone surgery in the past 60 days; Is the patient being treated for malignant pain; Has WCB advised you not to submit a Medication Management Report",
+    trigger_condition: { description: "if the response is No to ALL THREE, enable the narcotics/opioids fields D8 through D27" },
+    affected_element_names: ["narcotics/opioids fields D8 through D27"] }),
+  r({ form_id: "C151", rule_code: "SR3", ordinal: 2, rule_type: "show_hide", source_document: C151, source_page: 5,
+    trigger_element_name: "Is the current opioid therapy resulting in a reduction in pain levels",
+    trigger_condition: { description: "Yes -> enable Describe the reduction. No -> hide it" },
+    affected_element_names: ["Describe the reduction"] }),
+
+  // C151: Return to Work Details (pages 6 to 7). Basic (non OIS) block, matching C050E: 27 fields.
+  r({ form_id: "C151", rule_code: "BR2", ordinal: 3, rule_type: "business", source_document: C151, source_page: 6,
+    trigger_element_name: "Estimated date you expect the patient will be able to perform pre-accident level work", trigger_condition: { description: ">= Date of Examination" },
+    affected_element_names: ["Estimated date you expect the patient will be able to perform pre-accident level work"] }),
+  r({ form_id: "C151", rule_code: "BR8", ordinal: 2, rule_type: "business", source_document: C151, source_page: 6,
+    trigger_element_name: "Date the patient returned to work", trigger_condition: { description: "> Date of Injury" },
+    affected_element_names: ["Date the patient returned to work"] }),
+  r({ form_id: "C151", rule_code: "BR9", ordinal: 2, rule_type: "business", source_document: C151, source_page: 6,
+    trigger_element_name: "Number of hours patient is capable of working per day", trigger_condition: { description: "> 0 and <= 24", realizes: "VAL-X12" },
+    affected_element_names: ["Number of hours patient is capable of working per day"] }),
+  r({ form_id: "C151", rule_code: "SR1", ordinal: 3, rule_type: "show_hide", source_document: C151, source_page: 6,
+    trigger_element_name: "Will/has the patient miss(ed) work beyond the date of accident",
+    trigger_condition: { description: "Yes -> enable Has the patient returned to work, hide Modified duties and Modified hours. No -> enable Modified duties and Modified hours, clear and hide Has the patient returned to work" },
+    affected_element_names: ["Has the patient returned to work", "Modified duties", "Modified hours"] }),
+  r({ form_id: "C151", rule_code: "SR2", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 6,
+    trigger_element_name: "Has the patient returned to work",
+    trigger_condition: { description: "Yes -> enable Date returned, Modified duties, Modified hours; hide Current Capabilities, Other reasons, Other restrictions, Estimated date pre-accident. No -> the inverse" },
+    affected_element_names: ["Date the patient returned to work", "Modified duties", "Modified hours", "Current Capabilities", "Other reasons why the patient cannot work", "Other restrictions or additional comments", "Estimated date you expect the patient will be able to perform pre-accident work"] }),
+  r({ form_id: "C151", rule_code: "SR3", ordinal: 2, rule_type: "show_hide", source_document: C151, source_page: 6,
+    trigger_element_name: "Modified duties; Modified hours",
+    trigger_condition: { description: "both No -> enable Other restrictions, clear and hide the block. both Yes -> enable all five. the two mixed branches per the board text", note: "SR3 collapses the capability block" },
+    affected_element_names: ["Number of hours patient is capable of working per day", "Current Capabilities", "Other reasons why the patient cannot work", "Other restrictions or additional comments", "Estimated date you expect the patient will be able to perform pre-accident work"] }),
+  r({ form_id: "C151", rule_code: "SR5", ordinal: 2, rule_type: "show_hide", source_document: C151, source_page: 6, trigger_element_name: "Sitting", trigger_condition: { description: "= Limited to" }, affected_element_names: ["Hours (approx.) (sitting)"] }),
+  r({ form_id: "C151", rule_code: "SR6", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 6, trigger_element_name: "Standing", trigger_condition: { description: "= Limited to" }, affected_element_names: ["Hours (approx.) (standing)"] }),
+  r({ form_id: "C151", rule_code: "SR7", ordinal: 2, rule_type: "show_hide", source_document: C151, source_page: 6, trigger_element_name: "Walking", trigger_condition: { description: "= Limited to" }, affected_element_names: ["Hours (approx.) (walking)"] }),
+  r({ form_id: "C151", rule_code: "SR17", ordinal: 2, rule_type: "show_hide", source_document: C151, source_page: 6, trigger_element_name: "Lifting", trigger_condition: { description: "= Limited to" }, affected_element_names: ["Max of"] }),
+  r({ form_id: "C151", rule_code: "SR21", ordinal: 1, rule_type: "show_hide", source_document: C151, source_page: 6, trigger_element_name: "Driving", trigger_condition: { description: "= Limited to" }, affected_element_names: ["Hours (approx.) (driving)"] }),
+
+  // C151: Other Information, Attachments (page 7)
+  r({ form_id: "C151", rule_code: "BR6", ordinal: 2, rule_type: "business", source_document: C151, source_page: 7, trigger_element_name: "Attachment Type", trigger_condition: { description: "populated -> File becomes required" }, affected_element_names: ["File"] }),
+  r({ form_id: "C151", rule_code: "BR7", ordinal: 1, rule_type: "business", source_document: C151, source_page: 7, trigger_element_name: "Attachment Type", trigger_condition: { description: "= Other -> Description becomes required" }, affected_element_names: ["Description"] }),
+  r({ form_id: "C151", rule_code: "SR9", ordinal: 1, rule_type: "business", source_document: C151, source_page: 7, trigger_element_name: "attachments", trigger_condition: { description: "max count per form (Form ID Maximum Attachments)" }, affected_element_names: ["attachment count"] }),
+  r({ form_id: "C151", rule_code: "SR11", ordinal: 1, rule_type: "business", source_document: C151, source_page: 7, trigger_element_name: "attachments", trigger_condition: { description: "max size (Form ID To Attachment Codes)" }, affected_element_names: ["attachment size"] }),
+  r({ form_id: "C151", rule_code: "SR12", ordinal: 2, rule_type: "business", source_document: C151, source_page: 7, trigger_element_name: "attachments", trigger_condition: { description: "allowed types per report (Form ID To Attachment Codes)" }, affected_element_names: ["attachment type"] }),
+
+  // C151: Invoice Details (page 8)
+  r({ form_id: "C151", rule_code: "BR1", ordinal: 3, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "Modifier field 2; Modifier field 3", trigger_condition: { description: "field 2 requires field 1; field 3 requires 1 and 2" }, affected_element_names: ["Modifier fields"] }),
+  r({ form_id: "C151", rule_code: "BR3", ordinal: 3, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "Calls", trigger_condition: { description: "numeric, > 0 and <= 9999.99" }, affected_element_names: ["Calls"] }),
+  r({ form_id: "C151", rule_code: "BR6", ordinal: 3, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "Encounters", trigger_condition: { description: "> 0 and <= 9" }, affected_element_names: ["Encounters"] }),
+  r({ form_id: "C151", rule_code: "BR18", ordinal: 1, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "invoice line", trigger_condition: { description: "if visible, all required line fields must be populated" }, affected_element_names: ["invoice line"] }),
+  r({ form_id: "C151", rule_code: "SR6", ordinal: 3, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "Calls", trigger_condition: { description: "empty on submit -> value 1 (invoice default, not a clinical value)" }, affected_element_names: ["Calls"] }),
+  r({ form_id: "C151", rule_code: "SR7", ordinal: 3, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "Encounters", trigger_condition: { description: "empty on submit -> value 1 (invoice default, not a clinical value)" }, affected_element_names: ["Encounters"] }),
+  r({ form_id: "C151", rule_code: "SR11", ordinal: 2, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "Practitioner Role; Skill code", trigger_condition: { description: "if a role to skill relationship exists, default Skill code to it" }, affected_element_names: ["Skill code"] }),
+  r({ form_id: "C151", rule_code: "SR13", ordinal: 2, rule_type: "business", source_document: C151, source_page: 8, trigger_element_name: "Submit Report", trigger_condition: { description: "copy Facility type, Date of exam (From and To), Skill code to each completed invoice line" }, affected_element_names: ["invoice line tabular fields"] }),
+  r({ form_id: "C151", rule_code: "SR17", ordinal: 2, rule_type: "help_text", source_document: C151, source_page: 8, trigger_element_name: "invoice section", trigger_condition: { description: "3 invoice lines displayed by default" }, affected_element_names: ["invoice lines default count"] }),
 
   // ===== C151S: the no change chain (SR30, SR28, E1) and the RTW gate (SR1, SR2, SR3) =====
   // Verbatim from the C151S transcription. Criteria 9 and 10. Previously transcribed WRONG.
