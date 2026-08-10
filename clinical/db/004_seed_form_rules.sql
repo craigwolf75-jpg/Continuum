@@ -210,6 +210,137 @@ join (values
 where fd.jurisdiction_code='AB' and fd.form_id='C151' and fd.version='1.0'
 on conflict (form_definition_id,source_document,source_page,rule_code,ordinal) do nothing;
 
+-- C568 (31 rules)
+insert into clinical.form_rule(form_definition_id,rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable)
+select fd.id, r.rule_code, r.ordinal::int, r.rule_type, r.source_document, r.source_page::int,
+       r.trigger_element_name, r.trigger_condition::jsonb, r.affected_element_names,
+       r.clears_on_hide::boolean, r.switches_code_list_to, r.verified_against_sample_xml::boolean, r.unresolvable::boolean
+from clinical.form_definition fd
+join (values
+  ('BR5',1,'business','2.05 - C568 - User Interface Design.pdf',1,'Alberta PHN; Patient does not have an Alberta PHN','{"description":"exactly one of the two is provided","realizes":"VAL-X01","note":"PHN polarity inversion; does NOT hide"}'::jsonb,array['Alberta PHN']::varchar(200)[],true,null,true,false),
+  ('BR1',1,'business','2.05 - C568 - User Interface Design.pdf',1,'Date of Injury','{"description":"Date of Injury <= current date and >= date of birth"}'::jsonb,array['Date of Injury']::varchar(200)[],true,null,false,false),
+  ('BR2',1,'business','2.05 - C568 - User Interface Design.pdf',2,'Part of body; Nature of injury','{"description":"valid combination (POB-NOI Validations)","realizes":"VAL-X03"}'::jsonb,array['Part of body','Nature of injury']::varchar(200)[],true,null,false,false),
+  ('BR3',1,'business','2.05 - C568 - User Interface Design.pdf',2,'Part/Side/Nature (tabular)','{"description":"each combination unique","realizes":"VAL-X04"}'::jsonb,array['injury table']::varchar(200)[],true,null,false,false),
+  ('BR5',2,'business','2.05 - C568 - User Interface Design.pdf',2,'Part/Side (tabular)','{"description":"valid combination","realizes":"VAL-X02","note":"open item 3: use Side of Body Required flag; SOB POB Relations tab does not exist"}'::jsonb,array['Side of body']::varchar(200)[],true,null,false,false),
+  ('BR8',1,'business','2.05 - C568 - User Interface Design.pdf',2,'injury table','{"description":"at least one valid row"}'::jsonb,array['injury table']::varchar(200)[],true,null,false,false),
+  ('BR9',1,'business','2.05 - C568 - User Interface Design.pdf',2,'injury row','{"description":"if any of Part/Side/Nature populated the others must be","realizes":"VAL-X06"}'::jsonb,array['injury row']::varchar(200)[],true,null,false,false),
+  ('SR4',1,'show_hide','2.05 - C568 - User Interface Design.pdf',2,'injury table row count','{"description":"= 5 rows enabled","realizes":"VAL-X08"}'::jsonb,array['If more than 5 parts of body, please describe any additional injuries']::varchar(200)[],true,null,false,false),
+  ('BR6',1,'business','2.05 - C568 - User Interface Design.pdf',3,'Attachment Type','{"description":"populated -> File becomes required"}'::jsonb,array['File']::varchar(200)[],true,null,false,false),
+  ('BR7',1,'business','2.05 - C568 - User Interface Design.pdf',3,'Attachment Type','{"description":"= Other -> Description becomes required"}'::jsonb,array['Description']::varchar(200)[],true,null,false,false),
+  ('SR9',1,'business','2.05 - C568 - User Interface Design.pdf',3,'attachments','{"description":"max count per form (Form ID Maximum Attachments)"}'::jsonb,array['attachment count']::varchar(200)[],true,null,false,false),
+  ('SR11',1,'business','2.05 - C568 - User Interface Design.pdf',3,'attachments','{"description":"max size (Form ID To Attachment Codes)"}'::jsonb,array['attachment size']::varchar(200)[],true,null,false,false),
+  ('SR12',1,'business','2.05 - C568 - User Interface Design.pdf',3,'attachments','{"description":"allowed types per report (Form ID To Attachment Codes)"}'::jsonb,array['attachment type']::varchar(200)[],true,null,false,false),
+  ('BR1',2,'business','2.05 - C568 - User Interface Design.pdf',4,'Modifier 2; Modifier 3','{"description":"Modifier 2 requires 1; Modifier 3 requires 1 and 2"}'::jsonb,array['Modifier fields']::varchar(200)[],true,null,false,false),
+  ('BR2',2,'business','2.05 - C568 - User Interface Design.pdf',4,'Health service code; Modifiers','{"description":"valid health service codes and modifiers (warning only, may still submit)"}'::jsonb,array['Health service code','Modifiers']::varchar(200)[],true,null,false,false),
+  ('BR3',2,'business','2.05 - C568 - User Interface Design.pdf',4,'Calls','{"description":"numeric, > 0 and <= 9999.99"}'::jsonb,array['Calls']::varchar(200)[],true,null,false,false),
+  ('BR4',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Date of service From','{"description":"<= current, >= date of accident, <= Date of service To"}'::jsonb,array['Date of service From']::varchar(200)[],true,null,false,false),
+  ('BR6',2,'business','2.05 - C568 - User Interface Design.pdf',4,'Encounters','{"description":"> 0 and <= 9"}'::jsonb,array['Encounters']::varchar(200)[],true,null,false,false),
+  ('BR7',2,'business','2.05 - C568 - User Interface Design.pdf',4,'Fees submitted','{"description":"> 0 and <= 9999.99"}'::jsonb,array['Fees submitted']::varchar(200)[],true,null,false,false),
+  ('BR10',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Total Amount Billed','{"description":"<= 99999.99"}'::jsonb,array['Total Amount Billed']::varchar(200)[],true,null,false,false),
+  ('BR12',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Diagnostic code 2; Diagnostic code 3','{"description":"code 2 requires 1; code 3 requires 1 and 2","realizes":"VAL-X05"}'::jsonb,array['Diagnostic code 2','Diagnostic code 3']::varchar(200)[],true,null,false,false),
+  ('BR14',1,'business','2.05 - C568 - User Interface Design.pdf',4,'FFS grid','{"description":"no minimum line if at least one Medical Supplies line populated; per row required fields"}'::jsonb,array['Fee for Service grid']::varchar(200)[],true,null,false,false),
+  ('BR18',1,'business','2.05 - C568 - User Interface Design.pdf',4,'invoice line','{"description":"if visible, all required line fields must be populated"}'::jsonb,array['invoice line']::varchar(200)[],true,null,false,false),
+  ('BR20',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Billing number','{"description":"validated against Contract ID"}'::jsonb,array['Billing number']::varchar(200)[],true,null,false,false),
+  ('SR1',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Calculate; Save; Submit','{"description":"compute Fees submitted, Invoice amount billed, Medical supplies amount billed, Total amount billed"}'::jsonb,array['Fees submitted','Invoice amount billed','Medical supplies amount billed','Total amount billed']::varchar(200)[],true,null,false,false),
+  ('SR6',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Calls','{"description":"empty on submit -> default 1 (invoice default, not clinical)"}'::jsonb,array['Calls']::varchar(200)[],true,null,false,false),
+  ('SR7',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Encounters','{"description":"empty on submit -> default 1 (invoice default, not clinical)"}'::jsonb,array['Encounters']::varchar(200)[],true,null,false,false),
+  ('SR8',1,'help_text','2.05 - C568 - User Interface Design.pdf',4,'Calls; Modifier','{"description":"if Calls and/or Modifier entered, warn Fees submitted will not be accurate"}'::jsonb,array['Fees submitted accuracy warning']::varchar(200)[],true,null,false,false),
+  ('SR9',2,'show_hide','2.05 - C568 - User Interface Design.pdf',4,'Contract ID to Health service code relationship','{"description":"if a relationship exists, show Health service code as a dropdown; else as a text box (validated by BR2)"}'::jsonb,array['Health service code']::varchar(200)[],true,null,false,false),
+  ('SR14',1,'business','2.05 - C568 - User Interface Design.pdf',4,'Submit','{"description":"copy Date of service From to Date of service To if To is blank"}'::jsonb,array['Date of service To']::varchar(200)[],true,null,false,false),
+  ('SR16',1,'show_hide','2.05 - C568 - User Interface Design.pdf',4,'Health service code display (SR9)','{"description":"FFS grid: if Health service code is a dropdown (SR9), disable Fees submitted; if a text box, enable it. Medical Supplies grid: Fees submitted always enabled"}'::jsonb,array['Fees submitted']::varchar(200)[],true,null,false,false)
+) as r(rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable) on true
+where fd.jurisdiction_code='AB' and fd.form_id='C568' and fd.version='1.0'
+on conflict (form_definition_id,source_document,source_page,rule_code,ordinal) do nothing;
+
+-- C568A (36 rules)
+insert into clinical.form_rule(form_definition_id,rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable)
+select fd.id, r.rule_code, r.ordinal::int, r.rule_type, r.source_document, r.source_page::int,
+       r.trigger_element_name, r.trigger_condition::jsonb, r.affected_element_names,
+       r.clears_on_hide::boolean, r.switches_code_list_to, r.verified_against_sample_xml::boolean, r.unresolvable::boolean
+from clinical.form_definition fd
+join (values
+  ('BR5',1,'business','2.06 - C568A - User Interface Design.pdf',1,'Alberta PHN; Patient does not have an Alberta PHN','{"description":"exactly one of the two is provided","realizes":"VAL-X01","note":"PHN polarity inversion; does NOT hide"}'::jsonb,array['Alberta PHN']::varchar(200)[],true,null,true,false),
+  ('BR1',1,'business','2.06 - C568A - User Interface Design.pdf',1,'Date of Injury','{"description":"Date of Injury <= current date and >= date of birth"}'::jsonb,array['Date of Injury']::varchar(200)[],true,null,false,false),
+  ('BR2',1,'business','2.06 - C568A - User Interface Design.pdf',2,'Part of body; Nature of injury','{"description":"valid combination (POB-NOI Validations)","realizes":"VAL-X03"}'::jsonb,array['Part of body','Nature of injury']::varchar(200)[],true,null,false,false),
+  ('BR3',1,'business','2.06 - C568A - User Interface Design.pdf',2,'Part/Side/Nature (tabular)','{"description":"each combination unique","realizes":"VAL-X04"}'::jsonb,array['injury table']::varchar(200)[],true,null,false,false),
+  ('BR4',1,'business','2.06 - C568A - User Interface Design.pdf',2,'Diagnostic codes','{"description":"must be valid diagnostic codes"}'::jsonb,array['Diagnostic code 1','Diagnostic code 2','Diagnostic code 3']::varchar(200)[],true,null,false,false),
+  ('BR5',2,'business','2.06 - C568A - User Interface Design.pdf',2,'Part/Side (tabular)','{"description":"valid combination","realizes":"VAL-X02","note":"open item 3: use Side of Body Required flag"}'::jsonb,array['Side of body']::varchar(200)[],true,null,false,false),
+  ('BR8',1,'business','2.06 - C568A - User Interface Design.pdf',2,'injury table','{"description":"at least one valid row"}'::jsonb,array['injury table']::varchar(200)[],true,null,false,false),
+  ('BR9',1,'business','2.06 - C568A - User Interface Design.pdf',2,'injury row','{"description":"if any of Part/Side/Nature populated the others must be","realizes":"VAL-X06"}'::jsonb,array['injury row']::varchar(200)[],true,null,false,false),
+  ('SR4',1,'show_hide','2.06 - C568A - User Interface Design.pdf',2,'injury table row count','{"description":"= 5 rows enabled","realizes":"VAL-X08"}'::jsonb,array['If more than 5 parts of body, please describe any additional injuries']::varchar(200)[],true,null,false,false),
+  ('SR1',1,'show_hide','2.06 - C568A - User Interface Design.pdf',3,'Were narcotics/opioids prescribed','{"description":"= Yes -> show Prescription name, Strength, Daily intake","realizes":"VAL-X09"}'::jsonb,array['Prescription name','Strength','Daily intake']::varchar(200)[],true,null,false,false),
+  ('BR2',2,'business','2.06 - C568A - User Interface Design.pdf',3,'Prescription name; Strength; Daily intake (row)','{"description":"any one populated -> other two required"}'::jsonb,array['Prescription name','Strength','Daily intake']::varchar(200)[],true,null,false,false),
+  ('SR8',1,'show_hide','2.06 - C568A - User Interface Design.pdf',3,'Please select the format of consultation letter','{"description":"= Plain text -> enable the Consultation letter text area (hidden by default). Uses Consultation Letter Formats code list"}'::jsonb,array['Consultation letter text area']::varchar(200)[],true,null,false,false),
+  ('BR6',1,'business','2.06 - C568A - User Interface Design.pdf',4,'Attachment Type','{"description":"populated -> File becomes required"}'::jsonb,array['File']::varchar(200)[],true,null,false,false),
+  ('BR7',1,'business','2.06 - C568A - User Interface Design.pdf',4,'Attachment Type','{"description":"= Other -> Description becomes required"}'::jsonb,array['Description']::varchar(200)[],true,null,false,false),
+  ('SR9',1,'business','2.06 - C568A - User Interface Design.pdf',4,'attachments','{"description":"max count per form (Form ID Maximum Attachments)"}'::jsonb,array['attachment count']::varchar(200)[],true,null,false,false),
+  ('SR11',1,'business','2.06 - C568A - User Interface Design.pdf',4,'attachments','{"description":"max size (Form ID To Attachment Codes)"}'::jsonb,array['attachment size']::varchar(200)[],true,null,false,false),
+  ('SR12',1,'business','2.06 - C568A - User Interface Design.pdf',4,'attachments','{"description":"allowed types per report (Form ID To Attachment Codes)"}'::jsonb,array['attachment type']::varchar(200)[],true,null,false,false),
+  ('BR1',2,'business','2.06 - C568A - User Interface Design.pdf',5,'Modifier 2; Modifier 3','{"description":"Modifier 2 requires 1; Modifier 3 requires 1 and 2"}'::jsonb,array['Modifier fields']::varchar(200)[],true,null,false,false),
+  ('BR2',3,'business','2.06 - C568A - User Interface Design.pdf',5,'Health service code; Modifiers','{"description":"valid health service codes and modifiers (warning only)"}'::jsonb,array['Health service code','Modifiers']::varchar(200)[],true,null,false,false),
+  ('BR3',1,'business','2.06 - C568A - User Interface Design.pdf',5,'Calls','{"description":"numeric, > 0 and <= 9999.99"}'::jsonb,array['Calls']::varchar(200)[],true,null,false,false),
+  ('BR4',2,'business','2.06 - C568A - User Interface Design.pdf',5,'Date of service From','{"description":"<= current, >= date of accident, <= Date of service To"}'::jsonb,array['Date of service From']::varchar(200)[],true,null,false,false),
+  ('BR6',2,'business','2.06 - C568A - User Interface Design.pdf',5,'Encounters','{"description":"> 0 and <= 9"}'::jsonb,array['Encounters']::varchar(200)[],true,null,false,false),
+  ('BR7',2,'business','2.06 - C568A - User Interface Design.pdf',5,'Fees submitted','{"description":"> 0 and <= 9999.99"}'::jsonb,array['Fees submitted']::varchar(200)[],true,null,false,false),
+  ('BR10',1,'business','2.06 - C568A - User Interface Design.pdf',5,'Total Amount Billed','{"description":"<= 99999.99"}'::jsonb,array['Total Amount Billed']::varchar(200)[],true,null,false,false),
+  ('BR12',1,'business','2.06 - C568A - User Interface Design.pdf',5,'Diagnostic code 2; Diagnostic code 3','{"description":"code 2 requires 1; code 3 requires 1 and 2","realizes":"VAL-X05"}'::jsonb,array['Diagnostic code 2','Diagnostic code 3']::varchar(200)[],true,null,false,false),
+  ('BR14',1,'business','2.06 - C568A - User Interface Design.pdf',5,'FFS grid','{"description":"no minimum line if at least one Medical Supplies line populated; per row required fields"}'::jsonb,array['Fee for Service grid']::varchar(200)[],true,null,false,false),
+  ('BR18',1,'business','2.06 - C568A - User Interface Design.pdf',5,'invoice line','{"description":"if visible, all required line fields must be populated"}'::jsonb,array['invoice line']::varchar(200)[],true,null,false,false),
+  ('BR20',1,'business','2.06 - C568A - User Interface Design.pdf',5,'Billing number','{"description":"validated against Contract ID"}'::jsonb,array['Billing number']::varchar(200)[],true,null,false,false),
+  ('SR1',2,'business','2.06 - C568A - User Interface Design.pdf',5,'Calculate; Save; Submit','{"description":"compute Fees submitted, Invoice amount billed, Medical supplies amount billed, Total amount billed"}'::jsonb,array['Total amount billed']::varchar(200)[],true,null,false,false),
+  ('SR6',1,'business','2.06 - C568A - User Interface Design.pdf',5,'Calls','{"description":"empty on submit -> default 1"}'::jsonb,array['Calls']::varchar(200)[],true,null,false,false),
+  ('SR7',1,'business','2.06 - C568A - User Interface Design.pdf',5,'Encounters','{"description":"empty on submit -> default 1"}'::jsonb,array['Encounters']::varchar(200)[],true,null,false,false),
+  ('SR8',2,'help_text','2.06 - C568A - User Interface Design.pdf',5,'Calls; Modifier','{"description":"if Calls and/or Modifier entered, warn Fees submitted will not be accurate"}'::jsonb,array['Fees submitted accuracy warning']::varchar(200)[],true,null,false,false),
+  ('SR9',2,'show_hide','2.06 - C568A - User Interface Design.pdf',5,'Contract ID to Health service code relationship','{"description":"if a relationship exists, show Health service code as a dropdown; else as a text box"}'::jsonb,array['Health service code']::varchar(200)[],true,null,false,false),
+  ('SR14',1,'business','2.06 - C568A - User Interface Design.pdf',5,'Submit','{"description":"copy Date of service From to Date of service To if To is blank"}'::jsonb,array['Date of service To']::varchar(200)[],true,null,false,false),
+  ('SR16',1,'show_hide','2.06 - C568A - User Interface Design.pdf',5,'Health service code display (SR9)','{"description":"FFS grid: dropdown disables Fees submitted; text box enables it. Medical Supplies grid: always enabled"}'::jsonb,array['Fees submitted']::varchar(200)[],true,null,false,false),
+  ('SR17',1,'help_text','2.06 - C568A - User Interface Design.pdf',5,'invoice section','{"description":"5 Fee for Service lines and 1 Medical Supplies line displayed by default"}'::jsonb,array['invoice lines default count']::varchar(200)[],true,null,false,false)
+) as r(rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable) on true
+where fd.jurisdiction_code='AB' and fd.form_id='C568A' and fd.version='1.0'
+on conflict (form_definition_id,source_document,source_page,rule_code,ordinal) do nothing;
+
+-- C569 (7 rules)
+insert into clinical.form_rule(form_definition_id,rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable)
+select fd.id, r.rule_code, r.ordinal::int, r.rule_type, r.source_document, r.source_page::int,
+       r.trigger_element_name, r.trigger_condition::jsonb, r.affected_element_names,
+       r.clears_on_hide::boolean, r.switches_code_list_to, r.verified_against_sample_xml::boolean, r.unresolvable::boolean
+from clinical.form_definition fd
+join (values
+  ('BR5',1,'business','2.07 - C569 - User Interface Design.pdf',1,'Alberta PHN; Patient does not have an Alberta PHN','{"description":"exactly one of the two is provided","realizes":"VAL-X01","note":"PHN polarity inversion"}'::jsonb,array['Alberta PHN']::varchar(200)[],true,null,true,false),
+  ('BR1',1,'business','2.07 - C569 - User Interface Design.pdf',1,'Date of Injury','{"description":"Date of Injury <= current date and >= date of birth"}'::jsonb,array['Date of Injury']::varchar(200)[],true,null,false,false),
+  ('BR8',1,'business','2.07 - C569 - User Interface Design.pdf',2,'Date of service','{"description":">= date of accident and <= current date"}'::jsonb,array['Date of service']::varchar(200)[],true,null,false,false),
+  ('BR10',1,'business','2.07 - C569 - User Interface Design.pdf',2,'Total Amount Billed','{"description":"<= 99999.99"}'::jsonb,array['Total Amount Billed']::varchar(200)[],true,null,false,false),
+  ('BR15',1,'business','2.07 - C569 - User Interface Design.pdf',2,'Non-integrated Medical Supplies grid','{"description":"minimum one invoice line required; if any of Date of service, Quantity, Type and description, or Amount is populated, the other three are required"}'::jsonb,array['Date of service','Quantity','Type and description','Amount']::varchar(200)[],true,null,false,false),
+  ('SR2',1,'business','2.07 - C569 - User Interface Design.pdf',2,'Calculate; Save; Submit','{"description":"Total amount billed = sum of Amount across invoice lines"}'::jsonb,array['Total amount billed']::varchar(200)[],true,null,false,false),
+  ('SR11',1,'business','2.07 - C569 - User Interface Design.pdf',2,'Practitioner Role; Skill code','{"description":"Skill code defaults from the Practitioner Role to Skill relationship, else Please choose"}'::jsonb,array['Skill code']::varchar(200)[],true,null,false,false)
+) as r(rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable) on true
+where fd.jurisdiction_code='AB' and fd.form_id='C569' and fd.version='1.0'
+on conflict (form_definition_id,source_document,source_page,rule_code,ordinal) do nothing;
+
+-- C570 (13 rules)
+insert into clinical.form_rule(form_definition_id,rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable)
+select fd.id, r.rule_code, r.ordinal::int, r.rule_type, r.source_document, r.source_page::int,
+       r.trigger_element_name, r.trigger_condition::jsonb, r.affected_element_names,
+       r.clears_on_hide::boolean, r.switches_code_list_to, r.verified_against_sample_xml::boolean, r.unresolvable::boolean
+from clinical.form_definition fd
+join (values
+  ('BR5',1,'business','2.08 - C570 - User Interface Design.pdf',1,'Alberta PHN; Patient does not have an Alberta PHN','{"description":"exactly one of the two is provided","realizes":"VAL-X01","note":"PHN polarity inversion"}'::jsonb,array['Alberta PHN']::varchar(200)[],true,null,true,false),
+  ('BR1',1,'business','2.08 - C570 - User Interface Design.pdf',1,'Date of Injury','{"description":"Date of Injury <= current date and >= date of birth"}'::jsonb,array['Date of Injury']::varchar(200)[],true,null,false,false),
+  ('BR2',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Health service code; Modifiers','{"description":"valid health service codes and modifiers (warning only)"}'::jsonb,array['Health service code','Modifiers']::varchar(200)[],true,null,false,false),
+  ('BR4',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Date of service From','{"description":"<= current, >= date of accident, <= Date of service To"}'::jsonb,array['Date of service From']::varchar(200)[],true,null,false,false),
+  ('BR5',2,'business','2.08 - C570 - User Interface Design.pdf',2,'Diagnostic code 1; 2; 3','{"description":"Diagnostic code 1, 2, 3 may not be duplicates"}'::jsonb,array['Diagnostic code 1','Diagnostic code 2','Diagnostic code 3']::varchar(200)[],true,null,false,false),
+  ('BR6',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Encounters','{"description":"> 0 and <= 9"}'::jsonb,array['Encounters']::varchar(200)[],true,null,false,false),
+  ('BR7',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Fees submitted','{"description":"> 0 and <= 9999.99"}'::jsonb,array['Fees submitted']::varchar(200)[],true,null,false,false),
+  ('BR12',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Diagnostic code 2; Diagnostic code 3','{"description":"code 2 requires 1; code 3 requires 1 and 2","realizes":"VAL-X05"}'::jsonb,array['Diagnostic code 2','Diagnostic code 3']::varchar(200)[],true,null,false,false),
+  ('BR21',1,'business','2.08 - C570 - User Interface Design.pdf',2,'invoice line; WAS Date of service From; SHOULD BE Date of service From','{"description":"minimum one invoice line; WAS Date of service From required per populated WAS row; SHOULD BE Date of service From required per populated SHOULD BE row"}'::jsonb,array['WAS Date of service From','SHOULD BE Date of service From']::varchar(200)[],true,null,false,false),
+  ('BR23',1,'business','2.08 - C570 - User Interface Design.pdf',2,'invoice line','{"description":"each invoice line requires at least one of the WAS Date of service or the SHOULD BE Date of service"}'::jsonb,array['WAS Date of service','SHOULD BE Date of service']::varchar(200)[],true,null,false,false),
+  ('SR6',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Calls','{"description":"empty on submit -> default 1"}'::jsonb,array['Calls']::varchar(200)[],true,null,false,false),
+  ('SR7',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Encounters','{"description":"empty on submit -> default 1"}'::jsonb,array['Encounters']::varchar(200)[],true,null,false,false),
+  ('SR11',1,'business','2.08 - C570 - User Interface Design.pdf',2,'Practitioner Role; Skill code','{"description":"Skill code defaults from the Practitioner Role to Skill relationship, else Please choose"}'::jsonb,array['Skill code']::varchar(200)[],true,null,false,false)
+) as r(rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable) on true
+where fd.jurisdiction_code='AB' and fd.form_id='C570' and fd.version='1.0'
+on conflict (form_definition_id,source_document,source_page,rule_code,ordinal) do nothing;
+
 -- C151S (6 rules)
 insert into clinical.form_rule(form_definition_id,rule_code,ordinal,rule_type,source_document,source_page,trigger_element_name,trigger_condition,affected_element_names,clears_on_hide,switches_code_list_to,verified_against_sample_xml,unresolvable)
 select fd.id, r.rule_code, r.ordinal::int, r.rule_type, r.source_document, r.source_page::int,
