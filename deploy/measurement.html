@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Continuum: The measurement (SCR-MEAS-01)</title>
+<!--
+  Continuum Prompt 41 SCR-MEAS-01, the measurement screen (Section 3).
+  Behaviour lives in measurement-screen.mjs; band derivation is a review screen concern.
+  The axis set is rendered from a resolve_axes(form_id) payload. The payload below is a
+  FIXTURE for C050S, structurally identical to the Prompt 39 resolve_axes output, present
+  only until the resolve_axes server endpoint exists. Nothing here is hard coded: change
+  the payload and the whole screen changes.
+  WCAG 2.2 AA: radio groups with legends, visible persistent labels, focus rings kept,
+  status never colour alone, live regions for the counts. No dashes anywhere.
+-->
+<style>
+  :root {
+    --ink: #16202b; --muted: #4a5a6a; --line: #c9d4de; --bg: #f4f7fa;
+    --card: #ffffff; --focus: #0a5ad6; --draft: #b45309; --block: #b91c1c; --ok: #0f7a3d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: var(--ink); background: var(--bg); }
+  .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px;
+    max-width: 1120px; margin: 0 auto; padding: 24px; align-items: start; }
+  @media (max-width: 820px) { .wrap { grid-template-columns: 1fr; } .rail { position: static; } }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .fixture { background: #fff7e6; border: 1px solid #f0c968; border-radius: 8px;
+    padding: 8px 12px; color: var(--draft); font-size: .9rem; margin: 0 0 20px; }
+  section.zone { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; margin: 0 0 18px; }
+  section.zone > h2 { font-size: 1.1rem; margin: 0 0 12px; }
+  fieldset.axis { border: 1px solid var(--line); border-radius: 10px; margin: 0 0 12px; padding: 12px 14px; }
+  fieldset.axis > legend { font-weight: 600; padding: 0 6px; }
+  .caps { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0 0; }
+  .caps label { display: inline-flex; align-items: center; gap: 6px; padding: 4px 2px; }
+  .qty { margin: 10px 0 0; display: none; }
+  .qty.show { display: block; }
+  .qty label { display: block; font-weight: 600; margin: 0 0 4px; }
+  input[type="number"] { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+    font: inherit; width: 160px; }
+  .state { margin: 8px 0 0; font-size: .9rem; }
+  .state[data-s="unassessed"] { color: var(--muted); }
+  .state[data-s="answered"] { color: var(--ok); }
+  .state[data-s="skipped"] { color: var(--draft); }
+  button { font: inherit; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--focus);
+    background: var(--focus); color: #fff; cursor: pointer; }
+  button.secondary { background: #fff; color: var(--focus); }
+  button.link { background: none; border: none; color: var(--focus); text-decoration: underline;
+    padding: 6px 0; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .rail { position: sticky; top: 24px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px; }
+  .rail h2 { font-size: 1rem; margin: 0 0 10px; }
+  .banner { border-radius: 10px; padding: 10px 12px; margin: 0 0 12px; font-size: .95rem; }
+  .banner.block { background: #fdeaea; border: 1px solid #e7a3a3; color: var(--block); }
+  .banner.ok { background: #e9f7ee; border: 1px solid #a6d8b9; color: var(--ok); }
+  .count { font-weight: 700; }
+  .others { display: grid; gap: 6px; }
+  .exc { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+  .exc label { font-weight: 600; }
+  .factors { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0 0; }
+  .factors label { display: inline-flex; align-items: center; gap: 6px; }
+  dialog { border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; max-width: 520px; }
+  dialog::backdrop { background: rgba(20, 30, 40, .45); }
+  dialog h2 { margin: 0 0 8px; }
+  dialog .row { display: flex; gap: 10px; justify-content: flex-end; margin: 16px 0 0; }
+  ul.axis-list { margin: 8px 0 0; padding: 0 0 0 18px; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div>
+    <h1>The measurement</h1>
+    <p class="sub">Enter what you assessed. Nothing is assumed. An axis you do not answer stays unanswered, it is never set to Able for you.</p>
+    <p class="fixture" role="note">Axis set loaded from a C050S fixture. Pending the resolve_axes server endpoint, this mirrors the Prompt 39 axis configuration exactly.</p>
+
+    <section class="zone" id="zone1" aria-labelledby="z1h">
+      <h2 id="z1h">Focused axes</h2>
+      <div id="focused"></div>
+    </section>
+
+    <section class="zone" id="zone2" aria-labelledby="z2h" hidden>
+      <h2 id="z2h">Other axes</h2>
+      <button type="button" class="secondary" id="reveal-others" aria-expanded="false" aria-controls="others">
+        <span id="others-count-label">0 other axes not assessed. Review.</span>
+      </button>
+      <div class="others" id="others" hidden></div>
+    </section>
+
+    <section class="zone" id="zone3" aria-labelledby="z3h">
+      <h2 id="z3h">Exceptions</h2>
+      <div id="exceptions"></div>
+    </section>
+  </div>
+
+  <aside class="rail" aria-labelledby="railh">
+    <h2 id="railh">Before you sign</h2>
+    <div id="block-banner" class="banner block" role="status" aria-live="assertive"></div>
+    <p><span class="count" id="unassessed-count">0</span> axes not yet answered or skipped.</p>
+    <button type="button" class="secondary" id="mark-able">Mark all remaining as Able</button>
+    <p class="sub" style="margin-top:12px">The measurement screen only mirrors the server. The server enforces the block on signature.</p>
+  </aside>
+</main>
+
+<dialog id="confirm-able" aria-labelledby="confirm-h">
+  <h2 id="confirm-h">Mark remaining axes as Able</h2>
+  <p id="confirm-body">You are asserting a clinical judgement about these axes. The software is not making one.</p>
+  <ul class="axis-list" id="confirm-list"></ul>
+  <div class="row">
+    <button type="button" class="secondary" id="confirm-cancel">Cancel</button>
+    <button type="button" id="confirm-ok">Yes, I assessed these as Able</button>
+  </div>
+</dialog>
+
+<script type="module">
+import {
+  buildScreenModel, createState, answerAxis, skipAxis,
+  unassessedAxes, notAssessedCount, markAllRemainingAsAble, signatureBlockers,
+} from "./measurement-screen.mjs";
+
+// The resolve_axes(form_id) payload. FIXTURE for C050S until the server endpoint exists.
+const AXIS_SPECS = [
+  {"axis":"sitting","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"standing","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"walking","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"driving","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"bending","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"twisting","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"kneeling_squatting","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"climbing","ui_mapping":"hours","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"hours"},
+  {"axis":"pushing_pulling","ui_mapping":"weight_kg","code_list_name":"Extended Work Restriction Codes","code_set":"extended","quantity_kind":"weight"},
+  {"axis":"lifting_floor_to_waist","ui_mapping":"weight_kg","code_list_name":"Weight Category Codes","code_set":"weight","quantity_kind":"weight"},
+  {"axis":"lifting_waist_to_shoulder","ui_mapping":"weight_kg","code_list_name":"Weight Category Codes","code_set":"weight","quantity_kind":"weight"},
+  {"axis":"lifting_above_shoulder","ui_mapping":"weight_kg","code_list_name":"Weight Category Codes","code_set":"weight","quantity_kind":"weight"},
+  {"axis":"reaching_left_above","ui_mapping":"able_unable","code_list_name":null,"code_set":"able_unable_only","quantity_kind":"none"},
+  {"axis":"reaching_left_below","ui_mapping":"able_unable","code_list_name":null,"code_set":"able_unable_only","quantity_kind":"none"},
+  {"axis":"reaching_right_above","ui_mapping":"able_unable","code_list_name":null,"code_set":"able_unable_only","quantity_kind":"none"},
+  {"axis":"reaching_right_below","ui_mapping":"able_unable","code_list_name":null,"code_set":"able_unable_only","quantity_kind":"none"},
+  {"axis":"grasping_left","ui_mapping":"able_unable","code_list_name":null,"code_set":"able_unable_only","quantity_kind":"none"},
+  {"axis":"grasping_right","ui_mapping":"able_unable","code_list_name":null,"code_set":"able_unable_only","quantity_kind":"none"},
+  {"axis":"environment","ui_mapping":"environment_flags","code_list_name":null,"code_set":"environment","quantity_kind":"none"}
+];
+
+const AXIS_LABELS = {
+  sitting: "Sitting", standing: "Standing", walking: "Walking", driving: "Driving",
+  bending: "Bending", twisting: "Twisting", kneeling_squatting: "Kneeling or squatting",
+  climbing: "Climbing", pushing_pulling: "Pushing or pulling",
+  lifting_general: "Lifting", lifting_floor_to_waist: "Lifting, floor to waist",
+  lifting_waist_to_shoulder: "Lifting, waist to shoulder", lifting_above_shoulder: "Lifting, above shoulder",
+  overhead_reaching: "Overhead reaching",
+  reaching_left_above: "Reaching, left, above shoulder", reaching_left_below: "Reaching, left, below shoulder",
+  reaching_right_above: "Reaching, right, above shoulder", reaching_right_below: "Reaching, right, below shoulder",
+  grasping_left: "Grasping, left hand", grasping_right: "Grasping, right hand",
+};
+const CAP_LABELS = { not_answered: "Not answered", able: "Able", limited: "Limited", unable: "Unable" };
+const label = (axis) => AXIS_LABELS[axis] || axis.replace(/_/g, " ");
+
+const model = buildScreenModel("C050S", AXIS_SPECS);
+const state = createState(AXIS_SPECS);
+
+function qtyMeta(row) {
+  if (row.quantity_kind === "hours") return { label: "Hours per day", unit: "hours", max: 24 };
+  if (row.quantity_kind === "weight") return { label: "Kilograms", unit: "kg", max: 200 };
+  return null;
+}
+
+function axisFieldset(row) {
+  const fs = document.createElement("fieldset");
+  fs.className = "axis";
+  fs.dataset.axis = row.axis;
+  const legend = document.createElement("legend");
+  legend.textContent = label(row.axis);
+  fs.appendChild(legend);
+
+  const caps = document.createElement("div");
+  caps.className = "caps";
+  const name = "cap_" + row.axis;
+  for (const opt of row.options) {
+    const id = name + "_" + opt;
+    const l = document.createElement("label");
+    l.setAttribute("for", id);
+    const input = document.createElement("input");
+    input.type = "radio"; input.name = name; input.id = id; input.value = opt;
+    if (opt === "not_answered") input.checked = true;
+    l.appendChild(input);
+    l.appendChild(document.createTextNode(CAP_LABELS[opt] || opt));
+    caps.appendChild(l);
+    input.addEventListener("change", () => onCapabilityChange(row, opt, fs));
+  }
+  fs.appendChild(caps);
+
+  const qm = qtyMeta(row);
+  if (qm) {
+    const q = document.createElement("div");
+    q.className = "qty";
+    const qid = "qty_" + row.axis;
+    const ql = document.createElement("label");
+    ql.setAttribute("for", qid);
+    ql.textContent = qm.label + " (" + qm.unit + ")";
+    const qi = document.createElement("input");
+    qi.type = "number"; qi.id = qid; qi.min = "0"; qi.max = String(qm.max); qi.step = "0.5";
+    qi.addEventListener("input", () => onQuantityInput(row, qi.value, fs));
+    q.appendChild(ql); q.appendChild(qi);
+    fs.appendChild(q);
+  }
+
+  const st = document.createElement("p");
+  st.className = "state"; st.dataset.s = "unassessed"; st.textContent = "Not assessed";
+  fs.appendChild(st);
+  return fs;
+}
+
+function onCapabilityChange(row, opt, fs) {
+  const qtyBox = fs.querySelector(".qty");
+  const showQty = opt === "limited" && qtyMeta(row);
+  if (qtyBox) qtyBox.classList.toggle("show", !!showQty);
+  if (opt === "not_answered") {
+    state.get(row.axis).answered = false; state.get(row.axis).capability = null;
+    state.get(row.axis).source = null; state.get(row.axis).provenance = null;
+  } else {
+    const qtyInput = fs.querySelector(".qty input");
+    const qty = showQty && qtyInput ? Number(qtyInput.value) : null;
+    answerAxis(state, row.axis, opt, qty);
+  }
+  paintState(row, fs);
+  refresh();
+}
+
+function onQuantityInput(row, value, fs) {
+  const r = state.get(row.axis);
+  if (r.capability === "limited") { r.quantity = value === "" ? null : Number(value); }
+  paintState(row, fs);
+}
+
+function paintState(row, fs) {
+  const r = state.get(row.axis);
+  const st = fs.querySelector(".state");
+  if (r.answered) {
+    st.dataset.s = "answered";
+    const qm = qtyMeta(row);
+    const q = r.capability === "limited" && r.quantity != null && qm ? " (" + r.quantity + " " + qm.unit + ")" : "";
+    st.textContent = "Answered: " + (CAP_LABELS[r.capability] || r.capability) + q;
+  } else if (r.skipped) {
+    st.dataset.s = "skipped"; st.textContent = "Skipped: " + r.skip_reason;
+  } else {
+    st.dataset.s = "unassessed"; st.textContent = "Not assessed";
+  }
+}
+
+function excControl(e) {
+  const wrap = document.createElement("div");
+  if (e.control === "environment") {
+    const fs = document.createElement("fieldset"); fs.className = "axis";
+    const lg = document.createElement("legend"); lg.textContent = e.label; fs.appendChild(lg);
+    const fac = document.createElement("div"); fac.className = "factors";
+    for (const f of e.factors) {
+      const id = "env_" + f; const l = document.createElement("label"); l.setAttribute("for", id);
+      const c = document.createElement("input"); c.type = "checkbox"; c.id = id; c.value = f;
+      l.appendChild(c); l.appendChild(document.createTextNode(f[0].toUpperCase() + f.slice(1)));
+      fac.appendChild(l);
+    }
+    fs.appendChild(fac); return fs;
+  }
+  const div = document.createElement("div"); div.className = "exc";
+  const id = "exc_" + e.key;
+  const l = document.createElement("label"); l.setAttribute("for", id); l.textContent = e.label;
+  let input;
+  if (e.control === "number") {
+    input = document.createElement("input"); input.type = "number"; input.min = "0"; input.max = "24"; input.step = "0.5";
+  } else {
+    input = document.createElement("input"); input.type = "checkbox";
+  }
+  input.id = id;
+  if (e.control === "number") { div.appendChild(l); div.appendChild(input); if (e.unit) { const u = document.createElement("span"); u.textContent = e.unit; div.appendChild(u); } }
+  else { div.appendChild(input); div.appendChild(l); }
+  return div;
+}
+
+// Live rail: unassessed count, Zone 2 label, and the signature blocker banner.
+function refresh() {
+  const un = unassessedAxes(state);
+  document.getElementById("unassessed-count").textContent = String(un.length);
+  const otherAxes = model.other.map((r) => r.axis);
+  const oc = notAssessedCount(state, otherAxes);
+  document.getElementById("others-count-label").textContent =
+    oc + (oc === 1 ? " other axis not assessed. Review." : " other axes not assessed. Review.");
+  const banner = document.getElementById("block-banner");
+  const b = signatureBlockers(state);
+  if (b.blocked) {
+    banner.className = "banner block";
+    banner.textContent = "Signature is blocked. " + b.blockers.map((x) => x.message).join(" ");
+  } else {
+    banner.className = "banner ok";
+    banner.textContent = "Every axis is answered or skipped. The server will confirm before signature.";
+  }
+}
+
+// Render.
+const focusedHost = document.getElementById("focused");
+for (const row of model.focused) focusedHost.appendChild(axisFieldset(row));
+const othersHost = document.getElementById("others");
+if (model.other.length) {
+  document.getElementById("zone2").hidden = false;
+  for (const row of model.other) othersHost.appendChild(axisFieldset(row));
+  const reveal = document.getElementById("reveal-others");
+  reveal.addEventListener("click", () => {
+    const shown = !othersHost.hidden ? false : true;
+    othersHost.hidden = !shown; reveal.setAttribute("aria-expanded", String(shown));
+  });
+}
+const excHost = document.getElementById("exceptions");
+for (const e of model.exceptions) excHost.appendChild(excControl(e));
+
+// Mark all remaining as Able: a confirmation dialog naming the count and the axes, then
+// the accelerator writes source bulk_marked_able, provenance human.
+const dlg = document.getElementById("confirm-able");
+document.getElementById("mark-able").addEventListener("click", () => {
+  const preview = markAllRemainingAsAble(state); // no change, names count and axes
+  if (preview.count === 0) return;
+  document.getElementById("confirm-body").textContent =
+    "You are asserting that these " + preview.count + " axes are Able. The software is not making that judgement.";
+  const list = document.getElementById("confirm-list"); list.textContent = "";
+  for (const a of preview.axes) { const li = document.createElement("li"); li.textContent = label(a); list.appendChild(li); }
+  dlg.showModal();
+});
+document.getElementById("confirm-cancel").addEventListener("click", () => dlg.close());
+document.getElementById("confirm-ok").addEventListener("click", () => {
+  markAllRemainingAsAble(state, { confirmed: true });
+  // reflect in the axis radios and states
+  for (const row of [...model.focused, ...model.other]) {
+    const r = state.get(row.axis);
+    if (r.source === "bulk_marked_able") {
+      const fs = document.querySelector('fieldset.axis[data-axis="' + row.axis + '"]');
+      if (fs) { const able = fs.querySelector('input[value="able"]'); if (able) able.checked = true; paintState(row, fs); }
+    }
+  }
+  dlg.close(); refresh();
+});
+
+refresh();
+</script>
+</body>
+</html>
