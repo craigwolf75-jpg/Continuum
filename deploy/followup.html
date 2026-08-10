@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Continuum: Follow up (SCR-FUP-01)</title>
+<!--
+  Continuum Prompt 41 SCR-FUP-01, the follow up screen (Section 4).
+  Behaviour lives in followup-screen.mjs. The correction this screen embodies
+  (Section 4.2): UNCHANGED carries forward and runs the board's real rule chain from
+  form_rule. It does NOT collapse 66 fields to a two click signature. Only SR3, modified
+  duties and modified hours both No, collapses the capability block.
+  The previous visit payload below is a FIXTURE for a C151S case, present only until the
+  server endpoint exists.
+  WCAG 2.2 AA: radio groups with legends, visible labels, kept focus rings, status never
+  colour alone, sparklines with a text alternative, live regions for counts and blockers.
+  No dashes anywhere.
+-->
+<style>
+  :root { --ink:#16202b; --muted:#4a5a6a; --line:#c9d4de; --bg:#f4f7fa; --card:#fff;
+    --focus:#0a5ad6; --stale:#b45309; --block:#b91c1c; --ok:#0f7a3d; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink); background:var(--bg); }
+  .wrap { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:24px; max-width:1120px; margin:0 auto; padding:24px; align-items:start; }
+  @media (max-width:820px){ .wrap{ grid-template-columns:1fr; } .rail{ position:static; } }
+  h1{ font-size:1.5rem; margin:0 0 4px; } .sub{ color:var(--muted); margin:0 0 20px; }
+  .fixture{ background:#fff7e6; border:1px solid #f0c968; border-radius:8px; padding:8px 12px; color:var(--stale); font-size:.9rem; margin:0 0 20px; }
+  section.zone{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:0 0 18px; }
+  section.zone > h2{ font-size:1.1rem; margin:0 0 12px; }
+  .glance{ display:flex; flex-wrap:wrap; gap:8px 24px; color:var(--muted); }
+  .glance b{ color:var(--ink); }
+  .spark{ display:flex; align-items:center; gap:12px; margin:0 0 10px; }
+  .spark svg{ border:1px solid var(--line); border-radius:6px; background:#fbfdff; }
+  .spark .lab{ min-width:170px; font-weight:600; }
+  fieldset{ border:1px solid var(--line); border-radius:10px; margin:0 0 12px; padding:12px 14px; }
+  legend{ font-weight:600; padding:0 6px; }
+  .opts{ display:flex; flex-wrap:wrap; gap:6px 18px; }
+  .opts label{ display:inline-flex; align-items:center; gap:6px; }
+  .carried{ display:grid; gap:8px; }
+  .cf{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 10px; border:1px solid var(--line); border-radius:8px; }
+  .cf .fromprev{ color:var(--muted); font-size:.85rem; }
+  .badge{ font-size:.8rem; padding:2px 8px; border-radius:999px; }
+  .badge.stale{ background:#fdf0e0; color:var(--stale); border:1px solid #e9c48a; }
+  .badge.ok{ background:#e9f7ee; color:var(--ok); border:1px solid #a6d8b9; }
+  button{ font:inherit; padding:10px 14px; border-radius:8px; border:1px solid var(--focus); background:var(--focus); color:#fff; cursor:pointer; }
+  button.secondary{ background:#fff; color:var(--focus); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  :focus-visible{ outline:3px solid var(--focus); outline-offset:2px; }
+  .rail{ position:sticky; top:24px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .rail h2{ font-size:1rem; margin:0 0 10px; }
+  .banner{ border-radius:10px; padding:10px 12px; margin:0 0 12px; font-size:.95rem; }
+  .banner.block{ background:#fdeaea; border:1px solid #e7a3a3; color:var(--block); }
+  .banner.ok{ background:#e9f7ee; border:1px solid #a6d8b9; color:var(--ok); }
+  .note{ color:var(--muted); font-size:.9rem; }
+  dialog{ border:1px solid var(--line); border-radius:12px; padding:18px 20px; max-width:520px; }
+  dialog::backdrop{ background:rgba(20,30,40,.45); }
+  dialog .row{ display:flex; gap:10px; justify-content:flex-end; margin:16px 0 0; }
+  ul.fieldlist{ margin:8px 0 0; padding:0 0 0 18px; }
+  .visually-hidden{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div>
+    <h1>Follow up</h1>
+    <p class="sub">Most of this visit is carried forward. Confirm the trajectory, review what changed, then continue.</p>
+    <p class="fixture" role="note">Case loaded from a C151S fixture. Pending the server endpoint, this mirrors a real carry forward.</p>
+
+    <section class="zone" aria-labelledby="glanceh">
+      <h2 id="glanceh">The case at a glance</h2>
+      <div class="glance">
+        <span>Form <b>C151S</b></span><span>Worker <b>redacted</b></span>
+        <span>Previous visit <b id="prev-date">1 Aug</b></span>
+        <span>New measurement version <b id="new-version">3</b></span>
+      </div>
+    </section>
+
+    <section class="zone" aria-labelledby="trendh">
+      <h2 id="trendh">Trajectory</h2>
+      <div id="sparks"></div>
+    </section>
+
+    <section class="zone" aria-labelledby="wrh">
+      <h2 id="wrh">What the worker reported</h2>
+      <p class="note" id="worker-reported">Pain steady, taking prescribed medication, no new symptoms.</p>
+    </section>
+
+    <section class="zone" aria-labelledby="trajh">
+      <h2 id="trajh">How is the worker doing since the last visit</h2>
+      <fieldset>
+        <legend>Trajectory</legend>
+        <div class="opts" role="radiogroup" aria-describedby="traj-legend">
+          <label><input type="radio" name="traj" value="IMPROVING" /> Improving</label>
+          <label><input type="radio" name="traj" value="UNCHANGED" /> Unchanged</label>
+          <label><input type="radio" name="traj" value="REGRESSING" /> Regressing</label>
+        </div>
+        <p id="traj-legend" class="note">Improving opens only the axes you relax. Unchanged carries forward and runs the board rule chain. Regressing opens the full measurement screen with previous values shown alongside.</p>
+      </fieldset>
+    </section>
+
+    <section class="zone" id="unchanged-panel" aria-labelledby="uph" hidden>
+      <h2 id="uph">Unchanged: the board rule chain</h2>
+      <fieldset>
+        <legend>Has the patient's Return to Work status changed (E1)</legend>
+        <div class="opts" role="radiogroup">
+          <label><input type="radio" name="e1" value="N" /> Not changed</label>
+          <label><input type="radio" name="e1" value="Y" /> Changed</label>
+        </div>
+        <p class="note" id="e1-note"></p>
+      </fieldset>
+
+      <fieldset id="missed-fs" hidden>
+        <legend>Will or has the patient missed work beyond the date of accident</legend>
+        <div class="opts" role="radiogroup">
+          <label><input type="radio" name="missed" value="Y" /> Yes</label>
+          <label><input type="radio" name="missed" value="N" /> No</label>
+        </div>
+      </fieldset>
+
+      <fieldset id="modified-fs" hidden>
+        <legend>Modified duties and modified hours</legend>
+        <div class="opts" role="radiogroup" aria-label="Modified duties">
+          <span>Modified duties:</span>
+          <label><input type="radio" name="modduties" value="Y" /> Yes</label>
+          <label><input type="radio" name="modduties" value="N" /> No</label>
+        </div>
+        <div class="opts" role="radiogroup" aria-label="Modified hours">
+          <span>Modified hours:</span>
+          <label><input type="radio" name="modhours" value="Y" /> Yes</label>
+          <label><input type="radio" name="modhours" value="N" /> No</label>
+        </div>
+      </fieldset>
+
+      <h3 style="margin:16px 0 8px">Carried forward from the previous visit</h3>
+      <div class="carried" id="carried"></div>
+    </section>
+
+    <section class="zone" id="improving-panel" aria-labelledby="iph" hidden>
+      <h2 id="iph">Improving: choose the axes to relax</h2>
+      <p class="note">Only the axes you choose open, pre set to their previous values. Everything else is carried forward unchanged.</p>
+      <div class="carried" id="improving-axes"></div>
+    </section>
+
+    <section class="zone" id="regressing-panel" aria-labelledby="rph" hidden>
+      <h2 id="rph">Regressing</h2>
+      <p class="note">The full measurement screen opens with the previous values shown alongside. Nothing is discarded until you change it.</p>
+      <a href="./measurement.html">Open the measurement screen</a>
+    </section>
+  </div>
+
+  <aside class="rail" aria-labelledby="railh">
+    <h2 id="railh">Before you continue</h2>
+    <div id="block-banner" class="banner ok" role="status" aria-live="assertive">Choose a trajectory to begin.</div>
+    <button type="button" id="continue" disabled>Continue to review</button>
+    <p class="note" style="margin-top:12px">A new measurement version is written on every follow up, including Unchanged, so the trend has a point for every visit.</p>
+  </aside>
+</main>
+
+<dialog id="clear-dialog" aria-labelledby="cd-h">
+  <h2 id="cd-h">This will clear entered data</h2>
+  <p id="cd-body">Collapsing the capability block will discard values you entered this visit:</p>
+  <ul class="fieldlist" id="cd-list"></ul>
+  <div class="row">
+    <button type="button" class="secondary" id="cd-cancel">Keep the values</button>
+    <button type="button" id="cd-ok">Clear and collapse</button>
+  </div>
+</dialog>
+
+<script type="module">
+import {
+  evaluateNoChangeChain, nextMeasurementVersion, trajectoryPlan, carryForward,
+  confirmCarried, clearingWarning, sparklineTextAlt, followupSignatureBlockers, C151S_CHAIN,
+} from "./followup-screen.mjs";
+
+// FIXTURE: a previous visit payload for a C151S case (pending the server endpoint).
+const PREVIOUS = {
+  formId: "C151S",
+  version: 2,
+  previousVisit: "2026-08-01",
+  asOf: "2026-08-10",
+  workerReported: "Pain steady, taking prescribed medication, no new symptoms.",
+  // carried values, one deliberately old to show the stale confirmation flow.
+  carried: [
+    { element: "sitting", value: "Limited, 4 hours" },
+    { element: "standing", value: "Able" },
+    { element: "lifting_floor_to_waist", value: "Limited to 10 kg" },
+  ],
+  staleCarried: [
+    { element: "prior imaging note", value: "MRI 2026-04", visit: "2026-04-20" },
+  ],
+  // trend series per axis (hours), oldest to newest.
+  trends: {
+    Sitting: [3, 4, 4], Standing: [2, 3, 4], Walking: [1, 2, 3],
+  },
+};
+
+document.getElementById("prev-date").textContent =
+  new Date(PREVIOUS.previousVisit + "T00:00:00Z").getUTCDate() + " Aug";
+document.getElementById("new-version").textContent = String(nextMeasurementVersion(PREVIOUS.version));
+document.getElementById("worker-reported").textContent = PREVIOUS.workerReported;
+
+// Sparklines with a text alternative (Section 6).
+const sparks = document.getElementById("sparks");
+for (const [label, series] of Object.entries(PREVIOUS.trends)) {
+  const row = document.createElement("div"); row.className = "spark";
+  const lab = document.createElement("span"); lab.className = "lab"; lab.textContent = label;
+  const svg = sparklineSvg(series);
+  const alt = document.createElement("span"); alt.className = "visually-hidden";
+  alt.textContent = sparklineTextAlt(label, series, "hours");
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", sparklineTextAlt(label, series, "hours"));
+  row.appendChild(lab); row.appendChild(svg); row.appendChild(alt);
+  sparks.appendChild(row);
+}
+function sparklineSvg(series) {
+  const w = 160, h = 36, pad = 4;
+  const min = Math.min(...series), max = Math.max(...series), span = max - min || 1;
+  const pts = series.map((v, i) => {
+    const x = pad + (i * (w - 2 * pad)) / (series.length - 1);
+    const y = h - pad - ((v - min) * (h - 2 * pad)) / span;
+    return x.toFixed(1) + "," + y.toFixed(1);
+  }).join(" ");
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("width", w); svg.setAttribute("height", h); svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+  const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  pl.setAttribute("points", pts); pl.setAttribute("fill", "none");
+  pl.setAttribute("stroke", "#0a5ad6"); pl.setAttribute("stroke-width", "2");
+  svg.appendChild(pl); return svg;
+}
+
+// Carry forward the values, plus the stale one from an older visit.
+const carried = carryForward(PREVIOUS.carried, PREVIOUS.previousVisit, PREVIOUS.asOf);
+const staleCarried = PREVIOUS.staleCarried.map((s) =>
+  carryForward([{ element: s.element, value: s.value }], s.visit, PREVIOUS.asOf)[0]);
+let allCarried = [...carried, ...staleCarried];
+
+const panels = { UNCHANGED: "unchanged-panel", IMPROVING: "improving-panel", REGRESSING: "regressing-panel" };
+let trajectory = null;
+
+document.querySelectorAll('input[name="traj"]').forEach((el) => el.addEventListener("change", () => {
+  trajectory = el.value;
+  for (const [t, id] of Object.entries(panels)) document.getElementById(id).hidden = t !== trajectory;
+  if (trajectory === "UNCHANGED") renderCarried();
+  if (trajectory === "IMPROVING") renderImproving();
+  refresh();
+}));
+
+function renderCarried() {
+  const host = document.getElementById("carried"); host.textContent = "";
+  for (const e of allCarried) {
+    const row = document.createElement("div"); row.className = "cf";
+    const name = document.createElement("span"); name.textContent = e.element + ": " + e.value;
+    const from = document.createElement("span"); from.className = "fromprev"; from.textContent = e.label;
+    row.appendChild(name); row.appendChild(from);
+    if (e.stale) {
+      const badge = document.createElement("span"); badge.className = "badge stale";
+      badge.textContent = e.ageDays + " days old, confirm";
+      const btn = document.createElement("button"); btn.className = "secondary"; btn.textContent = "Confirm this value";
+      btn.addEventListener("click", () => {
+        allCarried = allCarried.map((x) => x === e ? confirmCarried(x) : x);
+        renderCarried(); refresh();
+      });
+      row.appendChild(badge); row.appendChild(btn);
+    } else {
+      const badge = document.createElement("span"); badge.className = "badge ok"; badge.textContent = "carried";
+      row.appendChild(badge);
+    }
+  }
+}
+
+function renderImproving() {
+  const host = document.getElementById("improving-axes"); host.textContent = "";
+  for (const e of carried) {
+    const row = document.createElement("div"); row.className = "cf";
+    const l = document.createElement("label");
+    const c = document.createElement("input"); c.type = "checkbox";
+    l.appendChild(c); l.appendChild(document.createTextNode(" Relax " + e.element + " (was " + e.value + ")"));
+    row.appendChild(l); host.appendChild(row);
+  }
+}
+
+// The chain drives which follow up questions show, and whether a collapse is pending.
+const chainState = { statusChanged: null, missedWork: null, modifiedDuties: null, modifiedHours: null };
+document.querySelectorAll('input[name="e1"]').forEach((el) => el.addEventListener("change", () => { chainState.statusChanged = el.value; applyChain(); }));
+document.querySelectorAll('input[name="missed"]').forEach((el) => el.addEventListener("change", () => { chainState.missedWork = el.value; applyChain(); }));
+document.querySelectorAll('input[name="modduties"]').forEach((el) => el.addEventListener("change", () => { chainState.modifiedDuties = el.value; applyChain(); }));
+document.querySelectorAll('input[name="modhours"]').forEach((el) => el.addEventListener("change", () => { chainState.modifiedHours = el.value; applyChain(); }));
+
+function applyChain() {
+  const r = evaluateNoChangeChain(chainState);
+  document.getElementById("e1-note").textContent = chainState.statusChanged
+    ? (chainState.statusChanged === "N"
+        ? "Not changed: the five capability axes use Basic Work Restriction Codes. The OIS disposition questions are hidden. The fields are not removed."
+        : "Changed: the axes use Extended Work Restriction Codes and the OIS disposition questions are shown.")
+    : "";
+  document.getElementById("missed-fs").hidden = !r.missedWorkEnabled;
+  document.getElementById("modified-fs").hidden = chainState.missedWork !== "N";
+  // A collapse that would discard entered data warns first (criterion 6).
+  if (r.capabilityBlockCollapsed) {
+    const w = clearingWarning(C151S_CHAIN.capabilityBlockFields, { "Current Capabilities": carried.length ? "carried" : "" });
+    if (w.warn) {
+      const list = document.getElementById("cd-list"); list.textContent = "";
+      for (const f of w.fields) { const li = document.createElement("li"); li.textContent = f; list.appendChild(li); }
+      document.getElementById("clear-dialog").showModal();
+    }
+  }
+  refresh();
+}
+document.getElementById("cd-cancel").addEventListener("click", () => {
+  document.getElementById("clear-dialog").close();
+  // undo the second No so nothing is discarded silently
+  document.querySelectorAll('input[name="modhours"]').forEach((el) => { el.checked = false; });
+  chainState.modifiedHours = null; refresh();
+});
+document.getElementById("cd-ok").addEventListener("click", () => document.getElementById("clear-dialog").close());
+
+// Rail: the stale blocker and the continue gate.
+function refresh() {
+  const banner = document.getElementById("block-banner");
+  const cont = document.getElementById("continue");
+  if (!trajectory) { banner.className = "banner ok"; banner.textContent = "Choose a trajectory to begin."; cont.disabled = true; return; }
+  const b = followupSignatureBlockers(allCarried);
+  if (b.blocked) {
+    banner.className = "banner block";
+    banner.textContent = b.blockers.map((x) => x.message).join(" ");
+    cont.disabled = true;
+  } else {
+    banner.className = "banner ok";
+    const plan = trajectoryPlan(trajectory);
+    banner.textContent = "Ready. " + trajectory + " carries forward and routes to " + plan.routesTo + ".";
+    cont.disabled = false;
+    cont.textContent = plan.routesTo === "review" ? "Continue to review" : "Continue to measurement";
+  }
+}
+
+refresh();
+</script>
+</body>
+</html>
