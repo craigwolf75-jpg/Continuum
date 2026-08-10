@@ -43,16 +43,19 @@ that already shipped, and what it leaves as new work. House rule: no em or en da
 These belong to the XML generation prompt and the reference data load, not the validation engine that
 is complete. Listed so none is lost.
 
-1. **The (form, element) Basic versus Extended table** (39A Section 2.3). A stored table keyed on
-   (form, element) selecting Basic, Extended, Conditional, "ABLE or UNABLE only", or "not on form".
-   Notable facts to load verbatim: C050S moves bending, twisting, kneeling, climbing and pushing from
-   Basic to Extended; overhead reaching and single field lifting exist only on C050E and C151, replaced
-   by four reaching and three lifting elements on C050S and C151S; grasping and reaching take ABLE or
-   UNABLE only. This feeds `emitCode` (which already takes the list name as a parameter, so no engine
-   change, only the config that selects the list).
-2. **Namespaced code enums** (39A Section 2.6). LIMITED is both a Basic Work Restriction Code and a
-   Weight Category Code. One type per workbook code sheet, the (form, element) table selects the type,
-   so a weight LIMITED can never land in a capability field. Enforce by type, not by string compare.
+1. DONE. **The (form, element) Basic versus Extended table** (39A Section 2.3). Built as
+   `clinical.wcb_capability_code_set` (migration 005, seed 006 from `capability_code_set.data.mjs`, 58
+   rows) and read by `clinical/engine/capability.mjs`. C050S moves bending, twisting, kneeling, climbing
+   and pushing from Basic to Extended; C151S makes those five conditional on RTWPATIENTSTATUSCHANGED;
+   overhead reaching and single field lifting are C050E and C151 only, replaced by four reaching and
+   three lifting elements on C050S and C151S; grasping and reaching take ABLE or UNABLE only; a not on
+   form element fails loudly.
+2. DONE. **Namespaced code enums** (39A Section 2.6). Built as `clinical/engine/codes.mjs`: each board
+   code carries its workbook sheet as a namespace and is branded so a bare string cannot pass a type
+   guard. `assignCapabilityCode` and `assignWeightCode` check the namespace tag, not the string, so a
+   weight LIMITED can never be assigned to a capability element and a restriction LIMITED can never be
+   assigned to a weight element (acceptance criterion 14). The capability resolver's list names are the
+   same strings as the code namespaces, so the two modules compose without wiring.
 3. **PHN length and check digit** (39A Section 1.4, 1.5, board enquiry B1). The validation schema types
    PID.3/CX.1 as `\d{0,9}`, so it permits a short PHN. Enforce length exactly 9 in application code (a
    P1 format of `^\d{9}$` on the PHN element, sourced from the workbook format `#########`). Ship the
