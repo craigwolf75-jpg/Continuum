@@ -78,8 +78,13 @@ is complete. Listed so none is lost.
    in the package (121023) is seeded mapping to the Alberta PHN element only, with the 2007 inverted
    polarity caveat as a human note and no value. An unmapped or below 0.80 confidence code surfaces the
    board's raw text to a human. The catalogue grows from real rejections.
-6. **OBX skeleton per form as stored configuration** (39A Section 3.1 item 1, acceptance criterion 4
-   replacement). Drive the skeleton and its fixed order from the board sample for each form.
+6. DONE. **OBX skeleton per form as stored configuration** (39A Section 3.1 item 1, acceptance criterion
+   4 replacement). Built as `clinical.wcb_obx_skeleton` (migration 009, seed 010 from
+   `obxskeletongen.mjs`, which reads each form's board sample XML) and `clinical/engine/obx.mjs`. The
+   skeleton and its fixed order are read from the samples: C050E is the 98 OBX of 5.03 in order
+   (criterion 4, gated in the generator), C569 and C570 carry two each, 521 across the eight forms.
+   `verifySkeleton` asserts a generated OBX set matches the skeleton exactly, and `assertNoHl7Null`
+   rejects the HL7 null. 16 tests.
 7. **Attachment block when there are no attachments** (39A board enquiry B3). Either shape validates;
    build to omission and make it one configuration flag.
 
