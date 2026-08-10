@@ -1,0 +1,10 @@
+{
+  "name": "wcb-seedgen",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Continuum Prompt 40 WCB seed SQL generator (build tool, not shipped app code)",
+  "dependencies": {
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  }
+}
