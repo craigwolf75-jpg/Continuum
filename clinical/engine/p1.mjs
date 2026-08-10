@@ -64,7 +64,7 @@ export function typeField(type, value) {
 // A date is real if round tripping its parts through the calendar is stable, so
 // month overflow (2026-02-30 -> March) is caught. new Date(y, m, d) with explicit
 // parts is deterministic and needs no clock, so it is safe for a pure check.
-function isRealCalendarDate(v) {
+export function isRealCalendarDate(v) {
   const [y, m, d] = v.split("-").map(Number);
   if (m < 1 || m > 12 || d < 1 || d > 31) return false;
   const dt = new Date(y, m - 1, d);

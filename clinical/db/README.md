@@ -89,11 +89,13 @@ flagged.
   capability element, enforced by namespace tag not string, criterion 14). The
   the **PHN gate is built** (`clinical/engine/phn.mjs`: exactly nine digits
   enforced in app code since the schema permits a short PHN, plus a default off
-  refuse to guess check digit stage, criterion 8). The remaining Prompt 39A
-  follow up belongs to the XML generation prompt: the validation schema date
-  defect passthrough, the error catalogue that maps a board code to an element
-  only, and the OBX skeleton per form as stored configuration. See the 39A
-  reconciliation doc for the full list.
+  refuse to guess check digit stage, criterion 8), and the **date defect
+  passthrough is built** (`clinical/engine/date_defect.mjs`: a real date the
+  validation schema wrongly rejects passes and is logged, a date that never
+  existed is blocked regardless, criteria 15 and 16). The remaining Prompt 39A
+  follow up belongs to the XML generation prompt: the error catalogue that maps a
+  board code to an element only, and the OBX skeleton per form as stored
+  configuration. See the 39A reconciliation doc for the full list.
 
 Every `form_rule` row stays `verified_against_sample_xml = false` until it is
 asserted against its board `5.xx` sample XML (the transcription docs' definition
