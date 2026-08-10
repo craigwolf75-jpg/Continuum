@@ -44,12 +44,16 @@ export function canonicalizeXml(s) {
 }
 
 // Serialise one OBX observation to the board fragment. An empty value emits <OBX.5/>
-// (present and empty), a non empty value emits <OBX.5>value</OBX.5>. The output is
-// already in canonical form (no indentation). value is expected to be XML safe.
-export function serializeObx(identifier, value) {
+// (present and empty), a non empty value emits <OBX.5>value</OBX.5>. The board populates
+// OBX.1 (set id) and OBX.2 (value type) for some observations (for example an address
+// component carries OBX.1 = position, OBX.2 = ST); opts.obx1 and opts.obx2 carry those,
+// defaulting to empty. The output is canonical (no indentation). value is XML safe.
+export function serializeObx(identifier, value, opts = {}) {
   const v = norm(value);
   const cell = v === "" ? "<OBX.5/>" : "<OBX.5>" + v + "</OBX.5>";
-  return "<OBX><OBX.1/><OBX.2/><OBX.3><CE.1>" + norm(identifier) + "</CE.1></OBX.3>" +
+  const f = (tag, raw) => { const s = norm(raw); return s === "" ? "<" + tag + "/>" : "<" + tag + ">" + s + "</" + tag + ">"; };
+  return "<OBX>" + f("OBX.1", opts.obx1) + f("OBX.2", opts.obx2) +
+    "<OBX.3><CE.1>" + norm(identifier) + "</CE.1></OBX.3>" +
     "<OBX.4/><OBX.5.LST>" + cell + "</OBX.5.LST><OBX.11/></OBX>";
 }
 
