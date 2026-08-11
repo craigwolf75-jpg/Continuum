@@ -68,6 +68,14 @@ order, via the Management API or the SQL editor.
     the generator round trip tests) and hard gates that each form's Min OBX skeleton is a
     subset of its Max, the difference being the conditionally available observations
     (Section 2.2, criterion 4).
+15. **`015_migration_employer_view.sql`** (Prompt 43) creates the SEPARATE `employer`
+    schema with `published_restriction_set` and `duty_match_line`. This is the wall
+    between the clinical record and the employer: there is no column here capable of
+    holding clinical content, `case_ref` and `worker_ref` are opaque uuids (NOT cross
+    schema foreign keys to `clinical`), and a build failing schema test
+    (`clinical/engine/employer_schema.test.mjs`, criterion 1) rejects any banned or raw
+    measurement column. It has no dependency on `001`; it is a standalone schema. Apply
+    any time. Idempotent, one transaction.
 
 ## What the seed contains (all faithful mirrors of the accreditation workbook)
 
