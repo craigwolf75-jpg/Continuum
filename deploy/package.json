@@ -4,6 +4,7 @@
   "type": "module",
   "description": "Continuum Prompt 40 site gate. No build step; static site (Framework preset: Other, per README.txt). The \"type\": \"module\" field is REQUIRED: for a non framework project Vercel only registers an ESM middleware.js as Routing Middleware when the nearest package.json declares module type. Without it, Vercel resolves the module type ambiguity toward CommonJS (build log: Compiling middleware.js from ESM to CommonJS) and emits middleware.js as a plain Serverless Function that never intercepts requests. The same field makes the ESM api functions load as ES modules. @vercel/functions supplies the rewrite()/next() helpers the gate uses.",
   "dependencies": {
-    "@vercel/functions": "3.7.6"
+    "@vercel/functions": "3.7.6",
+    "xmllint-wasm": "4.0.2"
   }
 }
