@@ -75,14 +75,32 @@ create table if not exists clinical.practitioner (
 -- ---------------------------------------------------------------------------
 -- worker: identifiable PHI. Never referenced by the employer schema except through an
 -- opaque worker_ref (no cross schema foreign key).
+--
+-- STRUCTURED for the board wire format (Prompt 42 per report field population finding): the
+-- HL7 message needs the name, address and phone in their component parts (XPN, XAD, XTN), so
+-- they are stored structured and mapped straight into the segments (clinical/engine/hl7report
+-- populateReportUnit), never split at submission time. A single display name is composed in
+-- the application from given and family; it is not stored. The engine mapper keeps a fallback
+-- that splits a full name, but with these columns present it never has to.
 -- ---------------------------------------------------------------------------
 create table if not exists clinical.worker (
   id uuid primary key default gen_random_uuid(),
-  phn varchar(9),                      -- Alberta PHN, exactly 9 digits (Prompt 40 phn gate)
-  name varchar(120) not null,
-  date_of_birth date,
-  address varchar(200),
-  phone varchar(30),
+  phn varchar(9),                      -- Alberta PHN, exactly 9 digits (Prompt 40 phn gate); PID.3/CX.1
+  -- Name components (board XPN, PID.5)
+  family_name varchar(50) not null,    -- XPN.1
+  given_name varchar(50) not null,     -- XPN.2
+  middle_name varchar(50),             -- XPN.3
+  sex varchar(1),                      -- PID.8, board Administrative Sex (single character); no column existed before
+  date_of_birth date,                  -- PID.7
+  -- Address components (board XAD, PID.11)
+  street varchar(100),                 -- XAD.1
+  po_box varchar(60),                  -- XAD.2
+  city varchar(50),                    -- XAD.3
+  province char(2),                    -- XAD.4, Canadian province or territory code (e.g. AB)
+  postal_code varchar(10),             -- XAD.5
+  -- Phone components (board XTN, PID.13)
+  phone_area varchar(5),               -- XTN.6 area code
+  phone_number varchar(15),            -- XTN.7 local number
   created_at timestamptz not null default now()
 );
 

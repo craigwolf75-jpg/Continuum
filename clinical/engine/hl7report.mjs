@@ -25,11 +25,11 @@
    The setters preserve structure and only replace VALUES, so an optional field the template
    leaves present and empty stays present and empty, and the document stays board conforming.
 
-   FINDING: migration 016 stores worker.name and worker.address as single columns, but the
-   board needs them structured (XPN and XAD components). This module accepts structured input
-   (family / given / middle, street / city / province / postal) and falls back to splitting a
-   full name; the repository adapter must supply the structured parts, or 016 needs structured
-   columns. Sex is not a column in 016 either and is populated only when provided.
+   SCHEMA: migration 016 stores the name, address and phone STRUCTURED (family / given /
+   middle, street / po_box / city / province / postal_code, phone_area / phone_number) plus a
+   sex column, exactly the board XPN, XAD and XTN components, so this module reads them straight
+   into the segments and never has to split at submission time. A fallback that splits a full
+   name is kept for any source that supplies only a display name.
 
    Pure string functions, no clock (date and time strings are injected), no schema dependency.
    No dashes anywhere. */
