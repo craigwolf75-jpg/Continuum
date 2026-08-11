@@ -30,6 +30,12 @@ function repoWithSignedReport() {
     practitioners: [{ id: "prac-1", clinic_id: "clinic-1", billing_number: "12345", name: "Dr Test", active: true }],
     reports: [{ id: "rep-1", case_id: "case-1", practitioner_id: "prac-1", form_id: "C050E", version: 1, status: "signed", snapshot_hash: "0".repeat(64) }],
     observations: [{ report_id: "rep-1", observations: templateObservations }],
+    reportFields: [{ report_id: "rep-1", fields: {
+      worker: { family: "Roe", given: "Sam", date_of_birth: "1990-03-03", phn: "987654321", street: "42 Elm Ave", city: "Calgary", province: "AB", postal: "T2T2T2" },
+      case: { claim_number: "7654321", claim_reference: "7654321", date_of_injury: "2026-02-02" },
+      practitioner: { family: "Green", given: "Pat", role_code: "GP" },
+      message: { datetime: "202608110900", formId: "C050E", injuryDate: "2026-02-02" },
+    } }],
   });
 }
 
@@ -59,6 +65,19 @@ const validate = async (xml) => {
   ok("the transmitter is never called while the gate is closed", transmitted === false);
   ok("the signed report is not mutated by a dry run batch", repo._debug.store.reports.get("rep-1").status === "signed");
   ok("the dry run records the reports it would submit", out.would_submit.includes("rep-1"));
+
+  // The assembled document carries the report's OWN populated fields, not the template's.
+  const assembled = await generateForAssertion(repo, template);
+  ok("the assembled document carries the report's populated worker and case fields", /<XPN\.1>Roe<\/XPN\.1>/.test(assembled) && /<PID\.7>19900303<\/PID\.7>/.test(assembled) && /<CX\.1>7654321<\/CX\.1>/.test(assembled) && /<MSH\.10>rep-1<\/MSH\.10>/.test(assembled));
+}
+
+// Re run the default assembler directly to assert on the assembled document content (the dry
+// run outcome does not return the XML). Same repository, same template, no transmission.
+async function generateForAssertion(repo, tmpl) {
+  const { runClinicBatch: _rcb } = await import("../clinical/engine/orchestrator.mjs");
+  let captured = null;
+  await _rcb(repo, { validate: async (xml) => { captured = xml; return { ok: true, failures: [] }; }, notify: () => {} }, { clinicId: "clinic-1" }, { env: {}, template: tmpl });
+  return captured;
 }
 
 console.log("\norchestrator CI wiring suite: " + pass + " passed, " + fail + " failed");
