@@ -24,6 +24,7 @@
 import { signMeasurement, provenanceAudit } from "./sign_measurement.mjs";
 import { runBatch } from "./batch.mjs";
 import { serializeObxSection } from "./hl7gen.mjs";
+import { extractReportUnits, getObxSection, buildReportUnit, assembleFromTemplate } from "./hl7envelope.mjs";
 import { parseReturnFile, reconcileReturnFile, buildSubmissionResult } from "./returnfile.mjs";
 import { resubmit } from "./resubmission.mjs";
 import { employerViewAllowed } from "./consent.mjs";
@@ -83,7 +84,7 @@ export async function runClinicBatch(repo, effects, params, opts = {}) {
   const signed = await nn(repo.getSignedReports(params.clinicId));
   if (!signed.length) { await nn(repo.recordBatchOutcome({ clinic_id: params.clinicId, status: "empty", transmitted: false })); return { status: "empty" }; }
 
-  const generate = effects.generate || defaultAssemble(repo);
+  const generate = effects.generate || defaultAssemble(repo, { template: opts.template });
   const validate = effects.validate;
   if (typeof validate !== "function") throw new Error("runClinicBatch requires an injected validate function (deploy xsd-validator adapter).");
 
@@ -114,18 +115,33 @@ export async function runClinicBatch(repo, effects, params, opts = {}) {
   return out;
 }
 
-// The default assembler: compose each signed report's OBX layer. NOTE: this is the OBX
-// section only; the full ZRPT_P03 batch envelope (FHS, BHS, MSH, demographic segments, LST
-// and GRP nesting, BTS, FTS) is the next HL7 increment (hl7gen.mjs header). Until that lands,
-// the batch tests inject a generate that returns a complete board sample so the validate and
-// gate path is exercised on a real document. This default is wired but flagged incomplete.
-function defaultAssemble(repo) {
+// The default assembler: build the full ZRPT_P03 batch through the envelope module
+// (hl7envelope.mjs). A template document (a committed board sample) supplies the demographic
+// envelope; each signed report contributes its OBX section (hl7gen serializeObxSection),
+// swapped into a report unit with its own control id, and the units assemble with the trailer
+// counts set. The envelope is complete and board conforming (proven in
+// deploy/hl7envelope.test.mjs against the real structural schema).
+//
+// The remaining increment is per report FIELD population: PID, PV1 and FT1 from live worker
+// and case data, and the full OBX skeleton from the seed (migration 009 and 010). Until that
+// lands the demographic fields come from the template, so the default assembler needs an
+// injected template (opts.template) to produce a valid document; a report with no observations
+// keeps the template's OBX section so the batch still validates.
+function defaultAssemble(repo, opts = {}) {
   return async (signed) => {
-    const sections = [];
-    for (const r of signed) sections.push(serializeObxSection(await nn(repo.getReportObservations(r.id))));
-    // INCOMPLETE: no ZRPT_P03 envelope yet. A validate() against the structural schema will
-    // reject this until the envelope module exists; that is the honest state, not a fake pass.
-    return "<ZRPT_P03 xmlns=\"urn:WCBhl7_v231-schema_modern_v100\">" + sections.join("") + "</ZRPT_P03>";
+    if (!opts.template) {
+      const e = new Error("runClinicBatch needs an injected template (a committed board sample) until per report field mapping is wired: pass opts.template or effects.generate.");
+      e.code = "NO-TEMPLATE";
+      throw e;
+    }
+    const templateUnit = extractReportUnits(opts.template)[0];
+    const units = [];
+    for (const r of signed) {
+      const obs = await nn(repo.getReportObservations(r.id));
+      const obxSection = obs && obs.length ? serializeObxSection(obs) : getObxSection(templateUnit);
+      units.push(buildReportUnit(templateUnit, { controlId: r.id, obxSection }));
+    }
+    return assembleFromTemplate(opts.template, units);
   };
 }
 
