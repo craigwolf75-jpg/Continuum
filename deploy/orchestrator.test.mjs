@@ -10,10 +10,16 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { createInMemoryRepository } from "../clinical/engine/repository.mjs";
 import { runClinicBatch } from "../clinical/engine/orchestrator.mjs";
+import { extractReportUnits, getObxSection } from "../clinical/engine/hl7envelope.mjs";
+import { extractObx } from "../clinical/engine/hl7gen.mjs";
 import { validateAgainstSchemas } from "./xsd-validator.mjs";
 
 const SAMPLES = join(dirname(fileURLToPath(import.meta.url)), "..", "clinical", "db", "samples");
-const sampleXml = readFileSync(join(SAMPLES, "5.01 - C050E - Max Fields with Attachment.xml"), "utf8");
+const template = readFileSync(join(SAMPLES, "5.03 - C050E - Min Fields.xml"), "utf8");
+// The report's observations are seeded from the template's own OBX section so the assembled
+// document is a complete, board valid section (the full OBX skeleton from the seed is the next
+// increment; here we prove the envelope path end to end through the real validator).
+const templateObservations = extractObx(getObxSection(extractReportUnits(template)[0]));
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
@@ -23,7 +29,7 @@ function repoWithSignedReport() {
     clinics: [{ id: "clinic-1", name: "Test Clinic", accreditation_status: "none", region: "ca-central-1" }],
     practitioners: [{ id: "prac-1", clinic_id: "clinic-1", billing_number: "12345", name: "Dr Test", active: true }],
     reports: [{ id: "rep-1", case_id: "case-1", practitioner_id: "prac-1", form_id: "C050E", version: 1, status: "signed", snapshot_hash: "0".repeat(64) }],
-    observations: [{ report_id: "rep-1", observations: [{ identifier: "JOBTITLE", value: "Gatehouse Officer" }] }],
+    observations: [{ report_id: "rep-1", observations: templateObservations }],
   });
 }
 
@@ -35,18 +41,21 @@ const validate = async (xml) => {
 };
 
 // Gate closed (no accreditation, no cron secret, no flag): the batch must be dry run and must
-// not transmit. generate returns a real board sample so validate runs on a real document.
+// not transmit. No generate is injected, so the orchestrator ASSEMBLES the document itself
+// through the envelope module (hl7envelope) from the signed report's OBX section, then the
+// real xmllint-wasm validator checks the assembled output. This proves the full
+// generate to validate chain on a document Continuum built, not one handed to it.
 {
   const repo = repoWithSignedReport();
   let transmitted = false;
   const out = await runClinicBatch(
     repo,
-    { generate: () => sampleXml, validate, transmit: () => { transmitted = true; return { ok: true }; }, notify: () => {} },
+    { validate, transmit: () => { transmitted = true; return { ok: true }; }, notify: () => {} },
     { clinicId: "clinic-1" },
-    { env: {} },
+    { env: {}, template },
   );
   ok("the batch is dry run while the submission gate is closed", out.status === "dry-run" && out.transmitted === false);
-  ok("the real xmllint-wasm validator passes the real board sample through the orchestrator", out.validated === true);
+  ok("the orchestrator assembled a batch that passes the real xmllint-wasm structural schema", out.validated === true);
   ok("the transmitter is never called while the gate is closed", transmitted === false);
   ok("the signed report is not mutated by a dry run batch", repo._debug.store.reports.get("rep-1").status === "signed");
   ok("the dry run records the reports it would submit", out.would_submit.includes("rep-1"));
