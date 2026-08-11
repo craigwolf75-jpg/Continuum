@@ -58,14 +58,26 @@ create table if not exists clinical.clinic_batch_schedule (
 
 -- ---------------------------------------------------------------------------
 -- practitioner (Prompt 42 blocks an inactive practitioner; practitioner_sees_all is the
--- Health Information Act question, Prompt 41 open item 4: built, defaulted true, flagged)
+-- Health Information Act question, Prompt 41 open item 4: built, defaulted true, flagged).
+--
+-- STRUCTURED for the board wire format, the same as the worker (Prompt 42 per report field
+-- population): the provider name goes to PRD.2 as XPN components and the provider phone to
+-- PRD.5 as XTN components, so they are stored structured and mapped straight in
+-- (clinical/engine/hl7report populatePRD), never split at submission time. A display name is
+-- composed in the application from given and family.
 -- ---------------------------------------------------------------------------
 create table if not exists clinical.practitioner (
   id uuid primary key default gen_random_uuid(),
   clinic_id uuid not null references clinical.clinic(id),
   billing_number varchar(20) not null,
-  name varchar(120) not null,
-  role_code varchar(4) not null,       -- board Practitioner Role Codes (GP, OIS, ...)
+  -- Name components (board XPN, PRD.2)
+  family_name varchar(50) not null,    -- XPN.1
+  given_name varchar(50) not null,     -- XPN.2
+  middle_name varchar(50),             -- XPN.3
+  role_code varchar(4) not null,       -- board Practitioner Role Codes (GP, OIS, ...); PRD.1
+  -- Phone components (board XTN, PRD.5); no phone column existed before
+  phone_area varchar(5),               -- XTN.6 area code
+  phone_number varchar(15),            -- XTN.7 local number
   active boolean not null default true,
   practitioner_sees_all boolean not null default true,  -- open item 4, flagged
   created_at timestamptz not null default now(),
