@@ -1,0 +1,42 @@
+# Continuum Prompt 42 / 43a gate 2 condition 4: the XSD cross check. The deploy suites
+# validate every board sample against the schemas with xmllint-wasm (WebAssembly libxml2).
+# This job validates the same seventeen samples against the AUTHORITATIVE structural
+# schema with the SYSTEM xmllint binary (native libxml2), so a WebAssembly specific quirk
+# can never silently pass a file the reference implementation would reject. The
+# supplementary schema (6.01) is deliberately not gated here: it rejects the board's own
+# samples on empty optional fields (the 39A over strictness), which the deploy suite
+# classifies and surfaces rather than blocks. No em dashes anywhere.
+
+name: xsd-crosscheck
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  xsd-crosscheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the system xmllint binary (native libxml2)
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Cross check all seventeen samples against the structural schema
+        run: |
+          set -e
+          cd clinical/db/samples
+          schema="6 - WCBhl7_v231_modern_v100.xsd"
+          count=0
+          for f in 5.*.xml; do
+            echo "== $f =="
+            xmllint --noout --schema "$schema" "$f"
+            count=$((count + 1))
+          done
+          if [ "$count" -ne 17 ]; then
+            echo "Expected 17 samples, found $count"
+            exit 1
+          fi
+          echo "All $count samples pass the structural schema under system xmllint (agrees with xmllint-wasm)."
