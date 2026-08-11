@@ -17,6 +17,9 @@
                                         event in ONE transaction; returns { committed: true }
      getSignedReports(clinicId)      -> [ report, ... ] with status signed
      getReportObservations(reportId) -> ordered [ { identifier, value }, ... ] (OBX layer)
+     getReportFields(reportId)       -> { worker, case, practitioner, message } | null
+                                        (the per report identity and demographic values;
+                                        hl7report populateReportUnit fills the segments)
      getClinic(clinicId)             -> { id, accreditation_status, region } | null
      isPractitionerActive(id)        -> boolean
      recordBatchOutcome(outcome)     -> { recorded: true }
@@ -41,6 +44,7 @@ export function createInMemoryRepository(seed = {}) {
     reports: new Map((seed.reports || []).map((r) => [r.id, { ...r }])),
     drafts: new Map((seed.drafts || []).map((d) => [d.report_id, { ...d }])),
     observations: new Map((seed.observations || []).map((o) => [o.report_id, o.observations.slice()])),
+    reportFields: new Map((seed.reportFields || []).map((f) => [f.report_id, { ...f.fields }])),
     restrictions: new Map((seed.restrictions || []).map((x) => [x.report_id, { ...x.restrictionByAxis }])),
     consents: new Map((seed.consents || []).map((c) => [c.case_id, { ...c }])),
     pinkData: new Map((seed.pinkData || []).map((p) => [p.report_id, { ...p.data }])),
@@ -70,6 +74,7 @@ export function createInMemoryRepository(seed = {}) {
       return out;
     },
     getReportObservations(reportId) { return (store.observations.get(reportId) || []).slice(); },
+    getReportFields(reportId) { const f = store.reportFields.get(reportId); return f ? { ...f } : null; },
     getClinic(clinicId) { const c = store.clinics.get(clinicId); return c ? { ...c } : null; },
     isPractitionerActive(id) { const p = store.practitioners.get(id); return Boolean(p && p.active !== false); },
     getSubmission(submissionId) { const s = store.submissions.get(submissionId); return s ? { ...s } : null; },

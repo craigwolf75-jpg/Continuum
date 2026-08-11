@@ -25,6 +25,7 @@ import { signMeasurement, provenanceAudit } from "./sign_measurement.mjs";
 import { runBatch } from "./batch.mjs";
 import { serializeObxSection } from "./hl7gen.mjs";
 import { extractReportUnits, getObxSection, buildReportUnit, assembleFromTemplate } from "./hl7envelope.mjs";
+import { populateReportUnit } from "./hl7report.mjs";
 import { parseReturnFile, reconcileReturnFile, buildSubmissionResult } from "./returnfile.mjs";
 import { resubmit } from "./resubmission.mjs";
 import { employerViewAllowed } from "./consent.mjs";
@@ -116,21 +117,22 @@ export async function runClinicBatch(repo, effects, params, opts = {}) {
 }
 
 // The default assembler: build the full ZRPT_P03 batch through the envelope module
-// (hl7envelope.mjs). A template document (a committed board sample) supplies the demographic
-// envelope; each signed report contributes its OBX section (hl7gen serializeObxSection),
-// swapped into a report unit with its own control id, and the units assemble with the trailer
-// counts set. The envelope is complete and board conforming (proven in
-// deploy/hl7envelope.test.mjs against the real structural schema).
+// (hl7envelope.mjs). A template document (a committed board sample) supplies the segment
+// structure; each signed report contributes its OBX section (hl7gen serializeObxSection) and,
+// when the repository supplies them, its own identity and demographic fields (hl7report
+// populateReportUnit: PID, PV1, ACC, PRD, MSH, EVN from the worker, case and practitioner).
+// The units assemble with the trailer counts set. Both the envelope and the populated output
+// are proven board conforming against the real structural schema (deploy/hl7envelope.test.mjs,
+// deploy/hl7report.test.mjs).
 //
-// The remaining increment is per report FIELD population: PID, PV1 and FT1 from live worker
-// and case data, and the full OBX skeleton from the seed (migration 009 and 010). Until that
-// lands the demographic fields come from the template, so the default assembler needs an
-// injected template (opts.template) to produce a valid document; a report with no observations
-// keeps the template's OBX section so the batch still validates.
+// The template is still injected (opts.template) because the segment structure is anchored to a
+// board sample, and a report with no observations keeps the template's OBX section. The
+// remaining mapping is the FT1 financial fields and the full OBX skeleton from the seed
+// (migration 009 and 010), which need the live schema.
 function defaultAssemble(repo, opts = {}) {
   return async (signed) => {
     if (!opts.template) {
-      const e = new Error("runClinicBatch needs an injected template (a committed board sample) until per report field mapping is wired: pass opts.template or effects.generate.");
+      const e = new Error("runClinicBatch needs an injected template (a committed board sample) for the segment structure: pass opts.template or effects.generate.");
       e.code = "NO-TEMPLATE";
       throw e;
     }
@@ -139,7 +141,10 @@ function defaultAssemble(repo, opts = {}) {
     for (const r of signed) {
       const obs = await nn(repo.getReportObservations(r.id));
       const obxSection = obs && obs.length ? serializeObxSection(obs) : getObxSection(templateUnit);
-      units.push(buildReportUnit(templateUnit, { controlId: r.id, obxSection }));
+      let unit = buildReportUnit(templateUnit, { controlId: r.id, obxSection });
+      const fields = repo.getReportFields ? await nn(repo.getReportFields(r.id)) : null;
+      if (fields) unit = populateReportUnit(unit, { ...fields, message: { ...(fields.message || {}), controlId: r.id } });
+      units.push(unit);
     }
     return assembleFromTemplate(opts.template, units);
   };
