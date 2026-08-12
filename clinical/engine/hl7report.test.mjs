@@ -12,7 +12,7 @@ import { dirname, join } from "node:path";
 import { extractReportUnits } from "./hl7envelope.mjs";
 import {
   hl7Date, hl7DateTime, splitName, phnFields, setLeaf,
-  populatePID, populateCase, populatePRD, populateMessage, populateReportUnit,
+  populatePID, populateCase, populatePRD, populateMessage, populateFT1, populateReportUnit,
 } from "./hl7report.mjs";
 
 const SAMPLES = join(dirname(fileURLToPath(import.meta.url)), "..", "db", "samples");
@@ -78,6 +78,15 @@ ok("phnFields: an absent PHN gives indicator Y and a blank", (() => { const p = 
   ok("message fills MSH.7, MSH.10, EVN.2, EVN.4, EVN.6", val(u, "MSH", "MSH.7") === "202608110900" && val(u, "MSH", "MSH.10") === "REP-xyz" && val(u, "EVN", "EVN.2") === "202608110900" && val(u, "EVN", "EVN.4") === "C050E" && val(u, "EVN", "EVN.6") === "20260102");
 }
 
+// -- FT1 financial fields ----------------------------------------------------
+{
+  const u = populateFT1(templateUnit, { transactionId: "TXN-0001", transactionDate: "2026-01-02", quantity: "1", feeCode: "000042", facilityType: "H", procedureCode: "03.02A" });
+  ok("FT1 transaction id and date land (FT1.3, FT1.4)", /<FT1\.3>TXN-0001<\/FT1\.3>/.test(u) && /<FT1\.4>20260102<\/FT1\.4>/.test(u));
+  ok("FT1 fee code lands in FT1.14/CE.1 and procedure in FT1.25/CE.1", val(u, "FT1.14", "CE.1") === "000042" && val(u, "FT1.25", "CE.1") === "03.02A");
+  ok("FT1 facility type lands in FT1.16/HD.2", val(u, "FT1.16", "HD.2") === "H");
+  ok("FT1 population does not touch the FT1.19 clinical coding (no diagnosis invented)", !val(u, "FT1.14", "CE.1").includes("DIAG") && (u.match(/<FT1\.19>/g) || []).length === (templateUnit.match(/<FT1\.19>/g) || []).length);
+}
+
 // -- populateReportUnit end to end -------------------------------------------
 {
   const u = populateReportUnit(templateUnit, {
@@ -85,8 +94,9 @@ ok("phnFields: an absent PHN gives indicator Y and a blank", (() => { const p = 
     case: { claim_number: "7654321", date_of_injury: "2026-02-02" },
     practitioner: { name: "Green, Pat", role_code: "OIS" },
     message: { datetime: "2026-08-11T10:00", controlId: "REP-1", formId: "C050E", injuryDate: "2026-02-02" },
+    financial: { transactionDate: "2026-01-05", feeCode: "000099", facilityType: "H" },
   });
-  ok("populateReportUnit fills patient, case, practitioner and message together", val(u, "PID.5", "XPN.1") === "Roe" && val(u, "PV1.19", "CX.1") === "7654321" && val(u, "PRD.1", "CE_TAB_0131.1") === "OIS" && val(u, "MSH", "MSH.10") === "REP-1");
+  ok("populateReportUnit fills patient, case, practitioner, message and financial together", val(u, "PID.5", "XPN.1") === "Roe" && val(u, "PV1.19", "CX.1") === "7654321" && val(u, "PRD.1", "CE_TAB_0131.1") === "OIS" && val(u, "MSH", "MSH.10") === "REP-1" && val(u, "FT1.14", "CE.1") === "000099");
   ok("populateReportUnit does not disturb the OBX section", (u.match(/<ZRPT_P03\.LST\.2>/g) || []).length === 1 && /<OBX>/.test(u));
 }
 
