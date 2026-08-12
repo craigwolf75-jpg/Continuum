@@ -32,11 +32,13 @@ const practitioner = { family: "Green", given: "Pat", role_code: "GP", phone_are
     worker, case: caseData, practitioner,
     message: { datetime: "202608110900", controlId: "REP-1", formId: "C050E", injuryDate: "2026-02-02" },
     financial: { transactionId: "TXN-0001", transactionDate: "2026-01-02", feeCode: "000042", facilityType: "H", procedureCode: "03.02A" },
+    coding: { diagnosisNarrative: "Left shoulder rotator cuff strain", diagnosisProvenance: "human", diagnosticCodes: ["840.4"], injuries: [{ partOfBody: "31000", sideOfBody: "L", typeOfInjury: "07110" }] },
   });
   const batch = assembleFromTemplate(template, [unit]);
   ok("a populated report carries the worker and case values", /<XPN\.1>Roe<\/XPN\.1>/.test(batch) && /<CX\.1>7654321<\/CX\.1>/.test(batch) && /<PID\.7>19900303<\/PID\.7>/.test(batch));
   ok("a populated report carries the FT1 financial fields", /<FT1\.3>TXN-0001<\/FT1\.3>/.test(batch) && /<FT1\.4>20260102<\/FT1\.4>/.test(batch) && /<CE\.1>000042<\/CE\.1>/.test(batch));
-  ok("a populated single report batch (with FT1) passes the real structural schema", await passesStructural(batch, "populated-1.xml"));
+  ok("a populated report carries the FT1.19 clinical coding", /<CE\.2>Left shoulder rotator cuff strain<\/CE\.2><CE\.3>DIAGNOSIS<\/CE\.3>/.test(batch) && /<CE\.1>840\.4<\/CE\.1><CE\.2\/><CE\.3>DIAGCD<\/CE\.3>/.test(batch) && /<CE\.1>31000<\/CE\.1><CE\.2\/><CE\.3>POBCD<\/CE\.3>/.test(batch));
+  ok("a populated single report batch (with FT1 + clinical coding) passes the real structural schema", await passesStructural(batch, "populated-1.xml"));
 }
 
 // Two distinct populated reports assemble into one batch that validates.

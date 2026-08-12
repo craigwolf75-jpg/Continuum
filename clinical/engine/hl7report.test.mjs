@@ -12,7 +12,8 @@ import { dirname, join } from "node:path";
 import { extractReportUnits } from "./hl7envelope.mjs";
 import {
   hl7Date, hl7DateTime, splitName, phnFields, setLeaf,
-  populatePID, populateCase, populatePRD, populateMessage, populateFT1, populateReportUnit,
+  populatePID, populateCase, populatePRD, populateMessage, populateFT1,
+  buildFt1CodingSection, assertDiagnosisSigned, populateFt1Coding, populateReportUnit,
 } from "./hl7report.mjs";
 
 const SAMPLES = join(dirname(fileURLToPath(import.meta.url)), "..", "db", "samples");
@@ -85,6 +86,42 @@ ok("phnFields: an absent PHN gives indicator Y and a blank", (() => { const p = 
   ok("FT1 fee code lands in FT1.14/CE.1 and procedure in FT1.25/CE.1", val(u, "FT1.14", "CE.1") === "000042" && val(u, "FT1.25", "CE.1") === "03.02A");
   ok("FT1 facility type lands in FT1.16/HD.2", val(u, "FT1.16", "HD.2") === "H");
   ok("FT1 population does not touch the FT1.19 clinical coding (no diagnosis invented)", !val(u, "FT1.14", "CE.1").includes("DIAG") && (u.match(/<FT1\.19>/g) || []).length === (templateUnit.match(/<FT1\.19>/g) || []).length);
+}
+
+// -- FT1.19 clinical injury coding + diagnosis -------------------------------
+const coding = {
+  diagnosisNarrative: "Left shoulder rotator cuff strain",
+  diagnosisProvenance: "human",
+  diagnosticCodes: ["840.4", "840.9"],
+  injuries: [{ partOfBody: "31000", sideOfBody: "L", typeOfInjury: "07110" }, { partOfBody: "00000", sideOfBody: "", typeOfInjury: "04300" }],
+};
+{
+  const section = buildFt1CodingSection(coding);
+  const entries = section.match(/<FT1\.19>[\s\S]*?<\/FT1\.19>/g) || [];
+  ok("the coding builds 1 diagnosis + 2 diag codes + 2 injury triples (9 entries)", entries.length === 1 + 2 + 6);
+  ok("the diagnosis narrative lands in CE.2 of the DIAGNOSIS entry", /<FT1\.19><CE\.1\/><CE\.2>Left shoulder rotator cuff strain<\/CE\.2><CE\.3>DIAGNOSIS<\/CE\.3><\/FT1\.19>/.test(section));
+  ok("diagnostic codes land as DIAGCD entries with the code in CE.1", /<CE\.1>840\.4<\/CE\.1><CE\.2\/><CE\.3>DIAGCD<\/CE\.3>/.test(section));
+  ok("an injury emits POBCD then SOBCD then TOICD in order", /POBCD[\s\S]*?SOBCD[\s\S]*?TOICD/.test(section) && /<CE\.1>31000<\/CE\.1><CE\.2\/><CE\.3>POBCD<\/CE\.3>/.test(section));
+  ok("an empty side of body is a self closing CE.1 on the SOBCD entry", /<FT1\.19><CE\.1\/><CE\.2\/><CE\.3>SOBCD<\/CE\.3><\/FT1\.19>/.test(section));
+}
+
+// -- the provenance guard (0A.2): an untouched ai_draft diagnosis is refused --
+ok("assertDiagnosisSigned throws on an untouched ai_draft diagnosis", (() => {
+  try { assertDiagnosisSigned({ diagnosisNarrative: "model guess", diagnosisProvenance: "ai_draft" }); return false; }
+  catch (e) { return e.code === "AI-DIAGNOSIS-UNSIGNED"; }
+})());
+ok("assertDiagnosisSigned passes a human diagnosis and an ai_draft_edited one", assertDiagnosisSigned({ diagnosisNarrative: "x", diagnosisProvenance: "human" }) === true && assertDiagnosisSigned({ diagnosisNarrative: "x", diagnosisProvenance: "ai_draft_edited" }) === true);
+
+// -- populateFt1Coding swaps the FT1.19.LST content --------------------------
+{
+  const u = populateFt1Coding(templateUnit, coding);
+  // the primary (first) FT1.19.LST is replaced with the 9 built entries (C050E has up to 3
+  // detail lines; only the first is populated, the cardinality note in hl7report).
+  const firstLst = u.slice(u.indexOf("<FT1.19.LST>"), u.indexOf("</FT1.19.LST>"));
+  ok("populateFt1Coding replaces the primary FT1.19.LST with the 9 built entries", firstLst.includes("Left shoulder rotator cuff strain") && (firstLst.match(/<FT1\.19>/g) || []).length === 9);
+  let threw = null;
+  try { populateFt1Coding(templateUnit, { diagnosisNarrative: "raw model dx", diagnosisProvenance: "ai_draft" }); } catch (e) { threw = e.code; }
+  ok("populateFt1Coding refuses an untouched ai_draft diagnosis", threw === "AI-DIAGNOSIS-UNSIGNED");
 }
 
 // -- populateReportUnit end to end -------------------------------------------
