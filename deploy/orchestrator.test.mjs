@@ -16,10 +16,12 @@ import { validateAgainstSchemas } from "./xsd-validator.mjs";
 
 const SAMPLES = join(dirname(fileURLToPath(import.meta.url)), "..", "clinical", "db", "samples");
 const template = readFileSync(join(SAMPLES, "5.03 - C050E - Min Fields.xml"), "utf8");
-// The report's observations are seeded from the template's own OBX section so the assembled
-// document is a complete, board valid section (the full OBX skeleton from the seed is the next
-// increment; here we prove the envelope path end to end through the real validator).
+// The report's observations and the form OBX skeleton are both seeded from the template's own
+// OBX section (identifier order = the skeleton, identifier -> value = the report values), so the
+// orchestrator assembles through the SKELETON path (repo.getObxSkeleton) and the real validator
+// checks the result.
 const templateObservations = extractObx(getObxSection(extractReportUnits(template)[0]));
+const c050eSkeleton = templateObservations.map((o) => o.identifier);
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
@@ -30,6 +32,7 @@ function repoWithSignedReport() {
     practitioners: [{ id: "prac-1", clinic_id: "clinic-1", billing_number: "12345", name: "Dr Test", active: true }],
     reports: [{ id: "rep-1", case_id: "case-1", practitioner_id: "prac-1", form_id: "C050E", version: 1, status: "signed", snapshot_hash: "0".repeat(64) }],
     observations: [{ report_id: "rep-1", observations: templateObservations }],
+    obxSkeletons: [{ form_id: "C050E", identifiers: c050eSkeleton }],
     reportFields: [{ report_id: "rep-1", fields: {
       worker: { family: "Roe", given: "Sam", date_of_birth: "1990-03-03", phn: "987654321", street: "42 Elm Ave", city: "Calgary", province: "AB", postal: "T2T2T2" },
       case: { claim_number: "7654321", claim_reference: "7654321", date_of_injury: "2026-02-02" },
@@ -69,6 +72,7 @@ const validate = async (xml) => {
   // The assembled document carries the report's OWN populated fields, not the template's.
   const assembled = await generateForAssertion(repo, template);
   ok("the assembled document carries the report's populated worker and case fields", /<XPN\.1>Roe<\/XPN\.1>/.test(assembled) && /<PID\.7>19900303<\/PID\.7>/.test(assembled) && /<CX\.1>7654321<\/CX\.1>/.test(assembled) && /<MSH\.10>rep-1<\/MSH\.10>/.test(assembled));
+  ok("the OBX section was built through the full form skeleton (98 observations)", extractObx(assembled.slice(assembled.indexOf("<ZRPT_P03.LST.2>"))).length === 98);
 }
 
 // Re run the default assembler directly to assert on the assembled document content (the dry

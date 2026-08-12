@@ -16,7 +16,9 @@
      commitSignature(bundle)         -> persists report_update, axis rows, band audit, audit
                                         event in ONE transaction; returns { committed: true }
      getSignedReports(clinicId)      -> [ report, ... ] with status signed
-     getReportObservations(reportId) -> ordered [ { identifier, value }, ... ] (OBX layer)
+     getReportObservations(reportId) -> ordered [ { identifier, value }, ... ] (OBX values)
+     getObxSkeleton(formId)          -> ordered [ obx_identifier, ... ] (wcb_obx_skeleton seed,
+                                        009/010: the form's full OBX skeleton in ordinal order)
      getReportFields(reportId)       -> { worker, case, practitioner, message } | null
                                         (the per report identity and demographic values;
                                         hl7report populateReportUnit fills the segments)
@@ -45,6 +47,7 @@ export function createInMemoryRepository(seed = {}) {
     drafts: new Map((seed.drafts || []).map((d) => [d.report_id, { ...d }])),
     observations: new Map((seed.observations || []).map((o) => [o.report_id, o.observations.slice()])),
     reportFields: new Map((seed.reportFields || []).map((f) => [f.report_id, { ...f.fields }])),
+    obxSkeletons: new Map((seed.obxSkeletons || []).map((s) => [s.form_id, s.identifiers.slice()])),
     restrictions: new Map((seed.restrictions || []).map((x) => [x.report_id, { ...x.restrictionByAxis }])),
     consents: new Map((seed.consents || []).map((c) => [c.case_id, { ...c }])),
     pinkData: new Map((seed.pinkData || []).map((p) => [p.report_id, { ...p.data }])),
@@ -74,6 +77,7 @@ export function createInMemoryRepository(seed = {}) {
       return out;
     },
     getReportObservations(reportId) { return (store.observations.get(reportId) || []).slice(); },
+    getObxSkeleton(formId) { return (store.obxSkeletons.get(formId) || []).slice(); },
     getReportFields(reportId) { const f = store.reportFields.get(reportId); return f ? { ...f } : null; },
     getClinic(clinicId) { const c = store.clinics.get(clinicId); return c ? { ...c } : null; },
     isPractitionerActive(id) { const p = store.practitioners.get(id); return Boolean(p && p.active !== false); },

@@ -99,6 +99,16 @@ export function resolveObservations(fullSkeletonIds, conditionalIds, valuesById,
   return out;
 }
 
+// Build a report's OBX section from its form skeleton (the wcb_obx_skeleton seed, migrations
+// 009 and 010): emit the FULL skeleton in ordinal order, each observation present, carrying its
+// value from valuesById or present and empty when the report has no value for it (the board
+// convention, never absent, never HL7 null). skeletonIds is the ordered identifier list for the
+// form; valuesById maps an identifier to its value. This is what carries a signed report's real
+// field values into the board's fixed OBX order, replacing a template's OBX.
+export function skeletonObxSection(skeletonIds, valuesById) {
+  return serializeObxSection(resolveObservations(skeletonIds, [], valuesById || {}));
+}
+
 // The signature hash: a canonical SHA-256 over the payload, computed at signature so the
 // signed snapshot and the submitted file are byte identical (Section 2.1).
 export function snapshotHash(canonicalPayload) {
