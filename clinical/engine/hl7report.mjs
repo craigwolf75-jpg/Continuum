@@ -198,9 +198,76 @@ export function populateFT1(unit, financial) {
   return u;
 }
 
+// -- FT1.19 clinical injury coding and the diagnosis (provenance gated) -------------------
+// FT1.19.LST is a variable length list of coded entries, each a CE with CE.1 (code), CE.2
+// (text) and CE.3 (the entry type): a DIAGNOSIS entry carrying the narrative in CE.2, DIAGCD
+// entries carrying diagnostic codes in CE.1, and repeating POBCD / SOBCD / TOICD triples
+// carrying the part of body, side of body and type of injury codes. This is CLINICAL data
+// bound for the BOARD (the board receives the full clinical record; only the employer view is
+// restricted, Prompt 43). The values come from the SIGNED report: the diagnosis and codes are
+// the practitioner's attested values, the injury codes derive from the case and the board code
+// lists (seeded 002) via the human confirmed AI-03 coding. NONE of it is invented here.
+
+const CE = (tag, v) => { const t = xmlEscape(s(v)); return t === "" ? "<" + tag + "/>" : "<" + tag + ">" + t + "</" + tag + ">"; };
+function ft1Entry(ce1, ce2, ce3) { return "<FT1.19>" + CE("CE.1", ce1) + CE("CE.2", ce2) + "<CE.3>" + xmlEscape(s(ce3)) + "</CE.3></FT1.19>"; }
+
+// The core doctrine (0A.2, criterion 4): a model may never propose the ANSWER to a clinical
+// question. A raw, untouched ai_draft diagnosis must never reach the board. Signed reports
+// cannot carry an untouched ai_draft (blocksSignature), so this is defense in depth: refuse to
+// emit a diagnosis whose provenance is an untouched ai_draft.
+export function assertDiagnosisSigned(coding) {
+  const c = coding || {};
+  if (s(c.diagnosisNarrative) !== "" && s(c.diagnosisProvenance) === "ai_draft") {
+    const e = new Error("Refusing to emit an untouched ai_draft diagnosis to the board. A model authored diagnosis must be reviewed and signed by the practitioner first (0A.2, criterion 4).");
+    e.code = "AI-DIAGNOSIS-UNSIGNED"; throw e;
+  }
+  return true;
+}
+
+// Build the FT1.19.LST inner content from structured clinical coding: the DIAGNOSIS entry
+// (narrative in CE.2), then the DIAGCD codes, then the POBCD / SOBCD / TOICD triple per injury.
+// coding: { diagnosisNarrative, diagnosisProvenance, diagnosticCodes[], injuries[{partOfBody,
+// sideOfBody, typeOfInjury}] }. Side of body may be empty (a part with no side).
+export function buildFt1CodingSection(coding) {
+  const c = coding || {};
+  const parts = [ft1Entry("", c.diagnosisNarrative, "DIAGNOSIS")];
+  for (const code of c.diagnosticCodes || []) parts.push(ft1Entry(code, "", "DIAGCD"));
+  for (const inj of c.injuries || []) {
+    parts.push(ft1Entry(inj.partOfBody, "", "POBCD"));
+    parts.push(ft1Entry(inj.sideOfBody, "", "SOBCD"));
+    parts.push(ft1Entry(inj.typeOfInjury, "", "TOICD"));
+  }
+  return parts.join("");
+}
+
+// Replace the inner content of a list element (for example FT1.19.LST), skipping comment
+// embedded tags. Used to swap a rebuilt coding list into the unit.
+function replaceListInner(x, listTag, innerXml) {
+  const open = "<" + listTag + ">";
+  const a = tagOutsideComment(x, open, 0);
+  if (a === -1) return x;
+  const b = tagOutsideComment(x, "</" + listTag + ">", a);
+  if (b === -1) return x;
+  return x.slice(0, a + open.length) + s0(innerXml) + x.slice(b);
+}
+
+// Populate the FT1.19 clinical coding on the PRIMARY (first) FT1 invoice detail line: guard the
+// diagnosis provenance, build the coded list, swap it into the first FT1.19.LST.
+//
+// CARDINALITY NOTE: a form may carry up to N FT1 invoice detail lines (C050E allows 3), and the
+// template ships the maximum, each with its own FT1.19.LST of placeholder coding. This
+// populates the first. Trimming the unused detail lines and populating any additional real
+// lines is a separate concern; until it is handled, the extra lines keep template placeholder
+// coding, which is harmless while production submission is structurally disabled but MUST be
+// resolved before any real submission. populateFT1 (financial) is on the same first line.
+export function populateFt1Coding(unit, coding) {
+  assertDiagnosisSigned(coding);
+  return replaceListInner(s0(unit), "FT1.19.LST", buildFt1CodingSection(coding));
+}
+
 // Populate a whole report unit from a report's data. data: { worker, case, practitioner,
-// message, financial }. Each segment populator is independent, so a caller can populate a
-// subset. Clinical values (diagnosis, injury coding) are populated elsewhere, provenance gated.
+// message, financial, coding }. Each segment populator is independent, so a caller can populate
+// a subset. The clinical coding (data.coding) is provenance gated (assertDiagnosisSigned).
 export function populateReportUnit(unit, data = {}) {
   let u = s0(unit);
   if (data.worker || data.case) u = populatePID(u, data.worker, data.case);
@@ -208,5 +275,6 @@ export function populateReportUnit(unit, data = {}) {
   if (data.practitioner) u = populatePRD(u, data.practitioner);
   if (data.message) u = populateMessage(u, data.message);
   if (data.financial) u = populateFT1(u, data.financial);
+  if (data.coding) u = populateFt1Coding(u, data.coding);
   return u;
 }
