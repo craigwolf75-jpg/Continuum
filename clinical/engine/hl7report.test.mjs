@@ -14,6 +14,7 @@ import {
   hl7Date, hl7DateTime, splitName, phnFields, setLeaf,
   populatePID, populateCase, populatePRD, populateMessage, populateFT1,
   buildFt1CodingSection, assertDiagnosisSigned, populateFt1Coding, populateReportUnit,
+  ft1DetailLines, populateInvoiceLines,
 } from "./hl7report.mjs";
 
 const SAMPLES = join(dirname(fileURLToPath(import.meta.url)), "..", "db", "samples");
@@ -122,6 +123,61 @@ ok("assertDiagnosisSigned passes a human diagnosis and an ai_draft_edited one", 
   let threw = null;
   try { populateFt1Coding(templateUnit, { diagnosisNarrative: "raw model dx", diagnosisProvenance: "ai_draft" }); } catch (e) { threw = e.code; }
   ok("populateFt1Coding refuses an untouched ai_draft diagnosis", threw === "AI-DIAGNOSIS-UNSIGNED");
+}
+
+// -- FT1 multi line invoice cardinality (trim unused + populate real lines) --
+// The C050E template ships the maximum three FT1 invoice detail lines, each with placeholder
+// coding; a real report carries one to three. populateInvoiceLines populates each real line and
+// trims the rest (the board's own C050E min sample carries a single FT1 line, so a trimmed
+// document stays board conforming: proven structurally in the deploy suite).
+const fin0 = { transactionId: "TXN-A", transactionDate: "2026-01-02", quantity: "1", feeCode: "000042", facilityType: "H", procedureCode: "03.02A" };
+const cod0 = { diagnosisNarrative: "Left shoulder rotator cuff strain", diagnosisProvenance: "human", diagnosticCodes: ["840.4"], injuries: [{ partOfBody: "31000", sideOfBody: "L", typeOfInjury: "07110" }] };
+const fin1 = { transactionId: "TXN-B", transactionDate: "2026-01-03", quantity: "1", feeCode: "000099", facilityType: "H", procedureCode: "03.05B" };
+const cod1 = { diagnosisNarrative: "Lumbar sprain", diagnosisProvenance: "human", diagnosticCodes: ["847.2"], injuries: [] };
+
+ok("ft1DetailLines finds the three real FT1 blocks and skips the instructional comments", (() => {
+  const lines = ft1DetailLines(templateUnit);
+  if (lines.length !== 3) return false;
+  return lines.every((l) => templateUnit.slice(l.start, l.end).startsWith("<FT1>") && templateUnit.slice(l.start, l.end).endsWith("</FT1>"));
+})());
+
+{
+  const u = populateInvoiceLines(templateUnit, [{ financial: fin0, coding: cod0 }]);
+  ok("one invoice line trims the template down to a single FT1 detail line", (u.match(/<FT1\.1>/g) || []).length === 1);
+  const line0 = (() => { const b = ft1DetailLines(u)[0]; return u.slice(b.start, b.end); })();
+  ok("the single retained line carries its financial and clinical coding", val(line0, "FT1.14", "CE.1") === "000042" && line0.includes("Left shoulder rotator cuff strain"));
+  ok("trimming preserves the FT1 END OF comment and the OBX section", /FINANCIAL TRANSACTION SEGMENT; END OF/.test(u) && (u.match(/<ZRPT_P03\.LST\.2>/g) || []).length === 1 && /<OBX>/.test(u));
+}
+
+{
+  const u = populateInvoiceLines(templateUnit, [{ financial: fin0, coding: cod0 }, { financial: fin1, coding: cod1 }]);
+  ok("two invoice lines keep two FT1 detail lines (the third is trimmed)", (u.match(/<FT1\.1>/g) || []).length === 2);
+  ok("the retained set ids are contiguous 1 then 2", (u.match(/<FT1\.1>[^<]*<\/FT1\.1>/g) || []).join(",") === "<FT1.1>1</FT1.1>,<FT1.1>2</FT1.1>");
+  const blocks = ft1DetailLines(u);
+  const l0 = u.slice(blocks[0].start, blocks[0].end), l1 = u.slice(blocks[1].start, blocks[1].end);
+  ok("each line carries its own financial and coding (the second line is really populated, not placeholder)",
+    val(l0, "FT1.14", "CE.1") === "000042" && l0.includes("Left shoulder rotator cuff strain") &&
+    val(l1, "FT1.14", "CE.1") === "000099" && l1.includes("Lumbar sprain"));
+}
+
+ok("populateInvoiceLines refuses an empty list (a report carries at least one invoice detail line)", (() => {
+  try { populateInvoiceLines(templateUnit, []); return false; } catch (e) { return e.code === "INVOICE-LINES-EMPTY"; }
+})());
+ok("populateInvoiceLines refuses more lines than the form allows (never fabricates an invoice line)", (() => {
+  try { populateInvoiceLines(templateUnit, [1, 2, 3, 4].map(() => ({ financial: fin0 }))); return false; } catch (e) { return e.code === "INVOICE-LINES-EXCEED-TEMPLATE"; }
+})());
+ok("populateInvoiceLines provenance gates every line (an untouched ai_draft diagnosis on any line is refused)", (() => {
+  try { populateInvoiceLines(templateUnit, [{ financial: fin0, coding: cod0 }, { coding: { diagnosisNarrative: "model guess", diagnosisProvenance: "ai_draft" } }]); return false; }
+  catch (e) { return e.code === "AI-DIAGNOSIS-UNSIGNED"; }
+})());
+
+{
+  const u = populateReportUnit(templateUnit, {
+    worker: { family: "Roe", given: "Sam", phn: "987654321" },
+    case: { claim_number: "7654321", date_of_injury: "2026-02-02" },
+    invoiceLines: [{ financial: fin0, coding: cod0 }],
+  });
+  ok("populateReportUnit routes invoiceLines through the multi line populator and still fills demographics", (u.match(/<FT1\.1>/g) || []).length === 1 && val(u, "PID.5", "XPN.1") === "Roe" && val(u, "PV1.19", "CX.1") === "7654321");
 }
 
 // -- populateReportUnit end to end -------------------------------------------

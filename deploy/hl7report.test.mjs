@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { validateAgainstSchemas } from "./xsd-validator.mjs";
 import { extractReportUnits, assembleFromTemplate, reportCount } from "../clinical/engine/hl7envelope.mjs";
-import { populateReportUnit } from "../clinical/engine/hl7report.mjs";
+import { populateReportUnit, populateInvoiceLines } from "../clinical/engine/hl7report.mjs";
 
 const SAMPLES = join(dirname(fileURLToPath(import.meta.url)), "..", "clinical", "db", "samples");
 const template = readFileSync(join(SAMPLES, "5.02 - C050E - Max Fields without Attachments.xml"), "utf8");
@@ -49,6 +49,32 @@ const practitioner = { family: "Green", given: "Pat", role_code: "GP", phone_are
   ok("two populated reports assemble into a two report batch", reportCount(batch) === 2);
   ok("a two report populated batch passes the real structural schema", await passesStructural(batch, "populated-2.xml"));
   ok("the second report has the no PHN indicator Y with a blank PHN", /<CX\.5>Y<\/CX\.5>/.test(batch));
+}
+
+// FT1 invoice detail line cardinality: the template ships three FT1 lines; a report populated
+// with fewer real invoice lines is TRIMMED, and the trimmed document must still validate. This
+// proves the board's own min shape (one FT1 line) holds after we trim the max template, and that
+// a two line report validates with both lines populated.
+const fin0 = { transactionId: "TXN-A", transactionDate: "2026-01-02", quantity: "1", feeCode: "000042", facilityType: "H", procedureCode: "03.02A" };
+const cod0 = { diagnosisNarrative: "Left shoulder rotator cuff strain", diagnosisProvenance: "human", diagnosticCodes: ["840.4"], injuries: [{ partOfBody: "31000", sideOfBody: "L", typeOfInjury: "07110" }] };
+const fin1 = { transactionId: "TXN-B", transactionDate: "2026-01-03", quantity: "1", feeCode: "000099", facilityType: "H", procedureCode: "03.05B" };
+const cod1 = { diagnosisNarrative: "Lumbar sprain", diagnosisProvenance: "human", diagnosticCodes: ["847.2"], injuries: [] };
+const baseData = { worker, case: caseData, practitioner, message: { datetime: "202608110900", controlId: "REP-T", formId: "C050E", injuryDate: "2026-02-02" } };
+
+// A single real invoice line (template trimmed from three to one) validates.
+{
+  const unit = populateReportUnit(extractReportUnits(template)[0], { ...baseData, invoiceLines: [{ financial: fin0, coding: cod0 }] });
+  const batch = assembleFromTemplate(template, [unit]);
+  ok("a trimmed single FT1 line report carries exactly one invoice detail line", (batch.match(/<FT1\.1>/g) || []).length === 1);
+  ok("a trimmed single FT1 line report validates against the real structural schema", await passesStructural(batch, "trimmed-1.xml"));
+}
+
+// A two invoice line report (template trimmed from three to two) validates with both lines filled.
+{
+  const unit = populateInvoiceLines(populateReportUnit(extractReportUnits(template)[0], baseData), [{ financial: fin0, coding: cod0 }, { financial: fin1, coding: cod1 }]);
+  const batch = assembleFromTemplate(template, [unit]);
+  ok("a two FT1 line report carries two invoice detail lines with both fee codes populated", (batch.match(/<FT1\.1>/g) || []).length === 2 && /<CE\.1>000042<\/CE\.1>/.test(batch) && /<CE\.1>000099<\/CE\.1>/.test(batch));
+  ok("a two FT1 line report validates against the real structural schema", await passesStructural(batch, "two-ft1.xml"));
 }
 
 console.log("\nhl7 per report population conformance suite: " + pass + " passed, " + fail + " failed");

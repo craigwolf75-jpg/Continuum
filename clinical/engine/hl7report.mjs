@@ -254,27 +254,101 @@ function replaceListInner(x, listTag, innerXml) {
 // Populate the FT1.19 clinical coding on the PRIMARY (first) FT1 invoice detail line: guard the
 // diagnosis provenance, build the coded list, swap it into the first FT1.19.LST.
 //
-// CARDINALITY NOTE: a form may carry up to N FT1 invoice detail lines (C050E allows 3), and the
-// template ships the maximum, each with its own FT1.19.LST of placeholder coding. This
-// populates the first. Trimming the unused detail lines and populating any additional real
-// lines is a separate concern; until it is handled, the extra lines keep template placeholder
-// coding, which is harmless while production submission is structurally disabled but MUST be
-// resolved before any real submission. populateFT1 (financial) is on the same first line.
+// CARDINALITY: a form may carry up to N FT1 invoice detail lines (C050E allows 3) and the
+// template ships the maximum, each with its own FT1.19.LST of placeholder coding. This populates
+// the FIRST line only. A report with more than one real invoice line, or one that must TRIM the
+// unused template lines so no phantom invoice line reaches the board, uses populateInvoiceLines
+// below (one { financial, coding } per real line), which populates each line and trims the rest.
+// populateFT1 (financial) is on the same first line.
 export function populateFt1Coding(unit, coding) {
   assertDiagnosisSigned(coding);
   return replaceListInner(s0(unit), "FT1.19.LST", buildFt1CodingSection(coding));
 }
 
+// -- FT1 invoice detail line cardinality (trim unused + populate real lines) -------------
+// The C050E template ships the MAXIMUM number of FT1 invoice detail lines the form allows
+// (three), each with placeholder coding; a real report carries one to three. populateFT1 and
+// populateFt1Coding above act on the FIRST FT1 line only, which left the extra template lines
+// carrying placeholder coding. That is harmless while production submission is structurally
+// disabled but must be resolved before any real submission (a phantom invoice line must never
+// reach the board). populateInvoiceLines populates each real line from the report and trims the
+// unused template lines. The board's own C050E MIN sample carries a single FT1 line, so a
+// trimmed document stays board conforming (proven structurally in the deploy suite).
+
+// Enumerate the real FT1 invoice detail line blocks: each <FT1>...</FT1> sibling that is not an
+// instructional comment (the board template embeds comments containing literal <FT1></FT1> text
+// to say how to repeat invoice lines; tagOutsideComment skips those). Returns [{ start, end }]
+// with end exclusive (just past </FT1>).
+export function ft1DetailLines(unit) {
+  const x = s0(unit);
+  const lines = [];
+  let from = 0;
+  for (;;) {
+    const a = tagOutsideComment(x, "<FT1>", from);
+    if (a === -1) break;
+    const c = tagOutsideComment(x, "</FT1>", a);
+    if (c === -1) break;
+    const end = c + "</FT1>".length;
+    lines.push({ start: a, end });
+    from = end;
+  }
+  return lines;
+}
+
+// Populate the invoice detail lines of a report unit. lines: an array of { financial, coding },
+// one per real invoice line, in order. Each line's financial fields go through populateFT1 and
+// its clinical coding through populateFt1Coding (so every line is provenance gated, not just the
+// first). Lines beyond the supplied count are trimmed; the retained lines stay in template order
+// so their FT1.1 set ids remain contiguous (1..N). Refuses an empty list (a report carries at
+// least one invoice detail line) and refuses more lines than the form's template allows (it never
+// fabricates an invoice line the form cannot carry).
+export function populateInvoiceLines(unit, lines) {
+  const x = s0(unit);
+  if (!Array.isArray(lines) || lines.length === 0) {
+    const e = new Error("A report carries at least one invoice detail line.");
+    e.code = "INVOICE-LINES-EMPTY"; throw e;
+  }
+  const blocks = ft1DetailLines(x);
+  if (blocks.length === 0) return x; // no FT1 detail lines in this form: nothing to populate
+  if (lines.length > blocks.length) {
+    const e = new Error("The form allows " + blocks.length + " invoice detail line(s); refusing to fabricate " + lines.length + ".");
+    e.code = "INVOICE-LINES-EXCEED-TEMPLATE"; throw e;
+  }
+  // Rebuild the FT1 region from the first supplied count of blocks (each populated, scoped to its
+  // own block string), preserving the original inter block separators, and drop the rest. The
+  // slice past the last kept block's region carries the FT1 END OF comment through unchanged.
+  const regionStart = blocks[0].start;
+  const regionEnd = blocks[blocks.length - 1].end;
+  let region = "";
+  for (let i = 0; i < lines.length; i++) {
+    if (i > 0) region += x.slice(blocks[i - 1].end, blocks[i].start); // the whitespace separator before this block
+    let block = x.slice(blocks[i].start, blocks[i].end);
+    const line = lines[i] || {};
+    if (line.financial) block = populateFT1(block, line.financial);
+    if (line.coding) block = populateFt1Coding(block, line.coding);
+    region += block;
+  }
+  return x.slice(0, regionStart) + region + x.slice(regionEnd);
+}
+
 // Populate a whole report unit from a report's data. data: { worker, case, practitioner,
-// message, financial, coding }. Each segment populator is independent, so a caller can populate
-// a subset. The clinical coding (data.coding) is provenance gated (assertDiagnosisSigned).
+// message, financial, coding, invoiceLines }. Each segment populator is independent, so a caller
+// can populate a subset. The clinical coding (data.coding) is provenance gated
+// (assertDiagnosisSigned). For the invoice detail lines a caller supplies EITHER data.invoiceLines
+// (the multi line form: one { financial, coding } per real line, trims the unused template lines)
+// OR the single line data.financial / data.coding (populates only the first FT1 line, the legacy
+// shape); invoiceLines wins when both are present.
 export function populateReportUnit(unit, data = {}) {
   let u = s0(unit);
   if (data.worker || data.case) u = populatePID(u, data.worker, data.case);
   if (data.case) u = populateCase(u, data.case);
   if (data.practitioner) u = populatePRD(u, data.practitioner);
   if (data.message) u = populateMessage(u, data.message);
-  if (data.financial) u = populateFT1(u, data.financial);
-  if (data.coding) u = populateFt1Coding(u, data.coding);
+  if (data.invoiceLines) {
+    u = populateInvoiceLines(u, data.invoiceLines);
+  } else {
+    if (data.financial) u = populateFT1(u, data.financial);
+    if (data.coding) u = populateFt1Coding(u, data.coding);
+  }
   return u;
 }
