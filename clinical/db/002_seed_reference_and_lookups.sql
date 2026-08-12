@@ -35,7 +35,7 @@ on conflict do nothing;
 -- code lists (spec Section 2.1). One wcb_code_list per lookup worksheet, faithful mirror.
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Form ID Maximum Attachments','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Form ID Maximum Attachments','C040','3',1,null),
   ('Form ID Maximum Attachments','C040E','3',2,null),
@@ -55,7 +55,7 @@ where l.list_name='Form ID Maximum Attachments' and l.source_version='2025.04' o
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','State Province Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('State Province Codes','AB','Alberta',1,null),
   ('State Province Codes','BC','British Columbia',2,null),
@@ -127,7 +127,7 @@ where l.list_name='State Province Codes' and l.source_version='2025.04' on confl
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Country Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Country Codes','CN','Canada',1,null),
   ('Country Codes','US','United States',2,null),
@@ -373,7 +373,7 @@ where l.list_name='Country Codes' and l.source_version='2025.04' on conflict do 
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Part Of Body Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Part Of Body Codes','24000','Abdomen',1,'{"Side of Body Required":"No"}'::jsonb),
   ('Part Of Body Codes','42000','Ankle',2,'{"Side of Body Required":"Yes"}'::jsonb),
@@ -410,7 +410,7 @@ where l.list_name='Part Of Body Codes' and l.source_version='2025.04' on conflic
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Side Of Body Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Side Of Body Codes','B','Both',1,null),
   ('Side Of Body Codes','L','Left',2,null),
@@ -420,7 +420,7 @@ where l.list_name='Side Of Body Codes' and l.source_version='2025.04' on conflic
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Nature Of Injury Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Nature Of Injury Codes','41150','Allergic Reaction',1,null),
   ('Nature Of Injury Codes','09510','Animal/Insect Bite',2,null),
@@ -473,7 +473,7 @@ where l.list_name='Nature Of Injury Codes' and l.source_version='2025.04' on con
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Pain Scale Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Pain Scale Codes','0','0 - No pain at all',1,null),
   ('Pain Scale Codes','1','1',2,null),
@@ -491,7 +491,7 @@ where l.list_name='Pain Scale Codes' and l.source_version='2025.04' on conflict 
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Function Level Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Function Level Codes','0','0 - Severely prohibited',1,null),
   ('Function Level Codes','1','1',2,null),
@@ -509,7 +509,7 @@ where l.list_name='Function Level Codes' and l.source_version='2025.04' on confl
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Skill Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Skill Codes','ADCS','Addictions Counsellor',1,null),
   ('Skill Codes','ANES','Anesthesiology',2,null),
@@ -656,7 +656,7 @@ where l.list_name='Skill Codes' and l.source_version='2025.04' on conflict do no
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Practitioner Role Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Practitioner Role Codes','GP','General Practitioner',1,null),
   ('Practitioner Role Codes','OR','Ortho',2,null),
@@ -672,7 +672,7 @@ where l.list_name='Practitioner Role Codes' and l.source_version='2025.04' on co
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Gender Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Gender Codes','M','Male',1,null),
   ('Gender Codes','F','Female',2,null),
@@ -682,7 +682,7 @@ where l.list_name='Gender Codes' and l.source_version='2025.04' on conflict do n
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Yes No Responses','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Yes No Responses','Y','Yes',1,null),
   ('Yes No Responses','N','No',2,null)
@@ -691,7 +691,7 @@ where l.list_name='Yes No Responses' and l.source_version='2025.04' on conflict 
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Yes No NA Responses','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Yes No NA Responses','YES','Yes',1,null),
   ('Yes No NA Responses','NO','No',2,null),
@@ -701,7 +701,7 @@ where l.list_name='Yes No NA Responses' and l.source_version='2025.04' on confli
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Dominant Hand Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Dominant Hand Codes','L','Left',1,null),
   ('Dominant Hand Codes','R','Right',2,null)
@@ -710,7 +710,7 @@ where l.list_name='Dominant Hand Codes' and l.source_version='2025.04' on confli
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Facility Types','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Facility Types','C','Clinic',1,null),
   ('Facility Types','F','Facility Non-Hospital',2,null),
@@ -720,7 +720,7 @@ where l.list_name='Facility Types' and l.source_version='2025.04' on conflict do
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Able Unable Responses','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Able Unable Responses','ABLE','Able',1,null),
   ('Able Unable Responses','UNABLE','Unable',2,null)
@@ -729,7 +729,7 @@ where l.list_name='Able Unable Responses' and l.source_version='2025.04' on conf
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Work Restriction Detail Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Work Restriction Detail Codes','ABLE','Able',1,null),
   ('Work Restriction Detail Codes','UNABLE','Unable',2,null),
@@ -740,7 +740,7 @@ where l.list_name='Work Restriction Detail Codes' and l.source_version='2025.04'
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Weight Category Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Weight Category Codes','LIMITED','Limited (5 kg/11 lbs)',1,null),
   ('Weight Category Codes','LIGHT','Light (10kg/22 lbs)',2,null),
@@ -751,7 +751,7 @@ where l.list_name='Weight Category Codes' and l.source_version='2025.04' on conf
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Fit For Work Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Fit For Work Codes','FIT','Fit to return to work',1,null),
   ('Fit For Work Codes','NOTFIT','Not fit for any work',2,null)
@@ -760,7 +760,7 @@ where l.list_name='Fit For Work Codes' and l.source_version='2025.04' on conflic
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Restriction Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Restriction Codes','NORESTRICT','No restrictions',1,null),
   ('Restriction Codes','RESTRICTFR','Restricted from',2,null)
@@ -769,7 +769,7 @@ where l.list_name='Restriction Codes' and l.source_version='2025.04' on conflict
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Consultation Letter Formats','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Consultation Letter Formats','ATTCH','File attachment',1,null),
   ('Consultation Letter Formats','TEXT','Plain text',2,null)
@@ -778,7 +778,7 @@ where l.list_name='Consultation Letter Formats' and l.source_version='2025.04' o
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Basic Work Restriction Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Basic Work Restriction Codes','ABLE','Able',1,null),
   ('Basic Work Restriction Codes','UNABLE','Unable',2,null),
@@ -788,7 +788,7 @@ where l.list_name='Basic Work Restriction Codes' and l.source_version='2025.04' 
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Extended Work Restriction Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Extended Work Restriction Codes','ABLE','Able',1,null),
   ('Extended Work Restriction Codes','UNABLE','Unable',2,null),
@@ -798,7 +798,7 @@ where l.list_name='Extended Work Restriction Codes' and l.source_version='2025.0
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','Work Level Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('Work Level Codes','PREINJURY','Pre-injury level',1,null),
   ('Work Level Codes','LIMITATION','With work limitations',2,null)
@@ -807,7 +807,7 @@ where l.list_name='Work Level Codes' and l.source_version='2025.04' on conflict 
 
 insert into clinical.wcb_code_list(jurisdiction_code,list_name,source_version) values ('AB','OIS Family Physician Codes','2025.04') on conflict do nothing;
 insert into clinical.wcb_code_value(list_id,list_name,code,description,sort_order,extra)
-select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra from clinical.wcb_code_list l
+select l.id, v.list_name, v.code, v.description, v.sort_order, v.extra::jsonb from clinical.wcb_code_list l
 join (values
   ('OIS Family Physician Codes','OIS','OIS physician',1,null),
   ('OIS Family Physician Codes','FAMILY','Family physician',2,null)
