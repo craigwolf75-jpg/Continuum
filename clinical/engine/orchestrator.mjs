@@ -23,7 +23,7 @@
 
 import { signMeasurement, provenanceAudit } from "./sign_measurement.mjs";
 import { runBatch } from "./batch.mjs";
-import { serializeObxSection } from "./hl7gen.mjs";
+import { serializeObxSection, skeletonObxSection } from "./hl7gen.mjs";
 import { extractReportUnits, getObxSection, buildReportUnit, assembleFromTemplate } from "./hl7envelope.mjs";
 import { populateReportUnit } from "./hl7report.mjs";
 import { parseReturnFile, reconcileReturnFile, buildSubmissionResult } from "./returnfile.mjs";
@@ -140,7 +140,20 @@ function defaultAssemble(repo, opts = {}) {
     const units = [];
     for (const r of signed) {
       const obs = await nn(repo.getReportObservations(r.id));
-      const obxSection = obs && obs.length ? serializeObxSection(obs) : getObxSection(templateUnit);
+      // Prefer the form's seeded OBX skeleton (009/010): emit the full board ordered skeleton
+      // with this report's values filled in and the rest present and empty. Fall back to the
+      // report's own observations, then to the template's OBX, so the batch always validates.
+      const skeleton = repo.getObxSkeleton ? await nn(repo.getObxSkeleton(r.form_id)) : [];
+      let obxSection;
+      if (skeleton && skeleton.length) {
+        const valuesById = {};
+        for (const o of obs || []) valuesById[o.identifier] = o.value;
+        obxSection = skeletonObxSection(skeleton, valuesById);
+      } else if (obs && obs.length) {
+        obxSection = serializeObxSection(obs);
+      } else {
+        obxSection = getObxSection(templateUnit);
+      }
       let unit = buildReportUnit(templateUnit, { controlId: r.id, obxSection });
       const fields = repo.getReportFields ? await nn(repo.getReportFields(r.id)) : null;
       if (fields) unit = populateReportUnit(unit, { ...fields, message: { ...(fields.message || {}), controlId: r.id } });
