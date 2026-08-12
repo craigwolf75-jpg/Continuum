@@ -80,12 +80,26 @@ export function phnFields(phn) {
 // (<L>old</L>); an empty value writes a self closing leaf. A leaf absent from the template is
 // left absent (the template owns which optional fields are present). container disambiguates
 // a leaf that repeats across segments (CX.1 in PID.2 versus PID.3, XPN.1 in PID.5 versus PRD.2).
+// Index of the first occurrence of tag at or after `from` that is NOT inside an XML comment.
+// The board template embeds instructional comments containing literal tag text (for example a
+// note that shows <FT1></FT1> to say how to repeat invoice lines); a naive indexOf would match
+// that comment instead of the real segment. This skips comment embedded matches.
+function tagOutsideComment(x, tag, from) {
+  let i = x.indexOf(tag, from);
+  while (i !== -1) {
+    const lastOpen = x.lastIndexOf("<!--", i);
+    const closeAfter = lastOpen === -1 ? -1 : x.indexOf("-->", lastOpen);
+    if (lastOpen === -1 || closeAfter < i) return i; // not inside a comment
+    i = x.indexOf(tag, i + tag.length);
+  }
+  return -1;
+}
+
 export function setLeaf(xml, container, leaf, value) {
   const x = s0(xml);
-  const open = "<" + container + ">";
-  const a = x.indexOf(open);
+  const a = tagOutsideComment(x, "<" + container + ">", 0);
   if (a === -1) return x;
-  const b = x.indexOf("</" + container + ">", a);
+  const b = tagOutsideComment(x, "</" + container + ">", a);
   if (b === -1) return x;
   const region = x.slice(a, b);
   const esc = leaf.replace(/\./g, "\\.");
@@ -162,13 +176,37 @@ export function populateMessage(unit, message) {
   return u;
 }
 
+// The FT1 financial transaction fields. FT1 is a mixed segment: FT1.19.LST carries the
+// diagnosis narrative and the diagnostic, part of body, side of body and type of injury codes,
+// and FT1.26 carries the provider skills. Those are CLINICAL values and are NOT populated here:
+// the diagnosis narrative is provenance gated (a practitioner authored or ai_draft then human
+// signed value, never invented by a mapper), and the injury coding is a separate clinical
+// mapping increment. This populator sets only the transaction and financial fields:
+//   FT1.3 transaction id, FT1.4 transaction date, FT1.10 quantity, FT1.14/CE.1 fee code,
+//   FT1.16/HD.2 facility type, FT1.25/CE.1 procedure code.
+// It only sets a field when the caller supplies it; the values come from the report, the clinic
+// profile and the board fee schedule (seeded in 002), never invented here.
+export function populateFT1(unit, financial) {
+  let u = s0(unit);
+  const fin = financial || {};
+  if (fin.transactionId !== undefined) u = setLeaf(u, "FT1", "FT1.3", s(fin.transactionId));
+  if (fin.transactionDate !== undefined) u = setLeaf(u, "FT1", "FT1.4", hl7Date(fin.transactionDate));
+  if (fin.quantity !== undefined) u = setLeaf(u, "FT1", "FT1.10", s(fin.quantity));
+  if (fin.feeCode !== undefined) u = setLeaf(u, "FT1.14", "CE.1", s(fin.feeCode));
+  if (fin.facilityType !== undefined) u = setLeaf(u, "FT1.16", "HD.2", s(fin.facilityType));
+  if (fin.procedureCode !== undefined) u = setLeaf(u, "FT1.25", "CE.1", s(fin.procedureCode));
+  return u;
+}
+
 // Populate a whole report unit from a report's data. data: { worker, case, practitioner,
-// message }. Each segment populator is independent, so a caller can populate a subset.
+// message, financial }. Each segment populator is independent, so a caller can populate a
+// subset. Clinical values (diagnosis, injury coding) are populated elsewhere, provenance gated.
 export function populateReportUnit(unit, data = {}) {
   let u = s0(unit);
   if (data.worker || data.case) u = populatePID(u, data.worker, data.case);
   if (data.case) u = populateCase(u, data.case);
   if (data.practitioner) u = populatePRD(u, data.practitioner);
   if (data.message) u = populateMessage(u, data.message);
+  if (data.financial) u = populateFT1(u, data.financial);
   return u;
 }
