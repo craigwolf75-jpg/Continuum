@@ -1,0 +1,11 @@
+# The tenancy exception allow-list (Prompt 51 Section 3.4 item 4, Prompt 50a Decision 2).
+#
+# This file contains EXACTLY ONE entry, forever. It is the single table in the entire platform
+# permitted to exist without a tenant column. A second entry is a defect to report, never a
+# provisioning step, and the CI check fails the build when this file has anything other than one
+# entry. Tables are excluded from platform rules by SCHEMA boundary, never by adding to this list.
+#
+# Format: schema.table | reason
+# Lines starting with # and blank lines are ignored.
+
+mpi.person | reserved for the Master Person Index anchor, declared by the old stream Prompt 48 Section 0.4

@@ -1,0 +1,70 @@
+# Continuum Core Platform Foundations (Prompt 51) CI gate.
+#
+# Proves the platform migrations against a throwaway postgres 15 service container: applies them
+# in order, runs the tenant coverage check, and runs the isolation tests. Nothing here touches the
+# live Supabase project; the container is created fresh for the job and discarded. psql runs with
+# ON_ERROR_STOP so any RAISE from a check or a test fails the build.
+#
+# No em dashes or en dashes anywhere.
+
+name: platform
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'platform/**'
+      - '.github/workflows/platform.yml'
+  pull_request:
+    paths:
+      - 'platform/**'
+      - '.github/workflows/platform.yml'
+
+jobs:
+  platform-db:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install psql
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Tenant exception allow-list must have exactly one entry
+        run: |
+          entries=$(grep -vE '^[[:space:]]*#|^[[:space:]]*$' platform/db/tenant_exception_allowlist.txt | wc -l)
+          echo "allow-list entries: $entries"
+          if [ "$entries" -ne 1 ]; then
+            echo "FAIL: the tenant exception allow-list must contain exactly one entry, found $entries"
+            exit 1
+          fi
+
+      - name: Apply platform migrations in order
+        run: |
+          for f in platform/db/0*.sql; do
+            echo "applying $f"
+            psql -v ON_ERROR_STOP=1 -f "$f"
+          done
+
+      - name: Tenant coverage check
+        run: psql -v ON_ERROR_STOP=1 -f platform/ci/check_tenant_coverage.sql
+
+      - name: Tenancy isolation tests
+        run: psql -v ON_ERROR_STOP=1 -f platform/db/tests/tenancy_isolation.sql
