@@ -67,6 +67,16 @@ jobs:
           done
           if [ "$bad" -ne 0 ]; then exit 1; fi
 
+      - name: Pre-create Supabase roles (clinical migrations revoke from them)
+        run: psql -v ON_ERROR_STOP=1 -f platform/ci/setup_roles.sql
+
+      - name: Apply clinical migrations (so the S8 retrofit has tables to alter)
+        run: |
+          for f in clinical/db/[0-9]*.sql; do
+            echo "applying $f"
+            psql -v ON_ERROR_STOP=1 -f "$f"
+          done
+
       - name: Apply platform migrations in order
         run: |
           for f in platform/db/0*.sql; do

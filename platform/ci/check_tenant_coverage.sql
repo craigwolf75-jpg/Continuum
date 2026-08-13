@@ -28,10 +28,20 @@ declare
   v_policies int;
   v_problems text := '';
   enforced   text[] := array['tenancy', 'consent', 'events', 'config'];
+  -- S8b brought the clinical board reference tables under the shared reference pattern (row level
+  -- security plus a read all policy, no organisation_id, no FORCE). The rest of the clinical schema
+  -- (tenant owned and immutable tables) is enforced as those increments land.
+  clinical_shared text[] := array[
+    'clinical.jurisdiction', 'clinical.wcb_code_list', 'clinical.wcb_code_value',
+    'clinical.wcb_pob_noi_forbidden', 'clinical.wcb_contract_role', 'clinical.wcb_contract_role_form',
+    'clinical.wcb_fee_schedule', 'clinical.statutory_holiday', 'clinical.form_definition',
+    'clinical.form_element', 'clinical.form_rule', 'clinical.wcb_capability_code_set',
+    'clinical.wcb_error_catalogue', 'clinical.wcb_obx_skeleton', 'clinical.wcb_hl7_wire_map',
+    'clinical.functional_axis_map', 'clinical.internal_restriction_code'];
   -- specific tables in schemas that also hold out of scope tables (the audit schema also holds the
-  -- physician stream's live audit.event and audit.ai_generation, retrofitted in S8).
-  enforced_tables text[] := array['audit.record', 'employer.disclosure_release'];
-  shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag'];
+  -- physician stream's live audit.event and audit.ai_generation, retrofitted in a later increment).
+  enforced_tables text[] := array['audit.record', 'employer.disclosure_release'] || clinical_shared;
+  shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag'] || clinical_shared;
   is_shared  boolean;
   is_root    boolean;
 begin
