@@ -66,5 +66,9 @@ jobs:
       - name: Tenant coverage check
         run: psql -v ON_ERROR_STOP=1 -f platform/ci/check_tenant_coverage.sql
 
-      - name: Tenancy isolation tests
-        run: psql -v ON_ERROR_STOP=1 -f platform/db/tests/tenancy_isolation.sql
+      - name: Platform SQL tests
+        run: |
+          for t in platform/db/tests/*.sql; do
+            echo "running $t"
+            psql -v ON_ERROR_STOP=1 -f "$t"
+          done
