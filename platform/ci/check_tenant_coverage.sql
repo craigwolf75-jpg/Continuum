@@ -28,6 +28,9 @@ declare
   v_policies int;
   v_problems text := '';
   enforced   text[] := array['tenancy', 'consent'];
+  -- specific tables in schemas that also hold out of scope tables (the audit schema also holds the
+  -- physician stream's live audit.event and audit.ai_generation, retrofitted in S8).
+  enforced_tables text[] := array['audit.record'];
   shared_ref text[] := array['consent.text_version'];
   is_shared  boolean;
   is_root    boolean;
@@ -37,7 +40,8 @@ begin
     from pg_class c
     join pg_namespace n on n.oid = c.relnamespace
     where c.relkind = 'r'
-      and n.nspname = any (enforced)
+      and (n.nspname = any (enforced)
+           or (n.nspname || '.' || c.relname) = any (enforced_tables))
   loop
     is_shared := (r.schema_name || '.' || r.table_name) = any (shared_ref);
     is_root   := (r.schema_name = 'tenancy' and r.table_name = 'organisation');
