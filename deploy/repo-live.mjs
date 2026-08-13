@@ -7,10 +7,14 @@
    without a network (the CI test injects a fake executor; the live runner injects a Supabase
    Management API executor). The orchestrators are unchanged: they await the same port methods.
 
-   Read only for the batch dry run path (getClinic, getSignedReports, getObxSkeleton,
+   Read side for the batch dry run path (getClinic, getSignedReports, getObxSkeleton,
    getReportObservations, getReportFields, isPractitionerActive); recordBatchOutcome is a receipt
    only, because the dry run must not write (and audit.event is append only, so a dry run must
-   not pollute it). No production submission is enabled here. No dashes anywhere. */
+   not pollute it). commitSignature is the signature WRITE path (safe partial): it builds the one
+   transaction that freezes a signed measurement, but takes the measurement header explicitly
+   because the measurement_draft jsonb contract that would supply it is not built yet, and it
+   refuses rather than fabricates when the header is absent or an axis is skipped. No production
+   submission is enabled here. No dashes anywhere. */
 
 // A SQL string literal, single quotes doubled; NULL for null or undefined. The inputs are ids
 // and form codes from the application, but everything is escaped regardless.
@@ -79,5 +83,64 @@ export function createLiveRepository(opts = {}) {
 
     // The dry run does not persist (audit.event is append only). Return a receipt.
     async recordBatchOutcome() { return { recorded: true, persisted: false }; },
+
+    // The signature write path (Prompt 42 Section 2.1, safe partial). Persists a signed
+    // measurement in ONE transaction: insert the functional_measurement header, one
+    // functional_axis_value per answered axis, the band_derivation_audit rows, update the
+    // wcb_report signature columns, and append the audit event. Testable with a fake executor;
+    // no live write happens here.
+    //
+    // The header is taken EXPLICITLY (header arg, or bundle.header) because the measurement
+    // header lives in the measurement_draft store, whose jsonb contract is owned by the Form
+    // Engine and Screens prompt and is not built yet. This adapter must never fabricate an
+    // immutable clinical row, so it refuses when the header is absent. answered is derived as
+    // NOT skipped: the signature gate (sign_measurement.signatureBlockers) guarantees every axis
+    // is answered or skipped, so a non skipped signed axis was answered. It also refuses a
+    // skipped axis: migration 011 makes functional_axis_value.source NOT NULL, but a signed skip
+    // carries no source, so persisting skips is an unresolved contract, surfaced not invented.
+    async commitSignature(bundle, header) {
+      const b = bundle || {};
+      const h = header || b.header || {};
+      const need = ["id", "clinic_id", "case_id", "practitioner_id", "form_id", "version", "measured_at", "effective_from", "created_by"];
+      const missing = need.filter((k) => h[k] === undefined || h[k] === null);
+      if (missing.length) {
+        throw new Error("commitSignature (live) requires an explicit measurement header (missing: " + missing.join(", ") + "); it must not fabricate an immutable clinical.functional_measurement row until the measurement_draft contract lands.");
+      }
+      const axes = b.axis_value_rows || [];
+      const skips = axes.filter((r) => r.skipped);
+      if (skips.length) {
+        const e = new Error("Refusing to persist a skipped axis (" + skips.map((r) => r.axis).join(", ") + "): migration 011 functional_axis_value.source is NOT NULL but a signed skip carries no source. The skipped axis persistence contract is unresolved.");
+        e.code = "SKIPPED-AXIS-PERSISTENCE-UNRESOLVED";
+        throw e;
+      }
+
+      const mid = h.id;
+      const by = h.created_by;
+      const ru = b.report_update || {};
+      const ev = b.audit_event || {};
+      const at = b.at ?? ru.signed_at ?? null;
+
+      const mCols = "id, clinic_id, case_id, report_id, practitioner_id, form_id, version, measured_at, work_hours_per_day, modified_hours, modified_duties, fit_for_work, fit_override_reason, effective_from, effective_to, created_by";
+      const mVals = [h.id, h.clinic_id, h.case_id, b.reportId, h.practitioner_id, h.form_id, h.version, h.measured_at, h.work_hours_per_day, h.modified_hours, h.modified_duties, h.fit_for_work, h.fit_override_reason, h.effective_from, h.effective_to, by].map(lit).join(", ");
+      const insMeasurement = "insert into clinical.functional_measurement (" + mCols + ") values (" + mVals + ")";
+
+      const avCols = "measurement_id, axis, answered, skipped, skip_reason, capability, restriction_code_list, measured_hours, measured_weight_kg, derived_band, derived_capability_code, rounded_down, below_lowest_band, source, created_by";
+      const avRows = axes.map((r) => "(" + [mid, r.axis, !r.skipped, false, r.skip_reason ?? null, r.capability ?? null, r.restriction_code_list ?? r.code_list_name ?? null, r.measured_hours ?? null, r.measured_weight_kg ?? null, r.derived_band ?? null, r.derived_capability_code ?? null, Boolean(r.rounded_down), Boolean(r.below_lowest_band), r.source ?? null, by].map(lit).join(", ") + ")");
+      const insAxis = avRows.length ? "insert into clinical.functional_axis_value (" + avCols + ") values " + avRows.join(", ") : null;
+
+      const baCols = "measurement_id, axis, measured_weight_kg, measured_hours, emitted_band, emitted_capability_code, rounded_down, below_lowest_band, derived_by";
+      const baRows = (b.band_derivation_audit || []).map((d) => "(" + [mid, d.axis, d.measured_weight_kg ?? null, d.measured_hours ?? null, d.emitted_band ?? null, d.emitted_capability_code ?? null, Boolean(d.rounded_down), Boolean(d.below_lowest_band), by].map(lit).join(", ") + ")");
+      const insBand = baRows.length ? "insert into clinical.band_derivation_audit (" + baCols + ") values " + baRows.join(", ") : null;
+
+      const updReport = "update clinical.wcb_report set status = " + lit(ru.status ?? "signed") + ", signed_at = " + lit(ru.signed_at ?? at) + ", snapshot_hash = " + lit(ru.snapshot_hash ?? null) + " where id = " + lit(b.reportId);
+
+      const insAudit = "insert into audit.event (actor, action, entity, entity_id, detail, at) values (" +
+        [ev.actor ?? null, ev.action ?? "sign_measurement", ev.entity ?? "wcb_report", ev.entity_id ?? b.reportId].map(lit).join(", ") +
+        ", " + lit(JSON.stringify(ev.detail || {})) + "::jsonb, " + lit(at) + ")";
+
+      const sql = ["begin", insMeasurement, insAxis, insBand, updReport, insAudit].filter(Boolean).join(";\n") + ";\ncommit;";
+      await execute(sql);
+      return { committed: true, measurement_id: mid };
+    },
   };
 }
