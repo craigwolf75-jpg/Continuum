@@ -27,11 +27,11 @@ declare
   v_force    boolean;
   v_policies int;
   v_problems text := '';
-  enforced   text[] := array['tenancy', 'consent', 'events'];
+  enforced   text[] := array['tenancy', 'consent', 'events', 'config'];
   -- specific tables in schemas that also hold out of scope tables (the audit schema also holds the
   -- physician stream's live audit.event and audit.ai_generation, retrofitted in S8).
   enforced_tables text[] := array['audit.record'];
-  shared_ref text[] := array['consent.text_version'];
+  shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag'];
   is_shared  boolean;
   is_root    boolean;
 begin

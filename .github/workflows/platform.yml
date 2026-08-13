@@ -66,6 +66,9 @@ jobs:
       - name: Tenant coverage check
         run: psql -v ON_ERROR_STOP=1 -f platform/ci/check_tenant_coverage.sql
 
+      - name: Feature flag expiry check
+        run: psql -v ON_ERROR_STOP=1 -f platform/ci/check_flag_expiry.sql
+
       - name: Platform SQL tests
         run: |
           for t in platform/db/tests/*.sql; do
