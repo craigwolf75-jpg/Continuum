@@ -42,7 +42,7 @@ begin
     execute format('alter table employer.%I force  row level security', t);
     execute format('drop policy if exists %I on employer.%I', t || '_isolation', t);
     execute format(
-      'create policy %I on employer.%I using (organisation_id = current_setting(''app.organisation_id'')::uuid) with check (organisation_id = current_setting(''app.organisation_id'')::uuid)',
+      'create policy %I on employer.%I using (organisation_id = (select current_setting(''app.organisation_id'')::uuid)) with check (organisation_id = (select current_setting(''app.organisation_id'')::uuid))',
       t || '_isolation', t);
     execute format('grant select, insert, update on employer.%I to app_release', t);
     execute format('grant select on employer.%I to app_employer', t);

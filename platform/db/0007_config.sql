@@ -59,8 +59,8 @@ alter table config.value enable row level security;
 alter table config.value force  row level security;
 drop policy if exists value_isolation on config.value;
 create policy value_isolation on config.value
-  using      (organisation_id = current_setting('app.organisation_id')::uuid or organisation_id is null)
-  with check (organisation_id = current_setting('app.organisation_id')::uuid);
+  using      (organisation_id = (select current_setting('app.organisation_id')::uuid) or organisation_id is null)
+  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
 revoke insert, update, delete on config.value from app_clinical, app_employer, app_release, app_readonly;
 
 -- ---------------------------------------------------------------------------
@@ -100,8 +100,8 @@ alter table config.feature_flag_rule enable row level security;
 alter table config.feature_flag_rule force  row level security;
 drop policy if exists flag_rule_isolation on config.feature_flag_rule;
 create policy flag_rule_isolation on config.feature_flag_rule
-  using      (organisation_id = current_setting('app.organisation_id')::uuid or organisation_id is null)
-  with check (organisation_id = current_setting('app.organisation_id')::uuid);
+  using      (organisation_id = (select current_setting('app.organisation_id')::uuid) or organisation_id is null)
+  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
 revoke insert, update, delete on config.feature_flag_rule from app_clinical, app_employer, app_release, app_readonly;
 
 -- ---------------------------------------------------------------------------

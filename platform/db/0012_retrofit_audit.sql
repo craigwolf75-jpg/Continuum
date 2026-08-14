@@ -39,7 +39,7 @@ begin
     execute format('alter table audit.%I force  row level security', t);
     execute format('drop policy if exists %I on audit.%I', t || '_isolation', t);
     execute format(
-      'create policy %I on audit.%I using (organisation_id = current_setting(''app.organisation_id'')::uuid) with check (organisation_id = current_setting(''app.organisation_id'')::uuid)',
+      'create policy %I on audit.%I using (organisation_id = (select current_setting(''app.organisation_id'')::uuid)) with check (organisation_id = (select current_setting(''app.organisation_id'')::uuid))',
       t || '_isolation', t);
     -- append only: no UPDATE or DELETE grant. The migration 016 and 017 revoke and trigger stand.
     execute format('grant select, insert on audit.%I to app_clinical', t);

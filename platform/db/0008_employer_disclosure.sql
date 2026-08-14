@@ -39,8 +39,8 @@ alter table employer.disclosure_release enable row level security;
 alter table employer.disclosure_release force  row level security;
 drop policy if exists disclosure_release_isolation on employer.disclosure_release;
 create policy disclosure_release_isolation on employer.disclosure_release
-  using      (organisation_id = current_setting('app.organisation_id')::uuid)
-  with check (organisation_id = current_setting('app.organisation_id')::uuid);
+  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
+  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
 
 -- append only: grant wall plus the S2 trigger. The release path role (app_release) inserts; no role
 -- holds update or delete (Section 5.3).

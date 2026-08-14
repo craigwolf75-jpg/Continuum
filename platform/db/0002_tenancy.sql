@@ -92,18 +92,18 @@ alter table tenancy.location     force  row level security;
 
 drop policy if exists organisation_isolation on tenancy.organisation;
 create policy organisation_isolation on tenancy.organisation
-  using      (id = current_setting('app.organisation_id')::uuid)
-  with check (id = current_setting('app.organisation_id')::uuid);
+  using      (id = (select current_setting('app.organisation_id')::uuid))
+  with check (id = (select current_setting('app.organisation_id')::uuid));
 
 drop policy if exists region_isolation on tenancy.region;
 create policy region_isolation on tenancy.region
-  using      (organisation_id = current_setting('app.organisation_id')::uuid)
-  with check (organisation_id = current_setting('app.organisation_id')::uuid);
+  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
+  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
 
 drop policy if exists location_isolation on tenancy.location;
 create policy location_isolation on tenancy.location
-  using      (organisation_id = current_setting('app.organisation_id')::uuid)
-  with check (organisation_id = current_setting('app.organisation_id')::uuid);
+  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
+  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
 
 -- ---------------------------------------------------------------------------
 -- Grants (the primary wall). The application roles may resolve their own organisation, region
