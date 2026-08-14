@@ -45,9 +45,16 @@ declare
     'clinical.worker', 'clinical.wcb_case', 'clinical.wcb_report', 'clinical.wcb_report_field',
     'clinical.wcb_submission', 'clinical.measurement_draft', 'clinical.clinic',
     'clinical.clinic_batch_schedule', 'clinical.consent'];
+  -- S8d brought the immutable clinical tables under tenant isolation (organisation_id, RLS, FORCE,
+  -- policy); they remain insert only via the migration 011 revoke plus the blocking trigger.
+  clinical_immutable text[] := array[
+    'clinical.functional_measurement', 'clinical.functional_axis_value', 'clinical.functional_grasping',
+    'clinical.functional_reaching', 'clinical.functional_environment', 'clinical.functional_clinical_context',
+    'clinical.internal_restriction', 'clinical.legacy_restriction_label', 'clinical.band_derivation_audit'];
   -- specific tables in schemas that also hold out of scope tables (the audit schema also holds the
   -- physician stream's live audit.event and audit.ai_generation, retrofitted in a later increment).
-  enforced_tables text[] := array['audit.record', 'employer.disclosure_release'] || clinical_shared || clinical_tenant;
+  enforced_tables text[] := array['audit.record', 'employer.disclosure_release']
+    || clinical_shared || clinical_tenant || clinical_immutable;
   shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag'] || clinical_shared;
   is_shared  boolean;
   is_root    boolean;
