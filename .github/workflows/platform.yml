@@ -73,7 +73,12 @@ jobs:
 
       - name: Apply clinical migrations (so the S8 retrofit has tables to alter)
         run: |
-          for f in clinical/db/[0-9]*.sql; do
+          # Non lexical order: migration 016 (the physician foundation) creates the parent tables
+          # that migration 011's preflight gates on, so 016 applies after 010 and before 011. This
+          # matches the live apply order (001 to 010, 016, 011 to 015, 017, 018).
+          order="001 002 003 004 005 006 007 008 009 010 016 011 012 013 014 015 017 018"
+          for n in $order; do
+            f=$(ls clinical/db/${n}_*.sql)
             echo "applying $f"
             psql -v ON_ERROR_STOP=1 -f "$f"
           done
