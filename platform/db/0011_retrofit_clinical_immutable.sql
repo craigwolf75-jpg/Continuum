@@ -47,7 +47,7 @@ begin
     execute format('alter table clinical.%I force  row level security', t);
     execute format('drop policy if exists %I on clinical.%I', t || '_isolation', t);
     execute format(
-      'create policy %I on clinical.%I using (organisation_id = (select current_setting(''app.organisation_id'')::uuid)) with check (organisation_id = (select current_setting(''app.organisation_id'')::uuid))',
+      'create policy %I on clinical.%I using (organisation_id = (select current_setting(''app.organisation_id''))::uuid) with check (organisation_id = (select current_setting(''app.organisation_id''))::uuid)',
       t || '_isolation', t);
     -- insert only: immutable, so no UPDATE or DELETE grant. Migration 011 revoke plus its trigger stand.
     execute format('grant select, insert on clinical.%I to app_clinical', t);

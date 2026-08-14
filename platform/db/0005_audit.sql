@@ -60,8 +60,8 @@ alter table audit.record enable row level security;
 alter table audit.record force  row level security;
 drop policy if exists record_isolation on audit.record;
 create policy record_isolation on audit.record
-  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
-  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
+  using      (organisation_id = (select current_setting('app.organisation_id'))::uuid)
+  with check (organisation_id = (select current_setting('app.organisation_id'))::uuid);
 
 -- append only: grant wall plus the S2 trigger. No direct insert grant either: the only write path
 -- is audit.append_record below, so the hash chain can never be bypassed by a raw insert.

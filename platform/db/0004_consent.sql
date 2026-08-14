@@ -81,8 +81,8 @@ alter table consent.ledger_entry enable row level security;
 alter table consent.ledger_entry force  row level security;
 drop policy if exists ledger_entry_isolation on consent.ledger_entry;
 create policy ledger_entry_isolation on consent.ledger_entry
-  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
-  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
+  using      (organisation_id = (select current_setting('app.organisation_id'))::uuid)
+  with check (organisation_id = (select current_setting('app.organisation_id'))::uuid);
 
 -- append only: grant wall plus the S2 trigger. No role holds UPDATE or DELETE.
 revoke update, delete on consent.ledger_entry from app_clinical, app_employer, app_release, app_readonly;

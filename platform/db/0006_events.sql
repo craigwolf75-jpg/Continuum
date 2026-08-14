@@ -48,8 +48,8 @@ alter table events.domain_event enable row level security;
 alter table events.domain_event force  row level security;
 drop policy if exists domain_event_isolation on events.domain_event;
 create policy domain_event_isolation on events.domain_event
-  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
-  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
+  using      (organisation_id = (select current_setting('app.organisation_id'))::uuid)
+  with check (organisation_id = (select current_setting('app.organisation_id'))::uuid);
 
 -- append only. The only write path is events.emit, so no insert grant either.
 revoke insert, update, delete on events.domain_event from app_clinical, app_employer, app_release, app_readonly;
@@ -76,8 +76,8 @@ alter table events.subscription enable row level security;
 alter table events.subscription force  row level security;
 drop policy if exists subscription_isolation on events.subscription;
 create policy subscription_isolation on events.subscription
-  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
-  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
+  using      (organisation_id = (select current_setting('app.organisation_id'))::uuid)
+  with check (organisation_id = (select current_setting('app.organisation_id'))::uuid);
 
 -- ---------------------------------------------------------------------------
 -- outbox: the dispatch queue. Tenant owned. Mutable status (the poller advances it after commit),
@@ -101,8 +101,8 @@ alter table events.outbox enable row level security;
 alter table events.outbox force  row level security;
 drop policy if exists outbox_isolation on events.outbox;
 create policy outbox_isolation on events.outbox
-  using      (organisation_id = (select current_setting('app.organisation_id')::uuid))
-  with check (organisation_id = (select current_setting('app.organisation_id')::uuid));
+  using      (organisation_id = (select current_setting('app.organisation_id'))::uuid)
+  with check (organisation_id = (select current_setting('app.organisation_id'))::uuid);
 
 revoke insert, update, delete on events.outbox from app_clinical, app_employer, app_release, app_readonly;
 
