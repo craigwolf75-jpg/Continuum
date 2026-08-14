@@ -53,7 +53,9 @@ declare
     'clinical.internal_restriction', 'clinical.legacy_restriction_label', 'clinical.band_derivation_audit'];
   -- specific tables in schemas that also hold out of scope tables. audit.event and
   -- audit.ai_generation (the physician audit tables) were retrofitted in S8e.
-  enforced_tables text[] := array['audit.record', 'employer.disclosure_release', 'audit.event', 'audit.ai_generation']
+  enforced_tables text[] := array[
+      'audit.record', 'employer.disclosure_release', 'audit.event', 'audit.ai_generation',
+      'employer.published_restriction_set', 'employer.duty_match_line']
     || clinical_shared || clinical_tenant || clinical_immutable;
   shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag'] || clinical_shared;
   is_shared  boolean;
