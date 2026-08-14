@@ -110,6 +110,23 @@ function serializeSiteCookie(token) {
   return "ct_site=" + token + "; HttpOnly; Secure; SameSite=Lax; Path=/";
 }
 
+// Idle timeout window for the site access session. The middleware re-issues the
+// ct_site cookie on every valid request, so an active visitor keeps sliding the
+// window forward; SITE_SESSION_TTL_SECONDS with no request lets the token expire
+// and the gate returns. One place owns the TTL and the { iat, exp } payload
+// shape so the entry endpoint (site-access.js) and the middleware slide can
+// never drift.
+const SITE_SESSION_TTL_SECONDS = 30 * 60; // 30 minutes idle
+
+// Sign a fresh ct_site token good for one idle window and return its Set-Cookie
+// value. Used at first entry (site-access.js) and on every sliding refresh
+// (middleware.js).
+async function issueSiteCookie(secret, nowSec) {
+  const iat = typeof nowSec === "number" ? nowSec : Math.floor(Date.now() / 1000);
+  const token = await signSession({ iat, exp: iat + SITE_SESSION_TTL_SECONDS }, secret);
+  return serializeSiteCookie(token);
+}
+
 // Minimal Cookie header parser. Returns a plain object of name to decoded
 // value; never throws on a malformed header.
 function parseCookies(header) {
@@ -132,4 +149,4 @@ function parseCookies(header) {
   return out;
 }
 
-export { signSession, verifySession, serializeSiteCookie, parseCookies };
+export { signSession, verifySession, serializeSiteCookie, parseCookies, issueSiteCookie, SITE_SESSION_TTL_SECONDS };

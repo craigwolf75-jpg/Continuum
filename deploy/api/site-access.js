@@ -31,11 +31,10 @@
 
    No dashes anywhere. */
 
-import { signSession, serializeSiteCookie } from "./_site_session.js";
+import { issueSiteCookie } from "./_site_session.js";
 
 const MAX_ATTEMPTS = 10;
 const WINDOW_SECONDS = 60 * 60; // 1 hour
-const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days
 
 // Pure rate limit decision: 10 attempts per IP per hour, then a 1 hour
 // lockout. No I/O, so this is unit testable without Supabase. attemptsInWindow
@@ -243,10 +242,7 @@ async function handler(req, res) {
       return;
     }
 
-    const iat = now;
-    const exp = iat + SESSION_TTL_SECONDS;
-    const token = await signSession({ iat, exp }, sessionSecret);
-    const cookie = serializeSiteCookie(token);
+    const cookie = await issueSiteCookie(sessionSecret, now);
 
     res.setHeader("set-cookie", cookie);
     res.status(200).json({ ok: true });

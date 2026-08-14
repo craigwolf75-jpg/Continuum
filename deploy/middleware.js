@@ -37,7 +37,7 @@
    thing that can mark a path public. No dashes anywhere. */
 
 import { rewrite, next } from "@vercel/functions";
-import { verifySession, parseCookies } from "./api/_site_session.js";
+import { verifySession, parseCookies, issueSiteCookie } from "./api/_site_session.js";
 import { verifyHubSession, ADMIN_EMAILS } from "./api/_hub_session.js";
 
 // Vercel Edge Middleware matcher. Deliberately minimal: it excludes only the
@@ -222,6 +222,21 @@ async function middleware(request) {
       return rewriteToHolding(request);
     }
 
+    // Sliding idle timeout: a valid site session re-issues its ct_site cookie on
+    // every request, so an active visitor keeps extending the window and the gate
+    // returns only after SITE_SESSION_TTL_SECONDS with no request. Best effort:
+    // a refresh failure never blocks the request (the current token stays valid
+    // until it expires on its own), and an always-public path reached with no
+    // valid cookie is not refreshed.
+    let refreshInit;
+    if (hasValidCookie && secret) {
+      try {
+        refreshInit = { headers: { "set-cookie": await issueSiteCookie(secret, Math.floor(Date.now() / 1000)) } };
+      } catch (e) {
+        refreshInit = undefined;
+      }
+    }
+
     // SITE gate passed (or the kill switch turned every gate off). Hub
     // gating only applies when the kill switch is not disabling the whole
     // gate layer, matching decideSiteAccess's own documented scope for
@@ -236,11 +251,11 @@ async function middleware(request) {
       }
       const hubDecision = decideHubAccess(url.pathname, hubSession);
       if (hubDecision === "blocked") {
-        return rewriteToHub(request);
+        return rewriteToHub(request, refreshInit);
       }
     }
 
-    return passThrough();
+    return passThrough(refreshInit);
   } catch (e) {
     // Fail closed on any unexpected error: show the holding page rather than
     // risk leaking a gated route.
@@ -267,14 +282,14 @@ function rewriteToHolding(request) {
 // all). The browser URL bar stays on the originally requested path; the
 // gated portal is never served under it. A user hitting a portal outside
 // their group is sent back to the hub, not shown the content.
-function rewriteToHub(request) {
-  return rewrite(new URL("/hub", request.url));
+function rewriteToHub(request, init) {
+  return init ? rewrite(new URL("/hub", request.url), init) : rewrite(new URL("/hub", request.url));
 }
 
 // Lets the request continue to its originally requested destination, via the
 // documented @vercel/functions next() helper.
-function passThrough() {
-  return next();
+function passThrough(init) {
+  return init ? next(init) : next();
 }
 
 export { config, decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch, decideHubAccess };

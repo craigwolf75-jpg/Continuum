@@ -7,7 +7,7 @@
    an actual Vercel Edge runtime is untested; this module never touches
    Supabase, so there is nothing else here that needs live creds.
    No dashes anywhere. */
-import { signSession, verifySession, serializeSiteCookie, parseCookies } from "./api/_site_session.js";
+import { signSession, verifySession, serializeSiteCookie, parseCookies, issueSiteCookie, SITE_SESSION_TTL_SECONDS } from "./api/_site_session.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
@@ -73,6 +73,19 @@ async function main() {
   ok("cookie is a SESSION cookie (no Max-Age, no Expires) so the gate returns each browser session",
     !/max-age/i.test(cookie) && !/expires/i.test(cookie));
   ok("cookie never names ct_session", !cookie.includes("ct_session"));
+
+  // -- issueSiteCookie: the shared idle-timeout issuer used by both the entry
+  //    endpoint (site-access.js) and the middleware sliding refresh --
+  ok("SITE_SESSION_TTL_SECONDS is a 30 minute idle window", SITE_SESSION_TTL_SECONDS === 30 * 60);
+  const issued = await issueSiteCookie(SECRET, now);
+  ok("issueSiteCookie returns a ct_site SESSION cookie (no Max-Age, no Expires)",
+    issued.indexOf("ct_site=") === 0 && !/max-age/i.test(issued) && !/expires/i.test(issued));
+  const issuedToken = parseCookies(issued).ct_site;
+  ok("issued token verifies now", (await verifySession(issuedToken, SECRET, now)) !== null);
+  const issuedPayload = await verifySession(issuedToken, SECRET, now);
+  ok("issued token exp is exactly one idle window out", issuedPayload && issuedPayload.exp === now + SITE_SESSION_TTL_SECONDS);
+  ok("issued token is rejected once the idle window elapses (the gate returns)",
+    (await verifySession(issuedToken, SECRET, now + SITE_SESSION_TTL_SECONDS + 1)) === null);
 
   // -- cookie header parsing --
   const parsed = parseCookies("ct_site=" + token + "; other=1");
