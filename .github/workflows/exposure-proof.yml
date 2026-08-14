@@ -1,9 +1,14 @@
-# Continuum exposure-proof gate (07.10). Runs the release-gate test that walks
-# every PHI surface as each role and fails on any leak. No em-dashes anywhere.
+# Continuum exposure-proof gate (07.10). Self-contained: builds the whole hub schema and the
+# demo seed into a throwaway postgres:15 service container, then walks every PHI surface as each
+# role and fails on any leak. No external database, no SUPABASE_DB_URL secret, and it never touches
+# the live Supabase project. psql runs with ON_ERROR_STOP so any RAISE (a leak, or an apply error)
+# fails the build.
 #
-# Requires repo secret SUPABASE_DB_URL: a Postgres connection string to a
-# database that has the migrations applied and the demo seed loaded. ON_ERROR_STOP
-# makes psql exit non-zero on the first RAISE, so any leak fails the job.
+# A stock postgres container does not have the Supabase managed objects the hub migrations assume,
+# so supabase/ci/00_supabase_shim.sql recreates them (roles, the auth claim helpers, and stubs for
+# cron, net, vault and storage), and the two managed-extension creates (pg_cron, pg_net) are
+# commented out at apply time. None of this touches the committed migrations or the real project.
+# No em dashes or en dashes anywhere.
 
 name: exposure-proof
 
@@ -16,20 +21,45 @@ on:
 jobs:
   exposure-proof:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
     steps:
       - uses: actions/checkout@v4
 
       - name: Install psql
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
-      - name: Run exposure-proof suite
-        env:
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      - name: Apply the Supabase compatibility shim (CI only)
+        run: psql -v ON_ERROR_STOP=1 -f supabase/ci/00_supabase_shim.sql
+
+      - name: Apply hub migrations in order (managed extensions neutralized)
         run: |
-          if [ -z "$SUPABASE_DB_URL" ]; then
-            echo "SUPABASE_DB_URL secret is not set; cannot run the exposure-proof gate."
-            exit 1
-          fi
-          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/exposure_proof.sql
+          # pg_cron and pg_net cannot be installed in a stock container; the shim stubs their
+          # call surface, so comment out just those two create-extension lines at apply time.
+          for f in supabase/migrations/*.sql; do
+            echo "applying $f"
+            sed -E 's/^[[:space:]]*create extension if not exists (pg_cron|pg_net);.*/-- CI shim: \1 stubbed in supabase\/ci\/00_supabase_shim.sql/' "$f" \
+              | psql -v ON_ERROR_STOP=1
+          done
+
+      - name: Load the demo seed (Worley tenant, Marcus Bedard case)
+        run: psql -v ON_ERROR_STOP=1 -f supabase/seed.sql
+
+      - name: Run the exposure-proof suite
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/exposure_proof.sql
