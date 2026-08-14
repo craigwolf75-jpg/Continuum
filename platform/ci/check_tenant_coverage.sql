@@ -38,9 +38,16 @@ declare
     'clinical.form_element', 'clinical.form_rule', 'clinical.wcb_capability_code_set',
     'clinical.wcb_error_catalogue', 'clinical.wcb_obx_skeleton', 'clinical.wcb_hl7_wire_map',
     'clinical.functional_axis_map', 'clinical.internal_restriction_code'];
+  -- S8c brought the mutable tenant owned clinical tables under tenant isolation (organisation_id,
+  -- RLS, FORCE, policy). practitioner is not here: E2 needs the absent mpi.person and is blocked.
+  -- The immutable clinical tables and the live audit tables are later increments.
+  clinical_tenant text[] := array[
+    'clinical.worker', 'clinical.wcb_case', 'clinical.wcb_report', 'clinical.wcb_report_field',
+    'clinical.wcb_submission', 'clinical.measurement_draft', 'clinical.clinic',
+    'clinical.clinic_batch_schedule', 'clinical.consent'];
   -- specific tables in schemas that also hold out of scope tables (the audit schema also holds the
   -- physician stream's live audit.event and audit.ai_generation, retrofitted in a later increment).
-  enforced_tables text[] := array['audit.record', 'employer.disclosure_release'] || clinical_shared;
+  enforced_tables text[] := array['audit.record', 'employer.disclosure_release'] || clinical_shared || clinical_tenant;
   shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag'] || clinical_shared;
   is_shared  boolean;
   is_root    boolean;
