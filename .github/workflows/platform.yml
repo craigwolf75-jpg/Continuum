@@ -56,12 +56,13 @@ jobs:
             exit 1
           fi
 
-      - name: Employer wall check (no platform migration references both clinical and employer)
+      - name: Employer wall check (no platform migration references both clinical and employer in SQL)
         run: |
           bad=0
           for f in platform/db/0*.sql; do
-            if grep -q 'clinical\.' "$f" && grep -q 'employer\.' "$f"; then
-              echo "FAIL: $f references both the clinical and employer schemas"
+            sql=$(sed 's/--.*//' "$f")   # strip line comments: a schema named in a doc comment is not a reference
+            if echo "$sql" | grep -q 'clinical\.' && echo "$sql" | grep -q 'employer\.'; then
+              echo "FAIL: $f references both the clinical and employer schemas in SQL"
               bad=1
             fi
           done

@@ -17,6 +17,11 @@
 -- the physician stream). This adds audit.record only; the live audit tables are brought under the
 -- platform rules in the S8 retrofit. Idempotent, ALTER never drop. No em dashes or en dashes.
 
+-- The audit schema already exists in production (migration 016 creates it), but this migration
+-- creates it if absent so the platform migrations are self sufficient and apply cleanly in a
+-- container that has not yet had clinical/db applied.
+create schema if not exists audit;
+
 -- ---------------------------------------------------------------------------
 -- audit.record: tenant owned, append only, hash chained per organisation.
 -- ---------------------------------------------------------------------------
