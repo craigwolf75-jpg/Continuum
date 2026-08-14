@@ -70,7 +70,8 @@ async function main() {
   ok("cookie is Secure", cookie.includes("Secure"));
   ok("cookie is SameSite=Lax", cookie.includes("SameSite=Lax"));
   ok("cookie Path is /", cookie.includes("Path=/"));
-  ok("cookie Max-Age is 2592000 (30 days)", cookie.includes("Max-Age=2592000"));
+  ok("cookie is a SESSION cookie (no Max-Age, no Expires) so the gate returns each browser session",
+    !/max-age/i.test(cookie) && !/expires/i.test(cookie));
   ok("cookie never names ct_session", !cookie.includes("ct_session"));
 
   // -- cookie header parsing --

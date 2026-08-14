@@ -102,9 +102,12 @@ async function verifySession(token, secret, nowSec) {
 }
 
 // Set-Cookie value for the ct_site session cookie. Own cookie, own name,
-// never ct_session (the hub gate's cookie).
+// never ct_session (the hub gate's cookie). No Max-Age and no Expires, so it is
+// a true session cookie: the browser drops it when it fully closes, and the
+// access gate returns on the next browser session (the signed token still
+// bounds the maximum lifetime for a browser that preserves session cookies).
 function serializeSiteCookie(token) {
-  return "ct_site=" + token + "; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=2592000";
+  return "ct_site=" + token + "; HttpOnly; Secure; SameSite=Lax; Path=/";
 }
 
 // Minimal Cookie header parser. Returns a plain object of name to decoded
