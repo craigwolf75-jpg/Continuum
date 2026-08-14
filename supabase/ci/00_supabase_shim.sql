@@ -25,6 +25,18 @@ begin
 end $$;
 
 -- ---------------------------------------------------------------------------
+-- Default privileges. Supabase grants table, sequence and function access in schema public to
+-- anon, authenticated and service_role at project creation; RLS, not the grant, is the real
+-- access control. Replicate that here BEFORE the migrations create their tables, so the roles can
+-- reference the tables and the exposure test exercises RLS (0 rows) instead of hitting a grant wall
+-- (permission denied). Set as postgres, the same role the migrations run as.
+-- ---------------------------------------------------------------------------
+grant usage on schema public to anon, authenticated, service_role;
+alter default privileges in schema public grant select, insert, update, delete on tables to anon, authenticated, service_role;
+alter default privileges in schema public grant usage, select on sequences to anon, authenticated, service_role;
+alter default privileges in schema public grant execute on functions to anon, authenticated, service_role;
+
+-- ---------------------------------------------------------------------------
 -- extensions schema + pgcrypto (provides extensions.digest; pgcrypto ships in the
 -- postgres:15 contrib packages, so this is a real extension, not a stub).
 -- ---------------------------------------------------------------------------
