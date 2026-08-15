@@ -38,6 +38,7 @@ ok("/terms.html allows without a cookie", decideSiteAccess("/terms.html", false,
 ok("/robots.txt allows without a cookie", decideSiteAccess("/robots.txt", false, undefined) === "allow");
 ok("/sitemap.xml allows without a cookie", decideSiteAccess("/sitemap.xml", false, undefined) === "allow");
 ok("/api/site-access allows without a cookie", decideSiteAccess("/api/site-access", false, undefined) === "allow");
+ok("/api/marketing-lead allows without a cookie (lead form posts from the gate)", decideSiteAccess("/api/marketing-lead", false, undefined) === "allow");
 
 // -- ALWAYS_PUBLIC prefix and exact asset paths allow without a cookie --
 ok("/favicon.ico allows without a cookie", decideSiteAccess("/favicon.ico", false, undefined) === "allow");

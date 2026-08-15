@@ -64,6 +64,7 @@ const ALWAYS_PUBLIC_EXACT = new Set([
   "/robots.txt",
   "/sitemap.xml",
   "/api/site-access",
+  "/api/marketing-lead",
   "/continuum-logo-dark.svg",
   "/favicon-16x16.png",
   "/favicon-32x32.png",
