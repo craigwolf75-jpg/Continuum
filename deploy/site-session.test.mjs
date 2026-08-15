@@ -76,7 +76,7 @@ async function main() {
 
   // -- issueSiteCookie: the shared idle-timeout issuer used by both the entry
   //    endpoint (site-access.js) and the middleware sliding refresh --
-  ok("SITE_SESSION_TTL_SECONDS is a 30 minute idle window", SITE_SESSION_TTL_SECONDS === 30 * 60);
+  ok("SITE_SESSION_TTL_SECONDS is a 2 minute idle window", SITE_SESSION_TTL_SECONDS === 2 * 60);
   const issued = await issueSiteCookie(SECRET, now);
   ok("issueSiteCookie returns a ct_site SESSION cookie (no Max-Age, no Expires)",
     issued.indexOf("ct_site=") === 0 && !/max-age/i.test(issued) && !/expires/i.test(issued));
