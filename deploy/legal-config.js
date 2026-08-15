@@ -4,7 +4,7 @@
   'use strict';
   var L = {
     entity: 'ContinuumRTW Inc.',
-    supportEmail: 'craig@continuumrtw.com',
+    supportEmail: 'info@continuumrtw.com',
     privacyOfficer: 'Privacy Officer, ContinuumRTW Inc.'
   };
   global.CONTINUUM_LEGAL = L;

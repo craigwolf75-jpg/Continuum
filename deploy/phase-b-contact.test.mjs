@@ -26,7 +26,7 @@ test("Book a demo and Start a Pilot use anchor text, not a raw URL as the label"
   assert.ok(!/>https?:\/\//.test(home), "a raw URL is used as visible link text");
 });
 test("footer carries the contact email", () => {
-  assert.ok(home.includes("craig@continuumrtw.com"));
+  assert.ok(home.includes("info@continuumrtw.com"));
 });
 test("contact page is em-dash clean", () => { assert.ok(!Array.from(home).some((c) => c.charCodeAt(0) === 8211 || c.charCodeAt(0) === 8212)); });
 

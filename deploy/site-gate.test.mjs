@@ -17,7 +17,7 @@ ok("locked line present verbatim", holding.includes("THE NEW STANDARD FOR WORKPL
 ok("hero line present verbatim", holding.includes("Where care ends, Continuum begins."));
 ok("Request access CTA present", holding.includes("Request access"));
 ok("Book a demo CTA present", holding.includes("Book a demo"));
-ok("contact email present", holding.includes("craig@continuumrtw.com"));
+ok("contact email present", holding.includes("info@continuumrtw.com"));
 ok("privacy link present", /href="\/privacy"/.test(holding));
 ok("terms link present", /href="\/terms"/.test(holding));
 

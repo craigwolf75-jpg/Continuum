@@ -13,7 +13,7 @@ test("single-source legal constants file exists with the right values", () => {
   assert.ok(existsSync(join(dir, "legal-config.js")));
   const cfg = readFileSync(join(dir, "legal-config.js"), "utf8");
   assert.ok(cfg.includes("ContinuumRTW Inc."));
-  assert.ok(cfg.includes("craig@continuumrtw.com"));
+  assert.ok(cfg.includes("info@continuumrtw.com"));
   assert.ok(/privacyOfficer\s*:/.test(cfg));
 });
 for (const [name, html] of [["privacy", priv], ["terms", terms]]) {
