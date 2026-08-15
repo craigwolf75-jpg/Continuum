@@ -70,4 +70,39 @@ async function sendSignupNotification(email, env) {
   }
 }
 
-export { buildSignupNotification, readNotifyConfig, sendSignupNotification, DEFAULT_FROM };
+// Pure: builds the Resend payload for a marketing access request (Prompt 62).
+function buildLeadNotification(email, source, to, from) {
+  const safeEmail = typeof email === "string" ? email : "";
+  const safeSource = typeof source === "string" ? source : "";
+  return {
+    from: from || DEFAULT_FROM,
+    to: [to],
+    subject: "New Continuum access request",
+    text:
+      "Someone requested access from the Continuum site.\n\n" +
+      "Email: " + safeEmail + "\n" +
+      "From page: " + safeSource + "\n"
+  };
+}
+
+// Best effort: forwards a captured lead via Resend. Never throws. Same gate as
+// the signup notification: a no op unless RESEND_API_KEY and SIGNUP_NOTIFY_TO
+// are both set, so storage is never blocked on the forwarding config.
+async function sendLeadNotification(email, source, env) {
+  try {
+    const src = env || (typeof process !== "undefined" && process.env ? process.env : {});
+    const cfg = readNotifyConfig(src);
+    if (!cfg.configured) return { sent: false, reason: "not configured" };
+    const res = await fetch(RESEND_ENDPOINT, {
+      method: "POST",
+      headers: { Authorization: "Bearer " + cfg.apiKey, "Content-Type": "application/json" },
+      body: JSON.stringify(buildLeadNotification(email, source, cfg.to, cfg.from))
+    });
+    if (res.status >= 200 && res.status < 300) return { sent: true };
+    return { sent: false, reason: "send failed with status " + res.status };
+  } catch (e) {
+    return { sent: false, reason: "error" };
+  }
+}
+
+export { buildSignupNotification, readNotifyConfig, sendSignupNotification, DEFAULT_FROM, buildLeadNotification, sendLeadNotification };

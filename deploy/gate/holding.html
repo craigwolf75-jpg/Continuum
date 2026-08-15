@@ -95,8 +95,26 @@ h1{
   transition:opacity .15s ease;
 }
 .btn:hover{opacity:.85}
-.btn-primary{background:var(--gold);color:var(--text-on-fill)}
+.btn-primary{background:var(--gold);color:var(--text-on-fill);border:none;cursor:pointer}
+.btn-primary:disabled{opacity:.5;cursor:default}
 .btn-secondary{background:transparent;color:var(--fg);border:1px solid var(--border)}
+.req-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.req-form input{
+  padding:12px 16px;
+  border-radius:var(--radius-md);
+  border:1px solid var(--border);
+  background:var(--bg-surface);
+  color:var(--fg);
+  font-size:14.5px;
+  min-width:220px;
+}
+.req-msg{
+  color:var(--fg-muted);
+  font-size:13.5px;
+  max-width:440px;
+  margin:-38px auto 56px;
+}
+.req-msg.err{color:var(--stop-700)}
 footer{
   border-top:1px solid var(--border);
   padding-top:22px;
@@ -180,10 +198,15 @@ footer a:hover{color:var(--fg)}
   <p class="desc">Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.</p>
 
   <div class="actions">
-    <a class="btn btn-primary" href="mailto:craig@continuumrtw.com?subject=Request%20access">Request access</a>
+    <form class="req-form" id="reqForm" novalidate>
+      <label for="reqEmail" class="sr-only">Your work email</label>
+      <input type="email" id="reqEmail" name="email" placeholder="Your work email" autocomplete="email" required>
+      <button type="submit" class="btn btn-primary" id="reqSubmit">Request access</button>
+    </form>
     <!-- BLOCKER: replace with the Continuum booking page URL (30/45/60 min) -->
     <a class="btn btn-secondary" href="#booking-url-pending">Book a demo</a>
   </div>
+  <p class="req-msg" id="reqMsg" role="status" aria-live="polite" hidden></p>
 
   <div class="gate">
     <button type="button" class="gate-toggle" id="gateToggle">Have an access code?</button>
@@ -253,6 +276,54 @@ footer a:hover{color:var(--fg)}
       submitBtn.disabled = false;
     }).catch(function(){
       setMsg("Something went wrong. Please try again later.");
+      submitBtn.disabled = false;
+    });
+  });
+})();
+
+// Prompt 62: Request access lead capture. Stores the email server side
+// (marketing_leads) and, if forwarding is wired, notifies the admin inbox.
+(function(){
+  var form = document.getElementById("reqForm");
+  var input = document.getElementById("reqEmail");
+  var submitBtn = document.getElementById("reqSubmit");
+  var msg = document.getElementById("reqMsg");
+  if (!form) return;
+
+  function setMsg(text, isError){
+    if (!text) { msg.hidden = true; msg.textContent = ""; msg.classList.remove("err"); return; }
+    msg.hidden = false;
+    msg.textContent = text;
+    msg.classList.toggle("err", Boolean(isError));
+  }
+
+  var FAIL = "That did not go through. Please try again, or email info@continuumrtw.com.";
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var email = input.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setMsg("Please enter a valid email address.", true);
+      input.focus();
+      return;
+    }
+    setMsg("");
+    submitBtn.disabled = true;
+
+    fetch("/api/marketing-lead", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: email, source: "/gate" })
+    }).then(function(res){
+      if (res.status === 200) {
+        form.reset();
+        setMsg("Thanks. We will be in touch shortly.");
+      } else {
+        setMsg(FAIL, true);
+      }
+      submitBtn.disabled = false;
+    }).catch(function(){
+      setMsg(FAIL, true);
       submitBtn.disabled = false;
     });
   });
