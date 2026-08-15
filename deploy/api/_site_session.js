@@ -116,7 +116,7 @@ function serializeSiteCookie(token) {
 // and the gate returns. One place owns the TTL and the { iat, exp } payload
 // shape so the entry endpoint (site-access.js) and the middleware slide can
 // never drift.
-const SITE_SESSION_TTL_SECONDS = 2 * 60; // 2 minutes idle
+const SITE_SESSION_TTL_SECONDS = 30 * 60; // 30 minutes idle
 
 // Sign a fresh ct_site token good for one idle window and return its Set-Cookie
 // value. Used at first entry (site-access.js) and on every sliding refresh
