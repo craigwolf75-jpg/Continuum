@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Continuum: Follow up (SCR-FUP-01)</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <!--
   Continuum Prompt 41 SCR-FUP-01, the follow up screen (Section 4).
   Behaviour lives in followup-screen.mjs. The correction this screen embodies
@@ -17,20 +18,20 @@
   No dashes anywhere.
 -->
 <style>
-  :root { --ink:#16202b; --muted:#4a5a6a; --line:#c9d4de; --bg:#f4f7fa; --card:#fff;
-    --focus:#0a5ad6; --stale:#b45309; --block:#b91c1c; --ok:#0f7a3d; }
+  :root { --ink:var(--ink-900); --muted:var(--ink-600); --line:var(--ink-200); --bg:var(--ink-050); --card:var(--white);
+    --focus:var(--action-600); --stale:var(--warn-700); --block:var(--stop-700); --ok:var(--ok-700); }
   * { box-sizing: border-box; }
   body { margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink); background:var(--bg); }
   .wrap { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:24px; max-width:1120px; margin:0 auto; padding:24px; align-items:start; }
   @media (max-width:820px){ .wrap{ grid-template-columns:1fr; } .rail{ position:static; } }
   h1{ font-size:1.5rem; margin:0 0 4px; } .sub{ color:var(--muted); margin:0 0 20px; }
-  .fixture{ background:#fff7e6; border:1px solid #f0c968; border-radius:8px; padding:8px 12px; color:var(--stale); font-size:.9rem; margin:0 0 20px; }
+  .fixture{ background:var(--warn-050); border:1px solid var(--action-600); border-radius:8px; padding:8px 12px; color:var(--stale); font-size:.9rem; margin:0 0 20px; }
   section.zone{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:0 0 18px; }
   section.zone > h2{ font-size:1.1rem; margin:0 0 12px; }
   .glance{ display:flex; flex-wrap:wrap; gap:8px 24px; color:var(--muted); }
   .glance b{ color:var(--ink); }
   .spark{ display:flex; align-items:center; gap:12px; margin:0 0 10px; }
-  .spark svg{ border:1px solid var(--line); border-radius:6px; background:#fbfdff; }
+  .spark svg{ border:1px solid var(--line); border-radius:6px; background:var(--white); }
   .spark .lab{ min-width:170px; font-weight:600; }
   fieldset{ border:1px solid var(--line); border-radius:10px; margin:0 0 12px; padding:12px 14px; }
   legend{ font-weight:600; padding:0 6px; }
@@ -40,17 +41,17 @@
   .cf{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 10px; border:1px solid var(--line); border-radius:8px; }
   .cf .fromprev{ color:var(--muted); font-size:.85rem; }
   .badge{ font-size:.8rem; padding:2px 8px; border-radius:999px; }
-  .badge.stale{ background:#fdf0e0; color:var(--stale); border:1px solid #e9c48a; }
-  .badge.ok{ background:#e9f7ee; color:var(--ok); border:1px solid #a6d8b9; }
-  button{ font:inherit; padding:10px 14px; border-radius:8px; border:1px solid var(--focus); background:var(--focus); color:#fff; cursor:pointer; }
-  button.secondary{ background:#fff; color:var(--focus); }
+  .badge.stale{ background:var(--warn-050); color:var(--stale); border:1px solid var(--action-600); }
+  .badge.ok{ background:var(--ok-050); color:var(--ok); border:1px solid var(--ink-300); }
+  button{ font:inherit; padding:10px 14px; border-radius:8px; border:1px solid var(--focus); background:var(--focus); color:var(--white); cursor:pointer; }
+  button.secondary{ background:var(--white); color:var(--focus); }
   button:disabled{ opacity:.5; cursor:not-allowed; }
   :focus-visible{ outline:3px solid var(--focus); outline-offset:2px; }
   .rail{ position:sticky; top:24px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
   .rail h2{ font-size:1rem; margin:0 0 10px; }
   .banner{ border-radius:10px; padding:10px 12px; margin:0 0 12px; font-size:.95rem; }
-  .banner.block{ background:#fdeaea; border:1px solid #e7a3a3; color:var(--block); }
-  .banner.ok{ background:#e9f7ee; border:1px solid #a6d8b9; color:var(--ok); }
+  .banner.block{ background:var(--stop-050); border:1px solid var(--ink-300); color:var(--block); }
+  .banner.ok{ background:var(--ok-050); border:1px solid var(--ink-300); color:var(--ok); }
   .note{ color:var(--muted); font-size:.9rem; }
   dialog{ border:1px solid var(--line); border-radius:12px; padding:18px 20px; max-width:520px; }
   dialog::backdrop{ background:rgba(20,30,40,.45); }
@@ -225,7 +226,7 @@ function sparklineSvg(series) {
   svg.setAttribute("width", w); svg.setAttribute("height", h); svg.setAttribute("viewBox", "0 0 " + w + " " + h);
   const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
   pl.setAttribute("points", pts); pl.setAttribute("fill", "none");
-  pl.setAttribute("stroke", "#0a5ad6"); pl.setAttribute("stroke-width", "2");
+  pl.setAttribute("stroke", "var(--action-600)"); pl.setAttribute("stroke-width", "2");
   svg.appendChild(pl); return svg;
 }
 

@@ -5,23 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>Continuum: Your Recovery</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#16273D;--gold:#E0B658;--goldbg:#fdf3dd;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;
---card:#FFFFFF;--bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--teal:#508c9c;--tealbg:#dce9ff}
+:root{--navy:var(--ink-900);--gold:var(--action-600);--goldbg:var(--warn-050);--ink:var(--ink-900);--muted:var(--ink-700);--soft:var(--ink-400);--line:var(--ink-100);--bg:var(--ink-050);
+--card:var(--white);--bright:var(--ink-050);--low:var(--action-050);--cont:var(--action-050);--teal:var(--ink-400);--tealbg:var(--action-050)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
 .msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
 aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);display:flex;flex-direction:column;box-shadow:0 2px 12px rgba(14,27,44,.2)}
 .side .head{padding:24px}
-.side .head h1{color:#fff;font-size:22px}
-.side .head p{color:#78859a;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.side .head h1{color:var(--white);font-size:22px}
+.side .head p{color:var(--ink-400);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .side nav{flex:1;margin-top:10px}
-.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:14px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left;transition:transform .15s}
-.side nav button:hover{color:#fff;background:#3b475a;transform:translateX(3px)}
-.side nav button.on{color:#fff;background:#3b475a;border-left-color:var(--gold);transform:translateX(3px)}
-.side .foot{border-top:1px solid #3b475a;padding:16px 24px;color:#9fb0c6;font-size:12px}
+.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:var(--ink-300);font:inherit;font-size:12.5px;font-weight:700;padding:14px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left;transition:transform .15s}
+.side nav button:hover{color:var(--white);background:var(--ink-700);transform:translateX(3px)}
+.side nav button.on{color:var(--white);background:var(--ink-700);border-left-color:var(--gold);transform:translateX(3px)}
+.side .foot{border-top:1px solid var(--ink-700);padding:16px 24px;color:var(--ink-300);font-size:12px}
 main{margin-left:240px;padding:26px;min-height:100vh}
 .wrap{max-width:1180px}
 h2.pg{font-size:29px;color:var(--navy)}
@@ -31,12 +32,12 @@ h2.pg{font-size:29px;color:var(--navy)}
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink);box-shadow:none}
-.btn.navy{background:var(--navy);color:#fff}
+.btn.navy{background:var(--navy);color:var(--white)}
 .hero{display:flex;gap:22px;align-items:center;padding:22px;position:relative;overflow:hidden}
 .hero .deco{position:absolute;top:-10px;right:6px;opacity:.08;font-size:120px}
 .ring{width:104px;height:104px;border-radius:50%;background:var(--low);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
 .ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
-.ring b{font-size:22px;color:#a97f1f;z-index:1}
+.ring b{font-size:22px;color:var(--action-600);z-index:1}
 .statch{display:flex;gap:26px;flex-wrap:wrap;margin-top:12px}
 .statch .ic{width:34px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;margin-right:8px}
 .statch .lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--muted)}
@@ -63,16 +64,16 @@ h2.pg{font-size:29px;color:var(--navy)}
 .log b{font-size:13.5px;color:var(--navy);display:block;margin:2px 0}
 .log .lx{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chip{font-size:10px;font-weight:700;text-transform:uppercase;border-radius:4px;padding:2px 7px}
-.chip.stable{background:var(--teal);color:#fff}
+.chip.stable{background:var(--teal);color:var(--white)}
 .chip.optimal{background:var(--gold);color:var(--navy)}
-.chip.notified{background:var(--goldbg);color:#735200;border:1px solid var(--gold)}
-.milestone{background:var(--navy);color:#fff;border-radius:10px;padding:18px;margin-top:14px}
-.milestone .mb{height:5px;background:#3b475a;border-radius:3px;overflow:hidden;margin-top:10px}
+.chip.notified{background:var(--goldbg);color:var(--warn-800);border:1px solid var(--gold)}
+.milestone{background:var(--navy);color:var(--white);border-radius:10px;padding:18px;margin-top:14px}
+.milestone .mb{height:5px;background:var(--ink-700);border-radius:3px;overflow:hidden;margin-top:10px}
 .milestone .mb i{display:block;height:5px;background:var(--gold);border-radius:3px;transition:width 1s}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
 .tile:hover{border-color:var(--gold)}
-.tile .ic{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.tile .ic{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--white);flex-shrink:0}
 .tile b{font-size:13px;display:block}
 .tile span{font-size:11.5px;color:var(--muted)}
 .duty{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card)}
@@ -90,33 +91,33 @@ textarea:focus{box-shadow:0 0 0 2px var(--gold)}
 .consent h2{font-size:22px;color:var(--navy);margin-bottom:8px}
 .consent p{font-size:13.5px;color:var(--muted);margin-bottom:12px}
 .consent .crow{display:flex;gap:10px;align-items:flex-start;background:var(--low);border-radius:10px;padding:12px;margin-bottom:10px;cursor:pointer}
-.consent .cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;margin-top:1px}
+.consent .cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--white);flex-shrink:0;margin-top:1px}
 .consent .crow.on .cb{background:var(--teal);border-color:var(--teal)}
 .adminrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
 .adminrow:last-child{border-bottom:none}
 .pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700}
-.pillst.ok{background:#e4efe8;color:#2c6e46}.pillst.off{background:var(--cont);color:#3b475a}.pillst.gold{background:var(--goldbg);color:#735200}
+.pillst.ok{background:var(--ok-050);color:var(--ok-700)}.pillst.off{background:var(--cont);color:var(--ink-700)}.pillst.gold{background:var(--goldbg);color:var(--warn-800)}
 .msg{border-radius:12px;padding:12px 14px;margin-bottom:10px;max-width:78%;font-size:13px}
 .msg.them{background:var(--low);border:1px solid var(--line)}
 .msg.me{background:var(--goldbg);border:1px solid var(--gold);margin-left:auto}
 .msg .mt{font-size:10.5px;color:var(--soft);margin-top:4px}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:var(--white);border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast b{color:var(--gold)}
 .burst{position:fixed;pointer-events:none;z-index:90;width:8px;height:8px;border-radius:50%;background:var(--gold)}
-.prail{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(680px,calc(100% - 32px));background:var(--navy);color:#fff;border-radius:14px;box-shadow:0 14px 40px rgba(14,27,44,.4);z-index:85;padding:16px 18px;display:none}
+.prail{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(680px,calc(100% - 32px));background:var(--navy);color:var(--white);border-radius:14px;box-shadow:0 14px 40px rgba(14,27,44,.4);z-index:85;padding:16px 18px;display:none}
 .prail.on{display:block}
 .prail .pr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .prail .pr-beat{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
-.prail .pr-x{background:none;border:none;color:#9fb0c6;font-size:20px;cursor:pointer;line-height:1}
+.prail .pr-x{background:none;border:none;color:var(--ink-300);font-size:20px;cursor:pointer;line-height:1}
 .prail .pr-say{font-size:14.5px;line-height:1.55;margin-bottom:14px}
 .prail .pr-ctl{display:flex;gap:10px;justify-content:flex-end}
 .prail .pr-ctl button{border-radius:9px;padding:9px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:none}
-.prail .pr-ctl .back{background:rgba(255,255,255,.14);color:#fff}
+.prail .pr-ctl .back{background:rgba(255,255,255,.14);color:var(--white)}
 .prail .pr-ctl .back[disabled]{opacity:.4;cursor:default}
 .prail .pr-ctl .next{background:var(--gold);color:var(--navy)}
-.prov{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:5px;background:#eef1f6;color:#5E6B7C;border:1px solid var(--line);vertical-align:middle;white-space:nowrap}
-.prov.clin{background:#e6eeff;color:#3b475a}
+.prov{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:5px;background:var(--ink-100);color:var(--ink-500);border:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+.prov.clin{background:var(--action-050);color:var(--ink-700)}
 .wizard{position:fixed;inset:0;z-index:95;background:rgba(11,28,48,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:20px}
 .wizard.on{display:flex}
 .wizcard{background:var(--card);border-radius:16px;box-shadow:0 24px 60px rgba(14,27,44,.4);width:min(520px,100%);max-height:92vh;overflow:auto;padding:24px}
@@ -133,7 +134,7 @@ textarea:focus{box-shadow:0 0 0 2px var(--gold)}
 .wizin:focus{box-shadow:0 0 0 2px var(--gold)}
 .wizard .crow{display:flex;gap:10px;align-items:flex-start;background:var(--low);border-radius:10px;padding:12px;margin-top:12px;cursor:pointer;font-size:13px;color:var(--ink)}
 .wizard .crow.on{background:var(--tealbg)}
-.wizard .cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;margin-top:1px}
+.wizard .cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--white);flex-shrink:0;margin-top:1px}
 .wizard .crow.on .cb{background:var(--teal);border-color:var(--teal)}
 .wizfoot{display:flex;gap:10px;justify-content:space-between;margin-top:18px}
 .wizfoot .btn.ghost[disabled]{opacity:.4;cursor:default}
@@ -154,9 +155,9 @@ section.view{display:none}section.view.on{display:block}
 </head>
 <body>
 <aside class="side">
-  <div class="head"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="width:150px;display:block"><p style="margin-top:7px">Your Recovery</p><p style="color:#8b97a9;font-size:11px;line-height:1.4;margin-top:8px;text-transform:none;letter-spacing:0;font-weight:500">What should I do today</p></div>
+  <div class="head"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="width:150px;display:block"><p style="margin-top:7px">Your Recovery</p><p style="color:var(--ink-400);font-size:11px;line-height:1.4;margin-top:8px;text-transform:none;letter-spacing:0;font-weight:500">What should I do today</p></div>
   <nav id="sidenav"></nav>
-  <div class="foot"><a href="/hub#roles" style="color:var(--gold);display:block;margin-bottom:8px;font-weight:600;text-decoration:none">&#8592; All portals</a>Help Center &nbsp;&middot;&nbsp; Logout<br><a href="#" onclick="resetAll();return false" style="color:#9fb0c6">Reset demo</a></div>
+  <div class="foot"><a href="/hub#roles" style="color:var(--gold);display:block;margin-bottom:8px;font-weight:600;text-decoration:none">&#8592; All portals</a>Help Center &nbsp;&middot;&nbsp; Logout<br><a href="#" onclick="resetAll();return false" style="color:var(--ink-300)">Reset demo</a></div>
 </aside>
 <main><div class="wrap" id="main"></div></main>
 <div class="toast" id="toast"></div>
@@ -277,7 +278,7 @@ function renderNav(){
   return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+badge+'</button>';}).join("");}
 function ringSVG(p){
  var r=48,c=2*Math.PI*r;
- return '<svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="'+r+'" fill="none" stroke="#e6eeff" stroke-width="7"/>'+
+ return '<svg width="104" height="104" viewBox="0 0 104 104"><circle cx="52" cy="52" r="'+r+'" fill="none" stroke="var(--action-050)" stroke-width="7"/>'+
  '<circle cx="52" cy="52" r="'+r+'" fill="none" stroke="var(--gold)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-p/100))+'" style="transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)"/></svg>';}
 function chipFor(tag){return tag==="stable"?'<span class="chip stable">Stable</span>':tag==="optimal"?'<span class="chip optimal">Optimal</span>':'<span class="chip notified">Clinician notified</span>';}
 function chart(){

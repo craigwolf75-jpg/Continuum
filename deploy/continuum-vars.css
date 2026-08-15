@@ -1,0 +1,192 @@
+/* Continuum Prompt 58 tokens, VARIABLES ONLY (light). Single source for the
+   existing-page colour migration: no base rules, so linking it changes nothing
+   until a value references a var. The full continuum_tokens.css (with the four
+   never-overridable rules) is for design-system screens. Hex lives here and in
+   continuum_tokens.css only. No dashes. */
+:root {
+  /* Light only at the root. The dark block below opts in. Declaring
+     "light dark" here would give a user whose OS prefers dark a set of
+     dark UA form controls and scrollbars against a light application,
+     defeating Prompt 58 section 3.5.1. */
+  color-scheme: light;
+
+  /* ---------- PALETTE. LIGHT. --------------------------------------------
+     Ratios are: on #FFFFFF surface / on #F5F7F9 page.
+     ---------------------------------------------------------------------- */
+
+  /* Structure and text. Navy derived from the brand wordmark. */
+  --ink-900: #0E1B2C;   /* 17.33 / 16.14  AAA */
+  --ink-700: #2C3E52;   /* 10.95 / 10.20  AAA */
+  --ink-600: #41556B;   /*  7.67 /  7.15  AAA */
+  --ink-500: #55697E;   /*  5.66 /  5.27  AA, floor for any text */
+  --ink-400: #6E7E8E;   /*  4.17 /  3.88  control borders + icons. NEVER text.
+                           Worst case 3.60 across every tint and hover fill. */
+  --ink-300: #AFBBC7;   /*  1.95 /  1.82  decorative container edges only */
+  --ink-200: #D6DDE4;   /*  1.37 /  1.28  table row rules. Decorative: SC
+                           1.4.11 does not require 3:1 for a non-meaningful
+                           edge. Genuinely subtle on a poor monitor; any
+                           boundary that CARRIES MEANING uses a 3:1 token. */
+  --ink-100: #EAEFF3;   /*  1.16 /  1.08  subtle fill, row hover */
+  --ink-050: #F5F7F9;   /*  1.07 /  1.00  page background */
+  --white:   #FFFFFF;
+
+  /* Interaction. Blue carries every action. */
+  --action-800: #0E4680; /*  9.52 /  8.86  pressed */
+  --action-700: #12559E; /*  7.45 /  6.94  hover, visited */
+  --action-600: #1A66BC; /*  5.72 /  5.33  primary action, link, focus ring,
+                             selected-row marker */
+  --action-500: #418ED6; /*  3.46 /  3.22  non-text accent only */
+  --action-050: #EAF2FB; /*  1.13 /  1.05  selected row fill, tint */
+
+  /* Positive semantic state. Green means exactly one thing. */
+  --ok-800: #0B5C40;     /*  8.02 /  7.47  text on --ok-050 (7.12) */
+  --ok-700: #0F7A55;     /*  5.34 /  4.97  SAFE icon, border, solid fill */
+  --ok-050: #E6F5EE;
+
+  /* Caution. AT RISK / CONDITIONAL. */
+  --warn-800: #6B4100;   /*  8.82 /  8.21  text on --warn-050 (8.02) */
+  --warn-700: #8A5300;   /*  6.33 /  5.89  icon, border, solid fill */
+  --warn-500: #C67A00;   /*  3.40 /  3.16  non-text only */
+  --warn-050: #FDF3E3;
+
+  /* Stop. WILL MISS / UNSAFE / error. */
+  --stop-800: #8C1A15;   /*  9.24 /  8.60  text on --stop-050 (8.08) */
+  --stop-700: #A8201A;   /*  7.28 /  6.77  icon, border, solid fill */
+  --stop-600: #C62828;   /*  5.62 /  5.24  inline error text */
+  --stop-050: #FDECEA;
+
+  /* Draft. REGULATORY. Violet collides with no semantic state, which is why
+     it was chosen: the regulatory position rests on the physician noticing. */
+  --draft-800: #4E2E78;  /* 10.57 /  9.85  the label text (9.19 on the tint) */
+  --draft-700: #6B3FA0;  /*  7.38 /  6.88  the left border and the status icon */
+  --draft-050: #F2EDF9;
+
+  /* ---------- SEMANTIC. LIGHT. ------------------------------------------- */
+  --bg-page:          var(--ink-050);
+  --bg-surface:       var(--white);
+  --bg-raised:        var(--white);
+  --bg-subtle:        var(--ink-100);
+  --bg-selected:      var(--action-050);
+
+  --text-primary:     var(--ink-900);
+  --text-body:        var(--ink-700);
+  --text-secondary:   var(--ink-600);
+  --text-tertiary:    var(--ink-500);
+  --text-on-fill:     var(--white);
+  --text-link:        var(--action-600);
+  --text-link-hover:  var(--action-700);
+
+  --border-control:   var(--ink-400);    /* 3:1, SC 1.4.11. Do not lighten. */
+  --border-divider:   var(--ink-200);    /* decorative only */
+  --border-card:      var(--ink-300);    /* decorative container edge */
+  --border-strong:    var(--ink-600);
+  --border-selected:  var(--action-600); /* 5.72:1, selection carries meaning */
+
+  --focus-ring:       var(--action-600);
+
+  /* --state-*      : icon, border, solid fill
+     --state-*-bg   : tint background
+     --state-*-text : the status WORD, on the matching tint. Deliberately
+                      darker than --state-*; do not conflate the two. */
+  --state-ok:           var(--ok-700);
+  --state-ok-bg:        var(--ok-050);
+  --state-ok-text:      var(--ok-800);
+  --state-caution:      var(--warn-700);
+  --state-caution-bg:   var(--warn-050);
+  --state-caution-text: var(--warn-800);
+  --state-stop:         var(--stop-700);
+  --state-stop-bg:      var(--stop-050);
+  --state-stop-text:    var(--stop-800);
+  --state-draft:        var(--draft-700);
+  --state-draft-bg:     var(--draft-050);
+  --state-draft-text:   var(--draft-800);
+  --state-none:         var(--ink-500);  /* "Not assessed" is first class */
+
+  /* ---------- TYPOGRAPHY ------------------------------------------------- */
+  --font-ui: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+             "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas,
+               "Liberation Mono", monospace;
+
+  /* 16px base. Nothing below 12px renders anywhere, in any density. */
+  --text-xs:    0.75rem;    /* 12, provenance labels, units, table meta */
+  --text-sm:    0.8125rem;  /* 13, captions */
+  --text-dense: 0.875rem;   /* 14, COMPACT table cells and dense read-only
+                                    content ONLY. Named "dense", not "base",
+                                    so nobody reaches for it as a default. */
+  --text-md:    1rem;       /* 16, DEFAULT body. All labels and all inputs,
+                                    in BOTH densities. */
+  --text-lg:    1.125rem;   /* 18, emphasised values */
+  --text-xl:    1.25rem;    /* 20, section headings */
+  --text-2xl:   1.5rem;     /* 24, screen title */
+  --text-3xl:   1.875rem;   /* 30, the measured value on SCR-MEAS-01 */
+
+  --leading-tight: 1.25;
+  --leading-ui:    1.45;
+  --leading-body:  1.5;
+  --leading-prose: 1.6;
+
+  --weight-regular: 400;
+  --weight-medium:  500;  /* labels, table headers */
+  --weight-semi:    600;  /* headings, emphasised values. Ceiling. */
+
+  /* ~72 characters of English prose. The ch unit measures the "0" glyph and
+     over-counts prose by 10-25%, so 72ch would render ~80-90 characters.
+     Prose only. DATA IS NEVER CAPPED. */
+  --measure-prose: 64ch;
+
+  /* ---------- SPACE. 4px base. No arbitrary pixel values, here or in a
+       component. Every value below is on the scale. --------------------- */
+  --space-1:  2px;
+  --space-2:  4px;
+  --space-3:  8px;
+  --space-4:  12px;
+  --space-5:  16px;
+  --space-6:  24px;
+  --space-7:  32px;
+  --space-8:  40px;
+  --space-9:  48px;
+  --space-10: 64px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* Shadow is reserved for things that genuinely float and can be dismissed.
+     Cards are white on off-white with a border, not a shadow. */
+  --shadow-popover: 0 2px 8px rgb(14 27 44 / 12%);
+  --shadow-dialog:  0 8px 32px rgb(14 27 44 / 20%);
+
+  /* ---------- DENSITY. Comfortable is the practitioner default. ---------- */
+  --row-height:     48px;
+  --cell-pad-y:     var(--space-4);
+  --cell-pad-x:     var(--space-5);
+  --control-height: 44px;
+  --cell-size:      var(--text-md);
+  --rhythm:         var(--space-5);
+  --section-gap:    var(--space-7);
+
+  /* ---------- TARGETS ---------------------------------------------------- */
+  --target-min:   24px;  /* SC 2.5.8 AA. Floor, with the standard's own
+                            exceptions applied by the build gate. */
+  --target-touch: 44px;  /* SC 2.5.5 AAA. Touch-capable + worker surface. */
+
+  /* ---------- MOTION. Nothing on a clinical surface exceeds 240ms, and no
+       longer token is defined, because a token defined for a screen that does
+       not exist gets used on one that does. ------------------------------ */
+  --motion-fast:   70ms;   /* button press, toggle, checkbox */
+  --motion-fade:   110ms;  /* opacity change, tooltip */
+  --motion-move:   150ms;  /* small movement, row insert, popover */
+  --motion-expand: 240ms;  /* disclosure, drawer, transient message entry */
+
+  --ease-standard: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --ease-entrance: cubic-bezier(0, 0, 0.38, 0.9);
+  --ease-exit:     cubic-bezier(0.2, 0, 1, 0.9);
+
+  /* ---------- LAYOUT -----------------------------------------------------
+     The design floor is 1366px. It is deliberately NOT a token, because a
+     custom property cannot be used in a media query condition:
+     @media (min-width: var(--x)) is invalid and is dropped silently.
+     Breakpoints are literals with a comment pointing at Prompt 58 s5.3.
+     --------------------------------------------------------------------- */
+  --content-max: 1440px;
+}

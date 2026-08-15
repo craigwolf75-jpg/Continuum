@@ -5,29 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>Continuum: GardaWorld demonstration runner</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--navy:#0E1B2C;--navy2:#0A1526;--card:#14243B;--gold:#C8972F;--gold2:#E3B968;--mist:#AAB6C6;--ink:#EAF0F7;--hair:rgba(255,255,255,.09);
-    --notice:#8a5a00;--noticebg:#fff4d6;--noticeline:#e7c975;--live:#1f6f52;--livebg:#dff3e8;--liveline:#8fceb0}
+  :root{--navy:var(--ink-900);--navy2:var(--ink-900);--card:var(--ink-900);--gold:var(--action-600);--gold2:var(--action-600);--mist:var(--ink-300);--ink:var(--ink-100);--hair:rgba(255,255,255,.09);
+    --notice:var(--warn-700);--noticebg:var(--warn-050);--noticeline:var(--action-600);--live:var(--ok-700);--livebg:var(--ok-050);--liveline:var(--ink-300)}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--navy);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5}
   .app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
   /* scene rail */
   .rail{background:var(--navy2);border-right:1px solid var(--hair);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
-  .rail .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:#fff;padding:0 20px 4px}
+  .rail .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:var(--white);padding:0 20px 4px}
   .rail .brand span{color:var(--gold)}
   .rail .sub{color:var(--mist);font-size:11px;padding:0 20px 14px}
   .moderow{padding:0 20px 14px;border-bottom:1px solid var(--hair);margin-bottom:10px}
-  .modetog{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;font-weight:600;color:#fff}
+  .modetog{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--white)}
   .modetog input{width:34px;height:18px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.16);border-radius:999px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;margin:0}
   .modetog input:checked{background:var(--gold)}
-  .modetog input:before{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
+  .modetog input:before{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--white);transition:left .2s}
   .modetog input:checked:before{left:18px}
   .modehint{color:var(--mist);font-size:10.5px;line-height:1.4;margin-top:7px}
   .rail button{display:flex;gap:11px;align-items:baseline;width:100%;background:none;border:none;color:var(--mist);font:inherit;font-size:12.5px;text-align:left;padding:9px 20px;cursor:pointer;border-left:3px solid transparent}
-  .rail button:hover{color:#fff;background:rgba(255,255,255,.03)}
-  .rail button.on{color:#fff;background:rgba(200,151,47,.12);border-left-color:var(--gold)}
+  .rail button:hover{color:var(--white);background:rgba(255,255,255,.03)}
+  .rail button.on{color:var(--white);background:rgba(200,151,47,.12);border-left-color:var(--gold)}
   .rail button .rn{color:var(--gold);font-weight:700;font-size:11px;min-width:16px}
   .rail button.on .rn{color:var(--gold2)}
   /* stage */
@@ -39,38 +40,38 @@
   .scene.active{display:block;animation:fade .35s ease-out}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   .kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
-  .scene h1{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:#fff;margin:5px 0 2px}
+  .scene h1{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:var(--white);margin:5px 0 2px}
   .scene .of{color:var(--mist);font-size:12.5px;margin-bottom:20px}
   .lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);margin:22px 0 8px}
-  .narration{font-size:18px;line-height:1.62;color:#F2F6FB}
+  .narration{font-size:18px;line-height:1.62;color:var(--ink-050)}
   /* placeholder vignette (Stage 1) */
   .vig{border:1px dashed var(--hair);border-radius:14px;background:var(--card);min-height:190px;display:flex;align-items:center;justify-content:center;color:var(--mist);font-size:13px;text-align:center;padding:22px}
   .vig b{color:var(--gold2);font-family:'Space Grotesk',sans-serif}
   /* high-fidelity vignette frames (light portal replicas) */
-  .frame{border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);background:#fff;color:#16202E;box-shadow:0 16px 46px rgba(0,0,0,.42);font-size:12.5px}
-  .frame>.bar{height:32px;background:#eef1f6;border-bottom:1px solid #dde3ec;display:flex;align-items:center;gap:6px;padding:0 12px}
-  .frame>.bar i{width:9px;height:9px;border-radius:50%;background:#cfd6e0}
-  .frame>.bar .u{margin-left:8px;font-size:11px;color:#6b7686}
+  .frame{border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);background:var(--white);color:var(--ink-900);box-shadow:0 16px 46px rgba(0,0,0,.42);font-size:12.5px}
+  .frame>.bar{height:32px;background:var(--ink-100);border-bottom:1px solid var(--ink-200);display:flex;align-items:center;gap:6px;padding:0 12px}
+  .frame>.bar i{width:9px;height:9px;border-radius:50%;background:var(--ink-200)}
+  .frame>.bar .u{margin-left:8px;font-size:11px;color:var(--ink-400)}
   .fbody{padding:15px 17px}
-  .phone{width:262px;margin:0 auto;border-radius:24px;border:1px solid rgba(0,0,0,.12);background:#fff;color:#16202E;box-shadow:0 16px 46px rgba(0,0,0,.42);overflow:hidden;font-size:12.5px}
-  .phone .notch{height:22px;background:#0E1B2C}
+  .phone{width:262px;margin:0 auto;border-radius:24px;border:1px solid rgba(0,0,0,.12);background:var(--white);color:var(--ink-900);box-shadow:0 16px 46px rgba(0,0,0,.42);overflow:hidden;font-size:12.5px}
+  .phone .notch{height:22px;background:var(--ink-900)}
   .pbody{padding:14px 15px}
   .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
   .split .sidelbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);margin-bottom:6px}
-  .v-h{font-weight:700;font-size:14px;color:#16202E}
-  .v-sub{color:#5a6678;font-size:11.5px}
+  .v-h{font-weight:700;font-size:14px;color:var(--ink-900)}
+  .v-sub{color:var(--ink-500);font-size:11.5px}
   .v-pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:10.5px;font-weight:700}
-  .v-func{background:#e7edf5;color:#33465e}
-  .v-flag{background:#fff4d6;color:#8a5a00;border:1px solid #e7c975}
-  .v-ok{background:#e3f0e3;color:#2c6e46}
-  .v-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eef1f5}
-  .card2{border:1px solid #e6e9ef;border-radius:10px;padding:12px 14px;background:#fff}
-  @media print{.frame,.phone{box-shadow:none}.frame>.bar{background:#f0f0f0}}
+  .v-func{background:var(--ink-100);color:var(--ink-700)}
+  .v-flag{background:var(--warn-050);color:var(--warn-700);border:1px solid var(--action-600)}
+  .v-ok{background:var(--ok-050);color:var(--ok-700)}
+  .v-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ink-100)}
+  .card2{border:1px solid var(--ink-100);border-radius:10px;padding:12px 14px;background:var(--white)}
+  @media print{.frame,.phone{box-shadow:none}.frame>.bar{background:var(--ink-100)}}
   /* notes */
   .notes{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:16px 18px}
   .notes li{list-style:none;padding:7px 0 7px 26px;position:relative;font-size:13.5px;color:var(--mist);line-height:1.5}
   .notes li:before{content:"";position:absolute;left:8px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
-  .notes li.verbatim{color:#fff}
+  .notes li.verbatim{color:var(--white)}
   .notes li.verbatim:before{background:var(--gold2);box-shadow:0 0 0 3px rgba(227,185,104,.18)}
   .vtag{display:inline-block;background:var(--gold);color:var(--navy);font-size:9px;font-weight:700;letter-spacing:.06em;border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:middle;text-transform:uppercase}
   /* smarter chips */
@@ -78,16 +79,16 @@
   .chip{background:rgba(255,255,255,.05);border:1px solid var(--hair);border-radius:999px;padding:7px 14px;font-size:12.5px;color:var(--ink)}
   .chip b{color:var(--gold2);font-weight:700}
   /* live system chip */
-  .livechip{display:flex;gap:12px;align-items:flex-start;background:var(--livebg);border:1px solid #a9d9c0;border-radius:12px;padding:14px 16px;color:#123f2d;margin-top:22px}
-  .livechip .tag{background:var(--live);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;border-radius:6px;padding:4px 9px;white-space:nowrap;text-transform:uppercase;flex-shrink:0;margin-top:1px}
-  .livechip .lt b{display:block;font-size:13px;color:#0e3524;margin-bottom:2px}
-  .livechip .lt span{font-size:12.5px;color:#2f5c48}
+  .livechip{display:flex;gap:12px;align-items:flex-start;background:var(--livebg);border:1px solid var(--ink-300);border-radius:12px;padding:14px 16px;color:var(--ok-800);margin-top:22px}
+  .livechip .tag{background:var(--live);color:var(--white);font-size:10px;font-weight:700;letter-spacing:.08em;border-radius:6px;padding:4px 9px;white-space:nowrap;text-transform:uppercase;flex-shrink:0;margin-top:1px}
+  .livechip .lt b{display:block;font-size:13px;color:var(--ink-900);margin-bottom:2px}
+  .livechip .lt span{font-size:12.5px;color:var(--ink-700)}
   /* nav bar */
   .nav{position:sticky;bottom:0;background:rgba(10,21,38,.94);border-top:1px solid var(--hair);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 46px}
   .nav .count{color:var(--mist);font-size:12.5px}
   .nav .btns{display:flex;gap:10px}
   .nav button{border-radius:10px;padding:11px 20px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;border:none}
-  .nav .prev{background:rgba(255,255,255,.1);color:#fff}
+  .nav .prev{background:rgba(255,255,255,.1);color:var(--white)}
   .nav .prev[disabled]{opacity:.35;cursor:default}
   .nav .next{background:var(--gold);color:var(--navy)}
   .nav .next[disabled]{opacity:.35;cursor:default}
@@ -95,16 +96,16 @@
   @media(max-width:820px){.app{grid-template-columns:1fr}.rail{position:static;height:auto;display:flex;flex-wrap:wrap;gap:2px}.rail .brand,.rail .sub{width:100%}.rail button{width:auto}.stagewrap{padding:22px}.nav{padding:12px 22px}}
   /* print: full script handout, one scene per page */
   @media print{
-    body{background:#fff;color:#111}
+    body{background:var(--white);color:var(--ink-900)}
     .rail,.nav,.prog{display:none !important}
     .app{display:block}
     .stagewrap{max-width:none;padding:0}
-    .scene{display:block !important;page-break-after:always;padding:24px 8px;border-bottom:1px solid #ccc}
-    .scene h1{color:#111}.kicker{color:#8a5a00}.narration{color:#111;font-size:15px}
-    .vig{background:#f4f6fa;color:#555;border-color:#ccc}
-    .notes{background:#f7f7f7;border-color:#ddd}.notes li{color:#333}.notes li.verbatim{color:#000}
-    .chip{color:#111;border-color:#ccc}.chip b{color:#8a5a00}
-    .livechip{background:#eef7f1;color:#123f2d}
+    .scene{display:block !important;page-break-after:always;padding:24px 8px;border-bottom:1px solid var(--ink-200)}
+    .scene h1{color:var(--ink-900)}.kicker{color:var(--warn-700)}.narration{color:var(--ink-900);font-size:15px}
+    .vig{background:var(--ink-050);color:var(--ink-600);border-color:var(--ink-200)}
+    .notes{background:var(--ink-050);border-color:var(--ink-200)}.notes li{color:var(--ink-700)}.notes li.verbatim{color:var(--ink-900)}
+    .chip{color:var(--ink-900);border-color:var(--ink-200)}.chip b{color:var(--warn-700)}
+    .livechip{background:var(--ok-050);color:var(--ok-800)}
   }
 </style>
 </head>
@@ -226,12 +227,12 @@ function esc(t){return String(t).replace(/[&<>]/g,function(c){return{"&":"&amp;"
 var VIGNETTES={
  "positioning":
   '<div style="text-align:center;padding:24px 18px">'+
-   '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:1.35">Continuum owns the<br><span style="color:var(--gold2)">space between events.</span></div>'+
+   '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:22px;font-weight:700;color:var(--white);line-height:1.35">Continuum owns the<br><span style="color:var(--gold2)">space between events.</span></div>'+
    '<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap">'+
-    '<span class="v-pill" style="background:rgba(255,255,255,.07);color:#AAB6C6;border:1px solid var(--hair)">Event: injury and care</span><span style="color:var(--gold)">&rarr;</span>'+
-    '<span class="v-pill" style="background:var(--gold);color:#0E1B2C">The gap: recovery</span><span style="color:var(--gold)">&rarr;</span>'+
-    '<span class="v-pill" style="background:rgba(255,255,255,.07);color:#AAB6C6;border:1px solid var(--hair)">Event: full duty</span></div>'+
-   '<div style="color:#AAB6C6;font-size:12px;margin-top:16px">SIGMA manages the claim. Continuum manages the recovery.</div></div>',
+    '<span class="v-pill" style="background:rgba(255,255,255,.07);color:var(--ink-300);border:1px solid var(--hair)">Event: injury and care</span><span style="color:var(--gold)">&rarr;</span>'+
+    '<span class="v-pill" style="background:var(--gold);color:var(--ink-900)">The gap: recovery</span><span style="color:var(--gold)">&rarr;</span>'+
+    '<span class="v-pill" style="background:rgba(255,255,255,.07);color:var(--ink-300);border:1px solid var(--hair)">Event: full duty</span></div>'+
+   '<div style="color:var(--ink-300);font-size:12px;margin-top:16px">SIGMA manages the claim. Continuum manages the recovery.</div></div>',
  "intake":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">claims system &middot; first notice of injury</span></div>'+
    '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="v-h">New claim CT-2026-0481</div><span class="v-pill v-ok">Open</span></div>'+
@@ -240,21 +241,21 @@ var VIGNETTES={
    '<div class="v-row"><span class="v-sub">Injury</span><b>Right shoulder, grade 1 supraspinatus strain</b></div>'+
    '<div class="v-row" style="border-bottom:none"><span class="v-sub">Continuum</span><span class="v-pill v-ok">Recovery plan attached</span></div></div></div>',
  "sms":
-  '<div class="phone"><div class="notch"></div><div class="pbody" style="background:#0E1B2C;min-height:150px">'+
-   '<div style="color:#8494a8;font-size:10.5px;text-align:center;margin-bottom:14px">Messages &middot; now</div>'+
-   '<div style="background:#243449;color:#fff;border-radius:16px 16px 16px 4px;padding:12px 14px;max-width:210px;font-size:12.5px;line-height:1.45">You have an update from your Continuum recovery team. Open the app to view.</div>'+
-   '<div style="color:#8494a8;font-size:10.5px;margin-top:8px">No diagnosis, scores, or restrictions in the message. Content stays behind sign in.</div></div></div>',
+  '<div class="phone"><div class="notch"></div><div class="pbody" style="background:var(--ink-900);min-height:150px">'+
+   '<div style="color:var(--ink-400);font-size:10.5px;text-align:center;margin-bottom:14px">Messages &middot; now</div>'+
+   '<div style="background:var(--ink-700);color:var(--white);border-radius:16px 16px 16px 4px;padding:12px 14px;max-width:210px;font-size:12.5px;line-height:1.45">You have an update from your Continuum recovery team. Open the app to view.</div>'+
+   '<div style="color:var(--ink-400);font-size:10.5px;margin-top:8px">No diagnosis, scores, or restrictions in the message. Content stays behind sign in.</div></div></div>',
  "onboarding":
   '<div class="phone"><div class="notch"></div><div class="pbody">'+
-   '<div style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;color:#0E1B2C">Continuum<span style="color:#C8972F">.</span></div><div class="v-sub" style="margin-bottom:10px">Your recovery</div>'+
-   '<div class="card2" style="margin-bottom:10px"><div style="display:flex;gap:9px;align-items:flex-start"><span style="width:20px;height:20px;border-radius:6px;border:2px solid #C8972F;flex-shrink:0"></span><div style="font-size:11.5px;line-height:1.45"><b>Consent</b><br>Timestamped and revocable. Collection begins only after you agree.</div></div></div>'+
+   '<div style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;color:var(--ink-900)">Continuum<span style="color:var(--action-600)">.</span></div><div class="v-sub" style="margin-bottom:10px">Your recovery</div>'+
+   '<div class="card2" style="margin-bottom:10px"><div style="display:flex;gap:9px;align-items:flex-start"><span style="width:20px;height:20px;border-radius:6px;border:2px solid var(--action-600);flex-shrink:0"></span><div style="font-size:11.5px;line-height:1.45"><b>Consent</b><br>Timestamped and revocable. Collection begins only after you agree.</div></div></div>'+
    '<div class="v-row"><span class="v-sub">Injury</span><b>Right shoulder strain</b></div>'+
    '<div class="v-row"><span class="v-sub">Restriction</span><b>No lifting above shoulder</b></div>'+
    '<div class="v-row" style="border-bottom:none"><span class="v-sub">Recovery day</span><b>9 of 21</b></div></div></div>',
  "ack":
   '<div class="phone"><div class="notch"></div><div class="pbody">'+
    '<div class="v-h" style="margin-bottom:3px">Today\'s restrictions</div><div class="v-sub" style="margin-bottom:12px">No lifting above shoulder height &middot; breaks every 60 minutes</div>'+
-   '<div style="background:#0E1B2C;color:#fff;border-radius:10px;padding:12px 14px;text-align:center;font-weight:700;font-size:12.5px">I understand my duties today</div>'+
+   '<div style="background:var(--ink-900);color:var(--white);border-radius:10px;padding:12px 14px;text-align:center;font-weight:700;font-size:12.5px">I understand my duties today</div>'+
    '<div style="text-align:center;margin-top:10px"><span class="v-pill v-ok">Acknowledged 6:58 AM</span></div>'+
    '<div class="v-sub" style="margin-top:12px;font-size:11px">A daily timestamped record that the worker knew his limits.</div></div></div>',
  "checkin-split":
@@ -264,13 +265,13 @@ var VIGNETTES={
     '<div class="v-row"><span class="v-sub">Pain</span><b>7</b></div>'+
     '<div class="v-row"><span class="v-sub">Fatigue / confidence</span><b>6 / 4</b></div>'+
     '<div class="v-row" style="border-bottom:none"><span class="v-sub">Signal</span><span class="v-pill v-flag">Plateau flagged</span></div>'+
-    '<div style="margin-top:9px;font-size:11px;color:#8a5a00">Escalated to the clinician per program rules.</div></div></div></div>'+
+    '<div style="margin-top:9px;font-size:11px;color:var(--warn-700)">Escalated to the clinician per program rules.</div></div></div></div>'+
    '<div class="side"><div class="sidelbl">Employer, same second</div><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">employer dashboard</span></div>'+
     '<div class="fbody"><div class="v-h" style="margin-bottom:8px">Marcus Bedard</div>'+
     '<div class="v-row"><span class="v-sub">Status</span><span class="v-pill v-func">Light duty</span></div>'+
     '<div class="v-row"><span class="v-sub">Duties</span><b>On track</b></div>'+
     '<div class="v-row" style="border-bottom:none"><span class="v-sub">Plan</span><span class="v-pill v-func">Under review</span></div>'+
-    '<div style="margin-top:9px;font-size:11px;color:#5a6678">No score, no diagnosis, no inference.</div></div></div></div></div>',
+    '<div style="margin-top:9px;font-size:11px;color:var(--ink-500)">No score, no diagnosis, no inference.</div></div></div></div></div>',
  "employer":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">employer dashboard &middot; what work is safe today</span></div>'+
    '<div class="fbody"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">'+
@@ -287,47 +288,47 @@ var VIGNETTES={
    '<div class="v-row"><span class="v-sub">Pain / mobility</span><b>7 &rarr; 4 &middot; 3 &rarr; 6</b></div>'+
    '<div class="v-row"><span class="v-sub">Fatigue / confidence</span><b>6 / 4</b></div>'+
    '<div class="v-row" style="border-bottom:none"><span class="v-sub">Note</span><span class="v-sub" style="max-width:58%;text-align:right">"Shoulder tight after the morning walk."</span></div>'+
-   '<div style="display:flex;gap:8px;margin-top:12px"><span class="v-pill v-func">Publish restriction</span><span class="v-pill" style="background:#C8972F;color:#0E1B2C">Physician sign-off</span></div>'+
-   '<div style="margin-top:9px;font-size:11px;color:#5a6678">The system routes; the clinician decides.</div></div></div>',
+   '<div style="display:flex;gap:8px;margin-top:12px"><span class="v-pill v-func">Publish restriction</span><span class="v-pill" style="background:var(--action-600);color:var(--ink-900)">Physician sign-off</span></div>'+
+   '<div style="margin-top:9px;font-size:11px;color:var(--ink-500)">The system routes; the clinician decides.</div></div></div>',
  "matcher":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">HSE portal &middot; assign light duty</span></div>'+
    '<div class="fbody"><div class="v-sub" style="margin-bottom:6px">Active restrictions</div>'+
    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"><span class="v-pill v-flag">No lifting above shoulder</span><span class="v-pill v-flag">Breaks every 60 min</span></div>'+
    '<div class="card2" style="margin-bottom:10px"><div class="v-sub">Task bank, filtered by restrictions</div><div style="font-weight:700;margin-top:3px">Tool crib inventory &middot; 4 h</div></div>'+
    '<div class="v-row"><span class="v-sub">Hazard check</span><span class="v-pill v-ok">Complete</span></div>'+
-   '<div style="background:#0E1B2C;color:#fff;border-radius:9px;padding:10px;text-align:center;font-weight:700;font-size:12px;margin-top:10px">Confirm and assign</div>'+
-   '<div style="margin-top:9px;font-size:11px;color:#5a6678">Marcus accepts it himself. Nobody accepts for him.</div></div></div>',
+   '<div style="background:var(--ink-900);color:var(--white);border-radius:9px;padding:10px;text-align:center;font-weight:700;font-size:12px;margin-top:10px">Confirm and assign</div>'+
+   '<div style="margin-top:9px;font-size:11px;color:var(--ink-500)">Marcus accepts it himself. Nobody accepts for him.</div></div></div>',
  "escalation":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">HSE portal &middot; escalation queue</span></div>'+
-   '<div class="fbody"><div style="border-left:4px solid #C8972F;padding:10px 12px;background:#fff8e9;border-radius:8px;margin-bottom:12px"><b>Marcus Bedard</b><div class="v-sub">Pain 8 on three consecutive check-ins.</div><div style="color:#8a5a00;font-weight:700;font-size:11.5px;margin-top:4px">Escalated to the clinician per program rules.</div></div>'+
-   '<div style="background:#f4f6fa;border:1px solid #e6e9ef;border-radius:8px;padding:11px 13px;font-size:11.5px;color:#33465e;line-height:1.5"><b>Device boundary:</b> tracking and visualization with independent clinician review. No scoring, no forecasting, no alerts that alter treatment.</div></div></div>',
+   '<div class="fbody"><div style="border-left:4px solid var(--action-600);padding:10px 12px;background:var(--warn-050);border-radius:8px;margin-bottom:12px"><b>Marcus Bedard</b><div class="v-sub">Pain 8 on three consecutive check-ins.</div><div style="color:var(--warn-700);font-weight:700;font-size:11.5px;margin-top:4px">Escalated to the clinician per program rules.</div></div>'+
+   '<div style="background:var(--ink-050);border:1px solid var(--ink-100);border-radius:8px;padding:11px 13px;font-size:11.5px;color:var(--ink-700);line-height:1.5"><b>Device boundary:</b> tracking and visualization with independent clinician review. No scoring, no forecasting, no alerts that alter treatment.</div></div></div>',
  "executive":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">executive view &middot; operational overview</span></div>'+
    '<div class="fbody"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">'+
-    '<div class="card2"><div class="v-sub">Avg recovery</div><div style="font-size:20px;font-weight:700">41 d</div><div class="v-sub" style="color:#2c6e46">vs 63 benchmark</div></div>'+
+    '<div class="card2"><div class="v-sub">Avg recovery</div><div style="font-size:20px;font-weight:700">41 d</div><div class="v-sub" style="color:var(--ok-700)">vs 63 benchmark</div></div>'+
     '<div class="card2"><div class="v-sub">Days regained</div><div style="font-size:20px;font-weight:700">312</div></div>'+
     '<div class="card2"><div class="v-sub">Open cases</div><div style="font-size:20px;font-weight:700">24</div></div></div>'+
-   '<div class="card2" style="opacity:.78;border-style:dashed"><div style="display:flex;justify-content:space-between;align-items:center"><div class="v-sub">Forecast RTW by site</div><span class="v-pill v-flag">Roadmap &middot; illustrative</span></div><div style="font-size:12.5px;color:#8a97a8;margin-top:3px">Forecasting is later, behind the same flag discipline as pose.</div></div></div></div>',
+   '<div class="card2" style="opacity:.78;border-style:dashed"><div style="display:flex;justify-content:space-between;align-items:center"><div class="v-sub">Forecast RTW by site</div><span class="v-pill v-flag">Roadmap &middot; illustrative</span></div><div style="font-size:12.5px;color:var(--ink-400);margin-top:3px">Forecasting is later, behind the same flag discipline as pose.</div></div></div></div>',
  "sigma":
   '<div style="border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);box-shadow:0 16px 46px rgba(0,0,0,.42)">'+
-   '<div style="background:#fff4d6;color:#8a5a00;font-size:11px;font-weight:600;padding:8px 14px;border-bottom:1px solid #e7c975">Illustrative mock &middot; pilot integration is intake level, not a live bidirectional connection.</div>'+
+   '<div style="background:var(--warn-050);color:var(--warn-700);font-size:11px;font-weight:600;padding:8px 14px;border-bottom:1px solid var(--action-600)">Illustrative mock &middot; pilot integration is intake level, not a live bidirectional connection.</div>'+
    '<div style="display:grid;grid-template-columns:1fr 220px">'+
-    '<div style="background:#fff;padding:14px 16px;color:#16202E"><div class="v-sub" style="margin-bottom:8px">SIGMA Claims &middot; CT-2026-0481</div><div class="v-row"><span class="v-sub">Claimant</span><b>Marcus Bedard</b></div><div class="v-row"><span class="v-sub">Employer</span><b>Northgate Industrial Services</b></div><div class="v-row" style="border-bottom:none"><span class="v-sub">Status</span><span class="v-pill v-ok">Open, active</span></div></div>'+
-    '<div style="background:#0E1B2C;color:#fff;padding:14px 15px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;font-weight:600">Continuum panel</span><span class="v-pill" style="background:#fff4d6;color:#8a5a00;font-size:8.5px">Illustrative</span></div><div style="color:#AAB6C6;font-size:11px">Recovery day</div><div style="font-size:20px;font-weight:700;color:#E3B968;font-family:\'Space Grotesk\',sans-serif">Day 14 <span style="font-size:11px;color:#AAB6C6">of 21</span></div><div style="border-top:1px solid rgba(255,255,255,.1);margin-top:8px;padding-top:8px;font-size:11px;color:#AAB6C6">Functional status<b style="color:#fff;float:right">Light duty</b></div></div></div></div>',
+    '<div style="background:var(--white);padding:14px 16px;color:var(--ink-900)"><div class="v-sub" style="margin-bottom:8px">SIGMA Claims &middot; CT-2026-0481</div><div class="v-row"><span class="v-sub">Claimant</span><b>Marcus Bedard</b></div><div class="v-row"><span class="v-sub">Employer</span><b>Northgate Industrial Services</b></div><div class="v-row" style="border-bottom:none"><span class="v-sub">Status</span><span class="v-pill v-ok">Open, active</span></div></div>'+
+    '<div style="background:var(--ink-900);color:var(--white);padding:14px 15px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;font-weight:600">Continuum panel</span><span class="v-pill" style="background:var(--warn-050);color:var(--warn-700);font-size:8.5px">Illustrative</span></div><div style="color:var(--ink-300);font-size:11px">Recovery day</div><div style="font-size:20px;font-weight:700;color:var(--action-600);font-family:\'Space Grotesk\',sans-serif">Day 14 <span style="font-size:11px;color:var(--ink-300)">of 21</span></div><div style="border-top:1px solid rgba(255,255,255,.1);margin-top:8px;padding-top:8px;font-size:11px;color:var(--ink-300)">Functional status<b style="color:var(--white);float:right">Light duty</b></div></div></div></div>',
  "timeline":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">worker dashboard &middot; recovery timeline</span></div>'+
    '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="v-h">Day 9 to Day 21</div><span class="v-pill v-ok">Full duty pending</span></div>'+
    '<div style="display:flex;align-items:flex-end;gap:5px;height:64px">'+
-    '<i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:28%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:34%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:40%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:48%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:56%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:66%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:78%"></i><i style="flex:1;background:#C8972F;border-radius:3px 3px 0 0;height:90%"></i><i style="flex:1;background:#E3B968;border-radius:3px 3px 0 0;height:100%"></i></div>'+
-   '<div style="display:flex;justify-content:space-between;font-size:10.5px;color:#5a6678;margin-top:5px"><span>Day 9</span><span>Day 15</span><span>Day 21</span></div>'+
+    '<i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:28%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:34%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:40%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:48%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:56%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:66%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:78%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:90%"></i><i style="flex:1;background:var(--action-600);border-radius:3px 3px 0 0;height:100%"></i></div>'+
+   '<div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-500);margin-top:5px"><span>Day 9</span><span>Day 15</span><span>Day 21</span></div>'+
    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:11px"><span class="v-pill v-func">Check-ins logged</span><span class="v-pill v-func">Restrictions acknowledged</span><span class="v-pill v-func">Duties completed</span></div></div></div>',
  "finale":
   '<div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
-    '<div class="card2" style="background:#0E1B2C;color:#fff;border-color:var(--hair)"><div class="v-sub" style="color:#AAB6C6">Worker app</div><b style="color:#E3B968">Cleared. Welcome back.</b></div>'+
+    '<div class="card2" style="background:var(--ink-900);color:var(--white);border-color:var(--hair)"><div class="v-sub" style="color:var(--ink-300)">Worker app</div><b style="color:var(--action-600)">Cleared. Welcome back.</b></div>'+
     '<div class="card2"><div class="v-sub">Employer</div><b>Retired from the list</b></div>'+
     '<div class="card2"><div class="v-sub">HSE</div><b>Case closed</b></div>'+
     '<div class="card2"><div class="v-sub">Board</div><b>Claim closed, full duty package</b></div></div>'+
-   '<div style="text-align:center;margin-top:12px"><span class="v-pill" style="background:#C8972F;color:#0E1B2C;padding:6px 16px">Dr. Owusu pressed Physician sign-off &middot; expected full duty Jul 31</span></div></div>'
+   '<div style="text-align:center;margin-top:12px"><span class="v-pill" style="background:var(--action-600);color:var(--ink-900);padding:6px 16px">Dr. Owusu pressed Physician sign-off &middot; expected full duty Jul 31</span></div></div>'
 };
 function vignette(key){
   if(VIGNETTES[key])return VIGNETTES[key];

@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>Continuum: Recovery Intelligence inside a claims system (illustrative)</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
 <style>
   :root{
-    --sg-bg:#eef1f6;--sg-card:#ffffff;--sg-navy:#1f3a5f;--sg-blue:#2c5c92;--sg-ink:#1a2536;--sg-muted:#5a6678;--sg-line:#d7dee8;--sg-soft:#eef3fa;
-    --c-navy:#0E1B2C;--c-navy2:#0A1526;--c-gold:#C8972F;--c-gold2:#E3B968;--c-mist:#AAB6C6;--c-hair:rgba(255,255,255,.09);
-    --notice:#8a5a00;--noticebg:#fff4d6;--noticeline:#e7c975;
+    --sg-bg:var(--ink-100);--sg-card:var(--white);--sg-navy:var(--ink-700);--sg-blue:var(--action-700);--sg-ink:var(--ink-900);--sg-muted:var(--ink-500);--sg-line:var(--ink-200);--sg-soft:var(--action-050);
+    --c-navy:var(--ink-900);--c-navy2:var(--ink-900);--c-gold:var(--action-600);--c-gold2:var(--action-600);--c-mist:var(--ink-300);--c-hair:rgba(255,255,255,.09);
+    --notice:var(--warn-700);--noticebg:var(--warn-050);--noticeline:var(--action-600);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--sg-bg);color:var(--sg-ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
@@ -21,9 +22,9 @@
   .illus{display:flex;align-items:center;gap:10px;background:var(--noticebg);color:var(--notice);border-bottom:1px solid var(--noticeline);padding:10px 22px;font-size:13px;font-weight:600}
   .illus .msym{font-size:19px}
   /* SIGMA chrome */
-  header.sg{background:var(--sg-navy);color:#fff;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+  header.sg{background:var(--sg-navy);color:var(--white);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
   .sg-wm{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.04em;font-size:16px}
-  .sg-wm .dot{width:26px;height:26px;border-radius:6px;background:#fff;color:var(--sg-navy);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+  .sg-wm .dot{width:26px;height:26px;border-radius:6px;background:var(--white);color:var(--sg-navy);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
   .sg-wm small{font-weight:600;font-size:10.5px;opacity:.7;letter-spacing:.12em;text-transform:uppercase}
   .sg-user{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:600}
   .wrap{max-width:1120px;margin:0 auto;padding:22px}
@@ -33,14 +34,14 @@
   .card{background:var(--sg-card);border:1px solid var(--sg-line);border-radius:12px;overflow:hidden}
   .card .hd{padding:15px 20px;border-bottom:1px solid var(--sg-line);display:flex;align-items:center;justify-content:space-between}
   .card .hd h2{font-size:15px;font-weight:700;color:var(--sg-navy)}
-  .status-pill{background:#e3f0e3;color:#2c6e46;border-radius:999px;padding:3px 11px;font-size:11.5px;font-weight:700}
+  .status-pill{background:var(--ok-050);color:var(--ok-700);border-radius:999px;padding:3px 11px;font-size:11.5px;font-weight:700}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--sg-line)}
   .field{background:var(--sg-card);padding:14px 20px}
   .field .l{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sg-muted);margin-bottom:3px}
   .field .v{font-size:14.5px;font-weight:600;color:var(--sg-ink)}
   .sg-note{padding:14px 20px;font-size:12.5px;color:var(--sg-muted);border-top:1px solid var(--sg-line)}
   /* embedded Continuum panel */
-  .cont{background:linear-gradient(180deg,var(--c-navy) 0%,var(--c-navy2) 100%);border:1px solid var(--c-hair);border-radius:12px;color:#fff;overflow:hidden}
+  .cont{background:linear-gradient(180deg,var(--c-navy) 0%,var(--c-navy2) 100%);border:1px solid var(--c-hair);border-radius:12px;color:var(--white);overflow:hidden}
   .cont .chd{padding:16px 18px;border-bottom:1px solid var(--c-hair);display:flex;align-items:center;justify-content:space-between}
   .cont .chd .b{display:flex;align-items:center;gap:9px}
   .cont .chd .c{width:26px;height:26px;border-radius:7px;background:var(--c-navy);color:var(--c-gold);border:1px solid var(--c-hair);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:"Space Grotesk",sans-serif}

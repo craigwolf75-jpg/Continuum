@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>Continuum: Hub Users</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#16273D;--gold:#E0B658;--goldbg:#fdf3dd;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;
---card:#FFFFFF;--low:#eff4ff;--red:#ba1a1a;--alert:#C0453B;--redbg:#ffdad6;--teal:#508c9c;--tealbg:#dce9ff;--green:#2c6e46;--greenbg:#e4efe8}
+:root{--navy:var(--ink-900);--gold:var(--action-600);--goldbg:var(--warn-050);--ink:var(--ink-900);--muted:var(--ink-700);--soft:var(--ink-400);--line:var(--ink-100);--bg:var(--ink-050);
+--card:var(--white);--low:var(--action-050);--red:var(--stop-700);--alert:var(--stop-600);--redbg:var(--stop-050);--teal:var(--ink-400);--tealbg:var(--action-050);--green:var(--ok-700);--greenbg:var(--ok-050)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif;padding:32px 24px 80px}
 .wrap{max-width:1040px;margin:0 auto}
 header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .brandline{display:flex;align-items:center;gap:12px}
 .brandline b{font-size:20px;color:var(--navy)}
-.tagchip{background:var(--goldbg);color:#735200;border:1px solid var(--gold);border-radius:5px;padding:3px 9px;font-size:10.5px;font-weight:700;letter-spacing:.08em}
+.tagchip{background:var(--goldbg);color:var(--warn-800);border:1px solid var(--gold);border-radius:5px;padding:3px 9px;font-size:10.5px;font-weight:700;letter-spacing:.08em}
 .gatenote{background:var(--low);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--muted);margin:16px 0 24px;display:flex;gap:10px;align-items:flex-start}
 .gatenote b{color:var(--navy)}
 h1{font-size:26px;color:var(--navy);margin-bottom:2px}
@@ -23,21 +24,21 @@ h2{font-size:17px;color:var(--navy);margin-bottom:12px}
 .sub{color:var(--muted);font-size:13px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(14,27,44,.06);padding:20px;margin-bottom:24px}
 select{height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font:inherit;font-size:12.5px;background:var(--card)}
-.btn{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
-.btn:hover{background:#3b475a}
+.btn{background:var(--navy);color:var(--white);border:none;border-radius:9px;padding:8px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--ink-700)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
 .btn.danger{background:var(--card);border:1px solid var(--alert);color:var(--alert)}
 table{width:100%;border-collapse:collapse}
 th{background:var(--low);font-size:10.5px;letter-spacing:.08em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:10px 14px}
 td{padding:10px 14px;border-top:1px solid var(--line);font-size:12.5px;vertical-align:middle}
-tr:hover td{background:#fafbfe}
+tr:hover td{background:var(--white)}
 .tablewrap{overflow-x:auto}
 .pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700;white-space:nowrap}
-.pillst.pending{background:var(--goldbg);color:#735200}
+.pillst.pending{background:var(--goldbg);color:var(--warn-800)}
 .pillst.approved{background:var(--greenbg);color:var(--green)}
-.pillst.rejected{background:var(--redbg);color:#93000a}
+.pillst.rejected{background:var(--redbg);color:var(--stop-800)}
 .rowbtns{display:flex;gap:6px;align-items:center}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:90;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:var(--white);border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:90;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{color:var(--soft);font-size:12.5px;padding:16px;text-align:center}
 .statusline{font-size:12.5px;color:var(--muted);margin-bottom:10px}
@@ -53,7 +54,7 @@ tr:hover td{background:#fafbfe}
   <p class="sub">Approve or reject accounts created at the Continuum Hub, and set each one's access group.</p>
 
   <div class="gatenote">
-    <span>&#128274;</span>
+    <span>&var(--ok-700);</span>
     <span>This page is gated by the Continuum hub sign in and is only usable by the Continuum hub admins, gary@farmceuticawellness.com and craig@continuumrtw.com. Every action below
     goes through deploy/api/hub-admin.js, which fails closed for any other signed in visitor.</span>
   </div>

@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>Continuum: HSE Portal, Light Duties Management</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#16273D;--gold:#E0B658;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;--card:#FFFFFF;
---bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--red:#ba1a1a;--redbg:#ffdad6;--teal:#508c9c;--tealbg:#dce9ff;--goldbg:#fdf3dd}
+:root{--navy:var(--ink-900);--gold:var(--action-600);--ink:var(--ink-900);--muted:var(--ink-700);--soft:var(--ink-400);--line:var(--ink-100);--bg:var(--ink-050);--card:var(--white);
+--bright:var(--ink-050);--low:var(--action-050);--cont:var(--action-050);--red:var(--stop-700);--redbg:var(--stop-050);--teal:var(--ink-400);--tealbg:var(--action-050);--goldbg:var(--warn-050)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:14px/1.45 "Public Sans",system-ui,sans-serif}
 .msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
@@ -22,15 +23,15 @@ header.top{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background
 .searchbox input:focus{box-shadow:0 0 0 2px var(--gold)}
 .searchbox .msym{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:19px;color:var(--soft)}
 aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);padding-top:80px;display:flex;flex-direction:column}
-.side .prof{margin:0 14px 20px;background:rgba(59,71,90,.35);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center;color:#fff;cursor:pointer}
-.side .prof .av{width:40px;height:40px;border-radius:50%;background:#bac7de;color:#0f1c2d;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.side .prof{margin:0 14px 20px;background:rgba(59,71,90,.35);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center;color:var(--white);cursor:pointer}
+.side .prof .av{width:40px;height:40px;border-radius:50%;background:var(--ink-300);color:var(--ink-900);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
 .side .prof p{font-size:12.5px;font-weight:700}
-.side .prof span{font-size:11px;color:#78859a}
+.side .prof span{font-size:11px;color:var(--ink-400)}
 .side nav{flex:1}
-.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:13px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
-.side nav button:hover{color:#fff;background:#3b475a}
-.side nav button.on{color:#fff;background:#3b475a;border-left-color:var(--gold)}
-.side .foot{border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;color:#9fb0c6;font-size:12px}
+.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:var(--ink-300);font:inherit;font-size:12.5px;font-weight:700;padding:13px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
+.side nav button:hover{color:var(--white);background:var(--ink-700)}
+.side nav button.on{color:var(--white);background:var(--ink-700);border-left-color:var(--gold)}
+.side .foot{border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;color:var(--ink-300);font-size:12px}
 main{margin-left:240px;padding:88px 24px 60px;min-height:100vh}
 .wrap{max-width:1180px;margin:0 auto}
 .eyebrow{font-size:11px;letter-spacing:.12em;font-weight:700;color:var(--muted);text-transform:uppercase}
@@ -42,20 +43,20 @@ h2{font-size:22px;line-height:28px;color:var(--navy)}
 .btn:hover{transform:translateY(-2px)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink);box-shadow:none}
-.btn.navy{background:var(--navy);color:#fff}
+.btn.navy{background:var(--navy);color:var(--white)}
 .restr{background:var(--redbg);border:1px solid rgba(186,26,26,.2);border-radius:12px;padding:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 18px rgba(14,27,44,.08)}
-.restr .warn{width:48px;height:48px;background:var(--red);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.restr .warn{width:48px;height:48px;background:var(--red);border-radius:50%;color:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .restr .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .restr .rc{background:rgba(255,255,255,.55);border:1px solid rgba(186,26,26,.2);border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;color:var(--red);display:inline-flex;gap:6px;align-items:center}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;gap:12px;align-items:center}
-.kpi .ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.kpi .ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--white);flex-shrink:0}
 .kpi .n{font-size:20px;font-weight:700;color:var(--navy)}
 .kpi .t{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase}
 .stchip{display:inline-block;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:700}
-.s-reported{background:var(--cont);color:#3b475a}.s-off_work{background:var(--redbg);color:#93000a}
-.s-light_duty{background:var(--goldbg);color:#735200}.s-full_duty_pending{background:var(--tealbg);color:#004e5c}
-.s-signed_off{background:#e4efe8;color:#2c6e46}.s-escalated{background:var(--goldbg);color:#735200;border:1px solid var(--gold)}
+.s-reported{background:var(--cont);color:var(--ink-700)}.s-off_work{background:var(--redbg);color:var(--stop-800)}
+.s-light_duty{background:var(--goldbg);color:var(--warn-800)}.s-full_duty_pending{background:var(--tealbg);color:var(--ok-800)}
+.s-signed_off{background:var(--ok-050);color:var(--ok-700)}.s-escalated{background:var(--goldbg);color:var(--warn-800);border:1px solid var(--gold)}
 table{width:100%;border-collapse:collapse}
 th{background:var(--low);font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:12px 16px}
 td{padding:13px 16px;border-top:1px solid var(--line);font-size:13px;vertical-align:middle}
@@ -64,34 +65,34 @@ tr.rl{cursor:pointer}tr.rl:hover td{background:var(--bright)}
 .duty{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card)}
 .duty.l-teal{border-left:5px solid var(--teal)}
 .duty.l-gold{border-left:5px solid var(--gold)}
-.duty.l-gray{border-left:5px solid #c5c6cd;opacity:.75}
+.duty.l-gray{border-left:5px solid var(--ink-300);opacity:.75}
 .duty b{font-size:12.5px;display:block}
 .duty .m{font-size:11px;color:var(--muted)}
-.tick{width:24px;height:24px;border-radius:6px;border:2px solid var(--soft);display:inline-flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;margin-right:10px}
+.tick{width:24px;height:24px;border-radius:6px;border:2px solid var(--soft);display:inline-flex;align-items:center;justify-content:center;color:var(--white);flex-shrink:0;margin-right:10px}
 .tick.done{background:var(--teal);border-color:var(--teal)}
 .stagechip{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .clschip{font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px}
-.cls-suitable_onsite{background:var(--goldbg);color:#735200}
-.cls-standard_precaution{background:var(--cont);color:#3b475a}
+.cls-suitable_onsite{background:var(--goldbg);color:var(--warn-800)}
+.cls-standard_precaution{background:var(--cont);color:var(--ink-700)}
 label.fl{font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
 select,input[type=date],input[type=number],input[type=search],input[type=text]{width:100%;height:46px;border:1px solid var(--line);border-radius:10px;padding:0 14px;font:inherit;font-size:13.5px;background:var(--card);outline:none}
 select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
 .notesbox{background:var(--low);border:1px solid var(--line);border-radius:10px;padding:14px}
 .notesbox p{font-size:13px;font-style:italic;color:var(--ink)}
 .hazrow{display:flex;align-items:center;gap:10px;background:var(--goldbg);border:1px solid var(--gold);border-radius:10px;padding:12px 14px;margin:12px 0;cursor:pointer}
-.hazrow .hz{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.hazrow .hz{width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--white);flex-shrink:0}
 .hazrow.done .hz{background:var(--teal);border-color:var(--teal)}
 .prog{height:8px;background:var(--cont);border-radius:4px;overflow:hidden}
 .prog i{display:block;height:8px;background:var(--teal);border-radius:4px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
 .scrim{position:fixed;inset:0;background:rgba(11,28,48,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
 .scrim.on{opacity:1;pointer-events:auto}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:var(--white);border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast b{color:var(--gold)}
 .adminrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .adminrow:last-child{border-bottom:none}
 .pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700}
-.pillst.ok{background:#e4efe8;color:#2c6e46}.pillst.filed{background:var(--goldbg);color:#735200}.pillst.off{background:var(--cont);color:#3b475a}
+.pillst.ok{background:var(--ok-050);color:var(--ok-700)}.pillst.filed{background:var(--goldbg);color:var(--warn-800)}.pillst.off{background:var(--cont);color:var(--ink-700)}
 .bars .brow{margin:10px 0}
 .bars .bl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--muted)}
 .bars .bt{height:8px;border-radius:4px;background:var(--cont);overflow:hidden}
@@ -109,14 +110,14 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
   .insight .il{font-weight:700;color:var(--muted)}
   .insight .iv{color:var(--ink)}
   .insight .ipart.authority{background:var(--goldbg)}
-  .insight .ipart.authority .il{color:#735200}
+  .insight .ipart.authority .il{color:var(--warn-800)}
   .qsort{font-size:11.5px;color:var(--muted)}
   .qs{background:none;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font:inherit;font-size:11.5px;cursor:pointer;color:var(--muted);margin-left:4px}
-  .qs.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .qs.on{background:var(--navy);color:var(--white);border-color:var(--navy)}
   .prov{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:5px;background:var(--low);color:var(--soft);border:1px solid var(--line);vertical-align:middle;white-space:nowrap}
-  .prov.intel{background:var(--goldbg);color:#735200;border-color:#e7c975}
-  .prov.worker{background:var(--tealbg);color:#2c5c6b}
-  .prov.clin{background:var(--cont);color:#3b475a}
+  .prov.intel{background:var(--goldbg);color:var(--warn-800);border-color:var(--action-600)}
+  .prov.worker{background:var(--tealbg);color:var(--ink-600)}
+  .prov.clin{background:var(--cont);color:var(--ink-700)}
   .ihdr{padding:7px 12px;border-bottom:1px solid var(--line);background:var(--bright)}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
@@ -133,10 +134,10 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
   </div>
 </header>
 <aside class="side">
-  <div style="padding:0 24px 14px"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="width:150px;display:block"><div style="color:#78859a;font-size:11px;margin-top:6px">Return to Work (RTW) Coordination Hub</div></div>
+  <div style="padding:0 24px 14px"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="width:150px;display:block"><div style="color:var(--ink-400);font-size:11px;margin-top:6px">Return to Work (RTW) Coordination Hub</div></div>
   <div class="prof" id="profcard" onclick="openWorker('m')"></div>
   <nav id="sidenav"></nav>
-  <div class="foot"><a href="/hub#roles" style="color:var(--gold);display:block;margin-bottom:8px;font-weight:600;text-decoration:none">&#8592; All portals</a>Help &nbsp;&middot;&nbsp; Logout<br><a href="#" onclick="resetAll();return false" style="color:#9fb0c6">Reset demo</a></div>
+  <div class="foot"><a href="/hub#roles" style="color:var(--gold);display:block;margin-bottom:8px;font-weight:600;text-decoration:none">&#8592; All portals</a>Help &nbsp;&middot;&nbsp; Logout<br><a href="#" onclick="resetAll();return false" style="color:var(--ink-300)">Reset demo</a></div>
 </aside>
 <main><div class="wrap" id="main"></div></main>
 <div class="scrim" id="scrim"></div>
@@ -212,7 +213,7 @@ function stchip(w){
  var escd=S.escalations.some(function(e){return e.w===w.id&&!e.resolved;});
  return '<span class="stchip s-'+w.status+'">'+ST[w.status]+'</span>'+(escd?' <span class="stchip s-escalated">Escalated</span>':"");}
 function presentBtn(){var on=(window.ContinuumPresenter&&ContinuumPresenter.isOn&&ContinuumPresenter.isOn())||false;
- return '<button type="button" class="btn ghost cp-present-btn" onclick="presentToggle()"'+(on?' style="background:#C8972F;color:var(--navy);border-color:#C8972F"':'')+'>'+(on?'Presenting':'Present')+'</button>';}
+ return '<button type="button" class="btn ghost cp-present-btn" onclick="presentToggle()"'+(on?' style="background:var(--action-600);color:var(--navy);border-color:var(--action-600)"':'')+'>'+(on?'Presenting':'Present')+'</button>';}
 function presentToggle(){if(window.ContinuumPresenter){ContinuumPresenter.toggle();render();}}
 function pagehead(title,sub,extra){
  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px"><div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+
@@ -224,12 +225,12 @@ function renderDashboard(){
  h+='<div class="kpis">'+
  '<div class="kpi"><div class="ic" style="background:var(--navy)"><span class="msym">medical_services</span></div><div><div class="n">'+openCases().length+'</div><div class="t">Open cases</div></div></div>'+
  '<div class="kpi"><div class="ic" style="background:var(--gold)"><span class="msym">assignment_turned_in</span></div><div><div class="n">'+activeDuties().length+'</div><div class="t">Active light duties</div></div></div>'+
- '<div class="kpi"><div class="ic" style="background:'+(openEsc().length?"#C0453B":"var(--teal)")+'"><span class="msym">priority_high</span></div><div><div class="n">'+openEsc().length+'</div><div class="t">Open escalations</div></div></div>'+
+ '<div class="kpi"><div class="ic" style="background:'+(openEsc().length?"var(--stop-600)":"var(--teal)")+'"><span class="msym">priority_high</span></div><div><div class="n">'+openEsc().length+'</div><div class="t">Open escalations</div></div></div>'+
  '<div class="kpi"><div class="ic" style="background:var(--teal)"><span class="msym">trending_up</span></div><div><div class="n">'+checkinPct()+'%</div><div class="t">Check-in completion</div></div></div>'+
  '</div>';
  if(openEsc().length){
   h+='<div class="card" style="padding:16px;margin-bottom:16px;border-left:5px solid var(--gold)"><div class="eyebrow" style="margin-bottom:8px">Escalations</div>'+
-  openEsc().map(function(e){var w=W(e.w);var nm=e.wname||(w?w.name:"Worker");var tag=e.src==="supervisor observation"?' <span class="prov" style="background:#e7edf5;color:#33465e">Supervisor observation</span>':'';
+  openEsc().map(function(e){var w=W(e.w);var nm=e.wname||(w?w.name:"Worker");var tag=e.src==="supervisor observation"?' <span class="prov" style="background:var(--ink-100);color:var(--ink-700)">Supervisor observation</span>':'';
    return '<div class="escitem"><div class="eschead"><div><b style="font-size:13.5px">'+esc(nm)+'</b>'+tag+' <span class="sub" style="font-size:11.5px">'+esc(e.text)+'</span></div><button class="btn ghost" onclick="resolveEsc('+e.id+')">Resolve</button></div>'+insightCard(e.insight)+'<p class="sub" style="font-size:11px;margin-top:6px">The treating physician makes every medical and return-to-work decision.</p></div>';}).join("")+'</div>';}
  var qsort=S.qsort||"attention";
  var sbtn=function(k,l){return '<button class="qs'+(qsort===k?" on":"")+'" onclick="setQSort(\''+k+'\')">'+l+'</button>';};
@@ -242,9 +243,9 @@ function renderDashboard(){
   var eb=S.escalations.some(function(e){return e.w===b.id&&!e.resolved;})?-1:0;
   if(ea!==eb)return ea-eb;var oa=(a.status in order)?order[a.status]:9,ob=(b.status in order)?order[b.status]:9;return oa-ob;});
  h+='<table><thead><tr><th>Worker</th><th>Injury</th><th>Day</th><th>Status</th><th>Pain trend</th><th>Mobility</th><th>Next review</th></tr></thead><tbody>'+
- sorted.map(function(w){return '<tr class="rl" onclick="openWorker(\''+w.id+'\')"><td><b>'+esc(w.name)+'</b><div class="sub" style="font-size:11px">'+esc(w.trade)+(w.live&&LIVE?' &middot; <span style="color:#735200;font-weight:700">Live</span>':'')+'</div></td>'+
+ sorted.map(function(w){return '<tr class="rl" onclick="openWorker(\''+w.id+'\')"><td><b>'+esc(w.name)+'</b><div class="sub" style="font-size:11px">'+esc(w.trade)+(w.live&&LIVE?' &middot; <span style="color:var(--warn-800);font-weight:700">Live</span>':'')+'</div></td>'+
   '<td style="max-width:220px">'+esc(w.injury)+'</td><td>'+w.day+'</td><td>'+stchip(w)+'</td>'+
-  '<td>'+spark(w.pain,"#B87A2E")+'</td><td>'+spark(w.mob,"#508c9c")+'</td><td>'+esc(w.review||"")+'</td></tr>';}).join("")+
+  '<td>'+spark(w.pain,"var(--action-600)")+'</td><td>'+spark(w.mob,"var(--ink-400)")+'</td><td>'+esc(w.review||"")+'</td></tr>';}).join("")+
  '</tbody></table><div style="padding:12px 16px;font-size:11.5px;color:var(--muted);background:var(--bright);border-top:1px solid var(--line)">This seat sees scores and clinical notes for operational need. It never moves medical status; the physician decides every transition.</div></div>';
  return h;}
 function insightCard(ins){if(!ins)return "";var row=function(l,v){return '<div class="ipart"><span class="il">'+l+'</span><span class="iv">'+esc(v)+'</span></div>';};return '<div class="insight"><div class="ihdr"><span class="prov intel">Generated by the case summary tool</span></div>'+row("What changed",ins.changed)+row("Contributing signals",ins.contributors)+row("Period",ins.period)+row("Why it may matter",ins.matters)+row("What remains uncertain",ins.uncertain)+'<div class="ipart authority"><span class="il">Who holds authority</span><span class="iv">'+esc(ins.authority)+'</span></div></div>';}
@@ -275,11 +276,11 @@ function renderDetail(w){
   h+='<section class="restr" style="margin-bottom:20px"><div class="warn"><span class="msym" style="font-size:28px">warning</span></div>'+
   '<div style="flex:1"><h2 style="color:var(--ink)">Medical Restrictions Active <span class="prov clin">Clinician entered</span></h2><div class="chips">'+
   w.restr.map(function(r){return '<span class="rc"><span class="msym" style="font-size:15px">do_not_disturb_on</span>'+esc(r)+'</span>';}).join("")+
-  '</div>'+((w.ackTs&&w.ackDay===w.day)?'<div style="margin-top:10px;font-size:12px;color:#2c6e46;font-weight:700"><span class="msym" style="font-size:15px;vertical-align:middle">task_alt</span> Worker acknowledged these restrictions today at '+hFmtTime(w.ackTs)+'</div>':((w.id==="m"&&LIVE)?'<div style="margin-top:10px;font-size:12px;color:var(--muted)">Awaiting today\'s worker acknowledgement</div>':''))+
+  '</div>'+((w.ackTs&&w.ackDay===w.day)?'<div style="margin-top:10px;font-size:12px;color:var(--ok-700);font-weight:700"><span class="msym" style="font-size:15px;vertical-align:middle">task_alt</span> Worker acknowledged these restrictions today at '+hFmtTime(w.ackTs)+'</div>':((w.id==="m"&&LIVE)?'<div style="margin-top:10px;font-size:12px;color:var(--muted)">Awaiting today\'s worker acknowledgement</div>':''))+
   '</div><div style="text-align:right"><div class="eyebrow">Valid until</div><div style="font-size:20px;font-weight:700;color:var(--navy)">'+esc(w.until||"Per clinician")+'</div></div></section>';}
  h+='<div class="two" style="display:grid;grid-template-columns:7fr 5fr;gap:20px">';
  /* assignment card */
- h+='<div class="card" style="padding:20px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2>Assign light duty: '+esc(w.name)+'</h2><span style="background:var(--navy);color:#fff;border-radius:999px;padding:4px 12px;font-size:11px">'+ST[w.status].toUpperCase()+'</span></div>';
+ h+='<div class="card" style="padding:20px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2>Assign light duty: '+esc(w.name)+'</h2><span style="background:var(--navy);color:var(--white);border-radius:999px;padding:4px 12px;font-size:11px">'+ST[w.status].toUpperCase()+'</span></div>';
  if(w.status==="light_duty"||w.status==="full_duty_pending"){
   h+='<div style="margin-bottom:12px"><label class="fl">Select task from bank (filtered by current restrictions)</label><select onchange="S.form.task=this.value;save()">'+
   TASKBANK.map(function(t){return '<option'+(f.task===t?" selected":"")+'>'+esc(t)+'</option>';}).join("")+'</select></div>';
@@ -288,7 +289,7 @@ function renderDetail(w){
   '<div><label class="fl">Daily hours</label><input type="number" min="1" max="8" value="'+f.hours+'" onchange="S.form.hours=+this.value;save()"></div>'+
   '<div><label class="fl">Duty class</label><select onchange="S.form.cls=this.value;save()"><option value="suitable_onsite"'+(f.cls==="suitable_onsite"?" selected":"")+'>Suitable onsite</option><option value="standard_precaution"'+(f.cls==="standard_precaution"?" selected":"")+'>Standard precaution</option></select></div></div>';
   h+='<div class="notesbox" style="margin-bottom:4px"><div class="fl">Clinician note (read only, shared with HSE)</div><p>"'+esc(w.note)+'" <span style="font-style:normal;color:var(--muted)">'+esc(w.physician)+'</span></p></div>';
-  h+='<div class="hazrow'+(f.hazard?" done":"")+'" onclick="S.form.hazard=!S.form.hazard;save()" role="checkbox" aria-checked="'+f.hazard+'" tabindex="0"><span class="hz">'+(f.hazard?"✓":"")+'</span><div><b style="font-size:12.5px">Hazard check complete</b><div style="font-size:11px;color:#735200">A duty cannot be assigned until it is hazard checked. Server enforced in the product.</div></div></div>';
+  h+='<div class="hazrow'+(f.hazard?" done":"")+'" onclick="S.form.hazard=!S.form.hazard;save()" role="checkbox" aria-checked="'+f.hazard+'" tabindex="0"><span class="hz">'+(f.hazard?"✓":"")+'</span><div><b style="font-size:12.5px">Hazard check complete</b><div style="font-size:11px;color:var(--warn-800)">A duty cannot be assigned until it is hazard checked. Server enforced in the product.</div></div></div>';
   h+='<button class="btn" style="width:100%" '+(canAssign?"":"disabled")+' onclick="assignDuty(\''+w.id+'\')">Confirm and assign</button>';
  } else if(w.status==="off_work"||w.status==="reported"){
   h+='<div class="notesbox"><p>"'+esc(w.note)+'"</p></div><p class="sub" style="margin-top:12px">Duties unlock when the physician moves this case to light duty via reassess. HSE assigns inside a physician-set state; it never moves the state itself.</p>';
@@ -307,16 +308,16 @@ function renderDetail(w){
   var next={matched:["hazard_checked","Hazard check"],hazard_checked:["assigned","Assign"],assigned:[null,"Awaiting worker accept"],accepted:["active","Start"],active:["completed","Mark complete"]}[d.status]||[null,null];
   h+='<div class="duty '+edge+'"><div style="display:flex;align-items:center"><span class="tick'+(d.status==="completed"?" done":"")+'">'+(d.status==="completed"?"✓":"")+'</span>'+
   '<div><b>'+esc(d.task)+'</b><div class="m">'+d.hours+' hrs &middot; '+esc(d.date)+' &middot; <span class="clschip cls-'+d.cls+'">'+fmtStage(d.cls)+'</span></div></div></div>'+
-  '<div style="text-align:right"><div class="stagechip" style="color:'+(d.status==="completed"?"var(--teal)":d.status==="matched"?"var(--soft)":"#735200")+'">'+fmtStage(d.status)+'</div>'+
+  '<div style="text-align:right"><div class="stagechip" style="color:'+(d.status==="completed"?"var(--teal)":d.status==="matched"?"var(--soft)":"var(--warn-800)")+'">'+fmtStage(d.status)+'</div>'+
   (next[0]?'<button class="btn ghost" style="padding:6px 10px;font-size:11px;margin-top:4px" onclick="advanceDuty('+d.id+')">'+next[1]+'</button>':(next[1]?'<div class="m">'+next[1]+'</div>':""))+
   '</div></div>';});
  h+='<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)"><div class="fl">Shift progress</div><div class="prog"><i style="width:'+pct+'%"></i></div><div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-top:6px"><span style="color:var(--teal)">'+doneHours.toFixed(1)+' / '+activeHours.toFixed(1)+' hours</span><span style="color:var(--muted)">'+pct+'%</span></div></div>';
  h+='</div></div>';
  /* footer KPIs */
  h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px" class="two">'+
- '<div class="kpi"><div class="ic" style="background:#3b475a"><span class="msym">medical_services</span></div><div><div class="t">Clinic sync</div><div class="n" style="font-size:14px">'+(LIVE&&w.id==="m"?"Live via worker app":"Synced 12m ago")+'</div></div></div>'+
+ '<div class="kpi"><div class="ic" style="background:var(--ink-700)"><span class="msym">medical_services</span></div><div><div class="t">Clinic sync</div><div class="n" style="font-size:14px">'+(LIVE&&w.id==="m"?"Live via worker app":"Synced 12m ago")+'</div></div></div>'+
  '<div class="kpi"><div class="ic" style="background:var(--teal)"><span class="msym">trending_up</span></div><div><div class="t">Recovery signal</div><div class="n" style="font-size:14px">Pain '+w.pain[w.pain.length-1]+' &middot; Mobility '+w.mob[w.mob.length-1]+'</div></div></div>'+
- '<div class="kpi"><div class="ic" style="background:#C0453B"><span class="msym">history</span></div><div><div class="t">Next review</div><div class="n" style="font-size:14px">'+esc(w.review||"Complete")+'</div></div></div></div>';
+ '<div class="kpi"><div class="ic" style="background:var(--stop-600)"><span class="msym">history</span></div><div><div class="t">Next review</div><div class="n" style="font-size:14px">'+esc(w.review||"Complete")+'</div></div></div></div>';
  return h;}
 function assignDuty(wid){
  if(!S.form.hazard){toast("Blocked: <b>hazard check first</b>");return;}
@@ -362,7 +363,7 @@ function renderAnalytics(){
  '<div class="kpi"><div class="ic" style="background:var(--navy)"><span class="msym">trending_up</span></div><div><div class="n">'+checkinPct()+'%</div><div class="t">Check-in completion</div></div></div></div>';
  h+='<div class="card bars" style="padding:18px"><div class="eyebrow" style="margin-bottom:6px">Modified days by duty class</div>'+
  '<div class="brow"><div class="bl"><span>Suitable onsite</span><span>'+suitable+' duties</span></div><div class="bt"><i style="width:'+Math.round(suitable/(suitable+std)*100)+'%;background:var(--gold)"></i></div></div>'+
- '<div class="brow"><div class="bl"><span>Standard precaution</span><span>'+std+' duties</span></div><div class="bt"><i style="width:'+Math.round(std/(suitable+std)*100)+'%;background:#9fb0c6"></i></div></div>'+
+ '<div class="brow"><div class="bl"><span>Standard precaution</span><span>'+std+' duties</span></div><div class="bt"><i style="width:'+Math.round(std/(suitable+std)*100)+'%;background:var(--ink-300)"></i></div></div>'+
  '<p style="font-size:11.5px;color:var(--muted);margin-top:10px">The pilot is judged on suitable onsite days versus standard precaution days. Duty class is captured on every assignment, at event time, because it cannot be reconstructed later.</p></div>';
  return h;}
 /* ---------- settings ---------- */

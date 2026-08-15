@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>Continuum: SIGMA administrator</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
 <style>
-:root{--navy:#16273D;--gold:#E0B658;--ink:#0b1c30;--muted:#44474c;--soft:#75777d;--line:#E6E9EF;--bg:#F4F6FA;--card:#FFFFFF;
---bright:#f8f9ff;--low:#eff4ff;--cont:#e6eeff;--notice:#8a5a00;--noticebg:#fff4d6;--noticeline:#e7c975;--ok:#1f6f52;--okbg:#e2f3ea;--okline:#8fceb0;--protect:#8a3a3a;--protectbg:#f6e5e5}
+:root{--navy:var(--ink-900);--gold:var(--action-600);--ink:var(--ink-900);--muted:var(--ink-700);--soft:var(--ink-400);--line:var(--ink-100);--bg:var(--ink-050);--card:var(--white);
+--bright:var(--ink-050);--low:var(--action-050);--cont:var(--action-050);--notice:var(--warn-700);--noticebg:var(--warn-050);--noticeline:var(--action-600);--ok:var(--ok-700);--okbg:var(--ok-050);--okline:var(--ink-300);--protect:var(--stop-800);--protectbg:var(--stop-050)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
 .msym{font-family:"Material Symbols Outlined";font-weight:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
@@ -20,13 +21,13 @@ header.top{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background
 .flag{background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:999px;font-size:11.5px;font-weight:700;padding:6px 13px}
 aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;background:var(--navy);padding-top:84px;display:flex;flex-direction:column}
 .side .brand{padding:0 24px 18px}
-.side .brand b{color:#fff;font-size:17px;display:block}
-.side .brand span{color:#78859a;font-size:11px}
+.side .brand b{color:var(--white);font-size:17px;display:block}
+.side .brand span{color:var(--ink-400);font-size:11px}
 .side nav{flex:1}
-.side button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:#9fb0c6;font:inherit;font-size:12.5px;font-weight:700;padding:13px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
-.side button:hover{color:#fff;background:#3b475a}
-.side button.on{color:#fff;background:#3b475a;border-left-color:var(--gold)}
-.side .foot{border-top:1px solid #3b475a;padding:16px 24px;color:#9fb0c6;font-size:12px}
+.side button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:var(--ink-300);font:inherit;font-size:12.5px;font-weight:700;padding:13px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
+.side button:hover{color:var(--white);background:var(--ink-700)}
+.side button.on{color:var(--white);background:var(--ink-700);border-left-color:var(--gold)}
+.side .foot{border-top:1px solid var(--ink-700);padding:16px 24px;color:var(--ink-300);font-size:12px}
 .side .foot a{color:var(--gold);text-decoration:none}
 main{margin-left:240px;padding:92px 32px 60px;min-height:100vh}
 .wrap{max-width:1080px;margin:0 auto}
@@ -46,13 +47,13 @@ h1{font-size:27px;line-height:34px}
 .chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px}
 .chip.prop{background:var(--noticebg);color:var(--notice)}
 .chip.ok{background:var(--okbg);color:var(--ok)}
-.chip.pend{background:#eef1f6;color:var(--soft)}
+.chip.pend{background:var(--ink-100);color:var(--soft)}
 .banner{background:var(--noticebg);border:1px solid var(--noticeline);border-radius:10px;padding:12px 14px;color:var(--notice);font-size:12.5px;font-weight:600;margin-top:12px}
 .method{background:var(--bright);border:1px solid var(--line);border-radius:9px;font-size:12px;padding:8px 11px;margin-top:8px}
 .col h4{font-size:13px;margin-bottom:6px}
 .privcol{border-radius:11px;padding:14px 15px}
 .privcol.allow{background:var(--okbg);border:1px solid var(--okline)}
-.privcol.protect{background:var(--protectbg);border:1px solid #d9b3b3}
+.privcol.protect{background:var(--protectbg);border:1px solid var(--ink-300)}
 .privcol .t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
 .privcol.allow .t{color:var(--ok)}.privcol.protect .t{color:var(--protect)}
 .fld{font-size:12.5px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06)}
@@ -60,7 +61,7 @@ h1{font-size:27px;line-height:34px}
 .map{display:grid;grid-template-columns:1fr 24px 1fr;gap:8px;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid var(--line)}
 .map:last-child{border-bottom:none}
 .map .ar{color:var(--gold);text-align:center;font-weight:700}
-.btn{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:9px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.btn{background:var(--navy);color:var(--white);border:none;border-radius:9px;padding:9px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 .btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
 .btn.on{background:var(--gold);color:var(--navy)}
 .disc{margin-top:14px;background:var(--noticebg);color:var(--notice);border:1px solid var(--noticeline);border-radius:11px;padding:12px 14px;font-size:12px;line-height:1.55}

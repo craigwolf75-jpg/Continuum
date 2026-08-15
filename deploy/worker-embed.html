@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Continuum worker app demo</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0E1B2C;--panel:#16243B;--panel2:#1C2C47;--line:#27395A;--ink:#E9EEF6;--muted:#9AA9BF;--gold:#C8972F;--goldsoft:#E3B85C;--good:#6FBF8F;--chipbg:#122036}
+:root{--navy:var(--ink-900);--panel:var(--ink-900);--panel2:var(--ink-700);--line:var(--ink-700);--ink:var(--ink-100);--muted:var(--ink-300);--gold:var(--action-600);--goldsoft:var(--action-600);--good:var(--ink-400);--chipbg:var(--ink-900)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{background:var(--navy);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;position:relative}
 .orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .orb{position:absolute;border-radius:50%;filter:blur(20px);opacity:.5}
 .orb.a{width:260px;height:260px;left:-50px;top:40px;background:radial-gradient(circle at 30% 30%,var(--gold),transparent 70%);animation:drift1 18s ease-in-out infinite}
-.orb.b{width:240px;height:240px;right:-40px;bottom:60px;background:radial-gradient(circle at 30% 30%,#2E5A8C,transparent 70%);animation:drift2 22s ease-in-out infinite}
+.orb.b{width:240px;height:240px;right:-40px;bottom:60px;background:radial-gradient(circle at 30% 30%,var(--action-700),transparent 70%);animation:drift2 22s ease-in-out infinite}
 @keyframes drift1{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,30px)}66%{transform:translate(-10px,-20px)}}
 @keyframes drift2{0%,100%{transform:translate(0,0)}33%{transform:translate(-30px,-25px)}66%{transform:translate(20px,15px)}}
 .phone{position:relative;z-index:1;max-width:420px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:22px 20px 12px}
@@ -23,7 +24,7 @@ body{background:var(--navy);color:var(--ink);font:15px/1.55 Inter,system-ui,sans
 h1,h2,h3{font-family:"Space Grotesk";font-weight:700}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
 .badge{display:inline-block;font-family:"Space Grotesk";font-size:11px;font-weight:600;background:var(--chipbg);border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--muted)}
-.btn{width:100%;min-height:48px;border:none;border-radius:12px;background:var(--gold);color:#14100a;font-family:"Space Grotesk";font-weight:600;font-size:15px;cursor:pointer}
+.btn{width:100%;min-height:48px;border:none;border-radius:12px;background:var(--gold);color:var(--ink-900);font-family:"Space Grotesk";font-weight:600;font-size:15px;cursor:pointer}
 .btn:hover{background:var(--goldsoft)}
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);font-family:Inter;font-weight:500}
 .btn:disabled{opacity:.4;cursor:not-allowed}
@@ -42,7 +43,7 @@ textarea{width:100%;background:var(--chipbg);border:1px solid var(--line);border
 .duty{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
 .duty:last-child{border-bottom:none}
 .duty.done span{text-decoration:line-through;color:var(--muted)}
-.duty button{min-height:44px;min-width:64px;border:1px solid var(--line);border-radius:10px;background:var(--gold);color:#14100a;font-weight:600;cursor:pointer}
+.duty button{min-height:44px;min-width:64px;border:1px solid var(--line);border-radius:10px;background:var(--gold);color:var(--ink-900);font-weight:600;cursor:pointer}
 .duty.done button{background:transparent;color:var(--muted)}
 .hint{color:var(--goldsoft);font-size:12px;margin-top:8px}
 footer{position:relative;z-index:1;max-width:420px;margin:0 auto;padding:12px 20px 20px;text-align:center;color:var(--muted);font-size:11.5px}
