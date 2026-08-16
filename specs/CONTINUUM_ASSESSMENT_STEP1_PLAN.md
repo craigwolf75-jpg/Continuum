@@ -13,6 +13,7 @@
 ## Global Constraints
 
 - No em dashes and no en dashes anywhere: code, comments, copy, commit messages. Use commas, colons, or a spaced hyphen.
+- Tests that assert dash cleanliness must detect dashes by char code (`charCodeAt(0) === 0x2013` for en, `0x2014` for em), never by a literal glyph character class, so the test files themselves stay dash clean.
 - Three layer resilience on every data path: config has an inline fallback, scoring is pure client side, storage is best effort and never blocks or alters the shown result.
 - No LLM in scoring or interpretation. Deterministic only.
 - UNKNOWN is never rendered as 0. "Not sure" is `null`, excluded from the score, and lowers confidence, never the score.
@@ -69,7 +70,7 @@ check('every question has exactly one NOT_SURE option',
 check('stage 1 has one question per dimension (six total)',
   CRS.questions.filter(q => q.stage === 1).length === 6);
 check('no em or en dashes in config strings',
-  !/[–—]/.test(JSON.stringify(CRS)));
+  ![...JSON.stringify(CRS)].some(function (c) { return c.charCodeAt(0) === 0x2013 || c.charCodeAt(0) === 0x2014; }));
 
 if (failures) { console.error(failures + ' config checks failed'); process.exit(1); }
 console.log('assessment-config: PASS');
@@ -419,7 +420,7 @@ ok('controller renders from config not hardcoded questions',
 ok('controller has try catch around persistence', js.includes('try') && js.includes('catch'));
 ok('no benchmark words on the surface',
   !/benchmark/i.test(html));
-ok('no em or en dashes', !/[–—]/.test(html) && !/[–—]/.test(js));
+ok('no em or en dashes', ![...(html + js)].some(function (c) { return c.charCodeAt(0) === 0x2013 || c.charCodeAt(0) === 0x2014; }));
 if (failures) { console.error(failures + ' smoke checks failed'); process.exit(1); }
 console.log('assessment-smoke: PASS');
 ```
