@@ -18,7 +18,15 @@
      controller, so window.ContinuumCRS and window.ContinuumScoring are set
      before the controller script runs. Three layer resilience: the
      controller also carries an inline fallback config for when the first
-     script below fails to load. -->
+     script below fails to load.
+
+     config.js and supabase.js are the site's existing anon Supabase client
+     (also used by the hub), loaded here so window.ContinuumSupabaseReady
+     resolves for the controller's best effort persist() call. If either
+     fails to load, persistResult() skips silently: scoring and the shown
+     result never depend on this. -->
+<script src="/config.js"></script>
+<script src="/supabase.js"></script>
 <script src="config/crs-1.0.js"></script>
 <script src="scoring.js"></script>
 <script src="assessment.js"></script>

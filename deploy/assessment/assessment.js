@@ -210,16 +210,40 @@
     };
   }
 
-  // Persistence lands in Task 5 (an anon Supabase RPC call). This stub is
-  // the safe, best effort seam for it: it never throws into the render
-  // path, and a failure here never blocks or alters the result already
-  // shown to the user.
+  // Best effort anonymous persistence (Task 5). Calls the submit_public_assessment
+  // RPC on an anon Supabase client. Never throws: always resolves { ok:boolean }.
+  // A failure here never blocks or alters the result already shown to the user;
+  // the controller fires this after rendering and ignores the outcome.
+  function persist(result, client) {
+    try {
+      if (!client || typeof client.rpc !== 'function') {
+        return Promise.resolve({ ok: false });
+      }
+      return client.rpc('submit_public_assessment', { p_payload: result })
+        .then(function (res) { return { ok: !res || !res.error }; })
+        .catch(function () { return { ok: false }; });
+    } catch (e) {
+      return Promise.resolve({ ok: false });
+    }
+  }
+
+  // Integration point: deploy/assessment/index.html loads the marketing
+  // site's existing anon Supabase client (deploy/config.js then
+  // deploy/supabase.js) ahead of this script, which exposes
+  // window.ContinuumSupabaseReady, a Promise resolving to the client. If
+  // those scripts are ever removed from the page, or fail to load, this
+  // stays best effort and skips silently: the page still works with client
+  // side scoring only, and the shown result never depends on this call.
   function persistResult(result) {
     try {
-      // Task 5 wires the submit_public_assessment RPC call here, using this
-      // result object as its payload. No network call is made yet; this is
-      // intentionally a no-op until that task.
       if (!result) return;
+      if (window.ContinuumSupabaseReady && typeof window.ContinuumSupabaseReady.then === 'function') {
+        window.ContinuumSupabaseReady.then(function (client) {
+          persist(result, client);
+        }, function () { /* client failed to initialize, skip silently */ });
+        return;
+      }
+      // No client global present: skip silently, best effort only.
     } catch (e) {
       try { console && console.warn && console.warn('assessment: persistResult skipped', e); } catch (e2) { /* nothing left to do */ }
     }
@@ -502,5 +526,5 @@
     init();
   }
 
-  window.ContinuumAssessment = { buildResult: buildResult };
+  window.ContinuumAssessment = { buildResult: buildResult, persist: persist };
 })();
