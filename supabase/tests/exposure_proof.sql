@@ -102,5 +102,27 @@ begin
   if (select count(*) from public.hse_case_view) > 0 then raise exception 'LEAK ops_admin: hse_case_view'; end if;
 end $$;
 
+-- FIELD FIREWALL (Prompt 56 Doc 3 section 3.2): the employer and hse views must
+-- carry only functional fields. Assert the prohibited clinical columns are
+-- absent from both views. Column presence is a schema fact, so this assertion
+-- holds regardless of role or seed.
+do $$
+declare
+  forbidden text[] := array[
+    'body_part','injury_type','severity','prognosis_days','rtw_progress_pct',
+    'latest_pain_score','latest_mobility_score','last_checkin_at'];
+  offender text;
+begin
+  select c.table_name || '.' || c.column_name into offender
+  from information_schema.columns c
+  where c.table_schema = 'public'
+    and c.table_name in ('employer_case_view','hse_case_view')
+    and c.column_name = any (forbidden)
+  limit 1;
+  if offender is not null then
+    raise exception 'LEAK field firewall: prohibited clinical column present: %', offender;
+  end if;
+end $$;
+
 reset role;
 select 'EXPOSURE-PROOF PASS' as result;
