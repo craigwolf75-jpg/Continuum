@@ -347,7 +347,6 @@
     resolveClient().then(function (client) {
       return saveResult(result, client);
     }).then(function (res) {
-      if (!slot) return;
       if (res && res.ok) {
         slot.innerHTML = '<p class="crs-note">Your result is saved.</p>';
       } else {

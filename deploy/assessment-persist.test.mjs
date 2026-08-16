@@ -11,7 +11,9 @@
 //     once, with save_source: 'user_initiated' present in the payload, and
 //     leaves the original result object untagged;
 // (c) persist still never throws and resolves { ok:false } on a rejecting,
-//     missing, or malformed client.
+//     missing, or malformed client, and the full click driven save path
+//     with a rejecting client shows the neutral retry message, never the
+//     saved confirmation.
 // No em or en dashes anywhere, checked by char code only.
 import { readFileSync } from 'fs';
 import { createRequire } from 'module';
@@ -146,6 +148,25 @@ ok('click driven save shows the confirmation in place of the button',
   root._slot.innerHTML.indexOf('Your result is saved.') !== -1);
 ok('confirmation replaces the button rather than adding to it',
   root._slot.innerHTML.indexOf('Save my result') === -1);
+
+// Click driven path with a rejecting client. A failed save must never
+// falsely show saved, per three layer resilience: it must show the
+// neutral retry message and leave the button so the visitor can try
+// again. This is the one acceptance item that was previously proven only
+// for persist() in isolation, not through the real click path.
+let rejectingRpcCalls = 0;
+sandbox.window.ContinuumSupabaseReady = Promise.resolve({
+  rpc: function () { rejectingRpcCalls++; return Promise.reject(new Error('down')); }
+});
+fireClick('save-result', { 'data-stage-reached': '2' });
+await new Promise(function (resolve) { setTimeout(resolve, 10); });
+ok('click driven save with a rejecting client calls client.rpc once', rejectingRpcCalls === 1);
+ok('click driven save with a rejecting client does not show the saved confirmation',
+  root._slot.innerHTML.indexOf('Your result is saved.') === -1);
+ok('click driven save with a rejecting client shows the neutral retry message',
+  root._slot.innerHTML.indexOf('Could not save right now.') !== -1);
+ok('click driven save with a rejecting client leaves the button in place to retry',
+  root._slot.innerHTML.indexOf('Save my result') !== -1);
 
 // ---------------------------------------------------------------------
 // (c) persist never throws; always resolves { ok:boolean }.
