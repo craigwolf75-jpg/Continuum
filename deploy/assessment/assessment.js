@@ -212,8 +212,9 @@
 
   // Best effort anonymous persistence (Task 5). Calls the submit_public_assessment
   // RPC on an anon Supabase client. Never throws: always resolves { ok:boolean }.
-  // A failure here never blocks or alters the result already shown to the user;
-  // the controller fires this after rendering and ignores the outcome.
+  // A failure here never blocks or alters the result already shown to the user.
+  // Nothing in this file calls persist on render or navigation: it fires only
+  // from the opt in Save my result control below (Prompt 63c).
   function persist(result, client) {
     try {
       if (!client || typeof client.rpc !== 'function') {
@@ -227,26 +228,38 @@
     }
   }
 
+  // Tags a copy of the result as a user initiated save, without mutating the
+  // original object. This is the same anonymous summary buildResult produces;
+  // the only addition is the tag and created_at (set server side) that mark
+  // it as a deliberate save rather than an automatic one.
+  function taggedForSave(result) {
+    var tagged = {};
+    Object.keys(result || {}).forEach(function (k) { tagged[k] = result[k]; });
+    tagged.save_source = 'user_initiated';
+    return tagged;
+  }
+
+  // Prompt 63c save handler core. Exposed on window.ContinuumAssessment so
+  // tests can call it directly with a spy client, exactly like persist()
+  // above. This is the only place a save is tagged and sent.
+  function saveResult(result, client) {
+    return persist(taggedForSave(result), client);
+  }
+
   // Integration point: deploy/assessment/index.html loads the marketing
   // site's existing anon Supabase client (deploy/config.js then
   // deploy/supabase.js) ahead of this script, which exposes
   // window.ContinuumSupabaseReady, a Promise resolving to the client. If
-  // those scripts are ever removed from the page, or fail to load, this
-  // stays best effort and skips silently: the page still works with client
-  // side scoring only, and the shown result never depends on this call.
-  function persistResult(result) {
+  // those scripts are ever removed from the page, or fail to load, the save
+  // action resolves to no client and simply fails gracefully: the shown
+  // result never depends on this.
+  function resolveClient() {
     try {
-      if (!result) return;
       if (window.ContinuumSupabaseReady && typeof window.ContinuumSupabaseReady.then === 'function') {
-        window.ContinuumSupabaseReady.then(function (client) {
-          persist(result, client);
-        }, function () { /* client failed to initialize, skip silently */ });
-        return;
+        return window.ContinuumSupabaseReady.then(function (client) { return client; }, function () { return null; });
       }
-      // No client global present: skip silently, best effort only.
-    } catch (e) {
-      try { console && console.warn && console.warn('assessment: persistResult skipped', e); } catch (e2) { /* nothing left to do */ }
-    }
+    } catch (e) { /* fall through to no client below */ }
+    return Promise.resolve(null);
   }
 
   // ---------------------------------------------------------------------
@@ -304,6 +317,45 @@
     return '<button type="button" class="crs-btn crs-btn-primary" data-action="' + esc(action) + '">' + esc(label) + '</button>';
   }
 
+  // Prompt 63c opt in save control. One offer per result surface, reusing
+  // the existing button classes. States plainly what saving does; no pre
+  // checked state, no repeated prompting. saveOfferInner is reused for the
+  // failure retry state so the same honest sentence and button reappear.
+  function saveOfferInner(stageReached) {
+    return '' +
+      '<p class="crs-note">Saving records an anonymous summary of your result to help improve the assessment.</p>' +
+      '<button type="button" class="crs-btn crs-btn-secondary" data-action="save-result" data-stage-reached="' + esc(stageReached) + '">Save my result</button>';
+  }
+
+  function saveOfferMarkup(stageReached) {
+    return '<div class="crs-save" data-save-slot>' + saveOfferInner(stageReached) + '</div>';
+  }
+
+  // Runs on Save my result activation. Persists exactly once: builds the
+  // same anonymous summary buildResult produces from the current answers,
+  // then hands it to saveResult (which tags and calls persist). The save
+  // slot's own markup is replaced with the outcome; nothing else on the
+  // page changes.
+  function handleSaveResult(stageReached) {
+    var slot = root.querySelector('[data-save-slot]');
+    if (!slot) return;
+    slot.innerHTML = ''; // remove the button immediately so a second activation cannot resubmit
+    var qs = stageReached === 2 ? stage1Questions().concat(stage2DepthQuestions()) : stage1Questions();
+    var answers = {};
+    qs.forEach(function (q) { if (q.id in state.answers) answers[q.id] = state.answers[q.id]; });
+    var result = buildResult(answers, state.exposure, stageReached);
+    resolveClient().then(function (client) {
+      return saveResult(result, client);
+    }).then(function (res) {
+      if (!slot) return;
+      if (res && res.ok) {
+        slot.innerHTML = '<p class="crs-note">Your result is saved.</p>';
+      } else {
+        slot.innerHTML = '<p class="crs-note">Could not save right now.</p>' + saveOfferInner(stageReached);
+      }
+    });
+  }
+
   // ---------------------------------------------------------------------
   // Stage renderers
   // ---------------------------------------------------------------------
@@ -347,8 +399,6 @@
     var sg = SCORING.strongestAndGap(dimScores);
     var note = SCORING.observation(dimScores, CONFIG);
 
-    persistResult(buildResult(answers, state.exposure, 1));
-
     var scoreLine = overall === null
       ? 'There is not yet enough information to calculate a score. Answering at least one question with more than Not sure would allow a score to be calculated.'
       : confidenceLead(confidence) + ' a Recovery Readiness score of ' + overall + ' out of 100, in the ' + esc(band) + ' range.';
@@ -371,6 +421,7 @@
         (note ? '<p class="crs-observation">' + esc(note) + '</p>' : '') +
         precisionPrompt +
         ctaMarkup('to-stage2', 'Continue to the Detailed Assessment') +
+        saveOfferMarkup(1) +
       '</section>';
   }
 
@@ -397,9 +448,6 @@
     var band = SCORING.bandFor(overall, CONFIG);
     var confidence = SCORING.assessmentConfidence(answers, dimScores, CONFIG);
     var sg = SCORING.strongestAndGap(dimScores);
-
-    var result = buildResult(answers, state.exposure, 2);
-    persistResult(result);
 
     var scoreLine = overall === null
       ? 'There is not yet enough information to calculate a refined score.'
@@ -440,6 +488,7 @@
         (priorities ? '<h3>Priority Opportunities</h3><ul class="crs-priorities">' + priorities + '</ul>' : '') +
         exposureBlock +
         '<p class="crs-note">This result is private to you and is not compared against any other organization.</p>' +
+        saveOfferMarkup(2) +
         '<button type="button" class="crs-btn crs-btn-secondary" data-action="restart">Start Over</button>' +
       '</section>';
   }
@@ -506,6 +555,9 @@
       state.stage = 'result';
     } else if (action === 'restart') {
       state = { stage: 'intro', industry: null, answers: {}, exposure: {} };
+    } else if (action === 'save-result') {
+      handleSaveResult(parseInt(actionEl.getAttribute('data-stage-reached'), 10));
+      return; // the save slot updates itself; nothing else on the page changes
     } else {
       return;
     }
@@ -526,5 +578,5 @@
     init();
   }
 
-  window.ContinuumAssessment = { buildResult: buildResult, persist: persist };
+  window.ContinuumAssessment = { buildResult: buildResult, persist: persist, saveResult: saveResult };
 })();

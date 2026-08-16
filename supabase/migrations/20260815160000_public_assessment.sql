@@ -21,7 +21,11 @@ create table if not exists public.public_assessment_response (
   assessment_confidence   text,                    -- High | Moderate | Limited
   missing_data_rate       numeric,
   exposure                jsonb,                   -- bands only
-  provenance              jsonb                    -- per field provenance
+  provenance              jsonb,                   -- per field provenance
+  save_source             text                     -- set to user_initiated by the
+                                                     -- opt in Save my result control
+                                                     -- (Prompt 63c); created_at is
+                                                     -- the save timestamp
 );
 alter table public.public_assessment_response enable row level security;
 -- No policies for anon or authenticated: no direct read or write. All writes go
@@ -38,7 +42,8 @@ declare v_id uuid;
 begin
   insert into public.public_assessment_response
     (scoring_model_version, stage_reached, industry, answers, dimension_scores,
-     overall_score, band, assessment_confidence, missing_data_rate, exposure, provenance)
+     overall_score, band, assessment_confidence, missing_data_rate, exposure, provenance,
+     save_source)
   values
     (p_payload->>'scoring_model_version',
      (p_payload->>'stage_reached')::int,
@@ -50,7 +55,8 @@ begin
      p_payload->>'assessment_confidence',
      nullif(p_payload->>'missing_data_rate','')::numeric,
      p_payload->'exposure',
-     p_payload->'provenance')
+     p_payload->'provenance',
+     p_payload->>'save_source')
   returning response_id into v_id;
   return v_id;
 end;

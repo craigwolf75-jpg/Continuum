@@ -22,9 +22,10 @@
 
      config.js and supabase.js are the site's existing anon Supabase client
      (also used by the hub), loaded here so window.ContinuumSupabaseReady
-     resolves for the controller's best effort persist() call. If either
-     fails to load, persistResult() skips silently: scoring and the shown
-     result never depend on this. -->
+     resolves when a visitor chooses to save their result (Prompt 63c).
+     Nothing is sent on render or navigation. If either script fails to
+     load, the save action resolves to no client and fails gracefully: the
+     shown result never depends on this. -->
 <script src="/config.js"></script>
 <script src="/supabase.js"></script>
 <script src="config/crs-1.0.js"></script>

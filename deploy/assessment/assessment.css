@@ -218,6 +218,14 @@ h1, h2, h3, legend {
 
 .crs-priorities li { margin-bottom: 6px; }
 
+.crs-save {
+  margin-top: 20px;
+}
+
+.crs-save p {
+  margin: 0 0 10px;
+}
+
 .crs-exposure-result {
   margin-top: 12px;
   padding-top: 4px;
