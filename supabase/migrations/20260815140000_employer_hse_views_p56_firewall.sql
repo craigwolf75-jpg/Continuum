@@ -38,7 +38,14 @@
 
 begin;
 
-create or replace view public.employer_case_view
+-- CREATE OR REPLACE VIEW cannot remove columns, so drop and recreate. These are
+-- leaf views (no dependent objects) and carry no data, so drop and recreate is
+-- lossless. Plain DROP, never CASCADE, so an unexpected dependent would surface
+-- as an error rather than be silently removed.
+drop view if exists public.employer_case_view;
+drop view if exists public.hse_case_view;
+
+create view public.employer_case_view
 with (security_invoker = false) as
 select
   i.id                            as injury_id,
@@ -62,7 +69,7 @@ where i.deleted_at is null
   and public.jwt_role() = 'employer_admin'
   and i.tenant_id = public.jwt_tenant_id();
 
-create or replace view public.hse_case_view
+create view public.hse_case_view
 with (security_invoker = false) as
 select
   i.id                            as injury_id,
