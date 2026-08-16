@@ -4,6 +4,7 @@
 import { readFileSync } from 'fs';
 const html = readFileSync(new URL('./assessment/index.html', import.meta.url), 'utf8');
 const js  = readFileSync(new URL('./assessment/assessment.js', import.meta.url), 'utf8');
+const css = readFileSync(new URL('./assessment/assessment.css', import.meta.url), 'utf8');
 let failures = 0; function ok(n,c){ if(!c){ failures++; console.error('FAIL', n); } }
 
 ok('loads config before controller',
@@ -16,6 +17,6 @@ ok('controller renders from config not hardcoded questions',
 ok('controller has try catch around persistence', js.includes('try') && js.includes('catch'));
 ok('no benchmark words on the surface',
   !/benchmark/i.test(html));
-ok('no em or en dashes', ![...(html + js)].some(function (c) { return c.charCodeAt(0) === 0x2013 || c.charCodeAt(0) === 0x2014; }));
+ok('no em or en dashes', ![...(html + js + css)].some(function (c) { return c.charCodeAt(0) === 0x2013 || c.charCodeAt(0) === 0x2014; }));
 if (failures) { console.error(failures + ' smoke checks failed'); process.exit(1); }
 console.log('assessment-smoke: PASS');
