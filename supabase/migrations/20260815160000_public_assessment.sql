@@ -12,11 +12,11 @@ create table if not exists public.public_assessment_response (
   response_id            uuid primary key default gen_random_uuid(),
   created_at              timestamptz not null default now(),
   scoring_model_version   text not null,
-  stage_reached           int  not null,          -- 1 or 2
+  stage_reached           int  not null check (stage_reached in (1, 2)),
   industry                text,                    -- classification only
   answers                 jsonb not null,          -- { questionId: optionKey }
   dimension_scores        jsonb not null,          -- { DIMENSION: int|null }
-  overall_score           int,                     -- 0 to 100, null if not computable
+  overall_score           int check (overall_score is null or (overall_score >= 0 and overall_score <= 100)),
   band                    text,
   assessment_confidence   text,                    -- High | Moderate | Limited
   missing_data_rate       numeric,

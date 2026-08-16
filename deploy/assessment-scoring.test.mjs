@@ -169,5 +169,31 @@ const allProfileText = JSON.stringify([
 ok('no em or en dashes in profile fixtures',
   ![...allProfileText].some(function (c) { return c.charCodeAt(0) === 0x2013 || c.charCodeAt(0) === 0x2014; }));
 
+// observation() rule matching: restrictions ok but modified duty gap fires the
+// restrictions_ok_duty_gap template; a profile matching no specific rule falls
+// through to the default template.
+const OBSERVATION_RESTRICTIONS_OK_DUTY_GAP = 'Your responses suggest that medical restrictions are being received reasonably effectively, but translating those restrictions into suitable work may still require significant manual coordination.';
+const OBSERVATION_DEFAULT = 'Your responses give an initial picture of how your recovery and return to work process is working today. The deeper assessment will sharpen it.';
+
+const dimScoresRestrictionsOkDutyGap = {
+  MEDICAL_ACCESS: 50,
+  RESTRICTIONS_WORKFLOW: 75,
+  MODIFIED_DUTY: 25,
+  RECOVERY_VISIBILITY: 50,
+  CLAIMS_COORDINATION: 50,
+  WORKFLOW_INTEGRATION: 50
+};
+eq('observation restrictions ok, duty gap', S.observation(dimScoresRestrictionsOkDutyGap, CRS), OBSERVATION_RESTRICTIONS_OK_DUTY_GAP);
+
+const dimScoresNoRuleMatch = {
+  MEDICAL_ACCESS: 50,
+  RESTRICTIONS_WORKFLOW: 50,
+  MODIFIED_DUTY: 75,
+  RECOVERY_VISIBILITY: 75,
+  CLAIMS_COORDINATION: 50,
+  WORKFLOW_INTEGRATION: 50
+};
+eq('observation default template when no rule matches', S.observation(dimScoresNoRuleMatch, CRS), OBSERVATION_DEFAULT);
+
 if (failures) { console.error(failures + ' scoring checks failed'); process.exit(1); }
 console.log('assessment-scoring: PASS');
