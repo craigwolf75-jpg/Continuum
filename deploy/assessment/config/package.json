@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "type": "commonjs",
+  "description": "Scopes this directory back to CommonJS so Node's require() can load the UMD scoring config modules (crs-1.0.js and future versions) as plain CommonJS, overriding the type: module declared by the repo-root deploy/package.json (which Vercel requires for middleware and API routing). This file is inert in the browser; it is never fetched by the static site."
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continuum Recovery Readiness Assessment</title>
+<meta name="description" content="A two stage self assessment of your organization's injury recovery and return to work maturity. Instant, private, and computed in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assessment.css">
+</head>
+<body>
+<div id="assessment-root" role="main" aria-live="polite"></div>
+
+<!-- Config and scoring engine load as plain classic scripts, before the
+     controller, so window.ContinuumCRS and window.ContinuumScoring are set
+     before the controller script runs. Three layer resilience: the
+     controller also carries an inline fallback config for when the first
+     script below fails to load.
+
+     config.js and supabase.js are the site's existing anon Supabase client
+     (also used by the hub), loaded here so window.ContinuumSupabaseReady
+     resolves when a visitor chooses to save their result (Prompt 63c).
+     Nothing is sent on render or navigation. If either script fails to
+     load, the save action resolves to no client and fails gracefully: the
+     shown result never depends on this. -->
+<script src="/config.js"></script>
+<script src="/supabase.js"></script>
+<script src="config/crs-1.0.js"></script>
+<script src="scoring.js"></script>
+<script src="assessment.js"></script>
+</body>
+</html>

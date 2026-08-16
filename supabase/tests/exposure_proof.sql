@@ -124,5 +124,26 @@ begin
   end if;
 end $$;
 
+-- PUBLIC ASSESSMENT (Prompt 63 section 6): anon writes only through the
+-- SECURITY DEFINER RPC, never directly against the base table.
+set role anon;
+do $$
+begin
+  begin
+    perform 1 from public.public_assessment_response limit 1;
+    raise exception 'LEAK public_assessment: anon can select base table';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+do $$
+begin
+  if not exists (
+    select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname='public' and p.proname='submit_public_assessment') then
+    raise exception 'MISSING public.submit_public_assessment';
+  end if;
+end $$;
+
 reset role;
 select 'EXPOSURE-PROOF PASS' as result;
