@@ -58,6 +58,14 @@ const lwdRaw = S.lostWorkerDays({ annual_lost_time_cases: 42, avg_lost_time_dura
 eq('lwd back compat days', lwdRaw.days, 504);
 eq('lwd back compat provenance', lwdRaw.provenance, 'USER_PROVIDED');
 
+// Regression: the shipped controller (assessment.js, exposureNumericInputs)
+// calls lostWorkerDays with raw numbers plus a whole-object _provenance flag
+// of 'MODELED_ESTIMATE' for band derived exposure. That flag must still be
+// honored so the "(estimated)" label in the rendered result survives.
+const lwdLegacyEstimate = S.lostWorkerDays({ annual_lost_time_cases: 5, avg_lost_time_duration_days: 5, _provenance: 'MODELED_ESTIMATE' }, CRS);
+eq('lwd legacy _provenance days', lwdLegacyEstimate.days, 25);
+eq('lwd legacy _provenance honored as MODELED_ESTIMATE', lwdLegacyEstimate.provenance, 'MODELED_ESTIMATE');
+
 function firstBandKey(cfg, kind){ const e = cfg.exposure.find(x=>x.kind===kind); return e.bands[0].key; }
 
 // ---------------------------------------------------------------------------

@@ -143,22 +143,27 @@
   }
 
   // A field is either a resolved { value, provenance } object (CRS_1.1 caller,
-  // via resolveExposure) or a raw number (CRS_1.0 caller, old behavior: a raw
-  // number is treated as USER_PROVIDED).
-  function resolveDaysField(field) {
+  // via resolveExposure) or a raw number (CRS_1.0 caller, old behavior). In
+  // the raw number case, legacyProvenance carries the old whole-object
+  // exposureAnswers._provenance flag: 'MODELED_ESTIMATE' when the caller
+  // marked the whole numeric input as band derived (e.g. assessment.js's
+  // exposureNumericInputs), otherwise USER_PROVIDED, matching pre-CRS_1.1
+  // behavior exactly.
+  function resolveDaysField(field, legacyProvenance) {
     if (field && typeof field === 'object' && 'value' in field) {
       return { value: field.value, provenance: field.provenance || 'UNKNOWN' };
     }
     if (typeof field === 'number') {
-      return { value: field, provenance: 'USER_PROVIDED' };
+      return { value: field, provenance: legacyProvenance || 'USER_PROVIDED' };
     }
     return { value: null, provenance: 'UNKNOWN' };
   }
 
   function lostWorkerDays(exposureResolved, config) {
     exposureResolved = exposureResolved || {};
-    var cases = resolveDaysField(exposureResolved.annual_lost_time_cases);
-    var days = resolveDaysField(exposureResolved.avg_lost_time_duration_days);
+    var legacyProvenance = (exposureResolved._provenance === 'MODELED_ESTIMATE') ? 'MODELED_ESTIMATE' : undefined;
+    var cases = resolveDaysField(exposureResolved.annual_lost_time_cases, legacyProvenance);
+    var days = resolveDaysField(exposureResolved.avg_lost_time_duration_days, legacyProvenance);
     if (typeof cases.value !== 'number' || typeof days.value !== 'number') {
       return { days: null, provenance: 'UNKNOWN', scenarios: [] };
     }
