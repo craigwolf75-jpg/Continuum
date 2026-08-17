@@ -245,6 +245,38 @@ begin
 end $$;
 reset role;
 
+-- compute_opportunity_score is an internal helper: anon cannot execute it.
+set role anon;
+do $$
+begin
+  begin
+    perform public.compute_opportunity_score(null::public.public_assessment_response);
+    raise exception 'LEAK compute_opportunity_score: anon can execute';
+  exception
+    when insufficient_privilege then null;
+    when others then
+      if sqlerrm like 'LEAK %' then raise; end if;
+      raise exception 'compute_opportunity_score anon check: unexpected error %', sqlerrm;
+  end;
+end $$;
+reset role;
+
+-- compute_opportunity_score is an internal helper: authenticated cannot execute it.
+set role authenticated;
+do $$
+begin
+  begin
+    perform public.compute_opportunity_score(null::public.public_assessment_response);
+    raise exception 'LEAK compute_opportunity_score: authenticated can execute';
+  exception
+    when insufficient_privilege then null;
+    when others then
+      if sqlerrm like 'LEAK %' then raise; end if;
+      raise exception 'compute_opportunity_score authenticated check: unexpected error %', sqlerrm;
+  end;
+end $$;
+reset role;
+
 -- Neither RPC ever returns an opportunity field: submit_public_assessment
 -- returns uuid only, record_engagement returns void only. This is a
 -- structural guarantee, so assert it against the function signatures
