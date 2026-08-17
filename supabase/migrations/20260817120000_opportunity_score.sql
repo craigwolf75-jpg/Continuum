@@ -48,7 +48,7 @@ declare
   v_inj numeric := nullif(v_ex #>> '{annual_lost_time_cases,value}','')::numeric;
   v_sites numeric := nullif(v_ex #>> '{site_count,value}','')::numeric;
   v_scale int; v_exposure int; v_pain int; v_complexity int; v_engagement int;
-  v_pain_vals numeric[]; v_wi int;
+  v_pain_vals numeric[]; v_wi numeric;
   v_num numeric := 0; v_den numeric := 0; v_w int; v_factors jsonb := '{}'::jsonb;
   r record;
 begin
@@ -65,7 +65,7 @@ begin
   if array_length(v_pain_vals,1) is null then v_pain := null;
   else select 100 - round(avg(x)) into v_pain from unnest(v_pain_vals) x; end if;
   -- complexity from sites + low workflow integration
-  v_wi := nullif(v_ds->>'WORKFLOW_INTEGRATION','')::int;
+  v_wi := nullif(v_ds->>'WORKFLOW_INTEGRATION','')::numeric;
   v_complexity := case
     when v_sites is null and v_wi is null then null
     else round((

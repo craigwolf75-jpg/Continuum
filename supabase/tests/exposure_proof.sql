@@ -233,6 +233,18 @@ begin
 end $$;
 reset role;
 
+-- opportunity_weights is internal only: authenticated cannot select it either.
+set role authenticated;
+do $$
+begin
+  begin
+    perform 1 from public.opportunity_weights limit 1;
+    raise exception 'LEAK opportunity_weights: authenticated can select';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
 -- Neither RPC ever returns an opportunity field: submit_public_assessment
 -- returns uuid only, record_engagement returns void only. This is a
 -- structural guarantee, so assert it against the function signatures
