@@ -146,7 +146,7 @@
       MODIFIED_DUTY: "Finding suitable modified duties still depends on manual coordination, which is where recovery time is most often lost.",
       RECOVERY_VISIBILITY: "Giving the right people a clear, current view of where each recovery stands, instead of waiting for someone to ask, is the opportunity here.",
       CLAIMS_COORDINATION: "Keeping the claim and the recovery plan moving together, under one clear owner, is the opportunity in claims coordination.",
-      WORKFLOW_INTEGRATION: "Connecting the medical, employer, and claims pieces so information moves once instead of being re entered is the opportunity in workflow integration."
+      WORKFLOW_INTEGRATION: "Connecting the medical, employer, and claims pieces so information moves once instead of being re-entered is the opportunity in workflow integration."
     },
     observations: [
       { id:"restrictions_ok_duty_gap",
@@ -162,7 +162,7 @@
         template:"Workers appear to reach medical care quickly, but the claim itself seems to run on a separate track from the recovery, which can create friction later." },
       { id:"workflow_integration_weak",
         when:[ { dimension:"WORKFLOW_INTEGRATION", op:"<=", value:25 } ],
-        template:"The medical, employer, and claims pieces appear to be disconnected, which usually shows up as information being re entered or lost between handoffs." },
+        template:"The medical, employer, and claims pieces appear to be disconnected, which usually shows up as information being re-entered or lost between handoffs." },
       { id:"claims_strong_visibility_weak",
         when:[ { dimension:"CLAIMS_COORDINATION", op:">=", value:75 },
                { dimension:"RECOVERY_VISIBILITY", op:"<=", value:50 } ],

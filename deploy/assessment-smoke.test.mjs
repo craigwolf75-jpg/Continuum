@@ -8,8 +8,8 @@ const css = readFileSync(new URL('./assessment/assessment.css', import.meta.url)
 let failures = 0; function ok(n,c){ if(!c){ failures++; console.error('FAIL', n); } }
 
 ok('loads config before controller',
-  html.indexOf('config/crs-1.0.js') < html.indexOf('assessment.js') &&
-  html.indexOf('config/crs-1.0.js') !== -1);
+  html.indexOf('config/crs-1.1.js') < html.indexOf('assessment.js') &&
+  html.indexOf('config/crs-1.1.js') !== -1);
 ok('loads scoring engine', html.includes('scoring.js'));
 ok('has a mount root', /id=["']assessment-root["']/.test(html));
 ok('controller renders from config not hardcoded questions',
