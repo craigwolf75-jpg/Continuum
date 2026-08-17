@@ -30,6 +30,10 @@
 <script src="/supabase.js"></script>
 <script src="config/crs-1.1.js"></script>
 <script src="scoring.js"></script>
+<!-- Single source of truth for the demo booking destination (Step 2D Book a
+     Demo CTA): window.CONTINUUM_LINKS.bookingUrl. assessment.js falls back
+     to the same literal if this script is absent or fails to load. -->
+<script src="/site-links.js"></script>
 <script src="assessment.js"></script>
 </body>
 </html>
