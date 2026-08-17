@@ -11,6 +11,12 @@ ok('metrics are frequency-context', CRB.metrics.length > 0 && CRB.metrics.every(
 ok('sources carry required metadata + attribution',
   CRB.sources.length >= 3 && CRB.sources.every(s => s.id && s.org && s.url && s.metricKeys && s.licensing && s.attribution && s.dateRetrieved && s.verdict));
 ok('data is empty (dark)', CRB.data && Object.keys(CRB.data).length === 0);
+ok('rungs is a non-empty array with numeric rung and non-empty fields',
+  Array.isArray(CRB.rungs) && CRB.rungs.length > 0 &&
+  CRB.rungs.every(r => typeof r.rung === 'number' && Array.isArray(r.fields) && r.fields.length > 0));
+ok('rung 1 is the most specific (most required fields, listed first)',
+  CRB.rungs[0].rung === 1 &&
+  CRB.rungs.every(r => r.fields.length <= CRB.rungs[0].fields.length));
 ok('no em or en dashes',
   ![...JSON.stringify(CRB)].some(c => c.charCodeAt(0) === 0x2013 || c.charCodeAt(0) === 0x2014));
 if (failures) { console.error(failures + ' checks failed'); process.exit(1); }

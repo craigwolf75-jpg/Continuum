@@ -15,6 +15,13 @@
     ],
     confidenceLevels: ["HIGH", "MODERATE", "ESTIMATED", "INSUFFICIENT"],
     adequacyFloor: 5,
+    rungs: [
+      { rung: 1, fields: ["industry", "province_state", "workforce_size_band"] },
+      { rung: 2, fields: ["industry", "country", "workforce_size_band"] },
+      { rung: 3, fields: ["industry", "country"] },
+      { rung: 4, fields: ["industry_family", "country"] },
+      { rung: 5, fields: ["country"] }
+    ],
     metrics: [
       {
         key: "lost_time_incidence_rate",

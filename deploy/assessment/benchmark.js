@@ -3,32 +3,26 @@
 // CRB config (see config/crb-2026-01.js) and, in tests, a SYNTH dataset. No
 // em or en dashes anywhere.
 (function (root) {
-  // The five cohort rungs from the design spec (section 3), most specific
-  // first. This is the fixed dimension-name structure of the hierarchy, not
-  // a cohort value or a tunable threshold, so it is not config data. Rung 4
-  // (broader industry family) has no supplying dimension yet in this dark
-  // shell (config.cohortDimensions carries no industry_family field), so it
-  // is structurally present but unreachable until a future config adds it;
-  // it is never removed, just never completed by any current cohort.
-  var RUNG_DEFINITIONS = [
-    { rung: 1, fields: ['industry', 'province_state', 'workforce_size_band'] },
-    { rung: 2, fields: ['industry', 'country', 'workforce_size_band'] },
-    { rung: 3, fields: ['industry', 'country'] },
-    { rung: 4, fields: ['industry_family', 'country'] },
-    { rung: 5, fields: ['country'] }
-  ];
-
   function hasValue(v) {
     return v !== undefined && v !== null && v !== '';
   }
 
   // cohortHierarchy: builds the ordered list of credible cohort rungs for
-  // this respondent. A rung is included only when the cohort supplies every
-  // field that rung requires; it is never manufactured or partially filled.
+  // this respondent, reading the rung structure from config.rungs (see
+  // config/crb-2026-01.js, matching design spec section 3), never a
+  // hardcoded table in the engine. A rung is included only when the cohort
+  // supplies every field that rung requires; it is never manufactured or
+  // partially filled. The rung's on object is built from its config-listed
+  // fields in that same order, so JSON.stringify(on) stays stable and the
+  // dataset key it produces matches what lookupBenchmark computes. Rung 4
+  // (industry_family) has no supplying dimension yet in this dark shell
+  // (no cohort ever carries an industry_family field), so it stays
+  // structurally present in config but unreachable until a future config
+  // and cohort shape add it; it is never removed, just never completed.
   function cohortHierarchy(cohort, config) {
     cohort = cohort || {};
     var rungs = [];
-    RUNG_DEFINITIONS.forEach(function (def) {
+    (config.rungs || []).forEach(function (def) {
       var on = {};
       var complete = def.fields.every(function (field) {
         var v = cohort[field];
