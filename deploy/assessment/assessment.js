@@ -144,6 +144,13 @@
     financial: {}  // financial input key -> number
   };
 
+  // Set only by a successful Save my result (Prompt 63c). Threads the
+  // response_id returned by submit_public_assessment through to the
+  // engagement CTAs (Step 2D) so a click can be attached to this visitor's
+  // own saved row. Never sent anywhere by itself; it is only ever passed as
+  // p_response_id to record_engagement. Cleared on Start Over.
+  var savedResponseId = null;
+
   // ---------------------------------------------------------------------
   // Config accessors. All content comes from CONFIG, never hardcoded here.
   // ---------------------------------------------------------------------
@@ -239,13 +246,13 @@
   function persist(result, client) {
     try {
       if (!client || typeof client.rpc !== 'function') {
-        return Promise.resolve({ ok: false });
+        return Promise.resolve({ ok: false, responseId: null });
       }
       return client.rpc('submit_public_assessment', { p_payload: result })
-        .then(function (res) { return { ok: !res || !res.error }; })
-        .catch(function () { return { ok: false }; });
+        .then(function (res) { return { ok: !res || !res.error, responseId: (res && res.data) ? res.data : null }; })
+        .catch(function () { return { ok: false, responseId: null }; });
     } catch (e) {
-      return Promise.resolve({ ok: false });
+      return Promise.resolve({ ok: false, responseId: null });
     }
   }
 
@@ -281,6 +288,34 @@
       }
     } catch (e) { /* fall through to no client below */ }
     return Promise.resolve(null);
+  }
+
+  // Single source of truth for the demo booking destination is
+  // deploy/site-links.js (window.CONTINUUM_LINKS.bookingUrl), loaded ahead
+  // of this script in index.html. The literal here is only the degrade path
+  // if that script is absent or failed to load; it must match the value in
+  // site-links.js.
+  function bookingUrl() {
+    return (window.CONTINUUM_LINKS && window.CONTINUUM_LINKS.bookingUrl) || 'https://continuumrtw.com/book';
+  }
+
+  // Step 2D engagement capture. Calls the record_engagement RPC on an anon
+  // Supabase client. Never throws: always resolves, success or failure alike
+  // (there is nothing useful to show or retry on a click capture, unlike
+  // Save my result). A no-op when responseId is falsy: there is no saved row
+  // to attach the signal to (the respondent never saved). The Opportunity
+  // Score itself is never fetched, referenced, or returned to this file: this
+  // call writes a boolean signal server side and reads nothing back.
+  function recordEngagement(responseId, signal, client) {
+    try {
+      if (!responseId) return Promise.resolve();
+      if (!client || typeof client.rpc !== 'function') return Promise.resolve();
+      return client.rpc('record_engagement', { p_response_id: responseId, p_signal: signal })
+        .then(function () {})
+        .catch(function () {});
+    } catch (e) {
+      return Promise.resolve();
+    }
   }
 
   // ---------------------------------------------------------------------
@@ -393,6 +428,26 @@
     return '<div class="crs-save" data-save-slot>' + saveOfferInner(stageReached) + '</div>';
   }
 
+  // Step 2D client CTAs (design spec sections 6, 7). Both buttons render on
+  // the Stage 2 detailed result unconditionally, whether or not the visitor
+  // has saved: Book a Demo still navigates either way, and Review my results
+  // still shows its confirmation either way. What is conditional is only
+  // whether a click records an engagement signal (recordEngagement is a
+  // no-op without a saved response_id, per spec section 6: "if the
+  // respondent did not Save... no engagement is recorded"). The Opportunity
+  // Score itself is never part of this markup.
+  function engagementSlotInner(message) {
+    var msgLine = message ? '<p class="crs-note">' + esc(message) + '</p>' : '';
+    return '' +
+      '<button type="button" class="crs-btn crs-btn-primary" data-action="review-results">Review my results</button>' +
+      '<button type="button" class="crs-btn crs-btn-secondary" data-action="book-a-demo">Book a Demo</button>' +
+      msgLine;
+  }
+
+  function engagementOfferMarkup() {
+    return '<div class="crs-engagement" data-engagement-slot>' + engagementSlotInner('') + '</div>';
+  }
+
   // Runs on Save my result activation. Persists exactly once: builds the
   // same anonymous summary buildResult produces from the current answers,
   // then hands it to saveResult (which tags and calls persist). The save
@@ -410,10 +465,41 @@
       return saveResult(result, client);
     }).then(function (res) {
       if (res && res.ok) {
+        savedResponseId = (res && res.responseId) ? res.responseId : null;
         slot.innerHTML = '<p class="crs-note">Your result is saved.</p>';
       } else {
         slot.innerHTML = '<p class="crs-note">Could not save right now.</p>' + saveOfferInner(stageReached);
       }
+    });
+  }
+
+  // Runs on Review my results activation. Best effort: record_engagement is
+  // a no-op if there is no savedResponseId (no Save happened yet), and it
+  // never throws or rejects, so this always reaches the confirmation. The
+  // confirmation is neutral and brief, and both CTAs remain available (a
+  // visitor may still choose Book a Demo afterward).
+  function handleReviewResults() {
+    var slot = root.querySelector('[data-engagement-slot]');
+    resolveClient().then(function (client) {
+      return recordEngagement(savedResponseId, 'review_clicked', client);
+    }).then(function () {
+      if (slot) slot.innerHTML = engagementSlotInner('Thanks for reviewing your results.');
+    });
+  }
+
+  // Runs on Book a Demo activation. Best effort: the engagement call never
+  // blocks or prevents navigation, per three layer resilience; the click
+  // always proceeds to the booking destination whether or not the signal was
+  // recorded. No email, CRM, or lead capture is built here: this is the
+  // click-capture and the link only (design spec section 6, Prompt 63d
+  // scope). The Opportunity Score is never fetched or referenced.
+  function handleBookADemo() {
+    resolveClient().then(function (client) {
+      return recordEngagement(savedResponseId, 'book_a_demo_clicked', client);
+    }).then(function () {
+      try {
+        if (window.location) window.location.href = bookingUrl();
+      } catch (e) { /* navigation is best effort; nothing left to do here */ }
     });
   }
 
@@ -590,6 +676,7 @@
         exposureBlock +
         '<p class="crs-note">This result is private to you and is not compared against any other organization.</p>' +
         saveOfferMarkup(2) +
+        engagementOfferMarkup() +
         '<button type="button" class="crs-btn crs-btn-secondary" data-action="restart">Start Over</button>' +
       '</section>';
   }
@@ -682,9 +769,16 @@
       state.stage = 'result';
     } else if (action === 'restart') {
       state = { stage: 'intro', industry: null, answers: {}, exposure: {}, financial: {} };
+      savedResponseId = null;
     } else if (action === 'save-result') {
       handleSaveResult(parseInt(actionEl.getAttribute('data-stage-reached'), 10));
       return; // the save slot updates itself; nothing else on the page changes
+    } else if (action === 'review-results') {
+      handleReviewResults();
+      return; // the engagement slot updates itself; nothing else on the page changes
+    } else if (action === 'book-a-demo') {
+      handleBookADemo();
+      return; // navigation and the best effort signal happen off page; nothing to re render
     } else {
       return;
     }
@@ -705,5 +799,5 @@
     init();
   }
 
-  window.ContinuumAssessment = { buildResult: buildResult, persist: persist, saveResult: saveResult };
+  window.ContinuumAssessment = { buildResult: buildResult, persist: persist, saveResult: saveResult, recordEngagement: recordEngagement };
 })();
