@@ -41,6 +41,29 @@ eq('below-floor match returns null', B.lookupBenchmark(cohort, 'lost_time_incide
 // maturity metric rejected (frequency-context guard).
 eq('unknown/maturity metric rejected', B.lookupBenchmark(cohort, 'rtw_maturity', synth, CRB), null);
 
+// Progressive broadening: no value at rung 1, falls through to rung 3
+// (industry+country) and returns it as MODERATE. The dataset key comes from
+// the engine's own cohortHierarchy output, never a hand-typed string, so the
+// two sides cannot drift.
+const r3 = rungs.find(r => 'industry' in r.on && 'country' in r.on && !('workforce_size_band' in r.on) && !('province_state' in r.on));
+const key3 = JSON.stringify(r3.on);
+const broaderDataset = { lost_time_incidence_rate: { [key3]: { value: 4.1, observations: CRB.adequacyFloor, sourceId: CRB.sources[0].id } } };
+const broaderHit = B.lookupBenchmark(cohort, 'lost_time_incidence_rate', broaderDataset, CRB);
+ok('falls through to rung 3 when rung 1 has no value', broaderHit && broaderHit.value === 4.1);
+eq('matched rung is rung 3', broaderHit && broaderHit.matchedCohortRung, r3.rung);
+eq('rung 3 confidence is MODERATE', broaderHit && broaderHit.confidence, 'MODERATE');
+
+// Rung 5 (country only, broadest occupational benchmark) yields ESTIMATED
+// when it is the only rung with a value. Key again taken from the engine's
+// own output.
+const r5 = rungs.find(r => Object.keys(r.on).length === 1 && 'country' in r.on);
+const key5 = JSON.stringify(r5.on);
+const broadestDataset = { lost_time_incidence_rate: { [key5]: { value: 2.5, observations: CRB.adequacyFloor, sourceId: CRB.sources[0].id } } };
+const broadestHit = B.lookupBenchmark(cohort, 'lost_time_incidence_rate', broadestDataset, CRB);
+ok('falls through to rung 5 when no more specific rung has a value', broadestHit && broadestHit.value === 2.5);
+eq('matched rung is rung 5', broadestHit && broadestHit.matchedCohortRung, r5.rung);
+eq('rung 5 confidence is ESTIMATED', broadestHit && broadestHit.confidence, 'ESTIMATED');
+
 // Guardrails (Step 5).
 const engineSrc = readFileSync(new URL('./assessment/benchmark.js', import.meta.url), 'utf8');
 const configSrc = readFileSync(new URL('./assessment/config/crb-2026-01.js', import.meta.url), 'utf8');
