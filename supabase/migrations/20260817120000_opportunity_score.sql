@@ -48,7 +48,7 @@ declare
   v_inj numeric := nullif(v_ex #>> '{annual_lost_time_cases,value}','')::numeric;
   v_sites numeric := nullif(v_ex #>> '{site_count,value}','')::numeric;
   v_scale int; v_exposure int; v_pain int; v_complexity int; v_engagement int;
-  v_pain_vals numeric[]; v_avg numeric; v_wi int;
+  v_pain_vals numeric[]; v_wi int;
   v_num numeric := 0; v_den numeric := 0; v_w int; v_factors jsonb := '{}'::jsonb;
   r record;
 begin
@@ -164,7 +164,7 @@ declare
   v_row public.public_assessment_response;
   v_opp jsonb;
 begin
-  if p_signal not in ('review_clicked','book_a_demo_clicked') then
+  if p_signal is null or p_signal not in ('review_clicked','book_a_demo_clicked') then
     raise exception 'invalid engagement signal';
   end if;
   update public.public_assessment_response
