@@ -15,6 +15,8 @@ ok('controller uses priorityOpportunities', js.includes('priorityOpportunities')
 ok('controller uses resolveExposure', js.includes('resolveExposure'));
 ok('controller uses financialModel', js.includes('financialModel'));
 ok('version from config', js.includes('ContinuumCRS.version'));
+ok('optional cost figures note present when dollars are shown',
+  js.includes('The other cost figures you entered were recorded but are not yet part of this dollar estimate.'));
 ok('no benchmark on the surface', !/benchmark/i.test(html));
 ok('no em or en dashes',
   ![...(html + js + css)].some(c => c.charCodeAt(0) === 0x2013 || c.charCodeAt(0) === 0x2014));

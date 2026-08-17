@@ -550,10 +550,22 @@
         var estTag = m.provenance === 'MODELED_ESTIMATE' ? ' (estimate)' : '';
         return '<li>A ' + pct + ' percent reduction is about ' + d.days + ' worker days, roughly $' + m.dollars.toLocaleString('en-US') + estTag + '.</li>';
       }).filter(function (s) { return s; }).join('');
+      // Transparency fix (final-review Minor): the dollar figure above is
+      // driven only by loaded_daily_labour_cost. The four optional cost
+      // variables are collected and stored as labelled assumptions
+      // (provenance.financial) but do not yet change the dollar estimate.
+      // Without this line, a user who fills those fields sees no effect and
+      // no explanation, which reads as their input silently vanishing.
+      var optionalCostKeys = ['replacement_or_overtime_cost', 'admin_handling_cost', 'claim_cost', 'indirect_cost_multiplier'];
+      var suppliedOptionalCost = optionalCostKeys.some(function (k) { return typeof state.financial[k] === 'number'; });
+      var optionalCostNote = suppliedOptionalCost
+        ? '<p class="crs-note">The other cost figures you entered were recorded but are not yet part of this dollar estimate.</p>'
+        : '';
       financialLines = '' +
         '<h3>Financial Scenario</h3>' +
         '<ul class="crs-financial-lines">' + lines + '</ul>' +
-        '<p class="crs-note">This is a scenario based on the figures you provided, not a guarantee.</p>';
+        '<p class="crs-note">This is a scenario based on the figures you provided, not a guarantee.</p>' +
+        optionalCostNote;
     }
 
     var exposureBlock = '';
