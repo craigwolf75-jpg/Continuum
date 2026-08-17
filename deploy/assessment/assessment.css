@@ -141,16 +141,86 @@ h1, h2, h3, legend {
 }
 
 .crs-exposure {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.crs-exposure > label {
   display: block;
 }
 
-.crs-exposure span {
+.crs-exposure > label > span {
+  text-transform: capitalize;
+}
+
+.crs-exposure span,
+.crs-exposure-exact span,
+.crs-financial-field span {
   display: block;
   font-size: 13px;
   font-weight: 500;
   color: var(--crs-text-muted);
   margin-bottom: 6px;
-  text-transform: capitalize;
+}
+
+.crs-exposure-exact {
+  display: block;
+  padding-left: 4px;
+}
+
+.crs-exposure-exact input[type="number"],
+.crs-financial-field input[type="number"] {
+  width: 100%;
+  min-height: var(--crs-tap);
+  padding: 8px 12px;
+  background: var(--crs-navy);
+  color: var(--crs-text);
+  border: 1px solid var(--crs-border);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.crs-financial-block {
+  margin-bottom: 24px;
+  border: 1px solid var(--crs-border);
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+
+.crs-financial-block summary {
+  cursor: pointer;
+  min-height: var(--crs-tap);
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.crs-financial-block .crs-note {
+  margin: 0 0 12px;
+}
+
+.crs-financial-field {
+  display: block;
+  margin: 0 0 14px;
+}
+
+.crs-financial-field:last-child {
+  margin-bottom: 12px;
+}
+
+.crs-financial-lines {
+  margin: 8px 0 12px;
+  padding-left: 20px;
+  color: var(--crs-text);
+  font-size: 14px;
+}
+
+.crs-financial-lines li {
+  margin-bottom: 6px;
 }
 
 .crs-btn {
@@ -243,7 +313,8 @@ a:hover { color: var(--crs-gold-hover); }
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
-select:focus-visible {
+select:focus-visible,
+summary:focus-visible {
   outline: 2px solid var(--crs-focus);
   outline-offset: 2px;
 }

@@ -57,11 +57,32 @@
     }).length;
   }
 
-  function assessmentConfidence(answers, dimScores, config) {
+  function countExactExposureValues(exposureResolved) {
+    if (!exposureResolved) return 0;
+    return Object.keys(exposureResolved).filter(function (k) {
+      var v = exposureResolved[k];
+      return v && v.provenance === 'USER_PROVIDED';
+    }).length;
+  }
+
+  // Extended signature: (answers, dimScores, exposureResolved, config). Also
+  // accepts the CRS_1.0 three argument call (answers, dimScores, config) for
+  // backward compatibility, detected by argument count, not by parameter name.
+  function assessmentConfidence(answers, dimScores, arg3, arg4) {
+    var exposureResolved, config;
+    if (arguments.length >= 4) {
+      exposureResolved = arg3;
+      config = arg4;
+    } else {
+      exposureResolved = undefined;
+      config = arg3;
+    }
     var notSure = countNotSure(answers, config);
     var scored = countScoredDimensions(dimScores);
+    var exactCount = countExactExposureValues(exposureResolved);
     var rule = config.confidence.rules.find(function (r) {
-      return notSure <= r.maxNotSure && scored >= r.minDimensionsScored;
+      var minExact = (typeof r.minExactExposureValues === 'number') ? r.minExactExposureValues : 0;
+      return notSure <= r.maxNotSure && scored >= r.minDimensionsScored && exactCount >= minExact;
     });
     return rule ? rule.level : 'Limited';
   }
@@ -98,24 +119,110 @@
     return rule ? rule.template : '';
   }
 
-  function lostWorkerDays(exposureAnswers, config) {
-    var cases = exposureAnswers.annual_lost_time_cases;
-    var days = exposureAnswers.avg_lost_time_duration_days;
-    if (typeof cases !== 'number' || typeof days !== 'number') {
+  // resolveExposure: exposureAnswers[kind] may be { exact:N }, { band:"Bn" },
+  // or absent. Exact wins (USER_PROVIDED); else band repValue (MODELED_ESTIMATE);
+  // else null (UNKNOWN). Every kind declared in config.exposure is present in
+  // the result, so an absent field still resolves to UNKNOWN rather than
+  // being missing from the returned object.
+  function resolveExposure(exposureAnswers, config) {
+    exposureAnswers = exposureAnswers || {};
+    var out = {};
+    (config.exposure || []).forEach(function (e) {
+      var kind = e.kind;
+      var answer = exposureAnswers[kind];
+      if (answer && typeof answer.exact === 'number') {
+        out[kind] = { value: answer.exact, provenance: 'USER_PROVIDED' };
+      } else if (answer && answer.band) {
+        var band = (e.bands || []).find(function (b) { return b.key === answer.band; });
+        out[kind] = band ? { value: band.repValue, provenance: 'MODELED_ESTIMATE' } : { value: null, provenance: 'UNKNOWN' };
+      } else {
+        out[kind] = { value: null, provenance: 'UNKNOWN' };
+      }
+    });
+    return out;
+  }
+
+  // A field is either a resolved { value, provenance } object (CRS_1.1 caller,
+  // via resolveExposure) or a raw number (CRS_1.0 caller, old behavior). In
+  // the raw number case, legacyProvenance carries the old whole-object
+  // exposureAnswers._provenance flag: 'MODELED_ESTIMATE' when the caller
+  // marked the whole numeric input as band derived (e.g. assessment.js's
+  // exposureNumericInputs), otherwise USER_PROVIDED, matching pre-CRS_1.1
+  // behavior exactly.
+  function resolveDaysField(field, legacyProvenance) {
+    if (field && typeof field === 'object' && 'value' in field) {
+      return { value: field.value, provenance: field.provenance || 'UNKNOWN' };
+    }
+    if (typeof field === 'number') {
+      return { value: field, provenance: legacyProvenance || 'USER_PROVIDED' };
+    }
+    return { value: null, provenance: 'UNKNOWN' };
+  }
+
+  function lostWorkerDays(exposureResolved, config) {
+    exposureResolved = exposureResolved || {};
+    var legacyProvenance = (exposureResolved._provenance === 'MODELED_ESTIMATE') ? 'MODELED_ESTIMATE' : undefined;
+    var cases = resolveDaysField(exposureResolved.annual_lost_time_cases, legacyProvenance);
+    var days = resolveDaysField(exposureResolved.avg_lost_time_duration_days, legacyProvenance);
+    if (typeof cases.value !== 'number' || typeof days.value !== 'number') {
       return { days: null, provenance: 'UNKNOWN', scenarios: [] };
     }
-    var total = Math.round(cases * days);
+    var total = Math.round(cases.value * days.value);
     var scenarios = [5, 10, 20].map(function (pct) {
       return { pct: pct, days: Math.round(total * pct / 100) };
     });
-    var prov = (exposureAnswers._provenance === 'MODELED_ESTIMATE') ? 'MODELED_ESTIMATE' : 'USER_PROVIDED';
+    var prov = (cases.provenance === 'USER_PROVIDED' && days.provenance === 'USER_PROVIDED') ? 'USER_PROVIDED' : 'MODELED_ESTIMATE';
     return { days: total, provenance: prov, scenarios: scenarios };
+  }
+
+  // financialModel: dollars stay null unless loaded_daily_labour_cost is
+  // supplied and lostWorkerDays resolves a non-null day total. Every financial
+  // variable actually read (supplied by the caller, or an accepted config
+  // industry estimate) is recorded in assumptions with its provenance and
+  // label. A variable with neither a supplied value nor a config estimate is
+  // omitted, never silently assumed.
+  function financialModel(exposureResolved, financialInputs, config) {
+    financialInputs = financialInputs || {};
+    var lwd = lostWorkerDays(exposureResolved, config);
+    var inputsCfg = (config.financial && config.financial.inputs) || [];
+    var assumptions = [];
+    inputsCfg.forEach(function (input) {
+      if (typeof financialInputs[input.key] === 'number') {
+        assumptions.push({ key: input.key, value: financialInputs[input.key], provenance: 'USER_PROVIDED', label: input.label });
+      } else if (input.industry_estimate !== null && input.industry_estimate !== undefined) {
+        assumptions.push({ key: input.key, value: input.industry_estimate, provenance: 'MODELED_ESTIMATE', label: input.label });
+      }
+    });
+    var dailyCost = financialInputs.loaded_daily_labour_cost;
+    var dollars = null;
+    if (typeof dailyCost === 'number' && lwd.days !== null) {
+      var dollarProv = (lwd.provenance === 'USER_PROVIDED') ? 'USER_PROVIDED' : 'MODELED_ESTIMATE';
+      var perScenario = lwd.scenarios.map(function (s) {
+        return { pct: s.pct, dollars: Math.round(s.days * dailyCost), provenance: dollarProv };
+      });
+      dollars = { perScenario: perScenario };
+    }
+    return { dollars: dollars, assumptions: assumptions };
+  }
+
+  // priorityOpportunities: up to the three lowest scored dimensions (unscored
+  // dimensions are excluded, same as strongestAndGap), each carrying its line
+  // from config.opportunityTemplates. Sort is stable, so ties keep the
+  // dimension declaration order from config.dimensions.
+  function priorityOpportunities(dimScores, config) {
+    var scored = Object.keys(dimScores).filter(function (d) { return dimScores[d] !== null && dimScores[d] !== undefined; });
+    scored.sort(function (a, b) { return dimScores[a] - dimScores[b]; });
+    var templates = config.opportunityTemplates || {};
+    return scored.slice(0, 3).map(function (d) {
+      return { dimension: d, line: templates[d] || '' };
+    });
   }
 
   var api = { dimensionScores: dimensionScores, overallScore: overallScore,
     missingDataRate: missingDataRate, assessmentConfidence: assessmentConfidence,
     bandFor: bandFor, strongestAndGap: strongestAndGap, observation: observation,
-    lostWorkerDays: lostWorkerDays };
+    resolveExposure: resolveExposure, lostWorkerDays: lostWorkerDays,
+    financialModel: financialModel, priorityOpportunities: priorityOpportunities };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ContinuumScoring = api;
 })(typeof window !== "undefined" ? window : globalThis);

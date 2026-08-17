@@ -16,7 +16,7 @@
   // an unknown value as a numeric zero).
   // ---------------------------------------------------------------------
   var FALLBACK_CONFIG = {
-    version: 'CRS_1.0_FALLBACK',
+    version: 'CRS_1.1_FALLBACK',
     scale: { STRUCTURED: 100, ESTABLISHED: 75, PARTIAL: 50, MANUAL: 25, ABSENT: 0, NOT_SURE: null },
     dimensions: {
       MEDICAL_ACCESS: { label: 'Medical Access', weight: 15 },
@@ -106,7 +106,19 @@
     ],
     observations: [
       { id: 'default', when: [], template: 'Your responses give an initial picture of how your recovery and return to work process is working today. The deeper assessment will sharpen it.' }
-    ]
+    ],
+    // A minimal opportunity line per dimension, so the result surface never
+    // renders a blank Priority Opportunities section even in this smallest
+    // safe fallback path. CRS_1.1's real config carries the fuller, config
+    // authored versions of these lines.
+    opportunityTemplates: {
+      MEDICAL_ACCESS: 'Getting an injured worker to a doctor quickly and consistently is an opportunity area based on your responses.',
+      RESTRICTIONS_WORKFLOW: 'Getting medical restrictions to the people who plan daily work is an opportunity area based on your responses.',
+      MODIFIED_DUTY: 'Finding suitable modified duties is an opportunity area based on your responses.',
+      RECOVERY_VISIBILITY: 'Giving the right people a clear, current view of recovery status is an opportunity area based on your responses.',
+      CLAIMS_COORDINATION: 'Keeping the claim and the recovery plan coordinated is an opportunity area based on your responses.',
+      WORKFLOW_INTEGRATION: 'Connecting the medical, employer, and claims pieces is an opportunity area based on your responses.'
+    }
   };
 
   function loadConfig() {
@@ -128,7 +140,8 @@
     stage: 'intro', // intro | stage1 | snapshot | stage2 | result
     industry: null,
     answers: {},   // maturity question id -> option key
-    exposure: {}   // exposure question id -> band key
+    exposure: {},  // exposure question id -> { band:key, exact:number }
+    financial: {}  // financial input key -> number
   };
 
   // ---------------------------------------------------------------------
@@ -151,23 +164,22 @@
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
   }
 
-  function repValueFor(kind) {
-    var q = exposureQuestions().filter(function (e) { return e.kind === kind; })[0];
-    if (!q) return null;
-    var selectedKey = state.exposure[q.id];
-    if (!selectedKey) return null;
-    var band = q.bands.filter(function (b) { return b.key === selectedKey; })[0];
-    return band ? band.repValue : null;
-  }
-
-  // Carried context 3: map the selected exposure bands' repValue into the
-  // numeric object ContinuumScoring.lostWorkerDays expects. Only present
-  // when both inputs have been answered.
-  function exposureNumericInputs() {
-    var cases = repValueFor('annual_lost_time_cases');
-    var days = repValueFor('avg_lost_time_duration_days');
-    if (typeof cases !== 'number' || typeof days !== 'number') return null;
-    return { annual_lost_time_cases: cases, avg_lost_time_duration_days: days, _provenance: 'MODELED_ESTIMATE' };
+  // Maps the per-question exposure state (keyed by exposure question id, each
+  // an optional { band, exact } pair) into the per-kind shape
+  // ContinuumScoring.resolveExposure expects. A question with neither a band
+  // nor an exact value contributes nothing, so resolveExposure resolves it to
+  // UNKNOWN rather than a fabricated value.
+  function exposureAnswersByKind(exposureState) {
+    var out = {};
+    exposureQuestions().forEach(function (eq) {
+      var entry = exposureState && exposureState[eq.id];
+      if (!entry) return;
+      var mapped = {};
+      if (typeof entry.exact === 'number') mapped.exact = entry.exact;
+      if (entry.band) mapped.band = entry.band;
+      out[eq.kind] = mapped;
+    });
+    return out;
   }
 
   // ---------------------------------------------------------------------
@@ -175,28 +187,37 @@
   // Task 5 (persistence) and tests can call it directly. Keys match the
   // table columns and RPC payload exactly.
   // ---------------------------------------------------------------------
-  function buildProvenance(answers, exposure) {
+  function buildProvenance(answers) {
     var out = {};
     Object.keys(answers || {}).forEach(function (qid) {
       var q = CONFIG.questions.filter(function (x) { return x.id === qid; })[0];
       var opt = q && q.options.filter(function (o) { return o.key === answers[qid]; })[0];
       out[qid] = opt ? opt.provenance : 'UNKNOWN';
     });
-    Object.keys(exposure || {}).forEach(function (eid) {
-      out[eid] = 'MODELED_ESTIMATE';
-    });
     out.industry = state.industry ? 'USER_PROVIDED' : 'UNKNOWN';
     return out;
   }
 
-  function buildResult(answers, exposure, stageReached) {
+  // exposureState is the per-question exposure state (state.exposure's shape:
+  // question id -> { band, exact }). It is resolved here to the per-kind
+  // { value, provenance } object (CRS_1.1 shape) via resolveExposure, which
+  // becomes both the stored "exposure" field and an input to the financial
+  // model and the extended confidence signature.
+  function buildResult(answers, exposureState, stageReached) {
     var dimScores = SCORING.dimensionScores(answers, CONFIG);
     var overall = SCORING.overallScore(dimScores, CONFIG);
     var band = SCORING.bandFor(overall, CONFIG);
-    var confidence = SCORING.assessmentConfidence(answers, dimScores, CONFIG);
+    var exposureResolved = SCORING.resolveExposure(exposureAnswersByKind(exposureState), CONFIG);
+    var confidence = SCORING.assessmentConfidence(answers, dimScores, exposureResolved, CONFIG);
     var missingRate = SCORING.missingDataRate(answers, CONFIG);
+    var financial = SCORING.financialModel(exposureResolved, state.financial, CONFIG);
+    var provenance = buildProvenance(answers);
+    provenance.financial = financial.assumptions;
     return {
-      scoring_model_version: CONFIG.version, // equals window.ContinuumCRS.version when the real config loaded
+      // Prefers the live loaded config's version; CONFIG.version covers the
+      // case where window.ContinuumCRS never loaded and CONFIG fell back to
+      // FALLBACK_CONFIG (Layer 1 of three layer resilience).
+      scoring_model_version: (window.ContinuumCRS && window.ContinuumCRS.version) || CONFIG.version,
       stage_reached: stageReached,
       industry: state.industry,
       answers: answers,
@@ -205,8 +226,8 @@
       band: band,
       assessment_confidence: confidence,
       missing_data_rate: missingRate,
-      exposure: exposure,
-      provenance: buildProvenance(answers, exposure)
+      exposure: exposureResolved,
+      provenance: provenance
     };
   }
 
@@ -300,17 +321,58 @@
   }
 
   function exposureQuestionMarkup(eq) {
-    var selected = state.exposure[eq.id] || '';
+    var current = state.exposure[eq.id] || {};
+    var selectedBand = current.band || '';
     var options = '<option value="">Select a range</option>' + eq.bands.map(function (b) {
-      var sel = b.key === selected ? ' selected' : '';
+      var sel = b.key === selectedBand ? ' selected' : '';
       return '<option value="' + esc(b.key) + '"' + sel + '>' + esc(b.label) + '</option>';
     }).join('');
     var kindLabel = capitalize(eq.kind.replace(/_/g, ' '));
+    var exactField = '';
+    if (eq.allowExact === true) {
+      var exactVal = (typeof current.exact === 'number') ? current.exact : '';
+      exactField = '' +
+        '<label class="crs-exposure-exact">' +
+          '<span>or enter the exact number</span>' +
+          '<input type="number" min="0" step="1" inputmode="numeric" data-exposure-exact="' + esc(eq.id) + '" value="' + esc(exactVal) + '">' +
+        '</label>';
+    }
     return '' +
-      '<label class="crs-exposure">' +
-        '<span>' + esc(kindLabel) + '</span>' +
-        '<select data-exposure="' + esc(eq.id) + '">' + options + '</select>' +
-      '</label>';
+      '<div class="crs-exposure">' +
+        '<label>' +
+          '<span>' + esc(kindLabel) + '</span>' +
+          '<select data-exposure="' + esc(eq.id) + '">' + options + '</select>' +
+        '</label>' +
+        exactField +
+      '</div>';
+  }
+
+  // Optional collapsible financial input block (design section 5, 6):
+  // loaded daily labour cost is the primary field (required for any dollar
+  // output), the rest are optional. Rendered only when config.financial
+  // carries at least one declared input; absent for CRS_1.0 and for
+  // FALLBACK_CONFIG, which is graceful degradation, not a bug: without it
+  // the result simply stays operational only (worker days, no dollars).
+  function financialBlockMarkup() {
+    var inputs = (CONFIG.financial && CONFIG.financial.inputs) || [];
+    if (!inputs.length) return '';
+    var fields = inputs.map(function (inp) {
+      var val = (typeof state.financial[inp.key] === 'number') ? state.financial[inp.key] : '';
+      var reqTag = inp.required ? ' (required for dollar figures)' : ' (optional)';
+      return '' +
+        '<label class="crs-financial-field">' +
+          '<span>' + esc(inp.label) + ' (' + esc(inp.unit) + ')' + reqTag + '</span>' +
+          '<input type="number" min="0" step="1" inputmode="numeric" data-financial="' + esc(inp.key) + '" value="' + esc(val) + '">' +
+        '</label>';
+    }).join('');
+    var note = CONFIG.financial.operational_only_note
+      ? '<p class="crs-note">' + esc(CONFIG.financial.operational_only_note) + '</p>' : '';
+    return '' +
+      '<details class="crs-financial-block">' +
+        '<summary>Add financial figures (optional)</summary>' +
+        note +
+        fields +
+      '</details>';
   }
 
   function ctaMarkup(action, label) {
@@ -432,6 +494,7 @@
         '<h2>The Detailed Assessment</h2>' +
         '<p class="crs-lede">These six questions are optional. Answer as many as you can for a more precise result; anything left blank simply will not factor into that part of the result.</p>' +
         (eqs.length ? '<div class="crs-exposure-group">' + eqs.map(exposureQuestionMarkup).join('') + '</div>' : '') +
+        financialBlockMarkup() +
         depthQs.map(function (q) { return questionMarkup(q, state.answers[q.id]); }).join('') +
         ctaMarkup('to-result', 'See My Detailed Assessment') +
       '</section>';
@@ -445,7 +508,8 @@
     var dimScores = SCORING.dimensionScores(answers, CONFIG);
     var overall = SCORING.overallScore(dimScores, CONFIG);
     var band = SCORING.bandFor(overall, CONFIG);
-    var confidence = SCORING.assessmentConfidence(answers, dimScores, CONFIG);
+    var exposureResolved = SCORING.resolveExposure(exposureAnswersByKind(state.exposure), CONFIG);
+    var confidence = SCORING.assessmentConfidence(answers, dimScores, exposureResolved, CONFIG);
     var sg = SCORING.strongestAndGap(dimScores);
 
     var scoreLine = overall === null
@@ -457,26 +521,64 @@
     var gapLine = sg.gap && sg.gap !== sg.strongest
       ? '<p><strong>Largest gap:</strong> ' + esc(dimensionLabel(sg.gap)) + '.</p>' : '';
 
-    var scoredDims = Object.keys(dimScores).filter(function (d) { return dimScores[d] !== null; });
-    scoredDims.sort(function (a, b) { return dimScores[a] - dimScores[b]; });
-    var priorities = scoredDims.slice(0, 3).map(function (d) {
-      return '<li>' + esc(dimensionLabel(d)) + ', scored ' + dimScores[d] + ' out of 100, is a priority area for improvement.</li>';
+    // Three priority opportunities from config authored opportunityTemplates
+    // (design section 6). A missing template (older or fallback config) falls
+    // back to the plain scored line rather than rendering blank.
+    var po = SCORING.priorityOpportunities(dimScores, CONFIG);
+    var priorities = po.map(function (p) {
+      var label = dimensionLabel(p.dimension);
+      if (p.line) {
+        return '<li><strong>' + esc(label) + ':</strong> ' + esc(p.line) + '</li>';
+      }
+      return '<li>' + esc(label) + ', scored ' + dimScores[p.dimension] + ' out of 100, is a priority area for improvement.</li>';
     }).join('');
 
+    var lwd = SCORING.lostWorkerDays(exposureResolved, CONFIG);
+    var fin = SCORING.financialModel(exposureResolved, state.financial, CONFIG);
+
+    // Financial scenario lines render only when financialModel resolves
+    // dollars (a stated loaded daily labour cost plus a worker day total).
+    // Otherwise the operational lines stand alone (design section 5, 6).
+    var financialLines = '';
+    if (fin.dollars) {
+      var byPct = {};
+      fin.dollars.perScenario.forEach(function (s) { byPct[s.pct] = s; });
+      var lines = [5, 10, 20].map(function (pct) {
+        var d = lwd.scenarios.filter(function (s) { return s.pct === pct; })[0];
+        var m = byPct[pct];
+        if (!d || !m) return '';
+        var estTag = m.provenance === 'MODELED_ESTIMATE' ? ' (estimate)' : '';
+        return '<li>A ' + pct + ' percent reduction is about ' + d.days + ' worker days, roughly $' + m.dollars.toLocaleString('en-US') + estTag + '.</li>';
+      }).filter(function (s) { return s; }).join('');
+      // Transparency fix (final-review Minor): the dollar figure above is
+      // driven only by loaded_daily_labour_cost. The four optional cost
+      // variables are collected and stored as labelled assumptions
+      // (provenance.financial) but do not yet change the dollar estimate.
+      // Without this line, a user who fills those fields sees no effect and
+      // no explanation, which reads as their input silently vanishing.
+      var optionalCostKeys = ['replacement_or_overtime_cost', 'admin_handling_cost', 'claim_cost', 'indirect_cost_multiplier'];
+      var suppliedOptionalCost = optionalCostKeys.some(function (k) { return typeof state.financial[k] === 'number'; });
+      var optionalCostNote = suppliedOptionalCost
+        ? '<p class="crs-note">The other cost figures you entered were recorded but are not yet part of this dollar estimate.</p>'
+        : '';
+      financialLines = '' +
+        '<h3>Financial Scenario</h3>' +
+        '<ul class="crs-financial-lines">' + lines + '</ul>' +
+        '<p class="crs-note">This is a scenario based on the figures you provided, not a guarantee.</p>' +
+        optionalCostNote;
+    }
+
     var exposureBlock = '';
-    var expInputs = exposureNumericInputs();
-    if (expInputs) {
-      var lwd = SCORING.lostWorkerDays(expInputs, CONFIG);
-      if (lwd.days !== null) {
-        var estimatedTag = lwd.provenance === 'MODELED_ESTIMATE' ? ' (estimated)' : '';
-        var tenPct = lwd.scenarios.filter(function (s) { return s.pct === 10; })[0];
-        exposureBlock = '' +
-          '<div class="crs-exposure-result">' +
-            '<h3>Operational Exposure</h3>' +
-            '<p>Estimated lost worker days: ' + lwd.days + ' per year' + estimatedTag + '.</p>' +
-            (tenPct ? '<h3>Improvement Scenario</h3><p>A 10 percent reduction in average lost time duration would represent approximately ' + tenPct.days + ' worker days annually. This is not a performance claim; it is a way to size the opportunity.</p>' : '') +
-          '</div>';
-      }
+    if (lwd.days !== null) {
+      var estimatedTag = lwd.provenance === 'MODELED_ESTIMATE' ? ' (estimated)' : '';
+      var tenPct = lwd.scenarios.filter(function (s) { return s.pct === 10; })[0];
+      exposureBlock = '' +
+        '<div class="crs-exposure-result">' +
+          '<h3>Operational Exposure</h3>' +
+          '<p>Estimated lost worker days: ' + lwd.days + ' per year' + estimatedTag + '.</p>' +
+          (tenPct ? '<h3>Improvement Scenario</h3><p>A 10 percent reduction in average lost time duration would represent approximately ' + tenPct.days + ' worker days annually. This is not a performance claim; it is a way to size the opportunity.</p>' : '') +
+          financialLines +
+        '</div>';
     }
 
     return '' +
@@ -518,6 +620,16 @@
     return stage1Questions().every(function (q) { return q.id in state.answers; });
   }
 
+  // Returns a number for a non-blank, numeric raw input value, otherwise
+  // null (covers both an emptied field and non-numeric text). Used so a
+  // cleared exact or financial field removes the stored value rather than
+  // storing NaN or an empty string.
+  function parsedNumberOrNull(raw) {
+    if (raw === '' || raw === null || raw === undefined) return null;
+    var n = Number(raw);
+    return isNaN(n) ? null : n;
+  }
+
   function onChange(e) {
     var t = e.target;
     if (t.matches && t.matches('input[type="radio"][data-question]')) {
@@ -530,8 +642,24 @@
     }
     if (t.matches && t.matches('select[data-exposure]')) {
       var id = t.getAttribute('data-exposure');
-      if (t.value) state.exposure[id] = t.value;
-      else delete state.exposure[id];
+      state.exposure[id] = state.exposure[id] || {};
+      if (t.value) state.exposure[id].band = t.value;
+      else delete state.exposure[id].band;
+      return;
+    }
+    if (t.matches && t.matches('input[data-exposure-exact]')) {
+      var exId = t.getAttribute('data-exposure-exact');
+      state.exposure[exId] = state.exposure[exId] || {};
+      var exactNum = parsedNumberOrNull(t.value);
+      if (exactNum !== null) state.exposure[exId].exact = exactNum;
+      else delete state.exposure[exId].exact;
+      return;
+    }
+    if (t.matches && t.matches('input[data-financial]')) {
+      var fkey = t.getAttribute('data-financial');
+      var finNum = parsedNumberOrNull(t.value);
+      if (finNum !== null) state.financial[fkey] = finNum;
+      else delete state.financial[fkey];
       return;
     }
     if (t.id === 'industry-select') {
@@ -553,7 +681,7 @@
     } else if (action === 'to-result') {
       state.stage = 'result';
     } else if (action === 'restart') {
-      state = { stage: 'intro', industry: null, answers: {}, exposure: {} };
+      state = { stage: 'intro', industry: null, answers: {}, exposure: {}, financial: {} };
     } else if (action === 'save-result') {
       handleSaveResult(parseInt(actionEl.getAttribute('data-stage-reached'), 10));
       return; // the save slot updates itself; nothing else on the page changes
