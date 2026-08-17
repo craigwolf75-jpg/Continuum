@@ -145,5 +145,117 @@ begin
   end if;
 end $$;
 
+-- OPPORTUNITY SCORE (Prompt 63 Step 2D): internal, server side, computed
+-- deterministically, never returned to the client. SYNTH fixtures only.
+do $$
+declare
+  v_a public.public_assessment_response;
+  v_b public.public_assessment_response;
+  v_opp_a jsonb;
+  v_opp_b jsonb;
+  v_score_a int;
+  v_score_b int;
+  v_eng_before int;
+  v_eng_after int;
+begin
+  -- SYNTH Employer A: large workforce, high injury volume, many sites, weak
+  -- process maturity, reached stage 2. Should score HIGH.
+  insert into public.public_assessment_response
+    (scoring_model_version, stage_reached, industry, answers, dimension_scores,
+     overall_score, band, assessment_confidence, missing_data_rate, exposure, provenance,
+     save_source, engagement_signals)
+  values
+    ('SYNTH-v1', 2, 'SYNTH manufacturing',
+     '{}'::jsonb,
+     '{"MODIFIED_DUTY":10,"RESTRICTIONS_WORKFLOW":15,"RECOVERY_VISIBILITY":5,"CLAIMS_COORDINATION":10,"WORKFLOW_INTEGRATION":10}'::jsonb,
+     40, 'Elevated Risk', 'High', 0.1,
+     '{"workforce_size":{"band":"10000_plus","value":12000},"annual_lost_time_cases":{"band":"250_plus","value":260},"site_count":{"band":"21_plus","value":25}}'::jsonb,
+     null, 'user_initiated', '{"completed_stage_2":true}'::jsonb)
+  returning * into v_a;
+
+  -- SYNTH Employer B: tiny workforce, low injury volume, one site, strong
+  -- process maturity, reached stage 1 only. Should score LOW.
+  insert into public.public_assessment_response
+    (scoring_model_version, stage_reached, industry, answers, dimension_scores,
+     overall_score, band, assessment_confidence, missing_data_rate, exposure, provenance,
+     save_source, engagement_signals)
+  values
+    ('SYNTH-v1', 1, 'SYNTH office services',
+     '{}'::jsonb,
+     '{"MODIFIED_DUTY":85,"RESTRICTIONS_WORKFLOW":80,"RECOVERY_VISIBILITY":90,"CLAIMS_COORDINATION":85,"WORKFLOW_INTEGRATION":90}'::jsonb,
+     85, 'Strong', 'High', 0.0,
+     '{"workforce_size":{"band":"under_100","value":75},"annual_lost_time_cases":{"band":"under_10","value":3},"site_count":{"band":"one","value":1}}'::jsonb,
+     null, null, '{}'::jsonb)
+  returning * into v_b;
+
+  v_opp_a := public.compute_opportunity_score(v_a);
+  v_opp_b := public.compute_opportunity_score(v_b);
+  v_score_a := (v_opp_a->>'score')::int;
+  v_score_b := (v_opp_b->>'score')::int;
+
+  if v_score_a is null or v_score_b is null then
+    raise exception 'OPPORTUNITY SCORE: expected non null scores for SYNTH A and B';
+  end if;
+  if v_score_a <= v_score_b + 20 then
+    raise exception 'OPPORTUNITY SCORE: SYNTH A (%) not materially higher than SYNTH B (%)', v_score_a, v_score_b;
+  end if;
+
+  -- record_engagement raises the engagement factor (and therefore the
+  -- score) for SYNTH A.
+  v_eng_before := (v_opp_a->'factors'->>'engagement')::int;
+  perform public.record_engagement(v_a.response_id, 'book_a_demo_clicked');
+  select (opportunity_factors->>'engagement')::int into v_eng_after
+    from public.public_assessment_response where response_id = v_a.response_id;
+  if v_eng_after is null or v_eng_after <= v_eng_before then
+    raise exception 'OPPORTUNITY SCORE: record_engagement did not raise the engagement factor for SYNTH A (before %, after %)', v_eng_before, v_eng_after;
+  end if;
+
+  -- an invalid signal is rejected.
+  begin
+    perform public.record_engagement(v_a.response_id, 'not_a_real_signal');
+    raise exception 'OPPORTUNITY SCORE: record_engagement accepted an invalid signal';
+  exception when others then
+    if sqlerrm <> 'invalid engagement signal' then
+      raise;
+    end if;
+  end;
+end $$;
+
+-- opportunity_weights is internal only: anon cannot select it.
+set role anon;
+do $$
+begin
+  begin
+    perform 1 from public.opportunity_weights limit 1;
+    raise exception 'LEAK opportunity_weights: anon can select';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+-- Neither RPC ever returns an opportunity field: submit_public_assessment
+-- returns uuid only, record_engagement returns void only. This is a
+-- structural guarantee, so assert it against the function signatures
+-- themselves, which holds regardless of role or seed.
+do $$
+declare v_ret text;
+begin
+  select t.typname into v_ret
+  from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+  join pg_type t on t.oid = p.prorettype
+  where n.nspname = 'public' and p.proname = 'submit_public_assessment';
+  if v_ret is distinct from 'uuid' then
+    raise exception 'OPPORTUNITY SCORE: submit_public_assessment return type is %, must stay uuid only (no opportunity field)', v_ret;
+  end if;
+
+  select t.typname into v_ret
+  from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+  join pg_type t on t.oid = p.prorettype
+  where n.nspname = 'public' and p.proname = 'record_engagement';
+  if v_ret is distinct from 'void' then
+    raise exception 'OPPORTUNITY SCORE: record_engagement return type is %, must stay void only (no opportunity field)', v_ret;
+  end if;
+end $$;
+
 reset role;
 select 'EXPOSURE-PROOF PASS' as result;
