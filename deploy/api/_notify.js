@@ -105,4 +105,49 @@ async function sendLeadNotification(email, source, env) {
   }
 }
 
-export { buildSignupNotification, readNotifyConfig, sendSignupNotification, DEFAULT_FROM, buildLeadNotification, sendLeadNotification };
+// Pure: builds the Resend payload for an access invite sent to the admin inbox
+// when the admin provisions a user. Carries the temporary credentials so the
+// team can relay access to the new user. No I/O.
+function buildAccessInvite(user, tempPassword, to, from) {
+  const u = user && typeof user === "object" ? user : {};
+  const name = typeof u.full_name === "string" ? u.full_name : "";
+  const email = typeof u.email === "string" ? u.email : "";
+  const role = typeof u.role === "string" ? u.role : "";
+  const pw = typeof tempPassword === "string" ? tempPassword : "";
+  return {
+    from: from || DEFAULT_FROM,
+    to: [to],
+    subject: "New Continuum user provisioned: access invite",
+    text:
+      "A user was provisioned in the Continuum admin and a login was created.\n\n" +
+      "Name: " + name + "\n" +
+      "Email: " + email + "\n" +
+      "Role: " + role + "\n" +
+      (pw ? "Temporary password: " + pw + "\n\n" : "\n") +
+      "Relay these credentials to the user. They sign in at https://continuumrtw.com/hub\n" +
+      "The password should be rotated after first use.\n"
+  };
+}
+
+// Best effort: emails the access invite to the admin inbox (SIGNUP_NOTIFY_TO,
+// normally info@continuumrtw.com). Same env gate as the other notifiers: a no
+// op unless RESEND_API_KEY and SIGNUP_NOTIFY_TO are set, so provisioning is
+// never blocked on the mail config. Never throws.
+async function sendAccessInvite(user, tempPassword, env) {
+  try {
+    const src = env || (typeof process !== "undefined" && process.env ? process.env : {});
+    const cfg = readNotifyConfig(src);
+    if (!cfg.configured) return { sent: false, reason: "not configured" };
+    const res = await fetch(RESEND_ENDPOINT, {
+      method: "POST",
+      headers: { Authorization: "Bearer " + cfg.apiKey, "Content-Type": "application/json" },
+      body: JSON.stringify(buildAccessInvite(user, tempPassword, cfg.to, cfg.from))
+    });
+    if (res.status >= 200 && res.status < 300) return { sent: true };
+    return { sent: false, reason: "send failed with status " + res.status };
+  } catch (e) {
+    return { sent: false, reason: "error" };
+  }
+}
+
+export { buildSignupNotification, readNotifyConfig, sendSignupNotification, DEFAULT_FROM, buildLeadNotification, sendLeadNotification, buildAccessInvite, sendAccessInvite };

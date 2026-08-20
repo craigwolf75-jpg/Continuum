@@ -315,8 +315,16 @@ function createUser(){
   .then(function(r){return r?r.json().then(function(j){return j;},function(){return null;}):null;})
   .then(function(j){
     if(!j||!j.ok){toast(j&&j.error?esc(j.error):(j&&j.errors?esc(j.errors.join("; ")):"Provision did not go through."));return;}
-    audit("User provisioned: "+name.trim()+" as "+role);
-    closeModal();toast("<b>"+esc(name.trim())+"</b> provisioned as "+role+".");refreshDirectory();
+    audit("User provisioned: "+name.trim()+" as "+role+(j.login_created?" (login created)":""));
+    refreshDirectory();
+    var pw=j.temp_password;
+    var msg='<h2 style="margin-bottom:8px">User provisioned</h2>'+
+     '<p class="sub" style="font-size:12.5px;margin-bottom:10px"><b>'+esc(name.trim())+'</b> ('+esc(role)+') was added'+(j.login_created?" and a sign in login was created.":".")+'</p>';
+    if(pw){ msg+='<label class="fl">Temporary password</label><input type="text" readonly value="'+esc(pw)+'" onclick="this.select()" style="font-family:monospace">'+
+     '<p class="sub" style="font-size:11.5px;margin-top:6px">Relay this to the user; they sign in at /hub and should rotate it.'+(j.invite_sent?" An invite was also emailed to info@continuumrtw.com.":" Email invite not sent (mail not configured)."); }
+    else { msg+='<p class="sub" style="font-size:11.5px">No login was created (the email may already have an account). The directory record was added.'; }
+    msg+='</p><button class="btn gold" style="width:100%;margin-top:14px" onclick="closeModal()">Done</button>';
+    openModal(msg);
   }).catch(function(){toast("Provision did not go through.");});}
 /* ---------- grants ---------- */
 function renderGrants(){

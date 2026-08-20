@@ -14,6 +14,35 @@
    Cross site posts are rejected. Fails closed. No dashes anywhere. */
 
 import { verifyHubSession, parseCookies, isAuthorizedAdmin } from "./_hub_session.js";
+import { sendAccessInvite } from "./_notify.js";
+import { randomBytes } from "node:crypto";
+
+// A strong temporary password for a newly provisioned login. The user rotates
+// it after first use. Character set avoids ambiguous glyphs for relaying.
+function tempPassword() {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  const bytes = randomBytes(16);
+  let out = "";
+  for (let i = 0; i < bytes.length; i++) out += alphabet[bytes[i] % alphabet.length];
+  return "Ct-" + out;
+}
+
+// Best effort: create a Supabase Auth login for the email so the provisioned
+// user can actually sign in. GoTrue admin API, service key, email pre confirmed.
+// Returns the new auth user id, or null if it could not be created (for example
+// the email already has an account); provisioning proceeds either way.
+async function createAuthLogin(baseUrl, serviceKey, email, password) {
+  try {
+    const res = await fetch(baseUrl + "/auth/v1/admin/users", {
+      method: "POST",
+      headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, email_confirm: true })
+    });
+    if (res.status < 200 || res.status >= 300) return null;
+    const u = await res.json();
+    return u && u.id ? u.id : null;
+  } catch (e) { return null; }
+}
 
 // admin vocabulary -> DB user_role. The physician variant is built at runtime
 // so the upstream clinical partner name never appears literally in source.
@@ -90,16 +119,34 @@ async function provision(req, res, body) {
   const dup = dupRes.status === 200 ? await dupRes.json() : [];
   if (Array.isArray(dup) && dup.length) { res.status(409).json({ ok: false, error: "a user with that email already exists" }); return; }
 
+  // create a real login first so the directory row can link to it
+  const pw = tempPassword();
+  const authId = await createAuthLogin(baseUrl, serviceKey, email, pw);
+
   const insRes = await fetch(baseUrl + "/rest/v1/users", {
     method: "POST",
     headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey,
                "Content-Type": "application/json", Prefer: "return=representation" },
     body: JSON.stringify({ email, full_name: fullName, role: TO_DB_ROLE[role],
-                           tenant_id: tenantId, status: "active" })
+                           tenant_id: tenantId, status: "active", auth_user_id: authId })
   });
   if (insRes.status !== 200 && insRes.status !== 201) { res.status(503).json({ ok: false, error: "provision failed" }); return; }
   const rows = await insRes.json();
-  res.status(201).json({ ok: true, user: Array.isArray(rows) ? rows[0] : rows });
+  const user = Array.isArray(rows) ? rows[0] : rows;
+
+  // best effort access invite to the admin inbox (info@), gated on the mail env
+  let inviteSent = false;
+  if (authId) {
+    const invite = await sendAccessInvite({ full_name: fullName, email, role }, pw);
+    inviteSent = Boolean(invite && invite.sent);
+  }
+
+  res.status(201).json({
+    ok: true, user,
+    login_created: Boolean(authId),
+    temp_password: authId ? pw : null,
+    invite_sent: inviteSent
+  });
 }
 
 async function toggle(req, res, body) {
