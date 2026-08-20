@@ -21,15 +21,21 @@
 
 import { verifyHubSession, parseCookies, isAuthorizedAdmin } from "./_hub_session.js";
 
-// DB role -> the admin portal's role vocabulary (its filter chips).
+// DB role -> the admin portal's role vocabulary (its filter chips). Any role
+// ending in "_physician" maps to "physician" via mapRole below, so the physician
+// role variant is handled without naming the upstream clinical partner here.
 const ROLE_MAP = {
   ops_admin: "continuum_admin",
   worker: "worker",
   hse: "hse",
   employer_admin: "employer_admin",
-  wcb_officer: "board_officer",
-  nexus_physician: "physician"
+  wcb_officer: "board_officer"
 };
+
+function mapRole(role) {
+  if (typeof role === "string" && /physician$/.test(role)) return "physician";
+  return ROLE_MAP[role] || role;
+}
 
 // province code -> the board label the admin portal shows.
 const BOARD_MAP = {
@@ -103,7 +109,7 @@ async function handler(req, res) {
       return {
         id: u.id,
         name: u.full_name || u.email,
-        role: ROLE_MAP[u.role] || u.role,
+        role: mapRole(u.role),
         org: u.tenant_id ? (tenantName[u.tenant_id] || "Unknown tenant")
                          : (u.role === "ops_admin" ? "Continuum" : "Unassigned"),
         status: u.status,
