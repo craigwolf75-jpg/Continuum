@@ -18,7 +18,7 @@ These carry the same rule codes, triggers, conditions and affected elements as C
 line against this document. The code reuse hazard is identical (BR1 recurs on the Accident, Injury and
 Invoice pages; SR1 recurs on Injury, Treatment and RTW; BR5 on Participant and Injury).
 
-- Participant Details (page 1): BR5 (Worker 36 one of two required, PHN polarity inversion source).
+- Participant Details (page 1): BR5 (Alberta PHN one of two required, PHN polarity inversion source).
 - Accident Details (page 2): BR1 (Date of Injury range), SR4 (develop over time warning).
 - Injury Details (pages 2 to 3): BR1, BR2 (POB-NOI), BR3 (unique combos, VAL-X04), BR5 (POB-SOB, cites
   the nonexistent SOB POB Relations tab), BR6 (diagnostic code order, VAL-X05), BR8 (at least one row),

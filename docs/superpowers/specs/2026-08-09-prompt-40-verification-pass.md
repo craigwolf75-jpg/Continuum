@@ -15,15 +15,15 @@ sample XML actually proves, and what it cannot isolate.
 ## The verifier
 
 `verify.mjs` parses a sample HL7 v2.3.1 XML and reports, without a database:
-- The PHN facts: `PID.3/CX.1` (the Worker 36 value) and `PID.3/CX.5` (the "patient does NOT have an
-  Worker 36" indicator, Y or N).
+- The PHN facts: `PID.3/CX.1` (the Alberta PHN value) and `PID.3/CX.5` (the "patient does NOT have an
+  Alberta PHN" indicator, Y or N).
 - Every OBX observation: its `OBX.3/CE.1` identifier and its `OBX.5` value (empty, a raw value, or a
   nested coded value).
 It then asserts criterion 15 directly and lets the capability emission be inspected per axis.
 
 ## VERIFIED: criterion 15, the PHN polarity inversion (highest risk)
 
-The board's element is "Patient does not have an Worker 36" carried as `PID.3/CX.5`; the PHN value is
+The board's element is "Patient does not have an Alberta PHN" carried as `PID.3/CX.5`; the PHN value is
 `PID.3/CX.1`. Emitting a PHN value while the no PHN indicator is Y is the real board rejection the
 engine spec Section 5.3 warns about. Verified across five samples:
 

@@ -58,7 +58,7 @@ const report = {
   completed: true, invoiced: false,
   date_of_injury: "1900-01-01", date_of_examination: "1900-01-01", claim_number: "7001234",
   worker_name: "PHAM, William", worker_date_of_birth: "1900-01-01", worker_address: "57483 45A Ave NW Edmonton AB T6M 0G8", worker_phone: "1-780-555-1067",
-  billing_and_name: "A2145 - MCNAMARA, Howard", clinic: "Family Health Worker 44", clinic_phone: "1-780-555-1000 ext 1067",
+  billing_and_name: "A2145 - MCNAMARA, Howard", clinic: "Family Health Clinic", clinic_phone: "1-780-555-1000 ext 1067",
   employer_name_and_location: "ABC Corp, Ft. McMurray AB", employer_phone: "1-780-555-1111 ext 1080",
   job_title: "Machine Operator", injury_kind: "Progressive Injury", injuries: "Left Ankle, Right Arm",
   time_missed: "Yes", work_status: "Hospitalized", hospitalized: true, modified_note: "Modified duties, up to 6 hours per day",

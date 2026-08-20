@@ -46,9 +46,9 @@ out.push("begin;");
 out.push("");
 
 // -- Section 1: jurisdiction (AB active, others inactive) --------------------
-out.push("-- jurisdiction: Worker 36 active, every other province and territory inactive (spec Section 2).");
+out.push("-- jurisdiction: Alberta active, every other province and territory inactive (spec Section 2).");
 const JURS = [
-  ["AB", "Worker 36", "batch_hl7", true], ["BC", "British Columbia", "none", false],
+  ["AB", "Alberta", "batch_hl7", true], ["BC", "British Columbia", "none", false],
   ["MB", "Manitoba", "none", false], ["NB", "New Brunswick", "none", false],
   ["NL", "Newfoundland and Labrador", "none", false], ["NT", "Northwest Territories", "none", false],
   ["NS", "Nova Scotia", "none", false], ["NU", "Nunavut", "none", false],
@@ -60,14 +60,14 @@ out.push("insert into clinical.jurisdiction(code,name,submission_channel,active)
 out.push(JURS.map((j) => "  (" + q(j[0]) + "," + q(j[1]) + "," + q(j[2]) + "," + j[3] + ")").join(",\n") + "\non conflict (code) do nothing;");
 out.push("");
 
-// -- Section 2: fee schedule (Worker 36 GP rates, spec Section 2) --------------
-out.push("-- wcb_fee_schedule: Worker 36 general practitioner rates effective 2025-04-01 (spec Section 2). Loaded as data, never hard coded elsewhere.");
+// -- Section 2: fee schedule (Alberta GP rates, spec Section 2) --------------
+out.push("-- wcb_fee_schedule: Alberta general practitioner rates effective 2025-04-01 (spec Section 2). Loaded as data, never hard coded elsewhere.");
 const FEES = [
   ["C050E", "GP", "same_day", "96.98"], ["C050E", "GP", "on_time", "88.37"], ["C050E", "GP", "late", "55.70"],
   ["C151", "GP", "same_day", "58.91"], ["C151", "GP", "on_time", "53.69"], ["C151", "GP", "late", "33.85"]
 ];
 out.push("insert into clinical.wcb_fee_schedule(jurisdiction_code,form_id,practitioner_role,fee_tier,amount,effective_from,source) values");
-out.push(FEES.map((f) => "  (" + q(JUR) + "," + q(f[0]) + "," + q(f[1]) + "," + q(f[2]) + "," + f[3] + "," + q(EFF) + "," + q("Worker 36 WCB GP rates 2025-04-01 (spec Section 2)") + ")").join(",\n") + "\non conflict do nothing;");
+out.push(FEES.map((f) => "  (" + q(JUR) + "," + q(f[0]) + "," + q(f[1]) + "," + q(f[2]) + "," + f[3] + "," + q(EFF) + "," + q("Alberta WCB GP rates 2025-04-01 (spec Section 2)") + ")").join(",\n") + "\non conflict do nothing;");
 out.push("");
 
 // -- Section 3: code lists and values ---------------------------------------
@@ -117,7 +117,7 @@ for (const name of wb.SheetNames) {
 }
 
 // -- Section 4: POB-NOI forbidden pairs --------------------------------------
-out.push("-- wcb_pob_noi_forbidden: the POB-NOI combinations NOT allowed (spec Section 3, expect 380 Worker 36 rows).");
+out.push("-- wcb_pob_noi_forbidden: the POB-NOI combinations NOT allowed (spec Section 3, expect 380 Alberta rows).");
 {
   const ws = sheet("POB-NOI Validations"); const rg = rangeOf(ws);
   // header at row s.r+1: NOI Code | NOI Description | POB Code | POB Description

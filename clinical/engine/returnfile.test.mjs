@@ -15,7 +15,7 @@ let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
 const DOC_LINE = "1\t121023: Worker Personal Health Number must be BLANK since Worker Personal Health Number Indicator is No";
-const ELEMENTS = ["Worker 36 Personal Health Number", "Worker Personal Health Number", "Claim Number", "Date of Injury"];
+const ELEMENTS = ["Alberta Personal Health Number", "Worker Personal Health Number", "Claim Number", "Date of Injury"];
 
 // -- parsing --------------------------------------------------------------------------
 ok("the documented line parses into seq, code and description", (() => {
@@ -43,7 +43,7 @@ ok("the description matches the Worker PHN element at full confidence", (() => {
   const m = matchDescriptionToElements(parseReturnLine(DOC_LINE).description, ELEMENTS);
   return m.element === "Worker Personal Health Number" && m.confidence === 1;
 })());
-ok("Worker 36 scores below Worker PHN (the word Worker 36 is absent)", (() => {
+ok("Alberta PHN scores below Worker PHN (the word Alberta is absent)", (() => {
   const m = matchDescriptionToElements("Worker Personal Health Number must be BLANK", ELEMENTS);
   return m.element === "Worker Personal Health Number";
 })());
@@ -68,17 +68,17 @@ ok("criterion 9: a catalogue growth record is created for each unmapped code", r
 ok("the unmapped count and unparsed lines are carried through", rEmpty.unmappedCount === 2 && rEmpty.unparsed.length === 1);
 
 // -- reconcile against a catalogue that trusts a code: it resolves to its element -------
-const trusted = indexErrorCatalogue([{ jurisdiction_code: "AB", board_code: "121023", element_name: "Worker 36 Personal Health Number", confidence: 0.95 }]);
+const trusted = indexErrorCatalogue([{ jurisdiction_code: "AB", board_code: "121023", element_name: "Alberta Personal Health Number", confidence: 0.95 }]);
 const rTrusted = reconcileReturnFile(parsed, trusted, { jurisdiction: "AB", elementNames: ELEMENTS });
 ok("a trusted code resolves to its element, the other stays unmapped", (() => {
   const mapped = rTrusted.results.find((r) => r.code === "121023");
   const other = rTrusted.results.find((r) => r.code === "100044");
-  return mapped.status === "mapped" && mapped.element === "Worker 36 Personal Health Number" && other.status === "unmapped";
+  return mapped.status === "mapped" && mapped.element === "Alberta Personal Health Number" && other.status === "unmapped";
 })());
 ok("a trusted mapping creates no growth record for that code", !rTrusted.catalogueGrowth.some((g) => g.board_code === "121023"));
 
 // -- below the floor is treated as unmapped -------------------------------------------
-const lowConf = indexErrorCatalogue([{ jurisdiction_code: "AB", board_code: "121023", element_name: "Worker 36 Personal Health Number", confidence: 0.5 }]);
+const lowConf = indexErrorCatalogue([{ jurisdiction_code: "AB", board_code: "121023", element_name: "Alberta Personal Health Number", confidence: 0.5 }]);
 ok("a catalogue entry below the 0.80 floor is unmapped and surfaced", reconcileReturnFile(parsed, lowConf, { jurisdiction: "AB", elementNames: ELEMENTS }).results.find((r) => r.code === "121023").status === "unmapped");
 
 // -- the submission result ------------------------------------------------------------

@@ -170,7 +170,7 @@ Q: "Can the employer or the board see this screen?" A: "No. This surface exists 
 
 **Milestone alerts.** "Plain-words nudges like: return to work milestone approaching. Enough to keep a claim moving, nothing more."
 
-**The channels.** "Here is the honest map of how paperwork travels in Canada. Three boards can accept machine submissions: Ontario, through a business to business XML channel that returns a confirmation number, plus British Columbia and Worker 36 with their own formats. The other nine boards work portal assist: Continuum prepares the paperwork perfectly, and a person submits it on the board's own website. We show you which is which, because pretending everything is automated would be a lie with a nice interface."
+**The channels.** "Here is the honest map of how paperwork travels in Canada. Three boards can accept machine submissions: Ontario, through a business to business XML channel that returns a confirmation number, plus British Columbia and Alberta with their own formats. The other nine boards work portal assist: Continuum prepares the paperwork perfectly, and a person submits it on the board's own website. We show you which is which, because pretending everything is automated would be a lie with a nice interface."
 
 **The honest retrieval answer.** "And one more piece of honesty that surprises people: no compensation board in Canada offers a way for software to pull claim data back out. Nobody's software can do it, including ours. So anything flowing back, like rebates or claim outcomes, is labeled as an estimate on our screens until a person confirms the real number. When a vendor tells you their system syncs both ways with a board, ask them how."
 

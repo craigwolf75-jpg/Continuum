@@ -138,7 +138,7 @@ because a disclosure made last March is evaluated against last March, `recipient
 one recipient is not consent for another. `never_asked` is distinct from `refused`. Do not cache the
 answer across a request. Revocation is a new ledger entry and is not retroactive.
 
-The Worker 36 rule that must not be got wrong: the statutory duty to report to the board survives a
+The Alberta rule that must not be got wrong: the statutory duty to report to the board survives a
 refusal and requires no consent, so a `refused` or `revoked` state must not block a board submission.
 Employer disclosure does require consent: a missing, refused or revoked consent blocks the release
 path unconditionally. This split is a jurisdiction profile, not a constant, and does not hold in

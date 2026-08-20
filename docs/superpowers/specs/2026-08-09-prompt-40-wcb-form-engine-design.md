@@ -2,7 +2,7 @@
 
 Status: DESIGN. The schema and loader in Sections 2 and 3 are apply ready now (this prompt is self
 contained). The rule transcription in Section 5 is a manual critical path, scoped here, not done here.
-Date: 2026-08-09. Source of truth: WCB Worker 36 Vendor Accreditation Package, verified present on
+Date: 2026-08-09. Source of truth: WCB Alberta Vendor Accreditation Package, verified present on
 2026-08-09 at D:\Continuim\Continuum\Continuum\VendorAccreditationPackage (1).zip (40 entries, all
 referenced files present). Mapping workbook 3 - WCB Report Element to HL7 Element Mapping.xlsx opened,
 43 worksheets confirmed by reading xl/workbook.xml.
@@ -119,8 +119,8 @@ create table if not exists clinical.statutory_holiday (
   name varchar(80) not null, primary key (jurisdiction_code, holiday_date));
 ```
 
-Seed `jurisdiction` with AB active, every other province inactive (Worker 36 is row one, not the
-schema). Seed `wcb_fee_schedule` with the Worker 36 general practitioner rates effective 2025-04-01
+Seed `jurisdiction` with AB active, every other province inactive (Alberta is row one, not the
+schema). Seed `wcb_fee_schedule` with the Alberta general practitioner rates effective 2025-04-01
 (C050E same_day 96.98, on_time 88.37, late 55.70; C151 same_day 58.91, on_time 53.69, late 33.85),
 loaded as data, never hard coded elsewhere. These change annually.
 
@@ -228,7 +228,7 @@ load_workbook(xlsx_path, source_version):
       insert clinical.wcb_code_value (list_id, list_name, code, description, sort_order, extra)
         extra carries per row flags (side_of_body_required, expedite_allowed, ...)
   load clinical.wcb_pob_noi_forbidden from POB-NOI Validations
-    (Worker 36, expect EXACTLY 380 rows: row 1 title, row 2 header, 380 data rows; report the count)
+    (Alberta, expect EXACTLY 380 rows: row 1 title, row 2 header, 380 data rows; report the count)
   load clinical.wcb_contract_role and clinical.wcb_contract_role_form from Contract ID Role Form ID Codes
     (32 source rows, split comma lists into 66 normalised rows over 14 contract and role pairs)
 ```
@@ -238,7 +238,7 @@ Report on completion: worksheets seen (expect 43), POB-NOI rows (expect 380), co
 
 ### 3.3 Contract role facts that catch you out (Prompt 40 Section 2.2)
 
-- Genuine crossover: contract 000065 Worker 36 Hospitals may create a C568 follow up from a C050E or a
+- Genuine crossover: contract 000065 Alberta Hospitals may create a C568 follow up from a C050E or a
   C151, neither of which it can create as an initial report. Do not build a rule requiring same
   contract ancestry.
 - Two roles in `wcb_contract_role` (HP Hospital, NP Nurse Practitioners) are not in the nine
@@ -307,7 +307,7 @@ verification is not done.
 ### 5.3 The board reuses rule codes within one document (Prompt 40 Section 4.2)
 
 In `2.01 - C050E - User Interface Design.pdf`, BR5 appears twice with unrelated meanings (page 1 the
-Worker 36 rule, page 2 the part and side combination rule). The unique key includes source_page and
+Alberta PHN rule, page 2 the part and side combination rule). The unique key includes source_page and
 ordinal; `rule_code` alone is never a key.
 
 ### 5.4 Mandatory clearing behaviour (Prompt 40 Section 4.3)
@@ -384,7 +384,7 @@ Client side validation is a courtesy. Server side validation is the contract. Ne
 
 | ID | Rule | Source |
 |---|---|---|
-| VAL-X01 | Worker 36 blank when the no PHN indicator is Yes, present when No | C050E BR5 page 1 |
+| VAL-X01 | Alberta PHN blank when the no PHN indicator is Yes, present when No | C050E BR5 page 1 |
 | VAL-X02 | Side of body required where the part of body flag says so | Part Of Body Codes, Side of Body Required |
 | VAL-X03 | Part of body and nature of injury not among the 380 forbidden pairs | POB-NOI Validations |
 | VAL-X04 | Each combination of part, side and nature in the injury table must be unique | C050E BR3 |
@@ -402,7 +402,7 @@ document page as rules that were captured. Acceptance criteria 13 (X04) and 14 (
 
 ### 6.3 The PHN polarity inversion (Prompt 40 Section 5.3). A production rejection if missed.
 
-The board element is "Patient does not have an Worker 36". Yes means the patient has NO PHN. The New
+The board element is "Patient does not have an Alberta PHN". Yes means the patient has NO PHN. The New
 XPath target is `/.../Claimant/HavePersonalHealthNumber/`, whose name is the inverse. Emitting `Y` into
 `HavePersonalHealthNumber` when the patient has no PHN produces the real rejection "Worker Personal
 Health Number must be BLANK since Worker Personal Health Number Indicator is No". Put a comment at the
@@ -428,7 +428,7 @@ mapping, invert deliberately, add a test. Acceptance criterion 15.
 
 1. Loader reports 43 worksheets and loads every lookup list including Yes No Responses. Proven at load.
    (Confirmed 43 on 2026-08-09 by reading workbook.xml.)
-2. `wcb_pob_noi_forbidden` contains exactly 380 Worker 36 rows. `select count(*) ...`. Report the number.
+2. `wcb_pob_noi_forbidden` contains exactly 380 Alberta rows. `select count(*) ...`. Report the number.
 3. `wcb_contract_role_form` reports 32 source rows and 66 normalised rows over 14 pairs.
 4. All eight form definitions load with the Section 4.1 counts. Any mismatch reported before proceeding.
 5. No stored code has a leading or trailing space:
@@ -447,7 +447,7 @@ mapping, invert deliberately, add a test. Acceptance criterion 15.
 12. A run with five distinct errors reports all five, each against its element.
 13. Two identical part, side, nature injury rows are rejected under VAL-X04.
 14. Dominant hand enabled for Shoulder, disabled for Back, per VAL-X07.
-15. A patient with no Worker 36 yields a correct `HavePersonalHealthNumber`, with a test asserting
+15. A patient with no Alberta PHN yields a correct `HavePersonalHealthNumber`, with a test asserting
     the inversion.
 16. Every C050S element hidden by an applicable rule but marked Always Required generates an exemption
     log record.

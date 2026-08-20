@@ -62,7 +62,7 @@ ok("phnFields: an absent PHN gives indicator Y and a blank", (() => { const p = 
 
 // -- an absent PHN writes indicator Y and a blank CX.1 -----------------------
 {
-  const u = populatePID(templateUnit, { name: "Worker 83", phn: "" }, {});
+  const u = populatePID(templateUnit, { name: "No Phn", phn: "" }, {});
   ok("an absent PHN writes indicator Y and leaves CX.1 present and empty", val(u, "PID.3", "CX.5") === "Y" && /<PID\.3>[\s\S]*?<CX\.1\s*\/>/.test(u));
 }
 

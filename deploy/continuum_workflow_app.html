@@ -198,11 +198,11 @@ input[type=text],select{width:100%;background:var(--chipbg);border:1px solid var
       <thead><tr><th>Record</th><th>Produced by</th><th>Consumed by</th><th>Guard</th></tr></thead>
       <tbody>
         <tr><td class="mono">injuries.status</td><td>Status machine only</td><td>Every section (badge, map node, gating of actions)</td><td>Transition table; only listed role advances; prior_status recorded on escalate</td></tr>
-        <tr><td class="mono">recovery_logs</td><td>Worker check-in</td><td>HSE scores, Worker 44 monitor, Escalation engine, Employer KPIs (counts only)</td><td>Employer projection strips pain, mobility, notes before render</td></tr>
+        <tr><td class="mono">recovery_logs</td><td>Worker check-in</td><td>HSE scores, Clinic monitor, Escalation engine, Employer KPIs (counts only)</td><td>Employer projection strips pain, mobility, notes before render</td></tr>
         <tr><td class="mono">restrictions</td><td>Physician sign-off</td><td>Employer table, HSE duty assignment (read-only), Worker duties header</td><td>Set by clinic_physician only; HSE has no write path</td></tr>
         <tr><td class="mono">light_duties</td><td>HSE assignment</td><td>Worker duties list, Employer RTW progress, HSE confirmations</td><td>Valid only in light_duty status</td></tr>
-        <tr><td class="mono">escalations</td><td>Escalation engine (3 rules)</td><td>Worker 44 alert panel, Workflow map, Audit</td><td>Never advances medical status; Worker 44 reassess resolves</td></tr>
-        <tr><td class="mono">wcb_notifications</td><td>Status machine auto-actions</td><td>WCB view, Worker 44 (FFW), Employer (initial package)</td><td>Lifecycle pending, generated, submitted, acknowledged. Document tracking, not an API</td></tr>
+        <tr><td class="mono">escalations</td><td>Escalation engine (3 rules)</td><td>Clinic alert panel, Workflow map, Audit</td><td>Never advances medical status; Clinic reassess resolves</td></tr>
+        <tr><td class="mono">wcb_notifications</td><td>Status machine auto-actions</td><td>WCB view, Clinic (FFW), Employer (initial package)</td><td>Lifecycle pending, generated, submitted, acknowledged. Document tracking, not an API</td></tr>
         <tr><td class="mono">consents</td><td>Worker consent gate</td><td>Worker app (blocks entry until granted)</td><td>Timestamped, revocable in More</td></tr>
         <tr><td class="mono">audit_log</td><td>Every transition</td><td>Audit section</td><td>Append only</td></tr>
       </tbody>
@@ -213,7 +213,7 @@ input[type=text],select{width:100%;background:var(--chipbg);border:1px solid var
       <div class="kicker">Visibility projections</div>
       <h3 style="margin:6px 0 10px">What each role's view can even read</h3>
       <table>
-        <thead><tr><th>Field</th><th>Worker</th><th>HSE</th><th>Employer</th><th>WCB</th><th>Worker 44</th></tr></thead>
+        <thead><tr><th>Field</th><th>Worker</th><th>HSE</th><th>Employer</th><th>WCB</th><th>Clinic</th></tr></thead>
         <tbody>
           <tr><td>Diagnosis notes</td><td>summary</td><td>no</td><td>no</td><td>no</td><td>yes</td></tr>
           <tr><td>Pain and mobility</td><td>own</td><td>yes</td><td>no</td><td>yes</td><td>yes</td></tr>
@@ -265,13 +265,13 @@ const TASKS = [
   {t:"Site orientation walkthroughs", d:"Walking pace, no lifting"}
 ];
 const OTHERS = [
-  {name:"Worker 60", trade:"Pipefitter", ref:"CT-2026-0476", type:"Laceration", status:"light_duty", days:14, visits:3, rtw:70},
-  {name:"Worker 42", trade:"Electrician", ref:"CT-2026-0468", type:"Ankle sprain", status:"full_duty_pending", days:24, visits:4, rtw:92},
+  {name:"Worker 58", trade:"Pipefitter", ref:"CT-2026-0476", type:"Laceration", status:"light_duty", days:14, visits:3, rtw:70},
+  {name:"Worker 41", trade:"Electrician", ref:"CT-2026-0468", type:"Ankle sprain", status:"full_duty_pending", days:24, visits:4, rtw:92},
   {name:"Worker 24", trade:"Ironworker", ref:"CT-2026-0471", type:"Low back strain", status:"off_work", days:6, visits:2, rtw:20},
   {name:"Worker 18", trade:"Labourer", ref:"CT-2026-0459", type:"Knee contusion", status:"light_duty", days:19, visits:3, rtw:78},
-  {name:"Worker 62", trade:"Welder", ref:"CT-2026-0463", type:"Wrist strain", status:"light_duty", days:11, visits:2, rtw:55},
-  {name:"Worker 54", trade:"Crane operator", ref:"CT-2026-0450", type:"Shoulder strain", status:"signed_off", days:31, visits:5, rtw:100},
-  {name:"Worker 65", trade:"Scaffolder", ref:"CT-2026-0481B", type:"Heat stress", status:"signed_off", days:9, visits:1, rtw:100}
+  {name:"Worker 60", trade:"Welder", ref:"CT-2026-0463", type:"Wrist strain", status:"light_duty", days:11, visits:2, rtw:55},
+  {name:"Worker 52", trade:"Crane operator", ref:"CT-2026-0450", type:"Shoulder strain", status:"signed_off", days:31, visits:5, rtw:100},
+  {name:"Worker 63", trade:"Scaffolder", ref:"CT-2026-0481B", type:"Heat stress", status:"signed_off", days:9, visits:1, rtw:100}
 ];
 const TRANSITIONS = [
   {from:"reported", to:"off_work", role:"system", label:"First check-in received"},
@@ -317,7 +317,7 @@ function seedDay9(){
     {type:"light_duty", status:"submitted", day:5, note:"Modified duty start, duties description, restrictions"}
   ];
   s.audit = [
-    {day:0, actor:"system", from:"(intake)", to:"reported", label:"Case created from Worker 44 intake"},
+    {day:0, actor:"system", from:"(intake)", to:"reported", label:"Case created from Clinic intake"},
     {day:1, actor:"system", from:"reported", to:"off_work", label:"First check-in received"},
     {day:5, actor:"clinic_physician", from:"off_work", to:"light_duty", label:"Physician sign-off for modified duty"}
   ];
@@ -328,7 +328,7 @@ function seedNew(){
   s.signedIn = false;
   s.day = 0; s.checkins = []; s.consent = {granted_at:null};
   s.marcus.status = "reported"; s.marcus.restrictions = ""; s.duties = [];
-  s.wcb = []; s.audit = [{day:0, actor:"system", from:"(intake)", to:"reported", label:"Case created from Worker 44 intake"}];
+  s.wcb = []; s.audit = [{day:0, actor:"system", from:"(intake)", to:"reported", label:"Case created from Clinic intake"}];
   return s;
 }
 function seedEsc(){
@@ -394,7 +394,7 @@ function transition(to, actorRole){
   m.status = dest;
   S.audit.push({day:S.day, actor:actorRole, from, to:dest, label:rule.label});
   autoActions(dest);
-  pushEvent("Status: "+STATUS_LABEL[from]+" to "+STATUS_LABEL[dest]+" ("+actorRole+")", ["Map","Worker","Employer","HSE","Worker 44","WCB","Audit"]);
+  pushEvent("Status: "+STATUS_LABEL[from]+" to "+STATUS_LABEL[dest]+" ("+actorRole+")", ["Map","Worker","Employer","HSE","Clinic","WCB","Audit"]);
   save();
   return true;
 }
@@ -421,7 +421,7 @@ function submitCheckin(pain, mobility, fatigue, confidence, notes){
   S.checkins.push({day:S.day, period, pain, mobility, fatigue, confidence, notes});
   S.checkedIn[S.day+period] = true;
   if(S.marcus.visits===2 && S.checkins.length%6===0) S.marcus.visits++;
-  pushEvent("Check-in "+period+" saved (day "+S.day+")", ["HSE scores","Worker 44 monitor","Escalation engine","Employer KPIs"]);
+  pushEvent("Check-in "+period+" saved (day "+S.day+")", ["HSE scores","Clinic monitor","Escalation engine","Employer KPIs"]);
   if(S.marcus.status==="reported"){ transition("off_work","system"); return; }
   evaluateEscalation();
   save();
@@ -450,7 +450,7 @@ function evaluateEscalation(){
   if(trigger){
     S.escalations.push({day:S.day, trigger, resolved:false});
     transition("escalated","system");
-    pushEvent("Escalation raised: "+trigger, ["Worker 44 alerts","Map","Audit"]);
+    pushEvent("Escalation raised: "+trigger, ["Clinic alerts","Map","Audit"]);
   }
 }
 
@@ -586,16 +586,16 @@ function renderMap(){
       flow:"Feeds: Worker app, WCB initial package. Contract: POST /v1/cases"},
     {id:"checkin", n:"B", title:"Worker check-ins, twice a day", desc:"Pain and mobility sliders plus notes. The first check-in moves the case to Off work automatically. Every check-in feeds four sections at once.",
       here:["off_work"].includes(m.status), done:!["reported","off_work"].includes(m.status), open:["worker","Open check-in"],
-      flow:"Feeds: HSE scores, Worker 44 monitor, Escalation engine, Employer counts"},
+      flow:"Feeds: HSE scores, Clinic monitor, Escalation engine, Employer counts"},
     {id:"employer", n:"C", title:"Employer dashboard, functional only", desc:"Status, restrictions, and return progress. Pain scores, diagnosis, and worker notes never reach this section: the projection strips them before render.",
       here:false, done:true, open:["hub","Open employer view"],
       flow:"Receives: status machine, restrictions, duty completions. Never receives: scores, diagnosis, notes"},
     {id:"esc", n:"D", title:"Escalation engine", desc:"Three rules watch every check-in: pain 8 or higher three times in a row, mobility declining across two days, or red-flag wording in notes. A trigger routes the case to the clinician and never advances medical status.",
-      here:m.status==="escalated", done:S.escalations.some(e=>e.resolved), open:["hub","Open Worker 44 alerts"],
-      flow:"Feeds: Worker 44 alerts. Resolved only by reassess"},
+      here:m.status==="escalated", done:S.escalations.some(e=>e.resolved), open:["hub","Open Clinic alerts"],
+      flow:"Feeds: Clinic alerts. Resolved only by reassess"},
     {id:"duties", n:"E", title:"Physician sign-off and light duties", desc:"The physician publishes restrictions; HSE assigns duties that fit them (restrictions are read-only to HSE); the worker checks duties off in the app.",
       here:m.status==="light_duty", done:["full_duty_pending","signed_off"].includes(m.status), open:["hub","Open HSE view"],
-      flow:"Worker 44 sets restrictions, HSE assigns within them, Worker confirms, Employer sees progress"},
+      flow:"Clinic sets restrictions, HSE assigns within them, Worker confirms, Employer sees progress"},
     {id:"wcb", n:"F", title:"WCB documents and sign-off", desc:"Milestones generate the three WCB document packages for the responsible person to file through the existing channel. Full-duty sign-off generates the fitness for work form; the employer confirms return and the case closes.",
       here:m.status==="full_duty_pending", done:m.status==="signed_off", open:["hub","Open WCB view"],
       flow:"Lifecycle: pending, generated, submitted, acknowledged. Document tracking, not an API"}
@@ -686,7 +686,7 @@ function renderWorker(){
   root.className="phone w-app";
   root.innerHTML =
     '<div class="sechead"><div><div class="kicker">Section 2 of 5: The worker app</div><h1>Hi Worker 15</h1>'+
-    '<div class="xref"><span class="chip"><b>Feeds</b> HSE, Worker 44, Escalation, Employer counts</span><span class="chip"><b>Receives</b> restrictions, duties</span></div></div></div>'+
+    '<div class="xref"><span class="chip"><b>Feeds</b> HSE, Clinic, Escalation, Employer counts</span><span class="chip"><b>Receives</b> restrictions, duties</span></div></div></div>'+
     body+
     '<div class="appts">'+["today","history","duties","more"].map(t=>'<button class="'+(tab===t?'active':'')+'" onclick="S.workerTab=\''+t+'\';save()">'+t[0].toUpperCase()+t.slice(1)+'</button>').join("")+'</div>';
 }
@@ -740,7 +740,7 @@ function employerView(){
   (S.marcus.status==="full_duty_pending" ? '<div class="card" style="border-color:var(--gold)"><div class="kicker">Action needed</div><h3 style="margin:6px 0">Confirm Worker 15’s return to full duty</h3><p class="note">The clinician has cleared him. Confirming closes the case and generates the final WCB package.</p><div style="margin-top:10px"><button class="btn" onclick="transition(\'signed_off\',\'employer_admin\')">Confirm return</button></div></div>' : '')+
   '<div class="card" style="overflow-x:auto"><table><thead><tr><th>Worker</th><th>Injury type</th><th>Days</th><th>Visits</th><th>Status</th><th>Restrictions</th><th>Return progress</th></tr></thead><tbody>'+
   all.map(w=>'<tr'+(w.live?' style="background:rgba(200,151,47,.05)"':'')+'><td><b>'+esc(w.name)+'</b><div class="note">'+esc(w.trade)+'</div></td><td>'+esc(w.type)+'</td><td>'+w.days+'</td><td>'+w.visits+'</td><td>'+statusBadge(w.status)+'</td><td>'+esc(w.restr||"")+'</td><td>'+w.rtw+'%</td></tr>').join("")+
-  '</tbody></table><p class="note" style="margin-top:10px">This view carries no pain scores, no diagnosis, and no worker notes. The Worker 36 framing here is claim cost and premium impact; provinces with statutory duties would show compliance framing instead.</p></div>';
+  '</tbody></table><p class="note" style="margin-top:10px">This view carries no pain scores, no diagnosis, and no worker notes. The Alberta framing here is claim cost and premium impact; provinces with statutory duties would show compliance framing instead.</p></div>';
 }
 function hseView(){
   const p = projHSE();

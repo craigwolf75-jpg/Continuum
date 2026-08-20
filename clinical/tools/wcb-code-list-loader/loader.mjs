@@ -1,4 +1,4 @@
-/* Continuum Prompt 40 increment 1: WCB Worker 36 code list loader and verifier.
+/* Continuum Prompt 40 increment 1: WCB Alberta code list loader and verifier.
 
    Reads the accreditation mapping workbook (3 - WCB Report Element to HL7 Element
    Mapping.xlsx) and reports the acceptance criteria facts from Prompt 40 Section 8
@@ -103,7 +103,7 @@ for (const f of FORM_SHEETS) {
 }
 line("  [C4] all eight match: " + c4allMatch);
 
-// Criterion 2: POB-NOI Validations Worker 36 data rows (expect 380; row 1 title, row 2 header).
+// Criterion 2: POB-NOI Validations Alberta data rows (expect 380; row 1 title, row 2 header).
 line("");
 const pob = wb.Sheets["POB-NOI Validations"];
 if (pob) {

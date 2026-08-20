@@ -152,7 +152,7 @@ Keep `opportunity_weights` RLS-enabled with no anon/authenticated policy. Dash-c
 
 **Files:**
 - Modify: `deploy/assessment/assessment.js`
-- Worker 44: `deploy/assessment-engagement.test.mjs`
+- Test: `deploy/assessment-engagement.test.mjs`
 
 **Interfaces:**
 - Consumes the `response_id` returned by the existing save. Adds, to the Stage 2 detailed result, two CTAs that call `record_engagement` best effort.

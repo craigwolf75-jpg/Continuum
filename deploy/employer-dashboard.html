@@ -147,18 +147,18 @@ var WORKERS=[
 {name:"Worker 19",role:"Shipper",injury:"Hip strain",cat:"strain",days:5,status:"treating",restr:"No prolonged standing",review:"Jun 26, 2026",rtw:10,visits:2,loc:"Other"},
 {name:"Worker 30",role:"Rigger",injury:"Calf strain",cat:"strain",days:5,status:"light_duty",restr:"Ground-level work only",review:"Jun 26, 2026",rtw:20,visits:1,loc:"Field Crew"},
 {name:"Worker 25",role:"Picker",injury:"Shoulder strain",cat:"strain",days:6,status:"treating",restr:"No overhead reach",review:"Jun 27, 2026",rtw:20,visits:1,loc:"Warehouse A"},
-{name:"Worker 37",role:"Yard hand",injury:"Groin strain",cat:"strain",days:7,status:"light_duty",restr:"No heavy pushing or pulling",review:"Jun 27, 2026",rtw:25,visits:1,loc:"Other"},
-{name:"Worker 43",role:"Inspector",injury:"Low back strain",cat:"back",days:10,status:"treating",restr:"No lifting over 15 lbs",review:"Jun 28, 2026",rtw:35,visits:2,loc:"Warehouse C"},
+{name:"Worker 36",role:"Yard hand",injury:"Groin strain",cat:"strain",days:7,status:"light_duty",restr:"No heavy pushing or pulling",review:"Jun 27, 2026",rtw:25,visits:1,loc:"Other"},
+{name:"Worker 42",role:"Inspector",injury:"Low back strain",cat:"back",days:10,status:"treating",restr:"No lifting over 15 lbs",review:"Jun 28, 2026",rtw:35,visits:2,loc:"Warehouse C"},
 {name:"Worker 01",role:"Loader",injury:"Knee strain",cat:"knee",days:12,status:"treating",restr:"No kneeling or squatting",review:"Jun 29, 2026",rtw:30,visits:2,loc:"Site B"},
-{name:"Worker 51",role:"Sorter",injury:"Thumb strain",cat:"hand",days:14,status:"light_duty",restr:"Use adaptive tooling",review:"Jun 30, 2026",rtw:45,visits:2,loc:"Warehouse A"},
+{name:"Worker 49",role:"Sorter",injury:"Thumb strain",cat:"hand",days:14,status:"light_duty",restr:"Use adaptive tooling",review:"Jun 30, 2026",rtw:45,visits:2,loc:"Warehouse A"},
 {name:"Worker 09",role:"Maintenance",injury:"Back strain",cat:"back",days:18,status:"light_duty",restr:"No lifting over 20 lbs",review:"Jul 1, 2026",rtw:55,visits:2,loc:"Warehouse C"},
 {name:"Worker 34",role:"Machine operator",injury:"Shoulder strain",cat:"shoulder",days:22,status:"light_duty",restr:"No work above chest height",review:"Jul 2, 2026",rtw:60,visits:3,loc:"Warehouse C"},
-{name:"Worker 40",role:"Electrician helper",injury:"Hamstring strain",cat:"strain",days:26,status:"light_duty",restr:"Limited climbing",review:"Jul 3, 2026",rtw:65,visits:3,loc:"Field Crew"},
+{name:"Worker 39",role:"Electrician helper",injury:"Hamstring strain",cat:"strain",days:26,status:"light_duty",restr:"Limited climbing",review:"Jul 3, 2026",rtw:65,visits:3,loc:"Field Crew"},
 {name:"Worker 26",role:"Cleaner",injury:"Elbow strain",cat:"strain",days:29,status:"light_duty",restr:"No repetitive wiping motions",review:"Jul 4, 2026",rtw:70,visits:3,loc:"Other"},
 {name:"Worker 22",role:"Carpenter",injury:"Back strain",cat:"back",days:35,status:"light_duty",restr:"No lifting over 10 lbs",review:"Jul 5, 2026",rtw:70,visits:3,loc:"Site B"},
 {name:"Worker 21",role:"Press operator",injury:"Shoulder strain",cat:"shoulder",days:45,status:"light_duty",restr:"One-handed tasks only",review:"Jul 6, 2026",rtw:75,visits:3,loc:"Warehouse A"},
 {name:"Worker 10",role:"Boilermaker",injury:"Knee strain",cat:"knee",days:52,status:"modified",restr:"Seated work station",review:"Jul 7, 2026",rtw:80,visits:4,loc:"Field Crew"},
-{name:"Worker 71",role:"Technician",injury:"Strain, multiple",cat:"strain",days:58,status:"light_duty",restr:"Half days, light bench work",review:"Jul 8, 2026",rtw:80,visits:3,loc:"Warehouse A"},
+{name:"Worker 69",role:"Technician",injury:"Strain, multiple",cat:"strain",days:58,status:"light_duty",restr:"Half days, light bench work",review:"Jul 8, 2026",rtw:80,visits:3,loc:"Warehouse A"},
 {name:"Worker 06",role:"Warehouse lead",injury:"Back strain",cat:"back",days:75,status:"light_duty",restr:"Supervisory duties only",review:"Jul 10, 2026",rtw:85,visits:3,loc:"Site B"},
 {name:"Worker 31",role:"Order builder",injury:"Other, gradual onset",cat:"other",days:102,status:"light_duty",restr:"Administrative duties",review:"Jul 12, 2026",rtw:90,visits:3,loc:"Other"}
 ];
@@ -175,7 +175,7 @@ var NAV=[["overview","Overview",null],
 ["users","Users & Roles","g"],["settings","Settings","g"],["integrations","Integrations","g"]];
 var S;
 function freshState(){return {workers:JSON.parse(JSON.stringify(WORKERS)),returned:[],section:"overview",filter:null,catFilter:null,search:"",audit:[],notes:[
- {who:"Worker 61", when:"Jun 27, 2026", worker:"Worker 04", text:"Route adjusted to local deliveries only. Duties confirmed manageable."},
+ {who:"Worker 59", when:"Jun 27, 2026", worker:"Worker 04", text:"Route adjusted to local deliveries only. Duties confirmed manageable."},
  {who:"Site HSE", when:"Jun 26, 2026", worker:"Worker 12", text:"Ground-level staging assigned. Hazard check complete."}
 ]};}
 function load(){try{var raw=localStorage.getItem(LSKEY);if(raw){var s=JSON.parse(raw);if(s&&s.workers){S=s;return;}}}catch(e){}S=freshState();}
@@ -269,7 +269,7 @@ function presentBtn(){var on=(window.ContinuumPresenter&&ContinuumPresenter.isOn
 function presentToggle(){if(window.ContinuumPresenter){ContinuumPresenter.toggle();render();}}
 function pagehead(kick,title,sub,tools){
  return '<div class="pagehead"><div><div class="kicker">'+kick+'</div><h1>'+title+'</h1><div class="sub">'+sub+'</div></div>'+
- '<div class="htools">'+(LIVE?'<div class="livechip">Worker feed: Live</div>':'')+''+(S.org?'<div class="range">Pilot period</div><div class="who">'+esc(S.org.contacts.coordinatorName)+' &middot; '+esc(S.org.organization.commonName||S.org.organization.legalName)+'</div>':'<div class="range">Jun 22 to Jun 29, 2026</div><div class="who">Worker 61 &middot; Sample Employer Co.</div>')+'<div class="hbtns" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px">'+presentBtn()+(tools||"")+'</div></div></div>';}
+ '<div class="htools">'+(LIVE?'<div class="livechip">Worker feed: Live</div>':'')+''+(S.org?'<div class="range">Pilot period</div><div class="who">'+esc(S.org.contacts.coordinatorName)+' &middot; '+esc(S.org.organization.commonName||S.org.organization.legalName)+'</div>':'<div class="range">Jun 22 to Jun 29, 2026</div><div class="who">Worker 59 &middot; Sample Employer Co.</div>')+'<div class="hbtns" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px">'+presentBtn()+(tools||"")+'</div></div></div>';}
 function chipFor(st){return '<span class="chip c-'+st+'">'+STATUS_META[st][0]+'</span>';}
 function rtwBar(v){return '<div style="display:flex;align-items:center;gap:8px"><div class="pbar'+(v>=100?" full":"")+'" style="flex:1"><i style="width:'+v+'%"></i></div><span style="font-size:11px;color:var(--muted);width:32px">'+v+'%</span></div>';}
 /* ---------- overview ---------- */
@@ -478,7 +478,7 @@ function renderNotes(){
  return h;}
 function addNote(){
  var w=document.getElementById("noteWorker").value,t=document.getElementById("noteText").value.trim();
- if(!t)return;S.notes.unshift({who:"Worker 61",when:"Jun 29, 2026",worker:w,text:t});toast("Note added");save();}
+ if(!t)return;S.notes.unshift({who:"Worker 59",when:"Jun 29, 2026",worker:w,text:t});toast("Note added");save();}
 function raiseConcern(){
  var w=document.getElementById("concWorker").value,t=document.getElementById("concText").value.trim();
  if(!t)return;
@@ -513,7 +513,7 @@ function renderBenchmarking(){
 function adminCard(title,rows){return '<div class="card" style="margin-bottom:12px"><div class="cardhead">'+title+'</div>'+rows.map(function(r){return '<div class="admin-row"><div><b style="font-size:12.5px">'+r[0]+'</b><div style="color:var(--muted);font-size:11.5px">'+r[1]+'</div></div><span class="pill'+(r[2]?"":" off")+'">'+(r[2]?"active":"off")+'</span></div>';}).join("")+'</div>';}
 function renderUsers(){
  return pagehead("Admin","Users &amp; Roles","Who can see this workspace")+
- adminCard("Workspace members",[["Worker 61 &middot; Employer admin","Full functional view, confirms returns",true],["Site HSE (2 seats)","Duty assignment, scores visible for operational need",true],["Finance (read only)","Cost and time loss summaries",true]])+
+ adminCard("Workspace members",[["Worker 59 &middot; Employer admin","Full functional view, confirms returns",true],["Site HSE (2 seats)","Duty assignment, scores visible for operational need",true],["Finance (read only)","Cost and time loss summaries",true]])+
  '<div class="card"><div class="cardhead">Role law</div><p style="font-size:12.5px">Employer roles never carry pain scores, diagnosis, notes, or photos. That rule is enforced below the interface, in what each role\'s view can read at all.</p></div>';}
 function renderSettings(){
  return pagehead("Admin","Settings","Workspace configuration")+

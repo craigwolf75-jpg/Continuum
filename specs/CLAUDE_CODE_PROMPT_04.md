@@ -142,7 +142,7 @@ design phase's matrix:
 
 | Role (picker)      | Surfaces in its nav set        | Clinical data? |
 |--------------------|--------------------------------|----------------|
-| Coordinator (Worker 49) | H2 Overview, H3 Case-file      | Yes (care team)|
+| Coordinator (Worker 47) | H2 Overview, H3 Case-file      | Yes (care team)|
 | Supervisor (Frank) | H4 Supervisor                  | No - functional only |
 | HSE (Worker 32)        | H5 HSE                         | No - functional only |
 | Physician (Osei)   | H6 Physician (+ clearance panel)| Yes            |
@@ -161,7 +161,7 @@ status `light_duty`, onboarding **complete** (see below).
 
 Aggregates for the coordinator Overview: 28 / 18 / 24 / 64% / 76%,
 cost impact $142,680, time loss 624 hrs (carry the Prompt 03 evidence figures:
-63-day baseline WCB Worker 36 2024; 763,326 / 274,022 / 1,056 AWCBC 2023).
+63-day baseline WCB Alberta 2024; 763,326 / 274,022 / 1,056 AWCBC 2023).
 
 **Missing from the draft - add:** per-worker seed records for the eight named
 dashboard workers (Worker 03, Miller, Worker 17, Worker 04, Worker 14, Worker 12,
@@ -200,7 +200,7 @@ after a reset that chooses to replay it) - it must NOT block the day-9 demo.
     `<meta name="robots" content="noindex, nofollow">` + `<link rel="canonical"
     href="/">` head block. The landing page `/` stays the only indexable route.
 - Demo cast only (Mateo R., claim 2408841, Northline Industrial,
-  Worker 49/Worker 17/Dr. Osei/Frank/Worker 32, the eight dashboard workers). No real data.
+  Worker 47/Worker 17/Dr. Osei/Frank/Worker 32, the eight dashboard workers). No real data.
 
 ---
 

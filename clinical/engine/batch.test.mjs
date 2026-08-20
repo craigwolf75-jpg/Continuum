@@ -13,7 +13,7 @@ import {
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
-// concrete anchors: 2026-07-31 is a Friday, 2026-08-03 is a Monday (Worker 36 Heritage Day).
+// concrete anchors: 2026-07-31 is a Friday, 2026-08-03 is a Monday (Alberta Heritage Day).
 const FRI = "2026-07-31", MON_HOL = "2026-08-03", TUE = "2026-08-04";
 const holidays = new Set([MON_HOL]);
 const dow = (d) => new Date(d + "T00:00:00Z").getUTCDay();

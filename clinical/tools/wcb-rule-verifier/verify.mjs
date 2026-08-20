@@ -15,8 +15,8 @@ if (!path) { console.error("usage: node verify.mjs <sample.xml> [--obx <substrin
 const filter = process.argv.includes("--obx") ? process.argv[process.argv.indexOf("--obx") + 1] : null;
 const xml = readFileSync(path, "utf8");
 
-// PHN facts. CX.1 is the Worker 36 value; CX.5 is "patient does NOT have an
-// Worker 36" (Y or N). The board rejects a populated PHN when CX.5 = Y.
+// PHN facts. CX.1 is the Alberta PHN value; CX.5 is "patient does NOT have an
+// Alberta PHN" (Y or N). The board rejects a populated PHN when CX.5 = Y.
 function tag(name) {
   // returns the inner text of the first <name>...</name> or "" for a self closing <name/>
   const self = new RegExp("<" + name + "\\s*/>", "i");
@@ -53,7 +53,7 @@ const obx = extractObx();
 
 console.log("== verification: " + path.split(/[\\/]/).pop() + " ==");
 console.log("");
-console.log("[PHN] CX.1 (Worker 36 value) = " + JSON.stringify(cx1) +
+console.log("[PHN] CX.1 (Alberta PHN value) = " + JSON.stringify(cx1) +
             " ; CX.5 (does NOT have PHN? Y/N) = " + JSON.stringify(cx5));
 if (cx5 === "Y") {
   const ok = cx1 === "" || cx1 === null;

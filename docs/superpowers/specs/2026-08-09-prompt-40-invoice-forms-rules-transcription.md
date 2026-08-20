@@ -16,7 +16,7 @@ show/hide rules. This completes increment 2: all eight forms transcribed.
 
 ## Shared header sections (all four forms)
 
-- Participant Details: BR5 (Worker 36, one of the two required, PHN polarity inversion source).
+- Participant Details: BR5 (Alberta PHN, one of the two required, PHN polarity inversion source).
 - Accident Details: BR1 (Date of Injury <= current and >= date of birth). C568A also has HT1.
 
 ## C568 (Medical Invoice, 61 elements, 3 attachments)

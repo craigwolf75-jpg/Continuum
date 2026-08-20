@@ -1,5 +1,5 @@
 /* Continuum demo engine. Plain vanilla JS, no dependencies, no build step.
-   Shared by /app (worker) and /hub (HSE, Employer, Worker 44, WCB).
+   Shared by /app (worker) and /hub (HSE, Employer, Clinic, WCB).
    Source of truth: specs/Continuum_MVP_Wireframe_Reference_v2.md and
    specs/CONTINUUM_PROMPT_06.md. Governed by Prompt 05.
 
@@ -67,9 +67,9 @@
           physician: 'Attending Physician'
         }
       },
-      { id: 'w_okafor', name: 'D. Worker 60', job_title: 'Pipefitter', company: 'Employer B', case_ref: 'CT-2026-0463', body_part: 'Lower back', injury_type: 'msk_strain', status: 'off_work', days_off: 5, doctor_visits: 1, rtw_progress: 0.12, restriction: 'Awaiting assessment' },
-      { id: 'w_tremblay', name: 'Worker 42', job_title: 'Welder', company: 'Employer B', case_ref: 'CT-2026-0470', body_part: 'Left wrist', injury_type: 'msk_strain', status: 'light_duty', days_off: 1, doctor_visits: 2, rtw_progress: 0.68, restriction: 'No repetitive gripping' },
-      { id: 'w_novak', name: 'R. Worker 40', job_title: 'Electrician', company: 'Employer B', case_ref: 'CT-2026-0452', body_part: 'Right knee', injury_type: 'msk_strain', status: 'full_duty_pending', days_off: 0, doctor_visits: 3, rtw_progress: 0.9, restriction: 'Cleared, pending employer confirm' },
+      { id: 'w_okafor', name: 'D. Worker 58', job_title: 'Pipefitter', company: 'Employer B', case_ref: 'CT-2026-0463', body_part: 'Lower back', injury_type: 'msk_strain', status: 'off_work', days_off: 5, doctor_visits: 1, rtw_progress: 0.12, restriction: 'Awaiting assessment' },
+      { id: 'w_tremblay', name: 'Worker 41', job_title: 'Welder', company: 'Employer B', case_ref: 'CT-2026-0470', body_part: 'Left wrist', injury_type: 'msk_strain', status: 'light_duty', days_off: 1, doctor_visits: 2, rtw_progress: 0.68, restriction: 'No repetitive gripping' },
+      { id: 'w_novak', name: 'R. Worker 39', job_title: 'Electrician', company: 'Employer B', case_ref: 'CT-2026-0452', body_part: 'Right knee', injury_type: 'msk_strain', status: 'full_duty_pending', days_off: 0, doctor_visits: 3, rtw_progress: 0.9, restriction: 'Cleared, pending employer confirm' },
       { id: 'w_singh_p', name: 'P. Worker 33', job_title: 'Rigger', company: 'Employer B', case_ref: 'CT-2026-0448', body_part: 'Right ankle', injury_type: 'msk_strain', status: 'signed_off', days_off: 0, doctor_visits: 4, rtw_progress: 1, restriction: 'None' }
     ];
 
@@ -426,7 +426,7 @@
   function viewModel(role) {
     var s = load();
     var m = marcus(s);
-    // WCB notifications are NOT in the shared base: only the WCB and Worker 44
+    // WCB notifications are NOT in the shared base: only the WCB and Clinic
     // view-models carry them, on a need-to-know basis.
     var base = { role: role, day: s.day, case_status: s.case.status, restrictions: s.case.restrictions_published.slice() };
 

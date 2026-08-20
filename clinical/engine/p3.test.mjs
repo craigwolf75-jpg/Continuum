@@ -48,7 +48,7 @@ ok("stale: a confirmed carried forward value is accepted", checkNoStaleCarried([
 const cleanForm = {
   id: "C050S",
   elements: [
-    { id: "phn", name: "Worker 36", type: "string", required: true },
+    { id: "phn", name: "Alberta PHN", type: "string", required: true },
     { id: "fees", name: "Fees", type: "numeric", bounds: { gt: 0, lte: 9999.99 } },
     { id: "pob", name: "Part of body", type: "code", codeListName: "POB" }
   ],
@@ -70,7 +70,7 @@ ok("runSubmission: reports check 12 XSD as deferred, not silently skipped", clea
 const badForm = {
   id: "C050S",
   elements: [
-    { id: "phn", name: "Worker 36", type: "string", required: true },       // "" -> P1-REQUIRED
+    { id: "phn", name: "Alberta PHN", type: "string", required: true },       // "" -> P1-REQUIRED
     { id: "fees", name: "Fees", type: "numeric", bounds: { gt: 0, lte: 9999.99 } }, // "0" -> P1-RANGE
     { id: "pob", name: "Part of body", type: "code", codeListName: "POB" }     // "99999" -> P1-CODELIST
   ],

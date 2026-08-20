@@ -28,7 +28,7 @@ const ITEMS = [
   ["P38-09", "Check-in lapse nudges", "Priority 2"],
   ["P38-10", "Physician summary view", "Priority 2"],
   ["P38-11", "White-label theming", "Priority 2"],
-  ["P38-12", "Worker 36 portal-assist ingestion", "Priority 2"],
+  ["P38-12", "Alberta portal-assist ingestion", "Priority 2"],
   ["P38-13", "Nexus Health handoff seam", "Priority 3"],
   ["P38-14", "Pilot metering and live ROI view", "Priority 2"],
   ["P38-15", "Consent alignment", "Priority 1"],

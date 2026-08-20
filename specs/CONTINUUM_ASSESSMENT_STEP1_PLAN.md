@@ -23,7 +23,7 @@
 - `SCORING_MODEL_VERSION` is `"CRS_1.0"`, stored on every response. Historical results are never silently recalculated.
 - No benchmark comparison is computed, stored as an aggregate, or displayed (phase 3, gated on the consent copy plus counsel).
 - No name, email, company, IP, user agent, or any personal or health data is captured or stored.
-- Worker 44 fixtures are SYNTH prefixed.
+- Test fixtures are SYNTH prefixed.
 - New tests are `deploy/*.test.mjs` (auto run by `suites.yml`); the SQL migration is applied by `exposure-proof.yml`.
 
 ---
@@ -32,7 +32,7 @@
 
 **Files:**
 - Create: `deploy/assessment/config/crs-1.0.js`
-- Worker 44: `deploy/assessment-config.test.mjs`
+- Test: `deploy/assessment-config.test.mjs`
 
 **Interfaces:**
 - Produces: a config object exported as `module.exports` in Node and assigned to `window.ContinuumCRS` in the browser. Shape:
@@ -170,7 +170,7 @@ git commit -m "feat(assessment): CRS_1.0 scoring config with validity test"
 
 **Files:**
 - Create: `deploy/assessment/scoring.js`
-- Worker 44: `deploy/assessment-scoring.test.mjs`
+- Test: `deploy/assessment-scoring.test.mjs`
 
 **Interfaces:**
 - Consumes: the Task 1 config object.
@@ -395,7 +395,7 @@ git commit -m "feat(assessment): deterministic scoring engine with QA profiles"
 - Create: `deploy/assessment/index.html`
 - Create: `deploy/assessment/assessment.js`
 - Create: `deploy/assessment/assessment.css`
-- Worker 44: `deploy/assessment-smoke.test.mjs`
+- Test: `deploy/assessment-smoke.test.mjs`
 
 **Interfaces:**
 - Consumes: `window.ContinuumCRS` (Task 1) and `window.ContinuumScoring` (Task 2), loaded as plain scripts before `assessment.js`.
@@ -516,7 +516,7 @@ git commit -m "feat(assessment): append only storage table and anon submit RPC"
 
 **Files:**
 - Modify: `deploy/assessment/assessment.js`
-- Worker 44: `deploy/assessment-persist.test.mjs`
+- Test: `deploy/assessment-persist.test.mjs`
 
 **Interfaces:**
 - Consumes: `buildResult(...)` from Task 3 and the anon Supabase client.
@@ -595,7 +595,7 @@ git commit -m "feat(assessment): best effort anonymous persistence via RPC"
 
 **Files:**
 - Create: `deploy/assessment-guardrails.test.mjs`
-- Worker 44: the whole `deploy/*.test.mjs` suite
+- Test: the whole `deploy/*.test.mjs` suite
 
 **Interfaces:**
 - Consumes: all prior files.

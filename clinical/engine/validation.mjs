@@ -18,7 +18,7 @@ const fail = (id, element, message) => ({ id, element, message });
 
 // ---------------------------------------------------------------------------
 // PHN polarity inversion (Section 5.3). The board element is "Patient does not
-// have an Worker 36" (Y means NO PHN), carried as PID.3/CX.5, with the PHN
+// have an Alberta PHN" (Y means NO PHN), carried as PID.3/CX.5, with the PHN
 // value in PID.3/CX.1. The New XPath target Claimant/HavePersonalHealthNumber
 // has the INVERSE name, so its value is inverted deliberately. Verified against
 // the board samples on 2026-08-09: every sample carries CX.5=Y with CX.1 blank.
@@ -35,11 +35,11 @@ export function havePhnXpathValue(doesNotHavePhn) {
   return doesNotHavePhn ? "N" : "Y"; // deliberate inversion
 }
 
-// VAL-X01: Worker 36 blank when the no PHN indicator is Yes, present when No.
+// VAL-X01: Alberta PHN blank when the no PHN indicator is Yes, present when No.
 export function valX01(doesNotHavePhn, phnValue) {
   const fails = [];
-  if (doesNotHavePhn && !isBlank(phnValue)) fails.push(fail("VAL-X01", "Worker 36", "PHN must be blank when the no PHN indicator is Yes"));
-  if (!doesNotHavePhn && isBlank(phnValue)) fails.push(fail("VAL-X01", "Worker 36", "PHN is required when the no PHN indicator is No"));
+  if (doesNotHavePhn && !isBlank(phnValue)) fails.push(fail("VAL-X01", "Alberta PHN", "PHN must be blank when the no PHN indicator is Yes"));
+  if (!doesNotHavePhn && isBlank(phnValue)) fails.push(fail("VAL-X01", "Alberta PHN", "PHN is required when the no PHN indicator is No"));
   return fails;
 }
 

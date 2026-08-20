@@ -28,8 +28,8 @@ const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + 
 
 function repoWithSignedReport() {
   return createInMemoryRepository({
-    clinics: [{ id: "clinic-1", name: "Worker 44", accreditation_status: "none", region: "ca-central-1" }],
-    practitioners: [{ id: "prac-1", clinic_id: "clinic-1", billing_number: "12345", name: "Dr Worker 44", active: true }],
+    clinics: [{ id: "clinic-1", name: "Test Clinic", accreditation_status: "none", region: "ca-central-1" }],
+    practitioners: [{ id: "prac-1", clinic_id: "clinic-1", billing_number: "12345", name: "Dr Test", active: true }],
     reports: [{ id: "rep-1", case_id: "case-1", practitioner_id: "prac-1", form_id: "C050E", version: 1, status: "signed", snapshot_hash: "0".repeat(64) }],
     observations: [{ report_id: "rep-1", observations: templateObservations }],
     obxSkeletons: [{ form_id: "C050E", identifiers: c050eSkeleton }],

@@ -189,7 +189,7 @@ function fresh(){return {
   {id:2,task:"Safety paperwork, weekly incident logs",hours:3,status:"accepted"},
   {id:3,task:"Toolbox talk preparation",hours:2,status:"assigned"}],
  activities:[{id:1,name:"Shoulder mobility, 5 min",status:"pending"},{id:2,name:"Gentle stretches, 3 sets",status:"pending"},{id:3,name:"Ice after activity, 10 min",status:"pending"}],
- msgs:[{who:"them",x:"Morning Worker 15. Your new duty list is ready when you are.",t:"Worker 61, 8:02 AM"}],
+ msgs:[{who:"them",x:"Morning Worker 15. Your new duty list is ready when you are.",t:"Worker 59, 8:02 AM"}],
  unread:1, present:false
 };}
 function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;if(S.form){if(S.form.fatigue==null)S.form.fatigue=3;if(S.form.confidence==null)S.form.confidence=7;}if(S.ackDay===undefined)S.ackDay=null;if(S.ackTs===undefined)S.ackTs=null;if(!S.activities)S.activities=fresh().activities;
@@ -261,7 +261,7 @@ function makePilot(id,flags){
   logs:[],
   duties:[{id:1,task:"Tool crib, inventory management",hours:4,status:"assigned"}],
   activities:[{id:1,name:"Gentle range of motion, 5 min",status:"pending"}],
-  msgs:[{who:"them",x:"Welcome to Continuum, "+id.name+". I am your coordinator here. Thirty seconds a day is all this asks.",t:"Worker 61, just now"}],
+  msgs:[{who:"them",x:"Welcome to Continuum, "+id.name+". I am your coordinator here. Thirty seconds a day is all this asks.",t:"Worker 59, just now"}],
   unread:1, present:false};
  applyCheckin(st,st.form,flags); /* the wizard step-four check-in: day zero becomes day one, first entry on the timeline */
  return st;
@@ -308,7 +308,7 @@ function closeDay(){var el=document.getElementById("daymodal");if(el){el.classNa
 /* ---------- views ---------- */
 function renderDashboard(){
  var h='<header style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px"><div>'+
- '<h2 class="pg">Your Recovery: Last 7 Days</h2><p class="sub">What should I do today &middot; Worker ID: 99283-WB &middot; Coordinator: Worker 61 &middot; Day '+S.day+' of '+PROG+'</p></div>'+
+ '<h2 class="pg">Your Recovery: Last 7 Days</h2><p class="sub">What should I do today &middot; Worker ID: 99283-WB &middot; Coordinator: Worker 59 &middot; Day '+S.day+' of '+PROG+'</p></div>'+
  '<div style="display:flex;gap:10px"><button class="btn ghost" onclick="startPresent()"><span class="msym" style="font-size:18px">play_arrow</span> Present</button>'+
  '<button class="btn" onclick="go(\'trend\')"><span class="msym" style="font-size:19px">add_circle</span> New Recovery Log</button></div></header>';
  var trend=S.escalated?"Your clinician is taking a look":"Trending well";
@@ -331,7 +331,7 @@ function renderDashboard(){
  h+='<section class="tiles">'+
  '<div class="tile"><span class="ic" style="background:var(--navy)"><span class="msym">event</span></span><div><b>Next appointment</b><span>Jul 21 &middot; Attending Physician</span></div></div>'+
  '<div class="tile"><span class="ic" style="background:var(--teal)"><span class="msym">assignment_turned_in</span></span><div><b>Active duty plan</b><span>Light duties. No lifting above shoulder height.</span></div></div>'+
- '<div class="tile" style="cursor:pointer" onclick="go(\'chat\')"><span class="ic" style="background:var(--gold);color:var(--navy)"><span class="msym">forum</span></span><div><b>Support message</b><span>'+(S.unread?S.unread+" unread from Worker 61":"You are all caught up")+'</span></div></div>'+
+ '<div class="tile" style="cursor:pointer" onclick="go(\'chat\')"><span class="ic" style="background:var(--gold);color:var(--navy)"><span class="msym">forum</span></span><div><b>Support message</b><span>'+(S.unread?S.unread+" unread from Worker 59":"You are all caught up")+'</span></div></div>'+
  '</section>';
  return h;}
 /* Shared section header so Present sits top-right on every worker section, the
@@ -399,7 +399,7 @@ function renderChat(){
 function sendMsg(){
  var el=document.getElementById("chatline");if(!el||!el.value.trim())return;
  S.msgs.push({who:"me",x:el.value.trim(),t:"You, just now"});
- S.msgs.push({who:"them",x:"Got it, thanks Worker 15. I will follow up today.",t:"Worker 61, just now"});
+ S.msgs.push({who:"them",x:"Got it, thanks Worker 15. I will follow up today.",t:"Worker 59, just now"});
  toast("Message <b>sent</b>");save();}
 function renderSettings(){
  var h=wkHeader("Settings","Your data, your choices. Changing these never affects your care or your job.");

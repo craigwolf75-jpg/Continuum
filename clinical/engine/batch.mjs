@@ -7,7 +7,7 @@
 
    Deadline aware scheduling (Section 4.1): the board's fee tiers turn on RECEIPT, and the
    same day tier includes up to 10:00 Mountain the next business day. Business day
-   excludes weekends and Worker 36 statutory holidays. A report signed at 16:30 must go in
+   excludes weekends and Alberta statutory holidays. A report signed at 16:30 must go in
    the 17:00 batch, not the overnight 00:05 one. Compute the target batch from the
    deadline, not from the clock.
 
@@ -27,7 +27,7 @@ const addDays = (dateStr, n) => {
   return d.toISOString().slice(0, 10);
 };
 
-// A business day is a weekday that is not an Worker 36 statutory holiday (the holiday set
+// A business day is a weekday that is not an Alberta statutory holiday (the holiday set
 // is injected, sourced from the statutory_holiday table).
 export function isBusinessDay(dateStr, holidays) {
   const hol = holidays instanceof Set ? holidays : new Set(holidays || []);

@@ -38,7 +38,7 @@ gate. Every human gate stands whether Zeus was called by a person or by cron.
 - Architecture, code, data model, migrations, resilience wiring -> athena (12a)
 - Visual system, layout, motion, imagery -> apollo (12b)
 - Every word a visitor reads, copy, tone, voice -> calliope (12f)
-- Worker 44 suites, seed reconciliation, verdicts on quality -> heracles (12c)
+- Test suites, seed reconciliation, verdicts on quality -> heracles (12c)
 - Release, deploy, push to main, rollback, smoke checks -> hermes (12d)
 - Audits and scans: privacy and visual inference, register, canon, links,
   storage keys, hygiene -> argus (12e)

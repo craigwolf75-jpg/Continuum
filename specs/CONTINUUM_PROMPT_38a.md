@@ -33,7 +33,7 @@ Every P38 item implemented as testable logic, specified for binding, or routed t
 
 **P38-11, white-label theming.** Specified (tenant name, logo, colors on worker app and login, Continuum in the footer); a theming layer is an artifact patch by nature. Extends the 37 org name seam.
 
-**P38-12, Worker 36 portal-assist ingestion.** Honesty-scoped in Prompt 38 (a person downloads from myWCB, the platform files to the right worker and notifies; no retrieval API is claimed because none exists); the filing flow binds into the archive from P38-06, so the two install together.
+**P38-12, Alberta portal-assist ingestion.** Honesty-scoped in Prompt 38 (a person downloads from myWCB, the platform files to the right worker and notifies; no retrieval API is claimed because none exists); the filing flow binds into the archive from P38-06, so the two install together.
 
 ## 3. Routed to owner, with the document as the deliverable
 

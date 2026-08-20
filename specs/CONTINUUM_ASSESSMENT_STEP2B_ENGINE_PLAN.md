@@ -27,7 +27,7 @@
 
 **Files:**
 - Create: `deploy/assessment/config/crb-2026-01.js`
-- Worker 44: `deploy/assessment-benchmark-config.test.mjs`
+- Test: `deploy/assessment-benchmark-config.test.mjs`
 
 **Interfaces:**
 - Produces the CRB_2026_01 config (UMD: `module.exports` in Node, `window.ContinuumBenchmark_CRB` in browser). Shape: `{ benchmarkVersion:"CRB_2026_01", changelog, cohortDimensions:[...], confidenceLevels:["HIGH","MODERATE","ESTIMATED","INSUFFICIENT"], adequacyFloor:<number>, metrics:[{key,label,unit,note}], sources:[{id,org,title,url,dataPeriod,geography,industryClassification,metricKeys,licensing,attribution,dateRetrieved,verdict}], data:{} }`.
@@ -69,7 +69,7 @@ console.log('assessment-benchmark-config: PASS');
 
 **Files:**
 - Create: `deploy/assessment/benchmark.js`
-- Worker 44: `deploy/assessment-benchmark.test.mjs`
+- Test: `deploy/assessment-benchmark.test.mjs`
 
 **Interfaces:**
 - Consumes CRB_2026_01 config. Exports `ContinuumBenchmark` (UMD), all pure:
