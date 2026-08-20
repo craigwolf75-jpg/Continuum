@@ -286,26 +286,38 @@ function renderUsers(){
  return h;}
 function toggleUser(id){
  var u=S.users.find(function(x){return x.id===id;});if(!u)return;
- u.status=u.status==="active"?"inactive":"active";
- if(u.status==="inactive"){audit("User deactivated: "+u.name+" ("+u.role+"). Sessions revoked.");toast("<b>"+esc(u.name)+"</b> deactivated. Sessions revoked.");}
- else{audit("User reactivated: "+u.name);toast("<b>"+esc(u.name)+"</b> reactivated.");}
- save();}
+ var action=u.status==="active"?"deactivate":"reactivate";
+ fetch("/api/admin-users",{method:"PATCH",credentials:"same-origin",headers:{"content-type":"application/json"},body:JSON.stringify({id:id,action:action})})
+  .then(function(r){return r&&r.ok?r.json():null;})
+  .then(function(d){
+    if(!d||!d.ok){toast("That did not go through. Please try again.");return;}
+    if(action==="deactivate"){audit("User deactivated: "+u.name+" ("+u.role+").");toast("<b>"+esc(u.name)+"</b> deactivated.");}
+    else{audit("User reactivated: "+u.name);toast("<b>"+esc(u.name)+"</b> reactivated.");}
+    refreshDirectory();
+  }).catch(function(){toast("That did not go through. Please try again.");});}
 function addUserModal(){
  var f=S.form;
  openModal('<h2 style="margin-bottom:8px">Provision user</h2>'+
  '<label class="fl">Name</label><input type="text" id="nuname" placeholder="Full name" value="'+esc(f.name)+'">'+
+ '<div style="height:10px"></div><label class="fl">Email</label><input type="email" id="nuemail" placeholder="name@example.com">'+
  '<div style="height:10px"></div><label class="fl">Role</label><select id="nurole">'+ROLES.filter(function(r){return r!=="continuum_admin";}).map(function(r){return '<option'+(f.role===r?" selected":"")+'>'+r+'</option>';}).join("")+'</select>'+
- '<div style="height:10px"></div><label class="fl">Tenant / org</label><select id="nuorg">'+S.tenants.map(function(t){return '<option>'+esc(t.name)+'</option>';}).join("")+'<option>Clinical Partner</option><option>WSIB Ontario</option><option>WCB Alberta</option></select>'+
+ '<div style="height:10px"></div><label class="fl">Tenant / org</label><select id="nuorg"><option value="">No tenant</option>'+S.tenants.map(function(t){return '<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>';}).join("")+'</select>'+
  '<button class="btn gold" style="width:100%;margin-top:14px" onclick="createUser()">Provision</button>'+
  '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>');}
 function createUser(){
  var name=(document.getElementById("nuname")||{}).value||"";
+ var email=(document.getElementById("nuemail")||{}).value||"";
  var role=(document.getElementById("nurole")||{}).value||"worker";
- var org=(document.getElementById("nuorg")||{}).value||"Employer B";
+ var tenant=(document.getElementById("nuorg")||{}).value||"";
  if(!name.trim()){toast("A user needs a <b>name</b>.");return;}
- S.users.push({id:"u"+(S.nextId++),name:name.trim(),role:role,org:org,status:"active",last:"just provisioned"});
- audit("User provisioned: "+name.trim()+" as "+role+" at "+org);
- closeModal();toast("<b>"+esc(name.trim())+"</b> provisioned as "+role+".");save();}
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())){toast("A user needs a valid <b>email</b>.");return;}
+ fetch("/api/admin-users",{method:"POST",credentials:"same-origin",headers:{"content-type":"application/json"},body:JSON.stringify({email:email.trim(),full_name:name.trim(),role:role,tenant_id:tenant||null})})
+  .then(function(r){return r?r.json().then(function(j){return j;},function(){return null;}):null;})
+  .then(function(j){
+    if(!j||!j.ok){toast(j&&j.error?esc(j.error):(j&&j.errors?esc(j.errors.join("; ")):"Provision did not go through."));return;}
+    audit("User provisioned: "+name.trim()+" as "+role);
+    closeModal();toast("<b>"+esc(name.trim())+"</b> provisioned as "+role+".");refreshDirectory();
+  }).catch(function(){toast("Provision did not go through.");});}
 /* ---------- grants ---------- */
 function renderGrants(){
  var h=pagehead("Access Grants","Cross-tenant reach is granted here, never by relaxing isolation. RLS still applies underneath.",
@@ -443,19 +455,18 @@ load();render();ingestOlympus();setInterval(ingestOlympus,5000);
    /api/admin-directory re verifies the admin session, so this fetches the live
    platform directory and replaces the seed rows in place. On any failure it
    leaves the built in rows untouched, so the page never breaks. */
-(function(){
- try{
-  fetch("/api/admin-directory",{credentials:"same-origin",headers:{"accept":"application/json"}})
-   .then(function(r){return r&&r.ok?r.json():null;})
-   .then(function(d){
-     if(!d||!d.ok) return;
-     if(Array.isArray(d.users)){ USERS.length=0; d.users.forEach(function(u){USERS.push(u);}); }
-     if(Array.isArray(d.tenants)){ TENANTS.length=0; d.tenants.forEach(function(t){TENANTS.push(t);}); }
-     if(typeof render==="function") render();
-   })
-   .catch(function(){});
- }catch(e){}
-})();
+function refreshDirectory(){
+ return fetch("/api/admin-directory",{credentials:"same-origin",headers:{"accept":"application/json"}})
+  .then(function(r){return r&&r.ok?r.json():null;})
+  .then(function(d){
+    if(!d||!d.ok) return false;
+    if(Array.isArray(d.users)) S.users=d.users;
+    if(Array.isArray(d.tenants)) S.tenants=d.tenants;
+    save();       /* persists the live directory and re renders */
+    return true;
+  }).catch(function(){return false;});
+}
+refreshDirectory();
 </script>
 </body>
 </html>
