@@ -439,6 +439,23 @@ function render(){
  document.getElementById("main").innerHTML=(views[S.section]||renderDashboard)();
 }
 load();render();ingestOlympus();setInterval(ingestOlympus,5000);
+/* Real data: the /admin-portal page is admin gated (deploy/middleware.js), and
+   /api/admin-directory re verifies the admin session, so this fetches the live
+   platform directory and replaces the seed rows in place. On any failure it
+   leaves the built in rows untouched, so the page never breaks. */
+(function(){
+ try{
+  fetch("/api/admin-directory",{credentials:"same-origin",headers:{"accept":"application/json"}})
+   .then(function(r){return r&&r.ok?r.json():null;})
+   .then(function(d){
+     if(!d||!d.ok) return;
+     if(Array.isArray(d.users)){ USERS.length=0; d.users.forEach(function(u){USERS.push(u);}); }
+     if(Array.isArray(d.tenants)){ TENANTS.length=0; d.tenants.forEach(function(t){TENANTS.push(t);}); }
+     if(typeof render==="function") render();
+   })
+   .catch(function(){});
+ }catch(e){}
+})();
 </script>
 </body>
 </html>
