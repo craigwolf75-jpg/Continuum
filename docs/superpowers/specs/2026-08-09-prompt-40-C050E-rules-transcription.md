@@ -25,7 +25,7 @@ The board reuses rule codes across sections with unrelated meanings. Verified on
   (Modifier field dependency). Three unrelated BR1 rules.
 - `SR1` appears on page 2 to 3 (prior conditions enable), page 3 to 4 (opioid fields enable), and page
   5 to 6 (miss work gate). Three unrelated SR1 rules.
-- `BR5` appears on page 1 (Alberta PHN required one of two) and page 3 (POB and SOB combination).
+- `BR5` appears on page 1 (Worker 36 required one of two) and page 3 (POB and SOB combination).
 - `SR4`, `SR5`, `SR7`, `SR17` each recur across sections.
 
 Therefore the form_rule key is `(form_definition_id, source_document, source_page, rule_code, ordinal)`
@@ -40,10 +40,10 @@ VAL = the named cross field rule it realizes, if any. ver = verified_against_sam
 
 | code | ord | type | trigger element | condition | affected elements | clears | VAL | ver |
 |---|---|---|---|---|---|---|---|---|
-| BR5 | 1 | business | Alberta PHN, Patient does not have an Alberta PHN | exactly one of the two is provided | Alberta PHN | n/a | VAL-X01 | pending |
+| BR5 | 1 | business | Worker 36, Patient does not have an Worker 36 | exactly one of the two is provided | Worker 36 | n/a | VAL-X01 | pending |
 
 Note: BR5 page 1 is the source of the PHN polarity inversion (engine spec Section 6.3). The element
-"Patient does not have an Alberta PHN" Yes means NO PHN; it maps to the inverse XPath
+"Patient does not have an Worker 36" Yes means NO PHN; it maps to the inverse XPath
 `Claimant/HavePersonalHealthNumber`. Invert deliberately at emission.
 
 ### Section: Accident Details (page 2)

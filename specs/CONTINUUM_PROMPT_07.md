@@ -38,9 +38,9 @@ ENUMS:
 - injuries.status: reported, off_work, light_duty, full_duty_pending, signed_off, escalated (side state; injuries also carry prior_status so escalated returns deterministically)
 - injuries.severity: minor, moderate, major
 - users.role: worker, hse, employer_admin, wcb_officer, nexus_physician
-- tenants.province: ab, bc, sk, on (MVP operates ab only; schema and copy must not hard-code Alberta)
+- tenants.province: ab, bc, sk, on (MVP operates ab only; schema and copy must not hard-code Worker 36)
 
-SCOPE: build the CORE LOOP only: intake, SMS, twice-daily check-ins, employer dashboard, Nexus clearance, WCB document generation. Do NOT build: photo AI triage, conversational AI check-ins, video assessment, wearable ingestion (table only), SiteDocs SSO, Ocean or EMR or FHIR integration, per-payer form pre-fill beyond Alberta document generation. Leave clean seams where named.
+SCOPE: build the CORE LOOP only: intake, SMS, twice-daily check-ins, employer dashboard, Nexus clearance, WCB document generation. Do NOT build: photo AI triage, conversational AI check-ins, video assessment, wearable ingestion (table only), SiteDocs SSO, Ocean or EMR or FHIR integration, per-payer form pre-fill beyond Worker 36 document generation. Leave clean seams where named.
 
 Ask before inventing any field name that crosses the Nexus or SiteDocs API boundary; those specs are pending. Use the proposed contracts verbatim and leave a clear seam.
 ```
@@ -68,11 +68,11 @@ Tables (client data model, plus reconciliation and forward-compatibility additio
 - audit_log: actor_id FK, action, entity, entity_id, occurred_at, ip_device; APPEND ONLY (revoke UPDATE and DELETE from every role; enforce with a trigger that raises on both)
 - wearable_data: injury_id FK, captured_at, metric (hrv/strain/recovery/hr), value, device. Table only, no ingestion.
 - case_metrics: injury_id FK, metric (days_to_first_checkin/days_in_status/checkin_adherence/escalation_count/days_to_rtw), value numeric, computed_at. The outcomes instrumentation baseline; populated by the state machine and check-in flow from day one so future duration and cost claims are measurable, never speculative.
-- province_form_codes (no tenant_id; reference table): province, party (worker/employer/physician), form_code, form_name, deadline_text. Seed all four provinces from verified values: AB C060/C040/C050 with 72 hours employer and 48 hours physician; BC Form 6/7/8 with 72 hours employer; SK W1/E1/PPI with 5 days employer (never "D1"); ON Form 6/7/8 plus FAF 2647A with 3 business days employer. MVP renders Alberta only; the table exists so no Alberta string is ever hard-coded.
+- province_form_codes (no tenant_id; reference table): province, party (worker/employer/physician), form_code, form_name, deadline_text. Seed all four provinces from verified values: AB C060/C040/C050 with 72 hours employer and 48 hours physician; BC Form 6/7/8 with 72 hours employer; SK W1/E1/PPI with 5 days employer (never "D1"); ON Form 6/7/8 plus FAF 2647A with 3 business days employer. MVP renders Worker 36 only; the table exists so no Worker 36 string is ever hard-coded.
 
 RLS: custom JWT claims (tenant_id, role, user_id) issued via a Supabase auth hook. Tenant-scoped roles (worker, hse, employer_admin) read and write only rows where tenant_id matches their claim. Cross-tenant roles (wcb_officer, nexus_physician) have NO tenant claim and every policy for them requires a matching access_grants row. Workers additionally restricted to their own worker and injury rows. Write every policy explicitly; no table without RLS enabled.
 
-Deliver: migrations, policies, the auth hook, and a seed script with one tenant (Worley, province ab), one user per role, and the Marcus Bedard case per the client intake example (NX-2026-00481, right shoulder, msk_strain, moderate, 21 days, no lifting above shoulder height). Include a policy test suite (pgTAP or SQL scripts) proving cross-tenant reads fail and access_grants gates work.
+Deliver: migrations, policies, the auth hook, and a seed script with one tenant (Worley, province ab), one user per role, and the Worker 15 case per the client intake example (NX-2026-00481, right shoulder, msk_strain, moderate, 21 days, no lifting above shoulder height). Include a policy test suite (pgTAP or SQL scripts) proving cross-tenant reads fail and access_grants gates work.
 ```
 
 ---
@@ -125,7 +125,7 @@ Layout per the client wireframe: sidebar nav; header with date range and tenant 
 FIELD-LEVEL FIREWALL, enforced server-side:
 - Create Postgres views or RPCs per role: employer_case_view exposes ONLY functional fields (no pain_score, no mobility_score, no diagnosis_notes, no notes, no image_url); hse_case_view additionally exposes pain_score and mobility_score, still never diagnosis_notes, notes free text, or image_url. Dashboards query the view for their role; base-table reads for these roles are denied by policy.
 - Response-shape tests: for employer_admin, assert the serialized API response contains no key and no value from the forbidden set; run the same test against every endpoint the dashboard touches.
-- The dashboard surfaces the tenant's rtw_obligation_frame in its RTW panel copy: incentive framing (claim cost, premium impact) for ab; compliance framing reserved for future provinces. No hard-coded Alberta strings; read province and frame from the tenant row.
+- The dashboard surfaces the tenant's rtw_obligation_frame in its RTW panel copy: incentive framing (claim cost, premium impact) for ab; compliance framing reserved for future provinces. No hard-coded Worker 36 strings; read province and frame from the tenant row.
 
 Real-time: Supabase Realtime subscription on the role view's underlying changes, falling back to 30-second polling.
 
@@ -201,7 +201,7 @@ Build the WCB notification module. There is NO public WCB claims API in any Cana
 
 - Three payload types in wcb_notifications.payload, shapes verbatim from the client: initial (wcb_account_number, worker name, SIN, DOB, date_of_injury, body_part, incident_description, time_lost bool); light_duty (wcb_claim_number, modified_duty_start_date, modified_duties_description, restrictions); full_duty (wcb_claim_number, regular_duty_return_date, hours_pay_confirmed bool, fitness_for_work_form PDF attached).
 - Lifecycle: pending, generated, submitted, acknowledged, failed. Generation fires from the Prompt 07.5 auto-actions; retry generation on failure.
-- Document rendering reads province_form_codes: for the MVP the tenant is ab, so the initial package is framed as the data set for the employer report (C040 via myWCB, 72-hour deadline surfaced prominently with a countdown from date_of_injury) and the full-duty package carries the FFW PDF for the physician channel (HCP online services). No Alberta string hard-coded; all names, codes, and deadline copy come from the reference table.
+- Document rendering reads province_form_codes: for the MVP the tenant is ab, so the initial package is framed as the data set for the employer report (C040 via myWCB, 72-hour deadline surfaced prominently with a countdown from date_of_injury) and the full-duty package carries the FFW PDF for the physician channel (HCP online services). No Worker 36 string hard-coded; all names, codes, and deadline copy come from the reference table.
 - A submit-to-WCB step in the employer and Nexus dashboards hands the document to the responsible party and lets them mark submitted, then acknowledged; every payload and status change is audited.
 - Exact WCB form field sets remain a pre-go-live verification item (client open item 9); mark the generators with a single FIELDSET_VERSION constant so reconciliation is one change.
 
@@ -254,4 +254,4 @@ Reconcile the intake and clearance contracts and auth to the attached Nexus Heal
 
 ## Deferred by design (seams exist, builds do not)
 
-Photo AI triage; conversational check-ins; video assessment; wearable ingestion; SiteDocs SSO (seam in 07.2); Ocean or EMR or FHIR integration; per-payer form pre-fill beyond the Alberta document package (province_form_codes already carries BC, SK, ON); the modified-duties matcher (seam in 07.9); Ontario FAF triggering; outcome benchmarking surfaces (case_metrics collects from day one so the claims are provable when made).
+Photo AI triage; conversational check-ins; video assessment; wearable ingestion; SiteDocs SSO (seam in 07.2); Ocean or EMR or FHIR integration; per-payer form pre-fill beyond the Worker 36 document package (province_form_codes already carries BC, SK, ON); the modified-duties matcher (seam in 07.9); Ontario FAF triggering; outcome benchmarking surfaces (case_metrics collects from day one so the claims are provable when made).

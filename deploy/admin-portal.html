@@ -125,7 +125,7 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
 <body>
 <header class="top">
   <div class="brandline"><img src="/continuum-logo-dark.svg" alt="Continuum Return to Work" style="height:44px;width:auto;display:block"><span class="tagchip">PLATFORM ADMIN</span></div>
-  <div class="who"><span class="msym" style="font-size:19px">shield_person</span> T. Admin &middot; Continuum</div>
+  <div class="who"><span class="msym" style="font-size:19px">shield_person</span> Worker 75 &middot; Continuum</div>
 </header>
 <aside class="side">
   <div class="brand"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="width:150px;display:block"><span style="display:block;margin-top:7px">Internal Admin</span><div style="color:var(--ink-400);font-size:11px;line-height:1.4;margin-top:7px;text-transform:none;letter-spacing:0">Where are my biggest operational risks</div></div>
@@ -139,9 +139,9 @@ select:focus,input:focus{box-shadow:0 0 0 2px var(--gold)}
 <div class="toast" id="toast"></div>
 <script>
 "use strict";
-var TENANTS=[{"id": "northgate", "name": "Northgate Industrial Services", "board": "WCB Alberta", "paused": false, "pose": false, "committee": "", "active": 7, "completion": 78, "onboarded": 1, "weeks": 21, "pilot": false, "sandbox": false}, {"id": "garda", "name": "GardaWorld", "board": "WSIB Ontario", "paused": false, "pose": false, "committee": "jhsc@gardaworld.example", "active": 12, "completion": 74, "onboarded": 3, "weeks": 47, "pilot": true, "sandbox": false}, {"id": "ledcor", "name": "Ledcor Group", "board": "WCB Alberta", "paused": false, "pose": false, "committee": "", "active": 5, "completion": 75, "onboarded": 1, "weeks": 18, "pilot": false, "sandbox": false}, {"id": "sample", "name": "Sample Employer Co.", "board": "WCB Alberta", "paused": false, "pose": false, "committee": "", "active": 28, "completion": 71, "onboarded": 0, "weeks": 0, "pilot": false, "sandbox": true}];
-var USERS=[{"id": "u1", "name": "Dr. A. Owusu", "role": "physician", "org": "Clinical Partner", "status": "active", "last": "2m ago"}, {"id": "u2", "name": "K. Morgan", "role": "hse", "org": "Northgate Industrial Services", "status": "active", "last": "8m ago"}, {"id": "u3", "name": "C. Officer", "role": "board_officer", "org": "WSIB Ontario", "status": "active", "last": "1h ago"}, {"id": "u4", "name": "Marcus Bedard", "role": "worker", "org": "Northgate Industrial Services", "status": "active", "last": "12m ago"}, {"id": "u5", "name": "Tyler Cardinal", "role": "worker", "org": "Northgate Industrial Services", "status": "active", "last": "3d ago"}, {"id": "u6", "name": "J. Whitford", "role": "worker", "org": "Ledcor Group", "status": "active", "last": "1h ago"}, {"id": "u7", "name": "S. Littlechild", "role": "worker", "org": "GardaWorld", "status": "active", "last": "4h ago"}, {"id": "u8", "name": "R. Fontaine", "role": "hse", "org": "GardaWorld", "status": "active", "last": "22m ago"}, {"id": "u9", "name": "M. Delacroix", "role": "hse", "org": "Ledcor Group", "status": "active", "last": "2h ago"}, {"id": "u10", "name": "D. Okonkwo", "role": "physician", "org": "Clinical Partner", "status": "active", "last": "1d ago"}, {"id": "u11", "name": "B. Officer", "role": "board_officer", "org": "WCB Alberta", "status": "active", "last": "2d ago"}, {"id": "u12", "name": "J. Okafor", "role": "worker", "org": "Northgate Industrial Services", "status": "active", "last": "6h ago"}, {"id": "u13", "name": "A. Osei", "role": "worker", "org": "GardaWorld", "status": "active", "last": "3h ago"}, {"id": "u14", "name": "H. Nguyen", "role": "worker", "org": "Ledcor Group", "status": "inactive", "last": "21d ago"}, {"id": "u15", "name": "T. Admin", "role": "continuum_admin", "org": "Continuum", "status": "active", "last": "now"}, {"id": "u16", "name": "S. Reader", "role": "employer_admin", "org": "Sample Employer Co.", "status": "active", "last": "30m ago"}, {"id": "u17", "name": "P. Girard", "role": "employer_admin", "org": "GardaWorld", "status": "active", "last": "5h ago"}, {"id": "u18", "name": "L. Chen", "role": "employer_admin", "org": "Northgate Industrial Services", "status": "inactive", "last": "34d ago"}];
-var GRANTS=[{"id": 1, "grantee": "Clinical Partner (clinical)", "subject": "Northgate Industrial Services", "scope": "all cases"}, {"id": 2, "grantee": "Clinical Partner (clinical)", "subject": "Ledcor Group", "scope": "all cases"}, {"id": 3, "grantee": "Clinical Partner (clinical)", "subject": "GardaWorld", "scope": "all cases"}, {"id": 4, "grantee": "WSIB Ontario (board)", "subject": "GardaWorld", "scope": "submitted filings"}, {"id": 5, "grantee": "WCB Alberta (board)", "subject": "Northgate Industrial Services", "scope": "submitted filings"}, {"id": 6, "grantee": "WCB Alberta (board)", "subject": "Ledcor Group", "scope": "submitted filings"}];
+var TENANTS=[{"id": "northgate", "name": "Employer B", "board": "WCB Worker 36", "paused": false, "pose": false, "committee": "", "active": 7, "completion": 78, "onboarded": 1, "weeks": 21, "pilot": false, "sandbox": false}, {"id": "garda", "name": "Employer A", "board": "WSIB Ontario", "paused": false, "pose": false, "committee": "jhsc@gardaworld.example", "active": 12, "completion": 74, "onboarded": 3, "weeks": 47, "pilot": true, "sandbox": false}, {"id": "ledcor", "name": "Employer C", "board": "WCB Worker 36", "paused": false, "pose": false, "committee": "", "active": 5, "completion": 75, "onboarded": 1, "weeks": 18, "pilot": false, "sandbox": false}, {"id": "sample", "name": "Sample Employer Co.", "board": "WCB Worker 36", "paused": false, "pose": false, "committee": "", "active": 28, "completion": 71, "onboarded": 0, "weeks": 0, "pilot": false, "sandbox": true}];
+var USERS=[{"id": "u1", "name": "Attending Physician", "role": "physician", "org": "Clinical Partner", "status": "active", "last": "2m ago"}, {"id": "u2", "name": "Worker 61", "role": "hse", "org": "Employer B", "status": "active", "last": "8m ago"}, {"id": "u3", "name": "Worker 47", "role": "board_officer", "org": "WSIB Ontario", "status": "active", "last": "1h ago"}, {"id": "u4", "name": "Worker 15", "role": "worker", "org": "Employer B", "status": "active", "last": "12m ago"}, {"id": "u5", "name": "Worker 08", "role": "worker", "org": "Employer B", "status": "active", "last": "3d ago"}, {"id": "u6", "name": "Worker 39", "role": "worker", "org": "Employer C", "status": "active", "last": "1h ago"}, {"id": "u7", "name": "Worker 07", "role": "worker", "org": "Employer A", "status": "active", "last": "4h ago"}, {"id": "u8", "name": "Worker 41", "role": "hse", "org": "Employer A", "status": "active", "last": "22m ago"}, {"id": "u9", "name": "Worker 29", "role": "hse", "org": "Employer C", "status": "active", "last": "2h ago"}, {"id": "u10", "name": "Worker 48", "role": "physician", "org": "Clinical Partner", "status": "active", "last": "1d ago"}, {"id": "u11", "name": "Worker 45", "role": "board_officer", "org": "WCB Worker 36", "status": "active", "last": "2d ago"}, {"id": "u12", "name": "Worker 60", "role": "worker", "org": "Employer B", "status": "active", "last": "6h ago"}, {"id": "u13", "name": "Worker 77", "role": "worker", "org": "Employer A", "status": "active", "last": "3h ago"}, {"id": "u14", "name": "Worker 58", "role": "worker", "org": "Employer C", "status": "inactive", "last": "21d ago"}, {"id": "u15", "name": "Worker 75", "role": "continuum_admin", "org": "Continuum", "status": "active", "last": "now"}, {"id": "u16", "name": "Worker 67", "role": "employer_admin", "org": "Sample Employer Co.", "status": "active", "last": "30m ago"}, {"id": "u17", "name": "Worker 63", "role": "employer_admin", "org": "Employer A", "status": "active", "last": "5h ago"}, {"id": "u18", "name": "Worker 80", "role": "employer_admin", "org": "Employer B", "status": "inactive", "last": "34d ago"}];
+var GRANTS=[{"id": 1, "grantee": "Clinical Partner (clinical)", "subject": "Employer B", "scope": "all cases"}, {"id": 2, "grantee": "Clinical Partner (clinical)", "subject": "Employer C", "scope": "all cases"}, {"id": 3, "grantee": "Clinical Partner (clinical)", "subject": "Employer A", "scope": "all cases"}, {"id": 4, "grantee": "WSIB Ontario (board)", "subject": "Employer A", "scope": "submitted filings"}, {"id": 5, "grantee": "WCB Worker 36 (board)", "subject": "Employer B", "scope": "submitted filings"}, {"id": 6, "grantee": "WCB Worker 36 (board)", "subject": "Employer C", "scope": "submitted filings"}];
 
 var LSKEY="continuum_admin_v1";
 var FEEDKEY="continuum_olympus_feed_v1";
@@ -175,7 +175,7 @@ var S;
 function fresh(){return {tenants:JSON.parse(JSON.stringify(TENANTS)),users:JSON.parse(JSON.stringify(USERS)),grants:JSON.parse(JSON.stringify(GRANTS)),
  section:"dashboard",search:"",roleFilter:null,nextId:100,olympus:olympusSeed(),
  audit:["07:02 Backup restore test passed (staging)","06:40 Nightly encrypted backup complete (ca-central-1)","Yesterday CI visibility test green: employer serialization carries zero clinical fields"],
- form:{name:"",role:"worker",org:"Northgate Industrial Services"}};}
+ form:{name:"",role:"worker",org:"Employer B"}};}
 function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.tenants){S=s;if(!S.olympus||S.olympus.version!==7)S.olympus=olympusSeed();return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}render();}
 function resetAll(){S=fresh();toast("Demo data <b>reset</b>");save();}
@@ -213,7 +213,7 @@ function renderDashboard(){
  h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Active cases by tenant <span class="prov sys">System computed</span></h2>'+
  realT().map(function(t){var p=Math.round(t.active/activeCases()*100);
   return '<div class="brow" style="cursor:pointer" title="Open tenants" onclick="go(\'tenants\')"><div class="bl"><span>'+esc(t.name)+(t.pilot?' <span class="pillst gold">pilot</span>':'')+'</span><span>'+t.active+' ('+p+'%)</span></div><div class="bt"><i style="width:'+p+'%;background:'+(t.pilot?"var(--gold)":"var(--navy)")+'"></i></div></div>';}).join("")+
- '<p class="sub" style="font-size:11.5px;margin-top:8px">These per-tenant counts equal each tenant\'s own portal: Northgate\'s 7 is the HSE queue, and the 24 total is the clinical census.</p></div>';
+ '<p class="sub" style="font-size:11.5px;margin-top:8px">These per-tenant counts equal each tenant\'s own portal: Employer B\'s 7 is the HSE queue, and the 24 total is the clinical census.</p></div>';
  h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Users by role</h2>'+
  ROLES.map(function(r){var v=S.users.filter(function(u){return u.role===r&&u.status==="active";}).length;var p=Math.round(v/activeUsers().length*100);
   return '<div class="brow" style="cursor:pointer" title="Open users with this role" onclick="S.roleFilter=\''+r+'\';S.section=\'users\';save()"><div class="bl"><span>'+r+'</span><span>'+v+'</span></div><div class="bt"><i style="width:'+p+'%;background:var(--teal)"></i></div></div>';}).join("")+
@@ -257,12 +257,12 @@ function poseEnable(id){
 function newTenantModal(){
  openModal('<h2 style="margin-bottom:8px">New tenant</h2><p class="sub" style="font-size:12px;margin-bottom:10px">Provisioning creates the tenant row, RLS scope, and default flags (paused off, pose off).</p>'+
  '<label class="fl">Name</label><input type="text" id="ntname" placeholder="Employer name">'+
- '<div style="height:10px"></div><label class="fl">Board</label><select id="ntboard"><option>WSIB Ontario</option><option>WCB Alberta</option></select>'+
+ '<div style="height:10px"></div><label class="fl">Board</label><select id="ntboard"><option>WSIB Ontario</option><option>WCB Worker 36</option></select>'+
  '<button class="btn gold" style="width:100%;margin-top:14px" onclick="createTenant()">Create tenant</button>'+
  '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>');}
 function createTenant(){
  var name=(document.getElementById("ntname")||{}).value||"";
- var board=(document.getElementById("ntboard")||{}).value||"WCB Alberta";
+ var board=(document.getElementById("ntboard")||{}).value||"WCB Worker 36";
  if(!name.trim()){toast("A tenant needs a <b>name</b>.");return;}
  S.tenants.push({id:"t"+(S.nextId++),name:name.trim(),board:board,paused:false,pose:false,committee:"",active:0,completion:0,onboarded:0,weeks:0,pilot:false,sandbox:false});
  audit("Tenant created: "+name.trim()+" ("+board+")");
@@ -295,13 +295,13 @@ function addUserModal(){
  openModal('<h2 style="margin-bottom:8px">Provision user</h2>'+
  '<label class="fl">Name</label><input type="text" id="nuname" placeholder="Full name" value="'+esc(f.name)+'">'+
  '<div style="height:10px"></div><label class="fl">Role</label><select id="nurole">'+ROLES.filter(function(r){return r!=="continuum_admin";}).map(function(r){return '<option'+(f.role===r?" selected":"")+'>'+r+'</option>';}).join("")+'</select>'+
- '<div style="height:10px"></div><label class="fl">Tenant / org</label><select id="nuorg">'+S.tenants.map(function(t){return '<option>'+esc(t.name)+'</option>';}).join("")+'<option>Clinical Partner</option><option>WSIB Ontario</option><option>WCB Alberta</option></select>'+
+ '<div style="height:10px"></div><label class="fl">Tenant / org</label><select id="nuorg">'+S.tenants.map(function(t){return '<option>'+esc(t.name)+'</option>';}).join("")+'<option>Clinical Partner</option><option>WSIB Ontario</option><option>WCB Worker 36</option></select>'+
  '<button class="btn gold" style="width:100%;margin-top:14px" onclick="createUser()">Provision</button>'+
  '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal()">Cancel</button>');}
 function createUser(){
  var name=(document.getElementById("nuname")||{}).value||"";
  var role=(document.getElementById("nurole")||{}).value||"worker";
- var org=(document.getElementById("nuorg")||{}).value||"Northgate Industrial Services";
+ var org=(document.getElementById("nuorg")||{}).value||"Employer B";
  if(!name.trim()){toast("A user needs a <b>name</b>.");return;}
  S.users.push({id:"u"+(S.nextId++),name:name.trim(),role:role,org:org,status:"active",last:"just provisioned"});
  audit("User provisioned: "+name.trim()+" as "+role+" at "+org);
@@ -323,7 +323,7 @@ function revokeGrant(id){
  toast("Grant <b>revoked</b>. The grantee\'s reach narrows immediately.");save();}
 function addGrantModal(){
  openModal('<h2 style="margin-bottom:8px">New access grant</h2>'+
- '<label class="fl">Grantee</label><select id="nggrantee"><option>Clinical Partner (clinical)</option><option>WSIB Ontario (board)</option><option>WCB Alberta (board)</option></select>'+
+ '<label class="fl">Grantee</label><select id="nggrantee"><option>Clinical Partner (clinical)</option><option>WSIB Ontario (board)</option><option>WCB Worker 36 (board)</option></select>'+
  '<div style="height:10px"></div><label class="fl">Subject tenant</label><select id="ngsubject">'+S.tenants.filter(function(t){return !t.sandbox;}).map(function(t){return '<option>'+esc(t.name)+'</option>';}).join("")+'</select>'+
  '<div style="height:10px"></div><label class="fl">Scope</label><select id="ngscope"><option>all cases</option><option>submitted filings</option></select>'+
  '<button class="btn gold" style="width:100%;margin-top:14px" onclick="createGrant()">Grant</button>'+

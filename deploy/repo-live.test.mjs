@@ -15,7 +15,7 @@ ok("lit quotes and doubles single quotes, NULLs null", lit("a'b") === "'a''b'" &
 const seen = [];
 const execute = async (sql) => {
   seen.push(sql);
-  if (/from clinical\.clinic where id/.test(sql)) return [{ id: "c1", name: "Clinic", accreditation_status: "none", region: "ca-central-1" }];
+  if (/from clinical\.clinic where id/.test(sql)) return [{ id: "c1", name: "Worker 44", accreditation_status: "none", region: "ca-central-1" }];
   if (/wcb_report r join clinical\.wcb_case/.test(sql) && /status = 'signed'/.test(sql)) return [{ id: "r1", case_id: "ca1", practitioner_id: "p1", form_id: "C050E", version: 1, status: "signed", snapshot_hash: null }];
   if (/wcb_obx_skeleton/.test(sql)) return [{ obx_identifier: "JOBTITLE" }, { obx_identifier: "EMPNAME" }];
   if (/from clinical\.wcb_report_field/.test(sql)) return [{ identifier: "JOBTITLE", value: "Guard" }];

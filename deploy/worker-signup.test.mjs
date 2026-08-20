@@ -23,18 +23,18 @@ const M = new Function(core + "\n return {windowPush:windowPush,applyCheckin:app
 const form = (pain, mob, note) => ({ pain, mob, fatigue: 3, confidence: 7, note: note || "" });
 
 // -- pilot creation: day zero record, first check-in advances to day one --
-const p = M.makePilot({ name: "Dana Reyes", trade: "Welder", injury: "Left wrist strain", restr: "", form: form(4, 6), ts: 1700000000000 }, FLAGS);
+const p = M.makePilot({ name: "Worker 49", trade: "Welder", injury: "Left wrist strain", restr: "", form: form(4, 6), ts: 1700000000000 }, FLAGS);
 ok("pilot record is a pilot", p.pilot === true);
 ok("pilot status is reported at creation", p.status === "reported");
 ok("consent is timestamped", p.consentTs === 1700000000000);
 ok("first save advances day zero to day one", p.day === 1);
 ok("first check-in is the only entry", p.pain.length === 1 && p.mob.length === 1);
 ok("first check-in is on the timeline", p.logs.length === 1);
-ok("coordinator welcome carries the worker name", p.msgs[0].who === "them" && p.msgs[0].x.includes("Dana Reyes"));
-ok("pilot name, trade, injury are on the record", p.name === "Dana Reyes" && p.trade === "Welder" && p.injury === "Left wrist strain");
+ok("coordinator welcome carries the worker name", p.msgs[0].who === "them" && p.msgs[0].x.includes("Worker 49"));
+ok("pilot name, trade, injury are on the record", p.name === "Worker 49" && p.trade === "Welder" && p.injury === "Left wrist strain");
 
 // -- the escalation rule holds from the pilot's first minute --
-const esc = M.makePilot({ name: "Sam Cole", trade: "Fitter", injury: "Back", restr: "", form: form(8, 4), ts: 1 }, FLAGS);
+const esc = M.makePilot({ name: "Worker 74", trade: "Fitter", injury: "Back", restr: "", form: form(8, 4), ts: 1 }, FLAGS);
 ok("pilot first check-in at pain eight escalates", esc.escalated === true);
 ok("escalation writes a clinician-notified log", esc.logs[0].tag === "notified" && /honest/i.test(esc.logs[0].x));
 M.applyCheckin(esc, form(2, 6), FLAGS);
@@ -78,10 +78,10 @@ const ALLOW = new Function("return " + js.match(/var ALLOW = (\[[\s\S]*?\]);/)[1
 const pbody = js.match(/function projectBridge\(fields\) \{([\s\S]*?)\n  \}/)[1];
 const project = f => new Function("fields", "ALLOW", "Date", pbody)(f, ALLOW, Date);
 const pilotBridge = project({ source: "worker-dashboard", name: p.name, trade: p.trade, injury: p.injury, restr: p.restr, day: p.day, status: p.status, consented: true, pain: p.pain[0], mobility: p.mob[0] });
-ok("pilot name, trade, injury cross the bridge", pilotBridge.name === "Dana Reyes" && pilotBridge.trade === "Welder" && pilotBridge.injury === "Left wrist strain");
+ok("pilot name, trade, injury cross the bridge", pilotBridge.name === "Worker 49" && pilotBridge.trade === "Welder" && pilotBridge.injury === "Left wrist strain");
 ok("pilot clinical values never cross the bridge", pilotBridge.pain === undefined && pilotBridge.mobility === undefined);
-const demoBridge = project({ source: "worker-dashboard", name: "Marcus Bedard", trade: "Scaffolder", status: "light_duty", day: 9 });
-ok("reset returns the demonstration worker to the bridge", demoBridge.name === "Marcus Bedard" && demoBridge.status === "light_duty");
+const demoBridge = project({ source: "worker-dashboard", name: "Worker 15", trade: "Scaffolder", status: "light_duty", day: 9 });
+ok("reset returns the demonstration worker to the bridge", demoBridge.name === "Worker 15" && demoBridge.status === "light_duty");
 
 // -- wizard wiring is present and honest (static) --
 ok("Settings offers the pilot sign-up", /Sign up as a new worker \(pilot\)/.test(w));
@@ -95,7 +95,7 @@ ok("cancel leaves the demonstration untouched", /function cancelSignup\(\)\{wiz=
 
 // -- the active worker (not a hardcoded name) is what the bridge writes --
 ok("bridge write reads the active worker name", /writeBridgeShared\(\{source:"worker-dashboard",name:S\.name/.test(w));
-ok("no hardcoded Marcus in the bridge write path", !/writeBridgeShared\(\{source:"worker-dashboard",name:"Marcus/.test(w));
+ok("no hardcoded Worker 15 in the bridge write path", !/writeBridgeShared\(\{source:"worker-dashboard",name:"Worker 15/.test(w));
 
 // -- the hub Sign up pill deep-links here and opens the wizard on arrival --
 ok("worker app opens the wizard on the signup query", /signup=1[\s\S]{0,40}startSignup\(\)/.test(w));

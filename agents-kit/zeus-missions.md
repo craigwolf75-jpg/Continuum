@@ -87,8 +87,8 @@ folds in.
 - Status: QUEUED
 - Lead: heracles, with hermes for the CI wiring
 - Gates: Heracles green (the canon suite itself must pass), Argus clean.
-- Note: wire the canon suite into CI so canon drift fails the build. Marcus at
-  day 9 pain 4, Cardinal off work day 18, per-tenant numbers that sum.
+- Note: wire the canon suite into CI so canon drift fails the build. Worker 15 at
+  day 9 pain 4, Worker 08 off work day 18, per-tenant numbers that sum.
 
 ### B3+: Argus patrol findings
 - Status: QUEUED (populated by M5)

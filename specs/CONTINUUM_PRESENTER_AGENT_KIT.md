@@ -1,7 +1,7 @@
 # Continuum Presenter Agent Kit (Prompt 32)
 
 Everything needed to stand up the live voice assistant that answers audience
-questions during the GardaWorld demo. The agent is created on the ElevenLabs side
+questions during the Employer A demo. The agent is created on the ElevenLabs side
 in under an hour; the portals already hold the one integration point (Present
 mode, voice panel, paste the agent ID once). No em-dashes anywhere.
 

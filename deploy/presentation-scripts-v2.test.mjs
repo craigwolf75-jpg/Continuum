@@ -2,7 +2,7 @@
    Asserts the v2 scripts supersede v1 for the voice: eight portal scripts in
    presentation order, forty four bold section narrations, two expected
    questions and a handoff per portal, every canon number in its spoken form,
-   the vocabulary laws verbatim, the walls held (Cardinal and Marcus absent
+   the vocabulary laws verbatim, the walls held (Worker 08 and Worker 15 absent
    from the employer block), the agent id in the update instruction, and both
    35d deliverables dash-clean. Hard-fail; no em-dashes anywhere. */
 import { readFileSync } from "node:fs";
@@ -42,10 +42,10 @@ ok("HSE: seven open cases", s.includes("Seven open cases"));
 ok("HSE: seventy eight percent completion", s.includes("seventy eight percent check-in completion"));
 ok("board: nineteen open claims, seven waiting", s.includes("Nineteen open claims, seven of them waiting to be acknowledged"));
 ok("clinical: twenty four active cases", s.includes("Twenty four active cases"));
-ok("clinical: Marcus day nine of twenty one, pain four, mobility six", block(3).includes("day nine of a twenty one day program") && block(3).includes("pain today is four") && block(3).includes("mobility is six"));
-ok("HSE: Tyler Cardinal at day eighteen", block(2).includes("Tyler Cardinal") && block(2).includes("day eighteen"));
-ok("SIGMA connection: Jordan Miller GW-2026-1048", block(5).includes("Jordan Miller") && block(5).includes("GW-2026-1048"));
-ok("admin: tenant counts", block(7).includes("Worley with seven seats") && block(7).includes("GardaWorld with twelve") && block(7).includes("Ledcor with five"));
+ok("clinical: Worker 15 day nine of twenty one, pain four, mobility six", block(3).includes("day nine of a twenty one day program") && block(3).includes("pain today is four") && block(3).includes("mobility is six"));
+ok("HSE: Worker 08 at day eighteen", block(2).includes("Worker 08") && block(2).includes("day eighteen"));
+ok("SIGMA connection: Worker 11 GW-2026-1048", block(5).includes("Worker 11") && block(5).includes("GW-2026-1048"));
+ok("admin: tenant counts", block(7).includes("Worley with seven seats") && block(7).includes("Employer A with twelve") && block(7).includes("Employer C with five"));
 ok("SIGMA connection: thirty five thousand employees", block(5).includes("thirty five thousand"));
 ok("occupational database set complete", block(5).includes("forty five positions") && block(5).includes("fifty tasks") && block(5).includes("twenty seven demand factors") && block(5).includes("fourteen injury profiles") && block(5).includes("two hundred nine pre-matched duties") && block(5).includes("twenty six categories") && block(5).includes("twenty two code restriction system"));
 
@@ -59,8 +59,8 @@ ok("staging line preserved in the admin script", block(7).includes("Predictive c
 ok("pricing and legal go to Gary by name", s.includes("goes to Gary by name") && s.includes("pricing and terms are for Gary"));
 
 // the walls, held under expansion
-ok("Cardinal absent from the employer script block", !block(1).includes("Cardinal"));
-ok("no worker name in the employer script block", !block(1).includes("Marcus") && !block(1).includes("Jordan") && !block(1).includes("Tyler"));
+ok("Worker 08 absent from the employer script block", !block(1).includes("Worker 08"));
+ok("no worker name in the employer script block", !block(1).includes("Worker 15") && !block(1).includes("Worker 11") && !block(1).includes("Worker 08"));
 ok("board block carries no check-in scores", !/pain (of|score|today)/.test(block(4)));
 
 // the update instruction

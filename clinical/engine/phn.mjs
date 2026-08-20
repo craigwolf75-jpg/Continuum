@@ -1,6 +1,6 @@
 /* Continuum Prompt 40 (Prompt 39A Section 1.4 and 1.5): the PHN format gate.
 
-   The validation schema types PID.3/CX.1 (the Alberta PHN) as stSINPHN with
+   The validation schema types PID.3/CX.1 (the Worker 36) as stSINPHN with
    pattern \d{0,9}, so it PERMITS a short PHN. The exact nine digit requirement
    comes from the workbook, not the schema, so it must be enforced in application
    code (39A Section 1.4). Do not rely on schema validation to catch a truncated
@@ -31,7 +31,7 @@ export function phnLength(value) {
   if (isBlank(value)) return [];
   return /^\d{9}$/.test(norm(value))
     ? []
-    : [fail("PHN-LENGTH", "Alberta PHN", "Alberta PHN must be exactly 9 digits (the validation schema permits a shorter value; the length is enforced here)")];
+    : [fail("PHN-LENGTH", "Worker 36", "Worker 36 must be exactly 9 digits (the validation schema permits a shorter value; the length is enforced here)")];
 }
 
 // Stage 2: the check digit, default OFF. config: { enabled, validator }. When
@@ -45,8 +45,8 @@ export function phnCheckDigit(value, config) {
   if (isBlank(value)) return [];
   const v = norm(value);
   if (typeof c.validator !== "function")
-    return [fail("PHN-CHECKDIGIT-CONFIG", "Alberta PHN", "check digit validation is enabled but no board confirmed validator is configured; refusing to guess an algorithm (board enquiry B1)")];
-  return c.validator(v) ? [] : [fail("PHN-CHECKDIGIT", "Alberta PHN", "Alberta PHN fails the configured check digit validation")];
+    return [fail("PHN-CHECKDIGIT-CONFIG", "Worker 36", "check digit validation is enabled but no board confirmed validator is configured; refusing to guess an algorithm (board enquiry B1)")];
+  return c.validator(v) ? [] : [fail("PHN-CHECKDIGIT", "Worker 36", "Worker 36 fails the configured check digit validation")];
 }
 
 // The full PHN gate: the hard length check always, then the check digit stage

@@ -1,6 +1,6 @@
 # Prompt 19 Section 4: Reply to Craig (draft)
 
-**What this is:** the draft reply to Craig Wolf that Prompt 19 section 4 asked for, written in Gary's voice. Updated to reflect that the Prompt 19 section 3 build queue and the Prompt 20 GardaWorld runner have since shipped, so the demonstration Craig described is built and rehearsable, not still on the whiteboard.
+**What this is:** the draft reply to Craig Wolf that Prompt 19 section 4 asked for, written in Gary's voice. Updated to reflect that the Prompt 19 section 3 build queue and the Prompt 20 Employer A runner have since shipped, so the demonstration Craig described is built and rehearsable, not still on the whiteboard.
 **Status:** Draft. Not sent. For Gary to review, adjust, and send.
 **Date:** July 20, 2026
 
@@ -14,7 +14,7 @@ The memo is the strongest strategic writing this project has produced, and I am 
 
 Here is the part I want you to sit with: the demonstration you described is not a deck we still have to build. It is running. All six role screens exist and pass a shared cross reference canon today, one worker's single check in lands as a different, lawful projection on every one of them. And your twelve scenes are now a rehearsable instrument: a fourteen scene runner, opening positioning beat through your closing line, each scene carrying the narration to speak, a working visual, presenter notes, and a pointer to the exact live portal to open at the moments the real product should take over. It prints the full script one scene per page. You can rehearse the whole thing start to finish.
 
-The one worker arc runs live, not as slides. Marcus Bedard, injury to sign off, and it ends on Dr. Owusu pressing the gold Clearance button while four tabs move at once. Your closing line is the final screen, verbatim: everyone made better decisions because everyone had better information.
+The one worker arc runs live, not as slides. Worker 15, injury to sign off, and it ends on Attending Physician pressing the gold Clearance button while four tabs move at once. Your closing line is the final screen, verbatim: everyone made better decisions because everyone had better information.
 
 Two sentences are built into the script because they are the ones that protect you in the room. Say them exactly:
 

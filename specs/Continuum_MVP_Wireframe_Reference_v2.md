@@ -38,7 +38,7 @@ A worker centered injury recovery and return to work platform. A worker is injur
 - **Employer Dashboard** - web, real time. Worker table color coded by recovery status, KPI tiles, charts, filters, reviews-and-alerts side rail. Company assigns modified-duty tasks within doctor set restrictions from the Light Duties view. *Privacy boundary:* the employer sees functional status, restrictions, days off, doctor visits, RTW progress, plus injury type for accommodation. It does NOT show diagnosis notes, photos, check-in free text, or raw pain and mobility scores. *Build note:* reads `injuries` + latest `recovery_logs`, scoped by `company_id` through RLS; field level rules enforced in the API response, not just the UI.
 - **Light Duties** - Company assigns modified-duty tasks within doctor set restrictions; worker checks them off daily; completion and feedback flow back. Medical restrictions are set by Nexus Health and read only to the company. *Build note:* writes `light_duties`; valid only while the injury is in the light duty state.
 - **Nexus Health (Clinician)** - the front door and clinical control center. The assessment form creates the injury and sends it to the Continuum API, which fires the worker SMS. Dashboard shows KPIs, escalation alerts, patient list with recovery progress, clearance actions, and the auto generated fitness-for-work form. *Build note:* only the Nexus Health role can advance medical status; intake endpoint built to the proposed contract and stubbed until the spec arrives.
-- **WCB Dashboard** - read only. Claims table and the three milestone notifications: initial injury, light duty cleared, full duty cleared. WCB-Alberta has no public API, so Continuum generates the documents (including the FFW form) for filing through myWCB or HCP online services, and tracks each to acknowledgement. *Build note:* `wcb_notifications` records every payload; WCB access is read only through `access_grants`, scoped to assigned employers.
+- **WCB Dashboard** - read only. Claims table and the three milestone notifications: initial injury, light duty cleared, full duty cleared. WCB-Worker 36 has no public API, so Continuum generates the documents (including the FFW form) for filing through myWCB or HCP online services, and tracks each to acknowledgement. *Build note:* `wcb_notifications` records every payload; WCB access is read only through `access_grants`, scoped to assigned employers.
 - **Reference tabs** - Status Flow (lifecycle below), Roles and Access (permission rules below), Data Model (tables below).
 
 ## 4. Data Model
@@ -117,7 +117,7 @@ Workers authenticate with a one time code sent by SMS to the phone on file. No p
 ## 10. Open Decisions and Dependencies
 
 - Nexus Health and SiteDocs API specs arrive next week; build to the proposed contracts and stub intake until then.
-- WCB-Alberta submission resolved: document generation plus portal filing, no live API.
+- WCB-Worker 36 submission resolved: document generation plus portal filing, no live API.
 - Employer visibility resolved: functional status only.
 - Brand resolved: Continuum, with Return To Work, in navy and gold.
 - Stack confirmation is with Gary.

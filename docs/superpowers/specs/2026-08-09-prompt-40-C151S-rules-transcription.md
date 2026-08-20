@@ -82,7 +82,7 @@ requires at least one of the seven booleans).
 
 ## Sections that mirror C151 (see the C151 transcription for full rows)
 
-- Participant Details: BR5 (Alberta PHN one of two required, PHN inversion).
+- Participant Details: BR5 (Worker 36 one of two required, PHN inversion).
 - Accident Details: BR1 (Date of Injury range).
 - Injury Details: BR1, BR2, BR3, BR4, BR5, BR6, BR8, BR9, SR1 (prior conditions), SR2 (diagnosis
   changed show_hide), SR3 (dominant hand, VAL-X07), SR4 (five rows, VAL-X08), IBR1, IBR2. Same

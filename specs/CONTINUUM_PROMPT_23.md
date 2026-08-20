@@ -9,7 +9,7 @@ Before patching, every chart in the family was inspected for hardcoded values. F
 
 ## 2. HSE portal: metrics that move
 
-The restrictions-to-first-suitable metric now computes from a new per-worker seed field recording each duty-holding worker's actual gap (2, 1, 2, and 2 days), averaging to the same 1.8 the surface previously asserted, except now it is true. Step-ups became an event stream: the seeded period holds one (Okafor's vehicle inspection logbooks), and the assignment workflow itself now fires the event live: assigning a suitable-onsite duty to a worker currently holding standard-precaution work records a step-up, the analytics KPI climbs, and the latest step-up renders under the figure; the suite proves a non-qualifying assignment does not fire it. The case queue gained a sort toggle: attention (the default, escalations first), day, and pain, each proven to reorder (pain puts Cardinal first, day puts the day-24 case first), with the hazard gate and escalation semantics regression-tested after the patch.
+The restrictions-to-first-suitable metric now computes from a new per-worker seed field recording each duty-holding worker's actual gap (2, 1, 2, and 2 days), averaging to the same 1.8 the surface previously asserted, except now it is true. Step-ups became an event stream: the seeded period holds one (Worker 60's vehicle inspection logbooks), and the assignment workflow itself now fires the event live: assigning a suitable-onsite duty to a worker currently holding standard-precaution work records a step-up, the analytics KPI climbs, and the latest step-up renders under the figure; the suite proves a non-qualifying assignment does not fire it. The case queue gained a sort toggle: attention (the default, escalations first), day, and pain, each proven to reorder (pain puts Worker 08 first, day puts the day-24 case first), with the hazard gate and escalation semantics regression-tested after the patch.
 
 ## 3. Board portal: the claims table sorts, the status chart filters
 
@@ -17,7 +17,7 @@ The claims table headers (worker, status, claim phase) are clickable in the Clai
 
 ## 4. Clinical dashboard: the census sorts, the buckets open
 
-The Workers census gained sortable headers (name, pain, tenant and day), with pain descending proven to put Cardinal first. The analytics progress-versus-prognosis buckets are now clickable: clicking Stalled opens the Workers census filtered to stalled patients, with a visible filter state and a clear link, and the suite proves the filter shows Cardinal while excluding the ahead-of-plan patient. The bucket mapping itself (ahead, on track, behind, stalled) is a tested function. Canon KPIs (24 active, 68 recovery score) and the transition legality matrix re-asserted after patching.
+The Workers census gained sortable headers (name, pain, tenant and day), with pain descending proven to put Worker 08 first. The analytics progress-versus-prognosis buckets are now clickable: clicking Stalled opens the Workers census filtered to stalled patients, with a visible filter state and a clear link, and the suite proves the filter shows Worker 08 while excluding the ahead-of-plan patient. The bucket mapping itself (ahead, on track, behind, stalled) is a tested function. Canon KPIs (24 active, 68 recovery score) and the transition legality matrix re-asserted after patching.
 
 ## 5. Admin portal: the aggregate bars navigate
 

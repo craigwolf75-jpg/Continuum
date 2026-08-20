@@ -75,7 +75,7 @@ is complete. Listed so none is lost.
    `clinical.wcb_error_catalogue` (migration 007, seed 008 from `error_catalogue.data.mjs`) and
    `clinical/engine/errors.mjs`. The table has no column for a value, polarity or correction, so it
    cannot store one; the generator also rejects any such field in the source. The one real board code
-   in the package (121023) is seeded mapping to the Alberta PHN element only, with the 2007 inverted
+   in the package (121023) is seeded mapping to the Worker 36 element only, with the 2007 inverted
    polarity caveat as a human note and no value. An unmapped or below 0.80 confidence code surfaces the
    board's raw text to a human. The catalogue grows from real rejections.
 6. DONE. **OBX skeleton per form as stored configuration** (39A Section 3.1 item 1, acceptance criterion

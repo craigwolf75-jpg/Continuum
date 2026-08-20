@@ -14,7 +14,7 @@ const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + 
 // -- the one real board code maps to an element only --
 const r = resolveError(idx, "AB", "121023", "121023: Worker Personal Health Number must be BLANK since Worker Personal Health Number Indicator is No");
 ok("121023 is mapped", r.mapped === true);
-ok("121023 maps to the Alberta PHN element", r.element === "Alberta PHN");
+ok("121023 maps to the Worker 36 element", r.element === "Worker 36");
 ok("121023 carries the legacy inverted polarity note", typeof r.note === "string" && r.note.includes("inverted polarity"));
 ok("121023 carries the raw board text through", r.rawText.includes("must be BLANK"));
 

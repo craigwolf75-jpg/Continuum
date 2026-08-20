@@ -79,16 +79,16 @@ section.view{display:none}section.view.on{display:block}
 <main><div class="wrap" id="main"></div></main>
 <script>
 "use strict";
-/* D13: default to SIGMA-RH (GardaWorld's own product, RH for Ressources Humaines).
+/* D13: default to SIGMA-RH (Employer A's own product, RH for Ressources Humaines).
    Settings offers the alternate spelling; the name is dynamic everywhere. */
 var LSKEY="continuum_sigma_portal_v1";
-var DEMO={name:"Jordan Miller", claim:"2026-04417", employer:"GardaWorld", coordinator:"Priya Anand, return to work coordinator"};
+var DEMO={name:"Worker 11", claim:"2026-04417", employer:"Employer A", coordinator:"Worker 32 Anand, return to work coordinator"};
 var INBOUND=["Claim number","Worker name","Employer","Job title","Injury type","Injury date","Body part","Claim status","Adjuster contact","Benefit start date"];
 var RETURNF=["Functional recovery milestone","Modified duty participation","Projected return to work window (clinician reviewed estimate)","Current functional status","Restriction acknowledgement","Duty plan state","Days on modified duty","Return milestone reached","Case workflow state","Last review date","Prepared document reference"];
 var METHODS=["Secure file exchange","A direct system connection","A workflow connector","A scheduled export"];
 var ALLOWED=["Functional status","Safe duties the worker can do","Modified work participation","Projected return to work window","Case workflow state"];
 var PROTECTED=["Diagnosis","Symptoms","Pain and mobility scores","Clinical notes","Movement video","Consent state","Personal recovery journal entries"];
-var SYNC=[["Prepared: functional update for Jordan Miller","held"],["Prepared: modified duty participation","held"],["Prepared: projected return window (clinician reviewed estimate)","held"]];
+var SYNC=[["Prepared: functional update for Worker 11","held"],["Prepared: modified duty participation","held"],["Prepared: projected return window (clinician reviewed estimate)","held"]];
 var NAV=[["overview","insights","Overview"],["exchange","swap_horiz","Case exchange"],["mapping","account_tree","Field mapping"],["sync","history","Sync history"],["permissions","shield_person","Permissions"],["settings","settings","Settings"]];
 
 var S;
@@ -147,7 +147,7 @@ function renderPermissions(){
 }
 function renderSettings(){
   var h=head("Settings","This seat's configuration.");
-  h+='<div class="card"><h3>System name</h3><div class="sub">GardaWorld runs SIGMA-RH (RH for the French Ressources Humaines). The presentation specification wrote SIGMA-HR. Pick the spelling GardaWorld uses; it flips across every screen.</div>';
+  h+='<div class="card"><h3>System name</h3><div class="sub">Employer A runs SIGMA-RH (RH for the French Ressources Humaines). The presentation specification wrote SIGMA-HR. Pick the spelling Employer A uses; it flips across every screen.</div>';
   h+='<div style="display:flex;gap:10px;margin-top:10px">'+
      '<button class="btn '+(sys()==="SIGMA-RH"?"on":"ghost")+'" onclick="setSys(\'SIGMA-RH\')">SIGMA-RH</button>'+
      '<button class="btn '+(sys()==="SIGMA-HR"?"on":"ghost")+'" onclick="setSys(\'SIGMA-HR\')">SIGMA-HR</button></div>';

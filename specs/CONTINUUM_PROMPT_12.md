@@ -1,7 +1,7 @@
 # CONTINUUM PROMPT 12: Framer Code Component, the Worker App as a Living Demo
 
 **Deliverable:** ContinuumWorkerApp.tsx, a single-file Framer code component. Compile-verified (esbuild, TSX) and spec-audited this session.
-**Choice made:** of the three candidate shapes (single card, full self-contained app, marketing section), this ships the FULL WORKER APP as a self-contained demo component: internal state, no backend, droppable into any Framer site. It is the highest-leverage shape because a visitor can run Marcus's whole day themselves, including the escalation story.
+**Choice made:** of the three candidate shapes (single card, full self-contained app, marketing section), this ships the FULL WORKER APP as a self-contained demo component: internal state, no backend, droppable into any Framer site. It is the highest-leverage shape because a visitor can run Worker 15's whole day themselves, including the escalation story.
 **Date:** July 17, 2026
 
 ## 1. Framer spec compliance (audited)

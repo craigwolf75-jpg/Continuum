@@ -15,8 +15,8 @@ const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + 
 
 function seedRepo(overrides = {}) {
   return createInMemoryRepository({
-    clinics: [{ id: "clinic-1", name: "Test Clinic", accreditation_status: overrides.accreditation || "none", region: "ca-central-1" }],
-    practitioners: [{ id: "prac-1", clinic_id: "clinic-1", billing_number: "12345", name: "Dr Test", active: overrides.practitionerActive !== false }],
+    clinics: [{ id: "clinic-1", name: "Worker 44", accreditation_status: overrides.accreditation || "none", region: "ca-central-1" }],
+    practitioners: [{ id: "prac-1", clinic_id: "clinic-1", billing_number: "12345", name: "Dr Worker 44", active: overrides.practitionerActive !== false }],
     reports: [{ id: "rep-1", case_id: "case-1", practitioner_id: "prac-1", form_id: "C050", version: 1, status: "draft", completed: false }],
     drafts: [{ report_id: "rep-1", practitioner_id: "prac-1", axisValues: [
       { axis: "lifting_floor_to_waist", answered: true, code_set: "basic", quantity_kind: "weight", capability: "limited", measured_weight_kg: 8, code_list_name: BASIC_LIST, source: "measured", provenance: "human" },

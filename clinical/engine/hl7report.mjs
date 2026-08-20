@@ -9,7 +9,7 @@
      MSH.7   message date time            EVN.2  event date time
      MSH.10  message control id           EVN.4  form id (C050E, ...)
      PID.2/CX.1   claim reference number  EVN.6  injury date
-     PID.3/CX.1   Alberta PHN             ACC.1  injury date
+     PID.3/CX.1   Worker 36             ACC.1  injury date
      PID.3/CX.5   no PHN indicator        PV1.19/CX.1  claim number
      PID.5   family / given / middle      PRD.1  practitioner role code
      PID.7   date of birth                PRD.2  practitioner family / given

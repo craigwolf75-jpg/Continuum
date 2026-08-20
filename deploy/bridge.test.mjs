@@ -22,10 +22,10 @@ const project = f => projectBridge(f, ALLOW, Date);
 ok("allowlist carries no clinical field", !ALLOW.some(k => /pain|mob|fatigue|confidence|notes|diagnos/i.test(k)));
 
 // a payload with clinical fields mixed in: only functional keys survive
-const r = project({ source: "worker-dashboard", name: "Marcus Bedard", trade: "Scaffolder", status: "light_duty", day: 9, consented: true, pain: 4, mobility: 6, fatigue: 3, confidence: 8, notes: "hurts", diagnosis: "supraspinatus strain" });
+const r = project({ source: "worker-dashboard", name: "Worker 15", trade: "Scaffolder", status: "light_duty", day: 9, consented: true, pain: 4, mobility: 6, fatigue: 3, confidence: 8, notes: "hurts", diagnosis: "supraspinatus strain" });
 ok("only allowlist keys cross", Object.keys(r).every(k => ALLOW.includes(k)));
 ok("clinical fields are dropped", r.pain === undefined && r.mobility === undefined && r.fatigue === undefined && r.confidence === undefined && r.notes === undefined && r.diagnosis === undefined);
-ok("functional fields are kept", r.name === "Marcus Bedard" && r.status === "light_duty" && r.day === 9 && r.consented === true);
+ok("functional fields are kept", r.name === "Worker 15" && r.status === "light_duty" && r.day === 9 && r.consented === true);
 ok("ts is auto-added when absent", typeof r.ts === "number");
 ok("a provided ts is preserved", project({ ts: 123 }).ts === 123);
 

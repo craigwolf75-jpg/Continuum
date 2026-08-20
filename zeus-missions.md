@@ -80,7 +80,7 @@ folds in.
 - Lead: argus
 - Result: NO confirmed law violation on any live visitor product surface.
   Employer surface visually clean (all trend arrows green, no red, no alarm
-  color), admin clean, canon consistent (Marcus day 9 pain 4, Cardinal day 18,
+  color), admin clean, canon consistent (Worker 15 day 9 pain 4, Worker 08 day 18,
   per-tenant sums 7+12+5=24), 11 storage keys no collision, hygiene clean (no
   secrets; publishable key correctly labeled). Six findings surfaced, all drift
   or housekeeping or governance rulings, none a live breach. Absorbed S-DESIGN-F
@@ -98,8 +98,8 @@ folds in.
 ### B2: Canon suite into CI
 - Status: DONE.
 - Lead: heracles (canon suite), hermes (CI wiring).
-- Result: deploy/canon.test.mjs proves the ledger across surfaces (Marcus day 9
-  pain 4 on worker/hse/clinical, Cardinal off work day 18 on hse/clinical,
+- Result: deploy/canon.test.mjs proves the ledger across surfaces (Worker 15 day 9
+  pain 4 on worker/hse/clinical, Worker 08 off work day 18 on hse/clinical,
   non-sandbox tenant active sums to 24 on admin, plus the canon copy). Wired into
   CI via .github/workflows/suites.yml, which runs every deploy/*.test.mjs on push
   and pull_request to main, so a portal-suite failure or canon drift fails the

@@ -32,7 +32,7 @@ ok("privacy: allowed column", html.includes("Allowed to cross"));
 ok("privacy: protected column", html.includes("Protected, never crosses"));
 ok("privacy panel title", html.includes("The right information for the right person"));
 ok("disclaimer: no live integration", html.includes("No live integration exists"));
-ok("start presentation button", html.includes("Start GardaWorld Demonstration"));
+ok("start presentation button", html.includes("Start Employer A Demonstration"));
 
 /* 2. Reusable component registry: nine components from one data object */
 ok("nine registry components", count(/\{cn:"/g) === 9);
@@ -53,11 +53,11 @@ ok("progress marker n of screens", html.includes('"Screen "+(idx+1)+" of "+SCREE
 ok("hideable presenter notes toggle", html.includes("function toggleNotes") && html.includes("notesHidden"));
 
 /* 4. Demonstration case and the human gates */
-ok("Jordan Miller demonstration case", html.includes("Jordan Miller"));
+ok("Worker 11 demonstration case", html.includes("Worker 11"));
 ok("labeled Demonstration Case throughout", count(/Demonstration Case/g) >= 3);
 ok("create-case confirmation", html.includes("Demonstration case created for"));
 ok("human-review banner", html.includes("Human review."));
-ok("human-attributed approval", html.includes("Approved by") && html.includes("Priya Anand"));
+ok("human-attributed approval", html.includes("Approved by") && html.includes("Worker 32 Anand"));
 ok("employer view shown by absence", html.includes("deliberately does not carry"));
 ok("review-before-changes rule", html.includes("Review before changes."));
 

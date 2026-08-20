@@ -6,7 +6,7 @@
 
 ## 1. The guardrail before anything else
 
-The live mode connects EXCLUSIVELY to a synthetic demo service serving the fictional Marcus case. Prompt 09 G3 prohibits real health information from reaching third-party runtimes, marketing surfaces, or analytics; a Framer-hosted page is all three. The demo service therefore runs against a dedicated demo state row, never against production tables, and its token grants access to nothing else. This is not a deployment choice; it is law.
+The live mode connects EXCLUSIVELY to a synthetic demo service serving the fictional Worker 15 case. Prompt 09 G3 prohibits real health information from reaching third-party runtimes, marketing surfaces, or analytics; a Framer-hosted page is all three. The demo service therefore runs against a dedicated demo state row, never against production tables, and its token grants access to nothing else. This is not a deployment choice; it is law.
 
 ## 2. What v2 adds to the component
 
@@ -45,7 +45,7 @@ Token leaks cost nothing but synthetic-state vandalism, healed by the daily rese
 
 ## Implementation record (this repo)
 
-- Migration supabase/migrations/20260718100000_framer_demo.sql: table framer_demo_state; a restricted role framer_demo that OWNS the SECURITY DEFINER operations and is granted access to ONLY that table, so any other-table query fails with permission denied (verified). RLS denies public keys, so the token is the sole gate. Operations framer_demo_get / _checkin / _toggle / _advance (trend cap 16, escalation on three consecutive pain 8+, day advance up to prognosis, window reset) granted to anon. Daily framer_demo_reset cron restores the Marcus baseline.
+- Migration supabase/migrations/20260718100000_framer_demo.sql: table framer_demo_state; a restricted role framer_demo that OWNS the SECURITY DEFINER operations and is granted access to ONLY that table, so any other-table query fails with permission denied (verified). RLS denies public keys, so the token is the sole gate. Operations framer_demo_get / _checkin / _toggle / _advance (trend cap 16, escalation on three consecutive pain 8+, day advance up to prognosis, window reset) granted to anon. Daily framer_demo_reset cron restores the Worker 15 baseline.
 - Edge function supabase/functions/framer-demo: verify_jwt off; GET /state, POST /checkins, /duties/toggle, /advance-day; open CORS; reachable with only the demo token as bearer; calls the operations with the anon key.
 - Component framer/ContinuumWorkerApp.tsx v2: the additions in section 2. Compile-verified with esbuild.
 - Verified end to end over HTTP: reads, writes, escalation rule, 401 without token, preflight CORS, isolation (framer_demo cannot read injuries).

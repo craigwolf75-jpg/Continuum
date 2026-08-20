@@ -109,10 +109,10 @@ swappable (07.2 seam):
    test OTP for the seed worker: phone `+15875550101` maps to a fixed code
    (for example `123456`) via the `sms_test_otp` auth config. No real SMS is
    sent for test numbers; the fixed code verifies.
-2. Set the phone on Marcus's existing seed auth user
+2. Set the phone on Worker 15's existing seed auth user
    (`a0000000-0000-0000-0000-000000000001`) to `+15875550101` and mark it
    confirmed, so phone OTP resolves to that auth user, which is already linked
-   to Marcus's `public.users` row. The auth hook then stamps his `worker`
+   to Worker 15's `public.users` row. The auth hook then stamps his `worker`
    claims and RLS scopes him to his own case.
 
 Risk: if Supabase requires a configured SMS provider before phone auth can be
@@ -159,7 +159,7 @@ The app performs no privileged operations; it relies entirely on existing RLS:
 - `tenants` select: worker sees own tenant (branding).
 
 No new migrations are required for this increment. The only backend change is
-the auth config and the one-row update to Marcus's seed auth user (Section 4.2),
+the auth config and the one-row update to Worker 15's seed auth user (Section 4.2),
 which is live provisioning, not a committed migration.
 
 ## 7. Look and feel
@@ -196,7 +196,7 @@ Nothing beyond this set is added without explicit approval.
 
 Local only, no build in the working tree:
 1. `npm install` and `npm run dev` in `worker-app/`.
-2. Drive the flow in a browser as Marcus: request OTP for `+15875550101`, enter
+2. Drive the flow in a browser as Worker 15: request OTP for `+15875550101`, enter
    the test code, land on the consent gate, agree, see Home with his real
    injury summary, submit a check-in, and confirm the row appears in
    `recovery_logs` (scoped to him) via a Supabase query.

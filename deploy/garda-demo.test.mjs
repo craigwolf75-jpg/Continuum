@@ -95,8 +95,8 @@ ok("closing line verbatim",
   html.includes("Everyone made better decisions because everyone had better information"));
 
 /* 12. Cast canon */
-ok("cast: Marcus Bedard", html.includes("Marcus Bedard"));
-ok("cast: Dr. A. Owusu", html.includes("Dr. A. Owusu") || html.includes("Dr. Owusu"));
+ok("cast: Worker 15", html.includes("Worker 15"));
+ok("cast: Attending Physician", html.includes("Attending Physician") || html.includes("Attending Physician"));
 ok("cast: claim CT-2026-0481", html.includes("CT-2026-0481"));
 ok("cast: day twenty one / 21", /day (twenty one|21)/i.test(html));
 ok("cast: expected full duty Jul 31", /jul 31/i.test(low));

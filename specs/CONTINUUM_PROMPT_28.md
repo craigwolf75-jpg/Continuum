@@ -26,7 +26,7 @@ The Executive Briefing is the productized form of the demo runner's Scene 11 and
 
 ## 6. Reply points to Craig
 
-The master is adopted as the composition root and the W-numbering enters the canon today. Give him the avatar repair with its reasoning, since it protects the feature he wants by defining it as authored conversation rather than generative improvisation. Ask for the D1 ruling as a blocking item, stated exactly that way. Confirm the four-surface specification assignment and the Organizational Health Index transparency rule. And ask, for the third consecutive review, for the GardaWorld occupational database document, which the master's own module interactions, the graph's node set, and the match engine build all read from, and which the stream has still never received.
+The master is adopted as the composition root and the W-numbering enters the canon today. Give him the avatar repair with its reasoning, since it protects the feature he wants by defining it as authored conversation rather than generative improvisation. Ask for the D1 ruling as a blocking item, stated exactly that way. Confirm the four-surface specification assignment and the Organizational Health Index transparency rule. And ask, for the third consecutive review, for the Employer A occupational database document, which the master's own module interactions, the graph's node set, and the match engine build all read from, and which the stream has still never received.
 
 ## Note on D1 (added on filing)
 

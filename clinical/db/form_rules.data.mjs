@@ -59,9 +59,9 @@ const C570 = "2.08 - C570 - User Interface Design.pdf";
 export const RULES = [
   // ===== C050E: Participant Details (page 1) =====
   r({ form_id: "C050E", rule_code: "BR5", ordinal: 1, rule_type: "business", source_document: C050E, source_page: 1,
-    trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN",
+    trigger_element_name: "Worker 36; Patient does not have an Worker 36",
     trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion source (engine Section 6.3); does NOT hide" },
-    affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+    affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
 
   // ===== C050E: Accident Details (page 2) =====
   r({ form_id: "C050E", rule_code: "BR1", ordinal: 1, rule_type: "business", source_document: C050E, source_page: 2,
@@ -251,9 +251,9 @@ export const RULES = [
 
   // C050S: Participant Details (page 1)
   r({ form_id: "C050S", rule_code: "BR5", ordinal: 1, rule_type: "business", source_document: C050S, source_page: 1,
-    trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN",
+    trigger_element_name: "Worker 36; Patient does not have an Worker 36",
     trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion source; does NOT hide" },
-    affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+    affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
 
   // C050S: Accident Details (page 2)
   r({ form_id: "C050S", rule_code: "BR1", ordinal: 1, rule_type: "business", source_document: C050S, source_page: 2,
@@ -443,9 +443,9 @@ export const RULES = [
 
   // C151: Participant Details (page 1)
   r({ form_id: "C151", rule_code: "BR5", ordinal: 1, rule_type: "business", source_document: C151, source_page: 1,
-    trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN",
+    trigger_element_name: "Worker 36; Patient does not have an Worker 36",
     trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion source; does NOT hide" },
-    affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+    affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
 
   // C151: Accident Details (page 2). No develop over time warning on C151 (SR4 absent here).
   r({ form_id: "C151", rule_code: "BR1", ordinal: 1, rule_type: "business", source_document: C151, source_page: 2,
@@ -585,7 +585,7 @@ export const RULES = [
 
   // ================= C568 (Medical Invoice) =================
   // Each section on its own page so the unique key holds with ordinal 1.
-  r({ form_id: "C568", rule_code: "BR5", rule_type: "business", source_document: C568, source_page: 1, trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion; does NOT hide" }, affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+  r({ form_id: "C568", rule_code: "BR5", rule_type: "business", source_document: C568, source_page: 1, trigger_element_name: "Worker 36; Patient does not have an Worker 36", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion; does NOT hide" }, affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
   r({ form_id: "C568", rule_code: "BR1", rule_type: "business", source_document: C568, source_page: 1, trigger_element_name: "Date of Injury", trigger_condition: { description: "Date of Injury <= current date and >= date of birth" }, affected_element_names: ["Date of Injury"] }),
   // C568 Injury Details (page 2)
   r({ form_id: "C568", rule_code: "BR2", rule_type: "business", source_document: C568, source_page: 2, trigger_element_name: "Part of body; Nature of injury", trigger_condition: { description: "valid combination (POB-NOI Validations)", realizes: "VAL-X03" }, affected_element_names: ["Part of body", "Nature of injury"] }),
@@ -621,7 +621,7 @@ export const RULES = [
   r({ form_id: "C568", rule_code: "SR16", rule_type: "show_hide", source_document: C568, source_page: 4, trigger_element_name: "Health service code display (SR9)", trigger_condition: { description: "FFS grid: if Health service code is a dropdown (SR9), disable Fees submitted; if a text box, enable it. Medical Supplies grid: Fees submitted always enabled" }, affected_element_names: ["Fees submitted"] }),
 
   // ================= C568A (Medical Consultation Report) =================
-  r({ form_id: "C568A", rule_code: "BR5", rule_type: "business", source_document: C568A, source_page: 1, trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion; does NOT hide" }, affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+  r({ form_id: "C568A", rule_code: "BR5", rule_type: "business", source_document: C568A, source_page: 1, trigger_element_name: "Worker 36; Patient does not have an Worker 36", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion; does NOT hide" }, affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
   r({ form_id: "C568A", rule_code: "BR1", rule_type: "business", source_document: C568A, source_page: 1, trigger_element_name: "Date of Injury", trigger_condition: { description: "Date of Injury <= current date and >= date of birth" }, affected_element_names: ["Date of Injury"] }),
   // C568A Injury Details (page 2), same as C568 plus BR4 valid diagnostic codes
   r({ form_id: "C568A", rule_code: "BR2", rule_type: "business", source_document: C568A, source_page: 2, trigger_element_name: "Part of body; Nature of injury", trigger_condition: { description: "valid combination (POB-NOI Validations)", realizes: "VAL-X03" }, affected_element_names: ["Part of body", "Nature of injury"] }),
@@ -663,7 +663,7 @@ export const RULES = [
   r({ form_id: "C568A", rule_code: "SR17", rule_type: "help_text", source_document: C568A, source_page: 5, trigger_element_name: "invoice section", trigger_condition: { description: "5 Fee for Service lines and 1 Medical Supplies line displayed by default" }, affected_element_names: ["invoice lines default count"] }),
 
   // ================= C569 (Medical Supplies Invoice). No injury, no treatment, ZERO attachments. =================
-  r({ form_id: "C569", rule_code: "BR5", rule_type: "business", source_document: C569, source_page: 1, trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion" }, affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+  r({ form_id: "C569", rule_code: "BR5", rule_type: "business", source_document: C569, source_page: 1, trigger_element_name: "Worker 36; Patient does not have an Worker 36", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion" }, affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
   r({ form_id: "C569", rule_code: "BR1", rule_type: "business", source_document: C569, source_page: 1, trigger_element_name: "Date of Injury", trigger_condition: { description: "Date of Injury <= current date and >= date of birth" }, affected_element_names: ["Date of Injury"] }),
   r({ form_id: "C569", rule_code: "BR8", rule_type: "business", source_document: C569, source_page: 2, trigger_element_name: "Date of service", trigger_condition: { description: ">= date of accident and <= current date" }, affected_element_names: ["Date of service"] }),
   r({ form_id: "C569", rule_code: "BR10", rule_type: "business", source_document: C569, source_page: 2, trigger_element_name: "Total Amount Billed", trigger_condition: { description: "<= 99999.99" }, affected_element_names: ["Total Amount Billed"] }),
@@ -672,7 +672,7 @@ export const RULES = [
   r({ form_id: "C569", rule_code: "SR11", rule_type: "business", source_document: C569, source_page: 2, trigger_element_name: "Practitioner Role; Skill code", trigger_condition: { description: "Skill code defaults from the Practitioner Role to Skill relationship, else Please choose" }, affected_element_names: ["Skill code"] }),
 
   // ================= C570 (Medical Invoice Correction). WAS and SHOULD BE sections, ZERO attachments. =================
-  r({ form_id: "C570", rule_code: "BR5", rule_type: "business", source_document: C570, source_page: 1, trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion" }, affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+  r({ form_id: "C570", rule_code: "BR5", rule_type: "business", source_document: C570, source_page: 1, trigger_element_name: "Worker 36; Patient does not have an Worker 36", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion" }, affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
   r({ form_id: "C570", rule_code: "BR1", rule_type: "business", source_document: C570, source_page: 1, trigger_element_name: "Date of Injury", trigger_condition: { description: "Date of Injury <= current date and >= date of birth" }, affected_element_names: ["Date of Injury"] }),
   r({ form_id: "C570", rule_code: "BR2", rule_type: "business", source_document: C570, source_page: 2, trigger_element_name: "Health service code; Modifiers", trigger_condition: { description: "valid health service codes and modifiers (warning only)" }, affected_element_names: ["Health service code", "Modifiers"] }),
   r({ form_id: "C570", rule_code: "BR4", rule_type: "business", source_document: C570, source_page: 2, trigger_element_name: "Date of service From", trigger_condition: { description: "<= current, >= date of accident, <= Date of service To" }, affected_element_names: ["Date of service From"] }),
@@ -691,7 +691,7 @@ export const RULES = [
   // C050S. The no change and gate chain (SR30, SR28, E1, SR1, SR2, SR3) is loaded separately below on
   // pages 5 and 6; nothing new is placed on page 5. =================
   // C151S Participant (page 1) and Accident (page 2)
-  r({ form_id: "C151S", rule_code: "BR5", rule_type: "business", source_document: C151S, source_page: 1, trigger_element_name: "Alberta PHN; Patient does not have an Alberta PHN", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion; does NOT hide" }, affected_element_names: ["Alberta PHN"], verified_against_sample_xml: true }),
+  r({ form_id: "C151S", rule_code: "BR5", rule_type: "business", source_document: C151S, source_page: 1, trigger_element_name: "Worker 36; Patient does not have an Worker 36", trigger_condition: { description: "exactly one of the two is provided", realizes: "VAL-X01", note: "PHN polarity inversion; does NOT hide" }, affected_element_names: ["Worker 36"], verified_against_sample_xml: true }),
   r({ form_id: "C151S", rule_code: "BR1", rule_type: "business", source_document: C151S, source_page: 2, trigger_element_name: "Date of Injury", trigger_condition: { description: "Date of Injury <= current date and >= date of birth" }, affected_element_names: ["Date of Injury"] }),
   // C151S Injury Details (pages 2 to 3), mirrors C151 (same ui_mapping bracket shift, which does not affect form_rule)
   r({ form_id: "C151S", rule_code: "BR1", ordinal: 2, rule_type: "business", source_document: C151S, source_page: 2, trigger_element_name: "Date of Examination", trigger_condition: { description: "<= current and >= Date of Injury" }, affected_element_names: ["Date of Examination"] }),

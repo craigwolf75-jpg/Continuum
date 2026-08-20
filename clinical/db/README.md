@@ -1,7 +1,7 @@
 # Continuum Prompt 40: WCB engine database (migration and seed)
 
 This directory holds the schema migration and the generated seed SQL for the WCB
-Alberta form engine (spec `docs/superpowers/specs/2026-08-09-prompt-40-wcb-form-engine-design.md`).
+Worker 36 form engine (spec `docs/superpowers/specs/2026-08-09-prompt-40-wcb-form-engine-design.md`).
 
 Per the standing rule, Claude never applies anything to the Continuum Supabase
 project (`agzhnmunodrhsjbogzae`) directly. Gary applies these files by hand, in
@@ -92,17 +92,17 @@ order, via the Management API or the SQL editor.
 
 | Data | Rows | Verified fact |
 |---|---|---|
-| `jurisdiction` | 13 | Alberta active, all other provinces/territories inactive |
-| `wcb_fee_schedule` | 6 | Alberta GP rates effective 2025-04-01 (spec Section 2) |
+| `jurisdiction` | 13 | Worker 36 active, all other provinces/territories inactive |
+| `wcb_fee_schedule` | 6 | Worker 36 GP rates effective 2025-04-01 (spec Section 2) |
 | `wcb_code_list` + `wcb_code_value` | 25 lists / 606 values | every simple lookup worksheet, codes read as TEXT (01100 stays 01100), padded codes trimmed, per-row flags in `extra` jsonb |
-| `wcb_pob_noi_forbidden` | 380 | acceptance criterion 2 (exactly 380 Alberta rows) |
+| `wcb_pob_noi_forbidden` | 380 | acceptance criterion 2 (exactly 380 Worker 36 rows) |
 | `wcb_contract_role` | 14 pairs | acceptance criterion 3 |
 | `wcb_contract_role_form` | 66 | acceptance criterion 3 (32 source rows normalised to 66; crossover ancestry in `created_from_form_ids`) |
 | `form_definition` | 8 | acceptance criterion 4 (verified element counts 111/171/136/153/61/69/37/66; C569 and C570 permit zero attachments) |
 | `form_element` | 804 | every element across the eight forms; parse HARD GATED on the verified per-form counts (criterion 4); deprecated seq 77/80 flagged (criterion 7); `element_seq` stored verbatim so the C568 35.06 typo lands under its section (criterion 8); 316 elements linked to a code list |
 | `form_rule` | 332 | ALL EIGHT forms in full (C050E 48, C050S 71, C151 52, C151S 74, C568 31, C568A 36, C569 7, C570 13). C151S mirrors C151 for Injury/Treatment and C050S for the OIS Return to Work axis block, plus its unique no change chain (SR30/SR28/E1) and gate chain. Two C050S rules (SR2, SR3) carry `unresolvable = true` per spec open item 9.4. Only BR5 / VAL-X01 (the PHN inversion) carries `verified_against_sample_xml = true` per form; the rest pending sample XML and Hannah sign off |
 | `wcb_capability_code_set` | 58 | the per (form, capability element) Basic vs Extended rule (Prompt 39A Section 2.3), every OBX identifier confirmed against samples 5.01/5.04. C050S moves bending/twisting/kneeling/climbing/pushing from Basic to Extended; C151S makes those five conditional on RTWPATIENTSTATUSCHANGED (N=Basic, Y=Extended); grasping and reaching are ABLE or UNABLE only; overhead reaching and single lifting are C050E/C151 only, replaced by three lifting planes on C050S/C151S. Read by `clinical/engine/capability.mjs` |
-| `wcb_error_catalogue` | 1 | the board error code catalogue (Prompt 39A Section 5). Maps a board code to an element ONLY (no column for a value, polarity or correction, by design). Seeded with the one real code the package contains (121023 to the Alberta PHN element, with the 2007 inverted polarity caveat as a note); grows from real rejections. Read by `clinical/engine/errors.mjs`, which surfaces raw board text to a human for unmapped or below 0.80 confidence codes |
+| `wcb_error_catalogue` | 1 | the board error code catalogue (Prompt 39A Section 5). Maps a board code to an element ONLY (no column for a value, polarity or correction, by design). Seeded with the one real code the package contains (121023 to the Worker 36 element, with the 2007 inverted polarity caveat as a note); grows from real rejections. Read by `clinical/engine/errors.mjs`, which surfaces raw board text to a human for unmapped or below 0.80 confidence codes |
 | `wcb_obx_skeleton` | 521 | the per form OBX skeleton in fixed order (Prompt 39A Section 3.1), read from each form's board sample XML (C050E 98 from 5.03 per criterion 4, C050S 145, C151 111, C151S 126, C568 3, C568A 34, C569 2, C570 2). The board emits the full skeleton with an empty `<OBX.5 />` for unused observations, never absent and never the HL7 null. Read by `clinical/engine/obx.mjs`, which verifies a generated OBX set matches the skeleton and carries no HL7 null |
 | `internal_restriction_code` | 8 | (Prompt 39) the internal R codes (R05, R10, R11, R13, R18, R19, R20, R22), each with the free text phrase emitted into the board "Other restrictions or additional comments" field. Internal only, never a board coding system |
 | `functional_axis_map` | 60 | (Prompt 39) the per (form, axis) measurement matrix (design spec Section 4.4, refined by 39A Section 2.4). What `clinical.resolve_axes` reads so the axis set is configuration, never hard coded: C050E and C151 carry 11 axes (posture and reaching Basic, one general lifting Max of, no grasping, no environment); C050S carries 19 (posture and pushing Extended, three lifting planes, four sided reaching, grasping per hand, environment); C151S mirrors C050S but its posture group and pushing are conditional on RTWPATIENTSTATUSCHANGED. Mirrored by `clinical/engine/measurement.mjs`, which reproduces the matrix under test |

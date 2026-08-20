@@ -16,8 +16,8 @@
 - Colors: navy `#0E1B2C`, panel `#16243B`, gold `#C8972F`, gold-soft `#E3B85C`, ink `#E9EEF6`, muted `#9AA9BF`, good `#6FBF8F`. 48px minimum tap targets. Grade-7 copy, functional not clinical.
 - No em-dashes or en-dashes anywhere: code, comments, copy, docs.
 - Never run `npm run build` in the working tree (poisons state); use `npm run dev` only.
-- No new migrations. All data access relies on existing RLS. The only backend change is auth config plus one update to Marcus's seed auth user.
-- Fixtures (seed): tenant `11111111-1111-1111-1111-111111111111`, worker user `b0000000-0000-0000-0000-000000000001`, worker `c0000000-0000-0000-0000-000000000001`, injury `d0000000-0000-0000-0000-000000000001`, seed auth user `a0000000-0000-0000-0000-000000000001`, Marcus phone `+15875550101`, test OTP `123456`.
+- No new migrations. All data access relies on existing RLS. The only backend change is auth config plus one update to Worker 15's seed auth user.
+- Fixtures (seed): tenant `11111111-1111-1111-1111-111111111111`, worker user `b0000000-0000-0000-0000-000000000001`, worker `c0000000-0000-0000-0000-000000000001`, injury `d0000000-0000-0000-0000-000000000001`, seed auth user `a0000000-0000-0000-0000-000000000001`, Worker 15 phone `+15875550101`, test OTP `123456`.
 - Management token for backend config calls is provided out of band by the operator; never commit it. All SQL and config go through the Supabase Management API as used elsewhere in this repo.
 
 ## File Structure
@@ -235,13 +235,13 @@ git commit -m "feat(worker): scaffold Next.js + Tailwind + Capacitor app"
 
 ---
 
-### Task 2: Enable SMS OTP test auth and link Marcus's phone (backend, de-risks the open question)
+### Task 2: Enable SMS OTP test auth and link Worker 15's phone (backend, de-risks the open question)
 
 **Files:**
 - No repo files. Live Supabase config via the Management API. Record the steps in the commit body of Task 4 where they are first exercised, or as a note.
 
 **Interfaces:**
-- Produces: phone OTP login works for `+15875550101` with code `123456`, resolving to Marcus's `worker` claims.
+- Produces: phone OTP login works for `+15875550101` with code `123456`, resolving to Worker 15's `worker` claims.
 
 - [ ] **Step 1: Enable phone auth and register the test OTP**
 
@@ -251,7 +251,7 @@ PATCH `https://api.supabase.com/v1/projects/agzhnmunodrhsjbogzae/config/auth` wi
 ```
 (`sms_test_otp` is a comma-separated `phone=code` map. If the API rejects enabling phone auth without a provider, set the SMS provider to a placeholder or fall back to email OTP for this increment behind the AuthStrategy seam, and note it.)
 
-- [ ] **Step 2: Put the phone on Marcus's seed auth user**
+- [ ] **Step 2: Put the phone on Worker 15's seed auth user**
 
 Run via the Management API database/query endpoint:
 ```sql
@@ -671,7 +671,7 @@ export default function Home() { return <div>Home</div>; }
 
 - [ ] **Step 5: Verify the whole gate**
 
-Run `npm run dev`. Fresh (signed out) shows Login. Sign in as Marcus. If a consent already exists from Task 5, land on the shell; otherwise ConsentGate, then agree, then shell with the four tabs and Worley branding in the header.
+Run `npm run dev`. Fresh (signed out) shows Login. Sign in as Worker 15. If a consent already exists from Task 5, land on the shell; otherwise ConsentGate, then agree, then shell with the four tabs and Worley branding in the header.
 
 - [ ] **Step 6: Commit**
 
@@ -723,7 +723,7 @@ export default function Home() {
 
 - [ ] **Step 2: Verify**
 
-Run dev, sign in. Expected: Home shows Marcus's right shoulder injury, status badge, day of prognosis. (`CheckIn` is a stub until Task 8; import compiles once Task 8 exists, so build Task 8 next.)
+Run dev, sign in. Expected: Home shows Worker 15's right shoulder injury, status badge, day of prognosis. (`CheckIn` is a stub until Task 8; import compiles once Task 8 exists, so build Task 8 next.)
 
 - [ ] **Step 3: Commit**
 
@@ -958,7 +958,7 @@ export default function Duties() {
 
 - [ ] **Step 2: Verify**
 
-Seed a duty for Marcus while on light duty (via SQL as service): insert a `light_duties` row for injury `d0000000-...0001`, set injury status to `light_duty` if needed. Open Duties, mark it done, confirm `completed_date` updates in the DB, then undo. Clean up the seeded duty and restore status afterward.
+Seed a duty for Worker 15 while on light duty (via SQL as service): insert a `light_duties` row for injury `d0000000-...0001`, set injury status to `light_duty` if needed. Open Duties, mark it done, confirm `completed_date` updates in the DB, then undo. Clean up the seeded duty and restore status afterward.
 
 - [ ] **Step 3: Commit**
 
@@ -1010,7 +1010,7 @@ Note: revoking consent sets `consent` to null in the provider, so `page.tsx` re-
 
 - [ ] **Step 2: Full end-to-end verification**
 
-Run `npm run dev` and walk the whole flow as Marcus:
+Run `npm run dev` and walk the whole flow as Worker 15:
 1. Sign in with `+15875550101` / `123456`.
 2. Land on Home with the right shoulder injury summary.
 3. Submit a check-in; confirm it lands in `recovery_logs` (SQL from Task 8 Step 2).

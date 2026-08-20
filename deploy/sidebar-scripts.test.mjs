@@ -29,7 +29,7 @@ ok("board: nineteen open claims", sl.includes("nineteen open claims"));
 ok("board: seven to acknowledge", sl.includes("seven to acknowledge"));
 ok("clinical and admin: twenty-four active cases (both)", (sl.match(/twenty-four active cases/g) || []).length >= 2);
 ok("worker: day nine", sl.includes("day nine"));
-ok("SIGMA: Jordan Miller is the worked example", s.includes("Jordan Miller"));
+ok("SIGMA: Worker 11 is the worked example", s.includes("Worker 11"));
 ok("SIGMA: prepared and held", s.toLowerCase().includes("prepared and held"));
 
 // employer names clinical detail only as absences

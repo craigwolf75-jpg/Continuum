@@ -11,7 +11,7 @@ it. Numbers are the current seeds and match the screen. No em-dashes anywhere.
 ## Worker app
 
 ### Dashboard (Today)
-This is Marcus at day nine. One quick check-in: two sliders for how he feels and
+This is Worker 15 at day nine. One quick check-in: two sliders for how he feels and
 how he moves, a fatigue and a confidence tap, and one tap to confirm he
 understands today's duties. Today's assigned tasks sit right below. It is gold,
 never red, and it takes under a minute.
@@ -206,7 +206,7 @@ proposed workflow, drawn honestly, not a live integration.
 
 ### Case exchange
 How a case would move: a claim opens in the exchange, Continuum creates the recovery
-case, and at the end prepares information to hand back. Jordan Miller is the worked
+case, and at the end prepares information to hand back. Worker 11 is the worked
 example.
 
 ### Field mapping

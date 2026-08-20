@@ -1,5 +1,5 @@
 /* Continuum demo engine. Plain vanilla JS, no dependencies, no build step.
-   Shared by /app (worker) and /hub (HSE, Employer, Clinic, WCB).
+   Shared by /app (worker) and /hub (HSE, Employer, Worker 44, WCB).
    Source of truth: specs/Continuum_MVP_Wireframe_Reference_v2.md and
    specs/CONTINUUM_PROMPT_06.md. Governed by Prompt 05.
 
@@ -40,7 +40,7 @@
   function addDaysIso(baseIso, n) { var d = new Date(baseIso); d.setDate(d.getDate() + n); return iso(d); }
 
   // ---- seed ----
-  // The reference doc fixes Marcus's static facts but not his day-9 check-in
+  // The reference doc fixes Worker 15's static facts but not his day-9 check-in
   // numbers; those are a documented minimal interpretation (Prompt 06: "propose
   // the smallest faithful interpretation"). Baseline status is light_duty with
   // restrictions published and a short recovery history.
@@ -49,28 +49,28 @@
     var marcusId = 'w_marcus';
     var restriction = 'No lifting above shoulder height';
 
-    // Employer table: Marcus plus deterministic functional-only co-workers.
-    // Clinical fields exist ONLY on Marcus, so nothing clinical can leak.
+    // Employer table: Worker 15 plus deterministic functional-only co-workers.
+    // Clinical fields exist ONLY on Worker 15, so nothing clinical can leak.
     var workers = [
       {
-        id: marcusId, name: 'Marcus Bedard', job_title: 'Scaffolder', company: 'Northgate Industrial Services',
+        id: marcusId, name: 'Worker 15', job_title: 'Scaffolder', company: 'Employer B',
         case_ref: 'CT-2026-0481',
         // functional (visible per matrix)
         body_part: 'Right shoulder', injury_type: 'msk_strain', status: 'light_duty',
         days_off: 2, doctor_visits: 2, rtw_progress: 0.43, restriction: restriction,
         estimated_return_date: addDaysIso(injuryDateIso, PROGNOSIS_DAYS),
-        // clinical (Marcus only; stripped for non-clinical roles by viewModel)
+        // clinical (Worker 15 only; stripped for non-clinical roles by viewModel)
         clinical: {
           diagnosis_summary: 'Grade 1 supraspinatus strain, right shoulder',
           diagnosis_notes: 'Moderate supraspinatus strain. Conservative management. Reassess day 14.',
           severity: 'moderate', prognosis_days: PROGNOSIS_DAYS, date_of_injury: injuryDateIso,
-          physician: 'Dr. A. Owusu'
+          physician: 'Attending Physician'
         }
       },
-      { id: 'w_okafor', name: 'D. Okafor', job_title: 'Pipefitter', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0463', body_part: 'Lower back', injury_type: 'msk_strain', status: 'off_work', days_off: 5, doctor_visits: 1, rtw_progress: 0.12, restriction: 'Awaiting assessment' },
-      { id: 'w_tremblay', name: 'S. Tremblay', job_title: 'Welder', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0470', body_part: 'Left wrist', injury_type: 'msk_strain', status: 'light_duty', days_off: 1, doctor_visits: 2, rtw_progress: 0.68, restriction: 'No repetitive gripping' },
-      { id: 'w_novak', name: 'R. Novak', job_title: 'Electrician', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0452', body_part: 'Right knee', injury_type: 'msk_strain', status: 'full_duty_pending', days_off: 0, doctor_visits: 3, rtw_progress: 0.9, restriction: 'Cleared, pending employer confirm' },
-      { id: 'w_singh_p', name: 'P. Singh', job_title: 'Rigger', company: 'Northgate Industrial Services', case_ref: 'CT-2026-0448', body_part: 'Right ankle', injury_type: 'msk_strain', status: 'signed_off', days_off: 0, doctor_visits: 4, rtw_progress: 1, restriction: 'None' }
+      { id: 'w_okafor', name: 'D. Worker 60', job_title: 'Pipefitter', company: 'Employer B', case_ref: 'CT-2026-0463', body_part: 'Lower back', injury_type: 'msk_strain', status: 'off_work', days_off: 5, doctor_visits: 1, rtw_progress: 0.12, restriction: 'Awaiting assessment' },
+      { id: 'w_tremblay', name: 'Worker 42', job_title: 'Welder', company: 'Employer B', case_ref: 'CT-2026-0470', body_part: 'Left wrist', injury_type: 'msk_strain', status: 'light_duty', days_off: 1, doctor_visits: 2, rtw_progress: 0.68, restriction: 'No repetitive gripping' },
+      { id: 'w_novak', name: 'R. Worker 40', job_title: 'Electrician', company: 'Employer B', case_ref: 'CT-2026-0452', body_part: 'Right knee', injury_type: 'msk_strain', status: 'full_duty_pending', days_off: 0, doctor_visits: 3, rtw_progress: 0.9, restriction: 'Cleared, pending employer confirm' },
+      { id: 'w_singh_p', name: 'P. Worker 33', job_title: 'Rigger', company: 'Employer B', case_ref: 'CT-2026-0448', body_part: 'Right ankle', injury_type: 'msk_strain', status: 'signed_off', days_off: 0, doctor_visits: 4, rtw_progress: 1, restriction: 'None' }
     ];
 
     return {
@@ -201,7 +201,7 @@
       case_ref: m.case_ref,
       worker: m.name,
       employer: m.company,
-      physician: (m.clinical && m.clinical.physician) || 'Dr. A. Owusu',
+      physician: (m.clinical && m.clinical.physician) || 'Attending Physician',
       body_part: m.body_part,
       determination: 'Fit for full duties',
       generated_at: iso(),
@@ -426,7 +426,7 @@
   function viewModel(role) {
     var s = load();
     var m = marcus(s);
-    // WCB notifications are NOT in the shared base: only the WCB and Clinic
+    // WCB notifications are NOT in the shared base: only the WCB and Worker 44
     // view-models carry them, on a need-to-know basis.
     var base = { role: role, day: s.day, case_status: s.case.status, restrictions: s.case.restrictions_published.slice() };
 

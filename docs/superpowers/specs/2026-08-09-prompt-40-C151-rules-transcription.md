@@ -26,7 +26,7 @@ identifier. A rule keyed on C8 would hit part of body on a C050E and a different
 
 ## Sections identical to C050E (see the C050E transcription for full rows)
 
-- Participant Details (page 1): BR5 (Alberta PHN one of two required, PHN polarity inversion source).
+- Participant Details (page 1): BR5 (Worker 36 one of two required, PHN polarity inversion source).
 - Accident Details (page 2): BR1 (Date of Injury range). Note: C151 has no SR4 develop over time
   warning in this section (it is present on C050E and C050S but absent here).
 - Return to Work Details (pages 6 to 7): BR2, BR8, BR9, and SR1, SR2, SR3 (the same gate chain as

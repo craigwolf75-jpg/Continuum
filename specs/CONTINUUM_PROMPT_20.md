@@ -1,4 +1,4 @@
-# CONTINUUM PROMPT 20: The GardaWorld Demonstration Runner
+# CONTINUUM PROMPT 20: The Employer A Demonstration Runner
 
 **Deliverable:** garda-demo.html, Craig's twelve-scene vision built as a presenter-grade instrument: fourteen scenes (his twelve, plus the opening positioning beat and the final scene), each carrying the narration, a working visual vignette, presenter notes with the protective sentences, the who-becomes-smarter answer, and live-system pointers naming the exact portal tabs to open at the moments the real product should take over. The Prompt 19 doctrine repairs are built into the script itself, so the demonstration Craig rehearses is already the one counsel can sit through. Full headless suite green, including doctrine assertions run against the script content.
 **Date:** July 19, 2026
@@ -13,8 +13,8 @@ Scene 6, the check-in, is built as the split screen it needs to be: the coordina
 
 ## 3. Where the live system takes over
 
-Six scenes carry a LIVE SYSTEM chip naming the tabs: the clinical portal at the assessment, the worker dashboard at onboarding and the timeline, the three-way split at the check-in, the employer dashboard for the supervisor morning, the HSE portal for matching and escalation, and all portals for the finale, which runs on the worker dashboard's Present mode through Dr. Owusu's gold Clearance button. The runner is the narration rail; the portals are the proof.
+Six scenes carry a LIVE SYSTEM chip naming the tabs: the clinical portal at the assessment, the worker dashboard at onboarding and the timeline, the three-way split at the check-in, the employer dashboard for the supervisor morning, the HSE portal for matching and escalation, and all portals for the finale, which runs on the worker dashboard's Present mode through Attending Physician's gold Clearance button. The runner is the narration rail; the portals are the proof.
 
 ## 4. Verification summary
 
-Fourteen scenes each structurally complete; navigation bounds and keyboard handling; the employer-vignette label separation asserted mechanically; routing phrasing present in both risk scenes; predictive badging, SIGMA mock labeling, SMS rule, morning acknowledgement, fatigue and confidence, the closing line, and cast canon (Marcus, Dr. A. Owusu, day 21, expected Jul 31) all asserted; the rendered stage carries notes and smarter chips. Dash audit clean across markup, script, and companions.
+Fourteen scenes each structurally complete; navigation bounds and keyboard handling; the employer-vignette label separation asserted mechanically; routing phrasing present in both risk scenes; predictive badging, SIGMA mock labeling, SMS rule, morning acknowledgement, fatigue and confidence, the closing line, and cast canon (Worker 15, Attending Physician, day 21, expected Jul 31) all asserted; the rendered stage carries notes and smarter chips. Dash audit clean across markup, script, and companions.

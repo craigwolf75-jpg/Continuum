@@ -13,7 +13,7 @@ The full suite on every mission, never a subset. Seeds reconciled to the canon l
 
 ## 3. The seam with Argus
 
-Argus patrols what is, Heracles proves what happens. When Argus reports a finding, Heracles turns it into a regression test so the same violation class cannot return unseen: Argus's findings become Heracles's tests, and Heracles's tests keep Argus's findings from recurring. He reconciles against the canon ledger: Marcus at day 9 pain 4, Cardinal off work day 18, per-tenant numbers that sum.
+Argus patrols what is, Heracles proves what happens. When Argus reports a finding, Heracles turns it into a regression test so the same violation class cannot return unseen: Argus's findings become Heracles's tests, and Heracles's tests keep Argus's findings from recurring. He reconciles against the canon ledger: Worker 15 at day 9 pain 4, Worker 08 off work day 18, per-tenant numbers that sum.
 
 ## 4. Verification summary
 

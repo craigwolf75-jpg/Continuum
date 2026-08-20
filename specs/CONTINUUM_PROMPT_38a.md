@@ -33,7 +33,7 @@ Every P38 item implemented as testable logic, specified for binding, or routed t
 
 **P38-11, white-label theming.** Specified (tenant name, logo, colors on worker app and login, Continuum in the footer); a theming layer is an artifact patch by nature. Extends the 37 org name seam.
 
-**P38-12, Alberta portal-assist ingestion.** Honesty-scoped in Prompt 38 (a person downloads from myWCB, the platform files to the right worker and notifies; no retrieval API is claimed because none exists); the filing flow binds into the archive from P38-06, so the two install together.
+**P38-12, Worker 36 portal-assist ingestion.** Honesty-scoped in Prompt 38 (a person downloads from myWCB, the platform files to the right worker and notifies; no retrieval API is claimed because none exists); the filing flow binds into the archive from P38-06, so the two install together.
 
 ## 3. Routed to owner, with the document as the deliverable
 
@@ -43,7 +43,7 @@ Every P38 item implemented as testable logic, specified for binding, or routed t
 
 **P38-15, consent alignment.** Routed to counsel as one package: Garda's doctor-contact consent form, the worker consent (12j), and the pilot consent text together, so no worker is consented twice in conflicting words. This remains the true critical path for any start date Andree-Anne picks.
 
-**P38-16, naming.** Ledgered: GardaWorld in documents, Garda in speech; SIGMA-HR versus SIGMA-RH routed to Angelina in the follow-up.
+**P38-16, naming.** Ledgered: Employer A in documents, Garda in speech; SIGMA-HR versus SIGMA-RH routed to Angelina in the follow-up.
 
 ## 4. What binding day looks like
 

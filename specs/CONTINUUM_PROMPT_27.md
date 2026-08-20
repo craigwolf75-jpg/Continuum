@@ -30,7 +30,7 @@ Part 8's split is adopted as written, and the demo family maps onto it usefully:
 
 ## 6. Reply points to Craig
 
-The spec is adopted and the flag is already on the switchboard. Ask him for three things: the formal D1 ruling this document presupposes; his agreement on the two policy sentences (supervisors named in the monitoring policy, the voluntary-participation line beside any employer-visible completion figure with the metric moved to aggregate grain for employer roles); and, once more, the GardaWorld occupational database document itself, which the dim_position, dim_job_task, dim_injury_type and dim_restriction projections all read from and which this stream still has not received.
+The spec is adopted and the flag is already on the switchboard. Ask him for three things: the formal D1 ruling this document presupposes; his agreement on the two policy sentences (supervisors named in the monitoring policy, the voluntary-participation line beside any employer-visible completion figure with the metric moved to aggregate grain for employer roles); and, once more, the Employer A occupational database document itself, which the dim_position, dim_job_task, dim_injury_type and dim_restriction projections all read from and which this stream still has not received.
 
 ## Note on D1 (added on filing)
 

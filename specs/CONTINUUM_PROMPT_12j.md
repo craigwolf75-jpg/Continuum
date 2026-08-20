@@ -28,7 +28,7 @@ Finishing creates the worker's own record: day zero, status reported, consent
 timestamped, the first check-in already on the timeline, a welcome message from the
 coordinator, and a toast that says what is true: "This device now holds your record."
 Cancel at any step returns to the demonstration unharmed. Settings then flips to
-"Return to the demonstration", which restores the Marcus canon exactly.
+"Return to the demonstration", which restores the Worker 15 canon exactly.
 
 ### The three mechanics underneath (suite-proven)
 - The seven-day chart assumed seven entries and rendered NaN bars for a day-zero
@@ -38,7 +38,7 @@ Cancel at any step returns to the demonstration unharmed. Settings then flips to
 - The rolling check-in window assumed a full week and would have pinned a pilot
   worker at one entry forever. It now grows to seven then rolls, and the first save
   advances day zero to day one.
-- The bridge broadcast Marcus by name unconditionally. It now reflects the active
+- The bridge broadcast Worker 15 by name unconditionally. It now reflects the active
   worker with functional fields only: name, trade, and injury cross; pain and
   mobility never do; reset returns the bridge to the demonstration. Enforcement stays
   the single functional allowlist in deploy/bridge.js.
@@ -52,7 +52,7 @@ who signs up on day zero is inside every safety rule from their first minute.
 ### Verification
 deploy/worker-signup.test.mjs (40 assertions) executes the DOM-free PILOT-CORE
 mechanics headlessly and statically proves the wizard wiring and the active-worker
-bridge. The canon suite (Marcus day 9, pain 4) and the bridge suite stay green, so the
+bridge. The canon suite (Worker 15 day 9, pain 4) and the bridge suite stay green, so the
 demonstration is untouched. Full suite green: 16 suites, dash audit clean.
 
 ## Half two: SITE-12j (real accounts, queued for Zeus, Phase 2)

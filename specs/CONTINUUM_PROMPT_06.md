@@ -34,7 +34,7 @@ Then, before building anything, open the wireframe and produce a SCREEN INVENTOR
   - Absent means absent: forbidden fields never render grayed out, locked, or redacted; they simply do not exist in that role's view. Build each role's view-model as a projection function over the store that strips forbidden fields BEFORE render, so a rendering bug cannot leak them.
 - Check-in is the client model: twice daily (AM and PM), pain slider 0 to 10, mobility slider 0 to 10, optional notes, submit. No three-step tap flow. NO camera, NO movement session, NO photo capture anywhere in the demo. The worker app bottom tabs become: Today, History, Duties, More.
 - Brand hexes are the client's: navy #0E1B2C, gold #C8972F. Update the token layer once and let every surface inherit. Secondary tokens (cream, ink, slate, mist) survive only where they do not fight the wireframe. Space Grotesk and Inter stay. Gold kickers stay. No emojis, no em-dashes, no en-dashes in any copy or code comment.
-- Cast is the client's: the demo case is Marcus Bedard, scaffolder at Worley, case ref NX-2026-00481, right shoulder, injury type msk_strain, severity moderate, prognosis 21 days, initial restriction "No lifting above shoulder height", physician Dr. A. Owusu. Mateo, Northline Industrial, Dr. Osei, claim 2408841, Dana, Frank, Priya, and Sarah are retired from every visible surface. Additional workers in the employer table take their names and figures FROM THE WIREFRAME; where the wireframe does not supply them, generate deterministic records into the seed file once (varied trades, case refs in the NX-2026-004xx range) and reconcile every dashboard KPI to the seeded rows exactly. Clinical fields exist on Marcus's record only; every other seeded worker carries functional fields exclusively, so nothing clinical exists to leak.
+- Cast is the client's: the demo case is Worker 15, scaffolder at Worley, case ref NX-2026-00481, right shoulder, injury type msk_strain, severity moderate, prognosis 21 days, initial restriction "No lifting above shoulder height", physician Attending Physician. Mateo, Northline Industrial, Dr. Osei, claim 2408841, Worker 49, Frank, Worker 32, and Worker 17 are retired from every visible surface. Additional workers in the employer table take their names and figures FROM THE WIREFRAME; where the wireframe does not supply them, generate deterministic records into the seed file once (varied trades, case refs in the NX-2026-004xx range) and reconcile every dashboard KPI to the seeded rows exactly. Clinical fields exist on Worker 15's record only; every other seeded worker carries functional fields exclusively, so nothing clinical exists to leak.
 - Worker-facing copy stays at grade 7. 48px minimum tap targets in the worker app. Red-flag and escalation states use gold, never red, in the worker app; hub surfaces may use the wireframe's own severity treatment.
 
 ## 2. TARGET SHAPE
@@ -61,7 +61,7 @@ Transition table (reject anything not listed; every transition appends to an in-
 
 | from | to | actor | trigger |
 |---|---|---|---|
-| reported | off_work | system | Marcus submits his first check-in |
+| reported | off_work | system | Worker 15 submits his first check-in |
 | off_work | light_duty | nexus_physician | clearance with restrictions published |
 | light_duty | full_duty_pending | nexus_physician | full-duty clearance; fitness-for-work form generated |
 | full_duty_pending | signed_off | employer_admin | employer confirms return |
@@ -88,7 +88,7 @@ For demonstrability, the /hub login screen (below the role buttons, small) gets 
 2. Store v2 plus the seed built from the wireframe's own figures; the reset control; the cross-tab reactivity harness (prove it with a temporary debug read-out on two open tabs before building screens on top).
 3. Worker app: consent gate, Today, slider check-in, History. First check-in flips reported to off_work and the WCB initial notification appears.
 4. Employer dashboard reading live: KPI row, worker table (status badges, restrictions, RTW progress), reacting to check-ins from another tab. Prove the projection: the employer view-model contains no pain, mobility, diagnosis, or free-text fields.
-5. Nexus workspace: patient monitoring for Marcus (scores visible, full detail), clearance actions driving the status machine, restrictions publish propagating to employer, HSE, and the worker's Duties header.
+5. Nexus workspace: patient monitoring for Worker 15 (scores visible, full detail), clearance actions driving the status machine, restrictions publish propagating to employer, HSE, and the worker's Duties header.
 6. HSE Light Duties workspace: assign from a small task bank within the published restrictions (restrictions read-only to HSE), worker accepts and checks off in /app, completion reflects back. HSE view shows scores; employer view still does not.
 7. Escalation engine plus the presenter panel; WCB read-only view with the notification lifecycle; full-duty clearance, FFW form view, employer confirmation, signed_off, case closed end to end.
 8. QA: run the full loop in two tabs; run the visibility audit (for each role, dump that role's view-model to console and verify against the matrix in section 1.2); verify gating headers; reset and run once more clean. Final deploy.

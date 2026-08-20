@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Continuum: GardaWorld demonstration runner</title>
+<title>Continuum: Employer A demonstration runner</title>
 <link rel="stylesheet" href="/continuum-vars.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -113,7 +113,7 @@
 <div class="app">
   <aside class="rail">
     <div class="brand"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="height:44px;width:auto;display:block"></div>
-    <div class="sub">GardaWorld demonstration runner</div>
+    <div class="sub">Employer A demonstration runner</div>
     <div class="moderow"><label class="modetog"><input type="checkbox" id="privmode"><span>Firewall first</span></label><div class="modehint">Privacy lead in the room: opens with the masking and escalation beats.</div></div>
     <nav id="railnav"></nav>
   </aside>
@@ -137,50 +137,50 @@
 var SCENES=[
  {kicker:"Where care ends",title:"The space between events",vig:"positioning",
   narration:"Every workplace injury has a moment of care: the clinic, the doctor, the first treatment. Then the worker goes home and the system goes quiet. That quiet is where recovery actually happens, and it is where no one is watching. Continuum owns the space between events. It does not replace the physician, the board, or your claims system; it manages the recovery that lives in the gap none of them can see.",
-  notes:[{v:1,t:"Continuum owns the space between events."},{v:0,t:"Open slow. Let the phrase land before you move to Marcus."}],
+  notes:[{v:1,t:"Continuum owns the space between events."},{v:0,t:"Open slow. Let the phrase land before you move to Worker 15."}],
   smarter:[{r:"Everyone",t:"names the category before anyone asks what this competes with."}],live:null},
 
  {kicker:"First notice",title:"The claim opens",vig:"intake",
-  narration:"Marcus Bedard is a scaffolder at Northgate Industrial Services. On a Tuesday he strains his right shoulder, a grade one supraspinatus strain. The claim opens in the board's system as claim CT-2026-0481. That first notice is the only handshake Continuum needs to begin. From here, the recovery is ours to coordinate.",
+  narration:"Worker 15 is a scaffolder at Employer B. On a Tuesday he strains his right shoulder, a grade one supraspinatus strain. The claim opens in the board's system as claim CT-2026-0481. That first notice is the only handshake Continuum needs to begin. From here, the recovery is ours to coordinate.",
   notes:[{v:0,t:"Name the claim number once, so the SIGMA scene later lands as the same case."},{v:0,t:"Do not overstate the integration. First notice in; that is the pilot scope."}],
   smarter:[{r:"Claims",t:"the file opens with a recovery plan attached, not just a diagnosis."}],live:null},
 
  {kicker:"The alert",title:"The message that says nothing",vig:"sms",
-  narration:"Marcus gets a text. It tells him he has an update from his recovery team, and nothing else: no diagnosis, no scores, no restrictions in the message body. He taps through and signs in, and only then does the content appear, behind his login. The alert is a doorbell, never the letter.",
+  narration:"Worker 15 gets a text. It tells him he has an update from his recovery team, and nothing else: no diagnosis, no scores, no restrictions in the message body. He taps through and signs in, and only then does the content appear, behind his login. The alert is a doorbell, never the letter.",
   notes:[{v:1,t:"The text is a doorbell, never the letter."},{v:0,t:"An SMS is not a private channel, so nothing private ever rides on it."}],
   smarter:[{r:"Worker",t:"knows something needs attention, with no exposure on an unsecured channel."}],live:null},
 
- {kicker:"Onboarding",title:"Marcus onboards",vig:"onboarding",
-  narration:"Marcus opens the worker app. He reads a plain consent, timestamped and revocable, and only then does collection begin. His injury summary, his restrictions, his recovery plan, all in one phone column. He is not filling out a form for the insurer. He is being handed his own recovery.",
+ {kicker:"Onboarding",title:"Worker 15 onboards",vig:"onboarding",
+  narration:"Worker 15 opens the worker app. He reads a plain consent, timestamped and revocable, and only then does collection begin. His injury summary, his restrictions, his recovery plan, all in one phone column. He is not filling out a form for the insurer. He is being handed his own recovery.",
   notes:[{v:0,t:"Slow down on consent. This is the trust moment."},{v:0,t:"If asked about withdrawal: he can revoke any time and the case continues unchanged."}],
   smarter:[{r:"Worker",t:"sees exactly what is expected today, and what is off limits."}],
   live:{tag:"Live system",tabs:"Worker dashboard",note:"Open the worker dashboard and walk the consent gate and the Today view live. The same tab returns at the timeline scene."}},
 
  {kicker:"Every morning",title:"The morning acknowledgement",vig:"ack",
-  narration:"Every morning, before anything else, Marcus confirms he understands today's restrictions: no lifting above shoulder height, breaks every sixty minutes. One tap, timestamped. It takes three seconds and it creates something valuable, a daily record that the worker knew his limits. That record is safety culture, instrumentation, and legal defense in a single tap.",
+  narration:"Every morning, before anything else, Worker 15 confirms he understands today's restrictions: no lifting above shoulder height, breaks every sixty minutes. One tap, timestamped. It takes three seconds and it creates something valuable, a daily record that the worker knew his limits. That record is safety culture, instrumentation, and legal defense in a single tap.",
   notes:[{v:1,t:"Safety culture, instrumentation, and legal defense in a single tap."},{v:0,t:"This is the compliance artifact a JHSC lead cares about. Say the word timestamped."}],
   smarter:[{r:"Worker",t:"reaffirms the limits daily."},{r:"HSE",t:"holds a dated record the worker acknowledged them."}],live:null},
 
  {kicker:"The keystroke",title:"One check-in, two truths",vig:"checkin-split",
-  narration:"At six pm on a hard day, Marcus logs his check-in: pain, mobility, and now fatigue and confidence too. Watch what happens the same second on two screens. The coordinator and clinician see the intelligence: a plateau flagged, escalated to the clinician per program rules. The employer, updated the same second, sees only function: duties on track, duty plan under review. The employer never sees a clinical inference. That is not a limitation. It is the reason Marcus tells the truth at six pm on a hard day.",
+  narration:"At six pm on a hard day, Worker 15 logs his check-in: pain, mobility, and now fatigue and confidence too. Watch what happens the same second on two screens. The coordinator and clinician see the intelligence: a plateau flagged, escalated to the clinician per program rules. The employer, updated the same second, sees only function: duties on track, duty plan under review. The employer never sees a clinical inference. That is not a limitation. It is the reason Worker 15 tells the truth at six pm on a hard day.",
   notes:[{v:1,t:"The employer never sees a clinical inference, and that is the reason he tells the truth."},{v:0,t:"If the Garda privacy lead is in the room, slow down here and let them watch the masking work."}],
   smarter:[{r:"Clinician",t:"sees the plateau, and the fatigue and confidence trend."},{r:"Coordinator",t:"knows to route it."},{r:"Employer",t:"knows the plan is under review, and nothing clinical."}],
   live:{tag:"Live system",tabs:"Worker dashboard + HSE portal + Employer dashboard",note:"Three tabs. Submit the check-in on the worker dashboard and let the HSE and employer tabs update live across the bridge."}},
 
  {kicker:"The next morning",title:"What work is safe today",vig:"employer",
-  narration:"The next morning Marcus's supervisor opens the employer dashboard. One question, answered: what work is safe today. Duties on track, one plan under review, awaiting clinical review. Functional status only, never a score, never a diagnosis, never a note. The supervisor makes a better staffing decision and never touches a piece of health information.",
+  narration:"The next morning Worker 15's supervisor opens the employer dashboard. One question, answered: what work is safe today. Duties on track, one plan under review, awaiting clinical review. Functional status only, never a score, never a diagnosis, never a note. The supervisor makes a better staffing decision and never touches a piece of health information.",
   notes:[{v:0,t:"Reinforce: the employer surface is functional by design, and that is a feature you demonstrate proudly."}],
   smarter:[{r:"Employer",t:"knows what is safe to assign, with zero clinical exposure."}],
-  live:{tag:"Live system",tabs:"Employer dashboard",note:"Open the employer dashboard; show the functional row and the awaiting-review masking on Marcus."}},
+  live:{tag:"Live system",tabs:"Employer dashboard",note:"Open the employer dashboard; show the functional row and the awaiting-review masking on Worker 15."}},
 
  {kicker:"The clinician",title:"The full picture, in one place",vig:"clinical",
-  narration:"Dr. A. Owusu opens the clinical portal. Here, and only here, is the full picture: the diagnosis, the scores, the trend, the fatigue and confidence Marcus reported, the free text. The clinician reviews independently and decides what changes. The system routes; the clinician decides. Nothing about treatment is automated.",
+  narration:"Attending Physician opens the clinical portal. Here, and only here, is the full picture: the diagnosis, the scores, the trend, the fatigue and confidence Worker 15 reported, the free text. The clinician reviews independently and decides what changes. The system routes; the clinician decides. Nothing about treatment is automated.",
   notes:[{v:1,t:"The system routes; the clinician decides."},{v:0,t:"This is the device-boundary sentence. Say it clearly. Health Canada reads marketing."}],
   smarter:[{r:"Clinician",t:"has every signal in one place, and the authority to act on it."}],
-  live:{tag:"Live system",tabs:"Clinical portal",note:"Open the clinical portal at Marcus's case; show the recovery signal beside the transition buttons."}},
+  live:{tag:"Live system",tabs:"Clinical portal",note:"Open the clinical portal at Worker 15's case; show the recovery signal beside the transition buttons."}},
 
  {kicker:"The matcher",title:"Duties inside the lines",vig:"matcher",
-  narration:"Back on the HSE portal, the coordinator assigns modified duties, and every task is filtered by Marcus's current restrictions before it can be offered. A duty cannot be assigned until it is hazard checked. Marcus accepts it himself. Nobody accepts for him. And when a trend turns, pain holding high across three check-ins, the same portal shows the escalation, as escalation, never as a diagnosis.",
+  narration:"Back on the HSE portal, the coordinator assigns modified duties, and every task is filtered by Worker 15's current restrictions before it can be offered. A duty cannot be assigned until it is hazard checked. Worker 15 accepts it himself. Nobody accepts for him. And when a trend turns, pain holding high across three check-ins, the same portal shows the escalation, as escalation, never as a diagnosis.",
   notes:[{v:0,t:"Show the hazard-check gate. Server enforced in the product."},{v:0,t:"Emphasize worker acceptance: nobody accepts for you."}],
   smarter:[{r:"HSE",t:"assigns only duties the restrictions allow, and sees escalations as escalations."},{r:"Worker",t:"accepts work he knows is safe."}],
   live:{tag:"Live system",tabs:"HSE portal",note:"Open the HSE portal; assign a duty from the restriction-filtered bank, and show the escalation queue."}},
@@ -196,20 +196,20 @@ var SCENES=[
   smarter:[{r:"Leadership",t:"sees where the operational risk sits, on real descriptive data."}],live:null},
 
  {kicker:"The buyer's picture",title:"Continuum inside the claim",vig:"sigma",
-  narration:"Here is the picture GardaWorld wants to see: their claims screen, claim CT-2026-0481, with a gold Continuum Recovery Intelligence panel beside it. Recovery day, functional status, return to work estimate, all functional, all from the recovery side. This is an illustrative mock. The pilot integration is intake level, not a live bidirectional connection. Say that out loud, before anyone asks.",
+  narration:"Here is the picture Employer A wants to see: their claims screen, claim CT-2026-0481, with a gold Continuum Recovery Intelligence panel beside it. Recovery day, functional status, return to work estimate, all functional, all from the recovery side. This is an illustrative mock. The pilot integration is intake level, not a live bidirectional connection. Say that out loud, before anyone asks.",
   notes:[{v:1,t:"Illustrative mock, and the pilot integration is intake level."},{v:0,t:"This is the scene where over-claiming would cost you the room. Under-claim it."},{v:0,t:"The sigma-panel.html page live-reads the same bridge if you want to show it moving; keep it labeled illustrative."}],
   smarter:[{r:"Claims",t:"sees recovery progress without leaving the claim, functional only."}],live:null},
 
  {kicker:"The arc",title:"Day nine to twenty one",vig:"timeline",
-  narration:"Step back and watch the whole arc. Day nine: light duty, pain easing, mobility returning. Each check-in moves the ring. Duties completed, restrictions acknowledged, the trend climbing toward sign-off. By day twenty one Marcus is at the threshold, full duty pending one signature. The story is not a chart. It is a worker getting his life back, on a timeline everyone can see.",
+  narration:"Step back and watch the whole arc. Day nine: light duty, pain easing, mobility returning. Each check-in moves the ring. Duties completed, restrictions acknowledged, the trend climbing toward sign-off. By day twenty one Worker 15 is at the threshold, full duty pending one signature. The story is not a chart. It is a worker getting his life back, on a timeline everyone can see.",
   notes:[{v:0,t:"Let the timeline breathe. This is the emotional beat before the finale."}],
   smarter:[{r:"Everyone",t:"sees the same arc, each from their own lane."}],live:null},
 
  {kicker:"The close",title:"Everyone made better decisions",vig:"finale",
-  narration:"Day twenty one. Dr. Owusu presses the gold Physician sign-off button on the clinical portal. The sign-off crosses the bridge. The worker app celebrates. The employer and HSE views retire him. The board portal closes the claim with the full duty package, expected full duty Jul 31. Four tabs, one keystroke, the whole company moving at once. Everyone made better decisions because everyone had better information.",
+  narration:"Day twenty one. Attending Physician presses the gold Physician sign-off button on the clinical portal. The sign-off crosses the bridge. The worker app celebrates. The employer and HSE views retire him. The board portal closes the claim with the full duty package, expected full duty Jul 31. Four tabs, one keystroke, the whole company moving at once. Everyone made better decisions because everyone had better information.",
   notes:[{v:1,t:"Everyone made better decisions because everyone had better information."},{v:0,t:"Run this live on the worker dashboard Present mode. Press Physician sign-off and let all four tabs move."},{v:0,t:"End here. Do not add a slide after this."}],
   smarter:[{r:"Everyone",t:"the single check-in that opened this demo is the same signal that just closed the claim."}],
-  live:{tag:"Live system",tabs:"All portals, worker dashboard Present mode",note:"The rehearsed ending: run Present mode to day 21 and land Dr. Owusu's sign-off across all four tabs at once."}}
+  live:{tag:"Live system",tabs:"All portals, worker dashboard Present mode",note:"The rehearsed ending: run Present mode to day 21 and land Attending Physician's sign-off across all four tabs at once."}}
 ];
 
 /* ============ RUNNER ============ */
@@ -236,8 +236,8 @@ var VIGNETTES={
  "intake":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">claims system &middot; first notice of injury</span></div>'+
    '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="v-h">New claim CT-2026-0481</div><span class="v-pill v-ok">Open</span></div>'+
-   '<div class="v-row"><span class="v-sub">Claimant</span><b>Marcus Bedard</b></div>'+
-   '<div class="v-row"><span class="v-sub">Employer</span><b>Northgate Industrial Services</b></div>'+
+   '<div class="v-row"><span class="v-sub">Claimant</span><b>Worker 15</b></div>'+
+   '<div class="v-row"><span class="v-sub">Employer</span><b>Employer B</b></div>'+
    '<div class="v-row"><span class="v-sub">Injury</span><b>Right shoulder, grade 1 supraspinatus strain</b></div>'+
    '<div class="v-row" style="border-bottom:none"><span class="v-sub">Continuum</span><span class="v-pill v-ok">Recovery plan attached</span></div></div></div>',
  "sms":
@@ -261,13 +261,13 @@ var VIGNETTES={
  "checkin-split":
   '<div class="split">'+
    '<div class="side"><div class="sidelbl">Clinician and coordinator</div><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">clinical portal</span></div>'+
-    '<div class="fbody"><div class="v-h" style="margin-bottom:8px">Marcus Bedard</div>'+
+    '<div class="fbody"><div class="v-h" style="margin-bottom:8px">Worker 15</div>'+
     '<div class="v-row"><span class="v-sub">Pain</span><b>7</b></div>'+
     '<div class="v-row"><span class="v-sub">Fatigue / confidence</span><b>6 / 4</b></div>'+
     '<div class="v-row" style="border-bottom:none"><span class="v-sub">Signal</span><span class="v-pill v-flag">Plateau flagged</span></div>'+
     '<div style="margin-top:9px;font-size:11px;color:var(--warn-700)">Escalated to the clinician per program rules.</div></div></div></div>'+
    '<div class="side"><div class="sidelbl">Employer, same second</div><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">employer dashboard</span></div>'+
-    '<div class="fbody"><div class="v-h" style="margin-bottom:8px">Marcus Bedard</div>'+
+    '<div class="fbody"><div class="v-h" style="margin-bottom:8px">Worker 15</div>'+
     '<div class="v-row"><span class="v-sub">Status</span><span class="v-pill v-func">Light duty</span></div>'+
     '<div class="v-row"><span class="v-sub">Duties</span><b>On track</b></div>'+
     '<div class="v-row" style="border-bottom:none"><span class="v-sub">Plan</span><span class="v-pill v-func">Under review</span></div>'+
@@ -278,12 +278,12 @@ var VIGNETTES={
     '<div class="card2"><div class="v-sub">Injured workers</div><div style="font-size:21px;font-weight:700">28</div></div>'+
     '<div class="card2"><div class="v-sub">On light duty</div><div style="font-size:21px;font-weight:700">18</div></div>'+
     '<div class="card2"><div class="v-sub">RTW rate</div><div style="font-size:21px;font-weight:700">76%</div></div></div>'+
-   '<div class="v-row"><b>Marcus Bedard</b><span class="v-pill v-func">Light duty</span></div>'+
+   '<div class="v-row"><b>Worker 15</b><span class="v-pill v-func">Light duty</span></div>'+
    '<div class="v-row"><span class="v-sub">Duties</span><b>On track</b></div>'+
    '<div class="v-row" style="border-bottom:none"><span class="v-sub">Plan</span><span class="v-pill v-func">Awaiting clinical review</span></div></div></div>',
  "clinical":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">clinical portal &middot; full clinical detail</span></div>'+
-   '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="v-h">Marcus Bedard</div><span class="v-sub">Dr. A. Owusu</span></div>'+
+   '<div class="fbody"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="v-h">Worker 15</div><span class="v-sub">Attending Physician</span></div>'+
    '<div class="v-row"><span class="v-sub">Diagnosis</span><b>Grade 1 supraspinatus strain</b></div>'+
    '<div class="v-row"><span class="v-sub">Pain / mobility</span><b>7 &rarr; 4 &middot; 3 &rarr; 6</b></div>'+
    '<div class="v-row"><span class="v-sub">Fatigue / confidence</span><b>6 / 4</b></div>'+
@@ -297,10 +297,10 @@ var VIGNETTES={
    '<div class="card2" style="margin-bottom:10px"><div class="v-sub">Task bank, filtered by restrictions</div><div style="font-weight:700;margin-top:3px">Tool crib inventory &middot; 4 h</div></div>'+
    '<div class="v-row"><span class="v-sub">Hazard check</span><span class="v-pill v-ok">Complete</span></div>'+
    '<div style="background:var(--ink-900);color:var(--white);border-radius:9px;padding:10px;text-align:center;font-weight:700;font-size:12px;margin-top:10px">Confirm and assign</div>'+
-   '<div style="margin-top:9px;font-size:11px;color:var(--ink-500)">Marcus accepts it himself. Nobody accepts for him.</div></div></div>',
+   '<div style="margin-top:9px;font-size:11px;color:var(--ink-500)">Worker 15 accepts it himself. Nobody accepts for him.</div></div></div>',
  "escalation":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">HSE portal &middot; escalation queue</span></div>'+
-   '<div class="fbody"><div style="border-left:4px solid var(--action-600);padding:10px 12px;background:var(--warn-050);border-radius:8px;margin-bottom:12px"><b>Marcus Bedard</b><div class="v-sub">Pain 8 on three consecutive check-ins.</div><div style="color:var(--warn-700);font-weight:700;font-size:11.5px;margin-top:4px">Escalated to the clinician per program rules.</div></div>'+
+   '<div class="fbody"><div style="border-left:4px solid var(--action-600);padding:10px 12px;background:var(--warn-050);border-radius:8px;margin-bottom:12px"><b>Worker 15</b><div class="v-sub">Pain 8 on three consecutive check-ins.</div><div style="color:var(--warn-700);font-weight:700;font-size:11.5px;margin-top:4px">Escalated to the clinician per program rules.</div></div>'+
    '<div style="background:var(--ink-050);border:1px solid var(--ink-100);border-radius:8px;padding:11px 13px;font-size:11.5px;color:var(--ink-700);line-height:1.5"><b>Device boundary:</b> tracking and visualization with independent clinician review. No scoring, no forecasting, no alerts that alter treatment.</div></div></div>',
  "executive":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">executive view &middot; operational overview</span></div>'+
@@ -313,7 +313,7 @@ var VIGNETTES={
   '<div style="border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);box-shadow:0 16px 46px rgba(0,0,0,.42)">'+
    '<div style="background:var(--warn-050);color:var(--warn-700);font-size:11px;font-weight:600;padding:8px 14px;border-bottom:1px solid var(--action-600)">Illustrative mock &middot; pilot integration is intake level, not a live bidirectional connection.</div>'+
    '<div style="display:grid;grid-template-columns:1fr 220px">'+
-    '<div style="background:var(--white);padding:14px 16px;color:var(--ink-900)"><div class="v-sub" style="margin-bottom:8px">SIGMA Claims &middot; CT-2026-0481</div><div class="v-row"><span class="v-sub">Claimant</span><b>Marcus Bedard</b></div><div class="v-row"><span class="v-sub">Employer</span><b>Northgate Industrial Services</b></div><div class="v-row" style="border-bottom:none"><span class="v-sub">Status</span><span class="v-pill v-ok">Open, active</span></div></div>'+
+    '<div style="background:var(--white);padding:14px 16px;color:var(--ink-900)"><div class="v-sub" style="margin-bottom:8px">SIGMA Claims &middot; CT-2026-0481</div><div class="v-row"><span class="v-sub">Claimant</span><b>Worker 15</b></div><div class="v-row"><span class="v-sub">Employer</span><b>Employer B</b></div><div class="v-row" style="border-bottom:none"><span class="v-sub">Status</span><span class="v-pill v-ok">Open, active</span></div></div>'+
     '<div style="background:var(--ink-900);color:var(--white);padding:14px 15px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;font-weight:600">Continuum panel</span><span class="v-pill" style="background:var(--warn-050);color:var(--warn-700);font-size:8.5px">Illustrative</span></div><div style="color:var(--ink-300);font-size:11px">Recovery day</div><div style="font-size:20px;font-weight:700;color:var(--action-600);font-family:\'Space Grotesk\',sans-serif">Day 14 <span style="font-size:11px;color:var(--ink-300)">of 21</span></div><div style="border-top:1px solid rgba(255,255,255,.1);margin-top:8px;padding-top:8px;font-size:11px;color:var(--ink-300)">Functional status<b style="color:var(--white);float:right">Light duty</b></div></div></div></div>',
  "timeline":
   '<div class="frame"><div class="bar"><i></i><i></i><i></i><span class="u">worker dashboard &middot; recovery timeline</span></div>'+
@@ -328,7 +328,7 @@ var VIGNETTES={
     '<div class="card2"><div class="v-sub">Employer</div><b>Retired from the list</b></div>'+
     '<div class="card2"><div class="v-sub">HSE</div><b>Case closed</b></div>'+
     '<div class="card2"><div class="v-sub">Board</div><b>Claim closed, full duty package</b></div></div>'+
-   '<div style="text-align:center;margin-top:12px"><span class="v-pill" style="background:var(--action-600);color:var(--ink-900);padding:6px 16px">Dr. Owusu pressed Physician sign-off &middot; expected full duty Jul 31</span></div></div>'
+   '<div style="text-align:center;margin-top:12px"><span class="v-pill" style="background:var(--action-600);color:var(--ink-900);padding:6px 16px">Attending Physician pressed Physician sign-off &middot; expected full duty Jul 31</span></div></div>'
 };
 function vignette(key){
   if(VIGNETTES[key])return VIGNETTES[key];

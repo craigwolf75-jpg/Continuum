@@ -8,8 +8,8 @@ words. No em-dashes anywhere.
 
 The agent must never say a number the screen does not show. The seeded numbers
 below are current: HSE queue seven open cases, board nineteen open claims and
-seven to acknowledge, clinical twenty-four active cases, Marcus at day nine,
-Jordan Miller in the exchange.
+seven to acknowledge, clinical twenty-four active cases, Worker 15 at day nine,
+Worker 11 in the exchange.
 
 ---
 
@@ -18,7 +18,7 @@ Jordan Miller in the exchange.
 **Open:** This is the worker's own space, the one seat built for the person doing
 the recovering, not for anyone watching them.
 
-**Walkthrough:** We are looking at Marcus Bedard, day nine. The Today view is a
+**Walkthrough:** We are looking at Worker 15, day nine. The Today view is a
 quick check-in: two sliders for how he feels and how he moves, a fatigue and
 confidence tap, and one tap to say he understands his duties for today. Recovery
 Trend is his own line, and it is moving the right way. My Duties are the tasks his
@@ -132,8 +132,8 @@ services. This seat only tracks that lifecycle.
 **Open:** This page shows how Continuum would sit beside a system of record like
 the SIGMA exchange. It is a proposed workflow, drawn honestly.
 
-**Walkthrough:** It follows one connected journey. A claim, Jordan Miller at
-GardaWorld, claim SIGMA-2026-04417, begins in the exchange. Continuum creates the
+**Walkthrough:** It follows one connected journey. A claim, Worker 11 at
+Employer A, claim SIGMA-2026-04417, begins in the exchange. Continuum creates the
 recovery case, modified work is approved by a person, the recovery journey runs,
 and at the end Continuum prepares the information to share back to the exchange.
 

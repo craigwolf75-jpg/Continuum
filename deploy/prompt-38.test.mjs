@@ -28,7 +28,7 @@ const ITEMS = [
   ["P38-09", "Check-in lapse nudges", "Priority 2"],
   ["P38-10", "Physician summary view", "Priority 2"],
   ["P38-11", "White-label theming", "Priority 2"],
-  ["P38-12", "Alberta portal-assist ingestion", "Priority 2"],
+  ["P38-12", "Worker 36 portal-assist ingestion", "Priority 2"],
   ["P38-13", "Nexus Health handoff seam", "Priority 3"],
   ["P38-14", "Pilot metering and live ROI view", "Priority 2"],
   ["P38-15", "Consent alignment", "Priority 1"],
@@ -67,7 +67,7 @@ ok("employer wall stands: pain to clinician, functional to the hybrid seat", s.i
 ok("movement analysis is a guarded flag, off, staged", s.includes("guarded flag, off") && s.includes("built, gated, and switched on"));
 
 // naming correction
-ok("GardaWorld in documents, Garda in speech; Garta is a transcription error", s.includes("The company is GardaWorld") && s.includes("transcription error"));
+ok("Employer A in documents, Garda in speech; Garta is a transcription error", s.includes("The company is Employer A") && s.includes("transcription error"));
 
 // register law
 ok("companion dash clean", !/[‒–—―−]/.test(s));

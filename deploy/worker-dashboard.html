@@ -175,7 +175,7 @@ var PROG=21;
 var S;
 var wiz=null; /* transient sign-up wizard state, never persisted */
 function fresh(){return {
- pilot:false, name:"Marcus Bedard", trade:"Scaffolder", injury:"Right shoulder strain", restr:"No lifting above shoulder height",
+ pilot:false, name:"Worker 15", trade:"Scaffolder", injury:"Right shoulder strain", restr:"No lifting above shoulder height",
  consented:true, videoConsent:false, section:"dashboard", day:9, status:"light_duty", escalated:false, checkedInToday:false,
  pain:[7,7,6,6,5,5,4], mob:[3,3,4,4,5,6,6],
  form:{pain:4,mob:6,fatigue:3,confidence:7,note:""}, ackDay:null, ackTs:null, consentTs:null,
@@ -189,11 +189,11 @@ function fresh(){return {
   {id:2,task:"Safety paperwork, weekly incident logs",hours:3,status:"accepted"},
   {id:3,task:"Toolbox talk preparation",hours:2,status:"assigned"}],
  activities:[{id:1,name:"Shoulder mobility, 5 min",status:"pending"},{id:2,name:"Gentle stretches, 3 sets",status:"pending"},{id:3,name:"Ice after activity, 10 min",status:"pending"}],
- msgs:[{who:"them",x:"Morning Marcus. Your new duty list is ready when you are.",t:"K. Morgan, 8:02 AM"}],
+ msgs:[{who:"them",x:"Morning Worker 15. Your new duty list is ready when you are.",t:"Worker 61, 8:02 AM"}],
  unread:1, present:false
 };}
 function load(){try{var r=localStorage.getItem(LSKEY);if(r){var s=JSON.parse(r);if(s&&s.pain){S=s;if(S.form){if(S.form.fatigue==null)S.form.fatigue=3;if(S.form.confidence==null)S.form.confidence=7;}if(S.ackDay===undefined)S.ackDay=null;if(S.ackTs===undefined)S.ackTs=null;if(!S.activities)S.activities=fresh().activities;
-if(S.pilot===undefined)S.pilot=false;if(S.name===undefined)S.name="Marcus Bedard";if(S.trade===undefined)S.trade="Scaffolder";if(S.injury===undefined)S.injury="Right shoulder strain";if(S.restr===undefined)S.restr="No lifting above shoulder height";if(S.consentTs===undefined)S.consentTs=null;return;}}}catch(e){}S=fresh();}
+if(S.pilot===undefined)S.pilot=false;if(S.name===undefined)S.name="Worker 15";if(S.trade===undefined)S.trade="Scaffolder";if(S.injury===undefined)S.injury="Right shoulder strain";if(S.restr===undefined)S.restr="No lifting above shoulder height";if(S.consentTs===undefined)S.consentTs=null;return;}}}catch(e){}S=fresh();}
 function save(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}writeBridge();render();}
 function resetAll(){S=fresh();S.checkedInToday=false;wiz=null;closeDay();toast("Demo <b>reset</b>");save();}
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -202,7 +202,7 @@ function burst(x,y){if(window.matchMedia && window.matchMedia("(prefers-reduced-
  (function(p,a,d){var t0=null;function step(ts){if(!t0)t0=ts;var k=(ts-t0)/700;if(k>=1){p.remove();return;}
  p.style.transform="translate("+(Math.cos(a)*d*k)+"px,"+(Math.sin(a)*d*k+30*k*k)+"px) scale("+(1-k)+")";p.style.opacity=1-k;requestAnimationFrame(step);}requestAnimationFrame(step);})(p,Math.random()*6.283,60+Math.random()*70);}}
 /* bridge write (13b schema): functional fields only, projection at the write side.
-   The active worker crosses (demonstration = Marcus canon, pilot = the signed-up
+   The active worker crosses (demonstration = Worker 15 canon, pilot = the signed-up
    worker); clinical values never do, because bridge.js drops anything off the
    functional allowlist. */
 function writeBridge(){
@@ -261,7 +261,7 @@ function makePilot(id,flags){
   logs:[],
   duties:[{id:1,task:"Tool crib, inventory management",hours:4,status:"assigned"}],
   activities:[{id:1,name:"Gentle range of motion, 5 min",status:"pending"}],
-  msgs:[{who:"them",x:"Welcome to Continuum, "+id.name+". I am your coordinator here. Thirty seconds a day is all this asks.",t:"K. Morgan, just now"}],
+  msgs:[{who:"them",x:"Welcome to Continuum, "+id.name+". I am your coordinator here. Thirty seconds a day is all this asks.",t:"Worker 61, just now"}],
   unread:1, present:false};
  applyCheckin(st,st.form,flags); /* the wizard step-four check-in: day zero becomes day one, first entry on the timeline */
  return st;
@@ -308,7 +308,7 @@ function closeDay(){var el=document.getElementById("daymodal");if(el){el.classNa
 /* ---------- views ---------- */
 function renderDashboard(){
  var h='<header style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px"><div>'+
- '<h2 class="pg">Your Recovery: Last 7 Days</h2><p class="sub">What should I do today &middot; Worker ID: 99283-WB &middot; Coordinator: K. Morgan &middot; Day '+S.day+' of '+PROG+'</p></div>'+
+ '<h2 class="pg">Your Recovery: Last 7 Days</h2><p class="sub">What should I do today &middot; Worker ID: 99283-WB &middot; Coordinator: Worker 61 &middot; Day '+S.day+' of '+PROG+'</p></div>'+
  '<div style="display:flex;gap:10px"><button class="btn ghost" onclick="startPresent()"><span class="msym" style="font-size:18px">play_arrow</span> Present</button>'+
  '<button class="btn" onclick="go(\'trend\')"><span class="msym" style="font-size:19px">add_circle</span> New Recovery Log</button></div></header>';
  var trend=S.escalated?"Your clinician is taking a look":"Trending well";
@@ -329,9 +329,9 @@ function renderDashboard(){
  '<div class="milestone"><b style="font-size:13.5px">Recovery milestone</b><p style="font-size:11.5px;opacity:.85;margin-top:4px">'+(PROG-S.day>0?("You are "+(PROG-S.day)+" days from the end of this recovery phase."):"Phase complete. Your clinician confirms the next step.")+'</p><div class="mb"><i style="width:'+pct()+'%"></i></div></div>'+
  '</div></div></div>';
  h+='<section class="tiles">'+
- '<div class="tile"><span class="ic" style="background:var(--navy)"><span class="msym">event</span></span><div><b>Next appointment</b><span>Jul 21 &middot; Dr. A. Owusu</span></div></div>'+
+ '<div class="tile"><span class="ic" style="background:var(--navy)"><span class="msym">event</span></span><div><b>Next appointment</b><span>Jul 21 &middot; Attending Physician</span></div></div>'+
  '<div class="tile"><span class="ic" style="background:var(--teal)"><span class="msym">assignment_turned_in</span></span><div><b>Active duty plan</b><span>Light duties. No lifting above shoulder height.</span></div></div>'+
- '<div class="tile" style="cursor:pointer" onclick="go(\'chat\')"><span class="ic" style="background:var(--gold);color:var(--navy)"><span class="msym">forum</span></span><div><b>Support message</b><span>'+(S.unread?S.unread+" unread from K. Morgan":"You are all caught up")+'</span></div></div>'+
+ '<div class="tile" style="cursor:pointer" onclick="go(\'chat\')"><span class="ic" style="background:var(--gold);color:var(--navy)"><span class="msym">forum</span></span><div><b>Support message</b><span>'+(S.unread?S.unread+" unread from Worker 61":"You are all caught up")+'</span></div></div>'+
  '</section>';
  return h;}
 /* Shared section header so Present sits top-right on every worker section, the
@@ -399,7 +399,7 @@ function renderChat(){
 function sendMsg(){
  var el=document.getElementById("chatline");if(!el||!el.value.trim())return;
  S.msgs.push({who:"me",x:el.value.trim(),t:"You, just now"});
- S.msgs.push({who:"them",x:"Got it, thanks Marcus. I will follow up today.",t:"K. Morgan, just now"});
+ S.msgs.push({who:"them",x:"Got it, thanks Worker 15. I will follow up today.",t:"Worker 61, just now"});
  toast("Message <b>sent</b>");save();}
 function renderSettings(){
  var h=wkHeader("Settings","Your data, your choices. Changing these never affects your care or your job.");
@@ -426,12 +426,12 @@ function toggleConsent(){
 function doCheckin(p,m){S.pain=S.pain.slice(1).concat([p]);S.mob=S.mob.slice(1).concat([m]);S.checkedInToday=true;S.escalated=false;S.logs.unshift({t:"Day "+S.day,title:"Standard check-in",x:"Pain "+p+", mobility "+m+".",tag:m>=7?"optimal":"stable"});}
 function advanceDays(n){for(var i=0;i<n;i++){S.day++;var np=Math.max(0,curPain()-1),nm=Math.min(10,curMob()+1);S.pain=S.pain.slice(1).concat([np]);S.mob=S.mob.slice(1).concat([nm]);}S.checkedInToday=true;S.logs.unshift({t:"Day "+S.day,title:"Standard check-in",x:"Pain "+curPain()+", mobility "+curMob()+".",tag:curMob()>=7?"optimal":"stable"});}
 var BEATS=[
- {say:"Day 9. Marcus opens the worker app and logs a check-in. Pain is down, mobility is up. The recovery ring moves.",run:function(){doCheckin(4,6);}},
- {say:"The employer dashboard now shows Marcus on light duty. Functional status only. It never sees his pain, his mobility, or his notes.",run:function(){}},
- {say:"Marcus acknowledges today's restrictions. His HSE coordinator sees the time he confirmed, and nothing else.",run:function(){S.ackDay=S.day;S.ackTs=Date.now();}},
+ {say:"Day 9. Worker 15 opens the worker app and logs a check-in. Pain is down, mobility is up. The recovery ring moves.",run:function(){doCheckin(4,6);}},
+ {say:"The employer dashboard now shows Worker 15 on light duty. Functional status only. It never sees his pain, his mobility, or his notes.",run:function(){}},
+ {say:"Worker 15 acknowledges today's restrictions. His HSE coordinator sees the time he confirmed, and nothing else.",run:function(){S.ackDay=S.day;S.ackTs=Date.now();}},
  {say:"Days pass. Every morning check-in nudges the ring forward and keeps all four portals current, live across the bridge.",run:function(){advanceDays(6);}},
- {say:"HSE assigns a duty inside his restrictions. Marcus accepts it himself. Nobody accepts for him.",run:function(){var d=S.duties.filter(function(x){return x.status!=="completed";})[0];if(d)d.status="completed";}},
- {say:"Day 21. Dr. Owusu reviews the recovery signal and presses Sign off. The sign-off crosses the bridge.",run:function(){advanceDays(Math.max(0,PROG-S.day));S.status="signed_off";S.logs.unshift({t:"Day "+S.day,title:"Cleared for full duty",x:"Dr. A. Owusu signed off your return. Welcome back.",tag:"optimal"});}},
+ {say:"HSE assigns a duty inside his restrictions. Worker 15 accepts it himself. Nobody accepts for him.",run:function(){var d=S.duties.filter(function(x){return x.status!=="completed";})[0];if(d)d.status="completed";}},
+ {say:"Day 21. Attending Physician reviews the recovery signal and presses Sign off. The sign-off crosses the bridge.",run:function(){advanceDays(Math.max(0,PROG-S.day));S.status="signed_off";S.logs.unshift({t:"Day "+S.day,title:"Cleared for full duty",x:"Attending Physician signed off your return. Welcome back.",tag:"optimal"});}},
  {say:"The worker app celebrates. Employer and HSE retire him. The board closes the claim with the full duty package. Everyone made better decisions because everyone had better information.",run:function(){}}
 ];
 function startPresent(){goBeat(0);}

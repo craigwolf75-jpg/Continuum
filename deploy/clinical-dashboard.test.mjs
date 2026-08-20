@@ -11,8 +11,8 @@ ok("bucketOf present", /function bucketOf\(p\)\{/.test(html));
 const bm = html.match(/function bucketOf\(p\)\{([^]*?)\}/);
 if (bm) {
   const bucketOf = new Function("p", bm[1]);
-  ok("prog 75 is ontrack (Marcus)", bucketOf({ prog: 75 }) === "ontrack");
-  ok("prog 30 is stalled (Cardinal)", bucketOf({ prog: 30 }) === "stalled");
+  ok("prog 75 is ontrack (Worker 15)", bucketOf({ prog: 75 }) === "ontrack");
+  ok("prog 30 is stalled (Worker 08)", bucketOf({ prog: 30 }) === "stalled");
   ok("prog 90 is ahead", bucketOf({ prog: 90 }) === "ahead");
   ok("prog 50 is behind", bucketOf({ prog: 50 }) === "behind");
 }

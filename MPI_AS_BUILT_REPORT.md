@@ -67,7 +67,7 @@ deleted_at timestamptz
 - `public.users.phone` carries a `unique` constraint (`foundation_core.sql:84`). **This is a natural key on a phone number, used as a global uniqueness constraint.**
 - `public.workers.sin_hash` is a `text` column, no unique constraint (`worker_intake_fields.sql`). It is not keyed on.
 - `public.users.email` is not unique.
-- `clinical.worker.phn` (the Alberta personal health number) has no unique constraint (`016`).
+- `clinical.worker.phn` (the Worker 36 personal health number) has no unique constraint (`016`).
 - No table keys or uniquely constrains a claim number for a person. Claim numbers live on `wcb_case`/`injuries`, not on the person.
 
 **Census result:** a person is uniquely constrained on a **phone number** (`public.users.phone`), which is a natural key that health information systems treat as reassignable and shared. Nothing is keyed on a health number, an email, or a claim number. The SIN is stored only as a mask and a hash and is not keyed on.

@@ -107,7 +107,7 @@
 <div class="overlay" id="present"></div>
 <script>
 (function(){
-  /* D13: GardaWorld's system of record is SIGMA-RH (RH for Ressources Humaines).
+  /* D13: Employer A's system of record is SIGMA-RH (RH for Ressources Humaines).
      One constant, flipped everywhere by a single edit. The RH spelling is the
      client's own product name; the HR spelling is never used. */
   var SYS = "SIGMA-RH";
@@ -148,7 +148,7 @@
       {cn:"Integration errors", cd:"An honest empty state: no exchange attempted, error handling built and ready."},
       {cn:"Human review banner", cd:"Every proposed outcome carries the reminder that a person reviews and approves it."}
     ],
-    demoCase: {name:"Jordan Miller", claim:"SIGMA-2026-04417", employer:"GardaWorld", coordinator:"Priya Anand, return to work coordinator", clinician:"Dr. L. Roy"}
+    demoCase: {name:"Worker 11", claim:"SIGMA-2026-04417", employer:"Employer A", coordinator:"Worker 32 Anand, return to work coordinator", clinician:"Dr. L. Roy"}
   };
 
   var esc = function(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); };
@@ -168,7 +168,7 @@
     /* three-part visual */
     h+='<div class="lbl">How the two systems connect</div>';
     h+='<div class="three">';
-    h+='<div class="col"><h3>'+esc(SYS)+'</h3><div class="csub">GardaWorld existing system</div>'+list(d.sigmaItems)+'</div>';
+    h+='<div class="col"><h3>'+esc(SYS)+'</h3><div class="csub">Employer A existing system</div>'+list(d.sigmaItems)+'</div>';
     h+='<div class="exch"><div class="kick" style="color:var(--gold2)">Secure information exchange</div><div class="arrows">&#8646;</div><div class="tbc">Method to be confirmed</div><div class="methods">'+d.methods.map(function(m){return '<div class="method">'+esc(m)+'</div>';}).join("")+'</div></div>';
     h+='<div class="col"><h3>Continuum CRTW</h3><div class="csub">Active recovery and safe return</div>'+list(d.crtwItems)+'</div>';
     h+='</div>';
@@ -188,7 +188,7 @@
     h+='<div class="lbl">Reusable component registry</div><div class="registry">'+d.registry.map(function(c){return '<div class="comp"><div class="cn">'+esc(c.cn)+'</div><div class="cd">'+esc(c.cd)+'</div></div>';}).join("")+'</div>';
     /* disclaimer */
     h+='<div class="disc">Proposed workflow. No live integration exists today. Every figure shown is demonstration data. Information prepared for sharing is prepared and ready; nothing is ever written to '+esc(SYS)+' until a connection method is confirmed in technical discovery and a person authorizes each exchange.</div>';
-    h+='<button class="start" id="startbtn">Start GardaWorld Demonstration</button>';
+    h+='<button class="start" id="startbtn">Start Employer A Demonstration</button>';
     document.getElementById("home").innerHTML=h;
     document.getElementById("startbtn").addEventListener("click",openPresent);
   }
@@ -198,7 +198,7 @@
   var SCREENS=[
     {kick:"Overview", title:"One connected journey",
      body:'<p class="body18">'+esc(SYS)+' keeps the incident and the claim. Continuum manages the recovery that happens between the events: the check ins, the modified work, the functional progress, and the safe return. Neither system replaces the other.</p>',
-     notes:["Open by naming the two systems and the one journey.","GardaWorld does not need to replace its system of record."]},
+     notes:["Open by naming the two systems and the one journey.","Employer A does not need to replace its system of record."]},
     {kick:"Step one", title:"A new claim in "+SYS,
      body:'<span class="democase">Demonstration Case</span><p class="body18">A workplace injury for '+esc(dc.name)+' is recorded in '+esc(SYS)+' as claim '+esc(dc.claim)+'. Continuum reads the reference fields it needs to open a recovery case. It reads a shallow set, never the whole record.</p>',
      notes:["This is the inbound direction: reference fields only.","Say the demonstration case name so the room can follow one worker."]},

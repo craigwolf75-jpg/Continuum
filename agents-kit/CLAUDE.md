@@ -38,7 +38,7 @@ gate. Every human gate stands whether Zeus was called by a person or by cron.
 - Architecture, code, data model, migrations, resilience wiring -> athena (12a)
 - Visual system, layout, motion, imagery -> apollo (12b)
 - Every word a visitor reads, copy, tone, voice -> calliope (12f)
-- Test suites, seed reconciliation, verdicts on quality -> heracles (12c)
+- Worker 44 suites, seed reconciliation, verdicts on quality -> heracles (12c)
 - Release, deploy, push to main, rollback, smoke checks -> hermes (12d)
 - Audits and scans: privacy and visual inference, register, canon, links,
   storage keys, hygiene -> argus (12e)
@@ -112,8 +112,8 @@ No mission integrates until all four gates that apply to it are satisfied.
 
 Canon is the single source of narrative and numeric truth across all surfaces.
 
-- Marcus is at day 9, pain 4.
-- Cardinal is off work as of day 18.
+- Worker 15 is at day 9, pain 4.
+- Worker 08 is off work as of day 18.
 - Per-tenant numbers must sum. A tenant total is the sum of its parts and is
   checked, not asserted.
 

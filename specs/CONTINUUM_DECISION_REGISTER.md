@@ -23,12 +23,12 @@ Prompt 30's Complete Build Spec v5 presupposes the NestJS and PostgreSQL stack a
 **Ruling: professional-only by default.** Movement video is viewable only by the treating professional by default. The coordinator does not get default video access; a specific case that genuinely needs it requires an explicit, audited per-case grant. Satisfies the counsel flag and data minimization.
 
 ### D5. Retention schedules per record class
-**Ruling: build configurable per-class retention with conservative interim defaults, counsel-gated.** Implement per-record-class retention as config now (video shortest, audit longest), hard-gated so counsel confirms the actual statutory minimums (PIPEDA + Alberta HIA + Ontario) before ANY first live data. Unblocks the build without a premature legal commitment. Actual periods remain a counsel dependency.
+**Ruling: build configurable per-class retention with conservative interim defaults, counsel-gated.** Implement per-record-class retention as config now (video shortest, audit longest), hard-gated so counsel confirms the actual statutory minimums (PIPEDA + Worker 36 HIA + Ontario) before ANY first live data. Unblocks the build without a premature legal commitment. Actual periods remain a counsel dependency.
 
 ### D6. Ontario privacy instrument mapping for consent text
 **Ruling: working posture + configurable consent, counsel-gated (assumption).** Build consent text as versioned and jurisdiction-configurable against a working assumption: Continuum operates as an agent/processor beside the authoritative health-information custodian, Ontario PHIPA-oriented with PIPEDA fallback. Logged in the assumption register; counsel confirms the actual instrument, Continuum's status under it, and the consent wording before first live data.
 
-### D7. Claims-panel scope promised to GardaWorld
+### D7. Claims-panel scope promised to Employer A
 **Ruling: illustrative concept + submission tracking.** Pilot materials present the SIGMA-embedded Recovery Intelligence panel as an illustrative, phase-two concept (labeled not-live). The pilot's actual claims experience is submission-and-acknowledgement tracking on the board seat, intake-level integration only. Consistent with Prompt 19/20 doctrine; avoids the integration-overreach risk. Prompt 29's board integration matrix refines this: the Ontario pilot board (WSIB) exposes a true B2B XML machine channel, so its adapter transmits machine to machine with a returned confirmation number under the same human-authorizes-the-send gate, while eight of the remaining boards stay portal-assist and one (Yukon) is paper. No Canadian board publishes a retrieval API, which reinforces the receive-only posture: the board seat submits and tracks acknowledgement, it never pulls claim data.
 
 ### D8. Marketing boundary for the word intelligence
@@ -56,10 +56,10 @@ Opened by the Prompt 30 review of the Complete Build Spec v5 and ruled by Gary t
 
 ## Prompt 34 (SIGMA demonstration naming)
 
-Added by the Prompt 34 SIGMA connection demonstration page on 2026-07-21, both to settle before the GardaWorld room.
+Added by the Prompt 34 SIGMA connection demonstration page on 2026-07-21, both to settle before the Employer A room.
 
 ### D13. SIGMA system name
-**Ruling: SIGMA-RH.** GardaWorld's product is SIGMA-RH (RH for the French Ressources Humaines), Craig's adopted integration blueprint uses SIGMA-RH throughout, and every spec on main uses SIGMA-RH. Prompt 34's demonstration spec wrote SIGMA-HR; that is the wrong name and would say the client's own system's name wrong in front of their executives. Any build of the demonstration page defaults its system-name constant to SIGMA-RH. Final confirmation with GardaWorld's own people is still worth taking before the room, but canon already sides with RH. Prompt 34a operationalizes this as a Settings toggle on the SIGMA portal, defaulting to SIGMA-RH and flipping the name across every screen in one action if GardaWorld confirms the other spelling.
+**Ruling: SIGMA-RH.** Employer A's product is SIGMA-RH (RH for the French Ressources Humaines), Craig's adopted integration blueprint uses SIGMA-RH throughout, and every spec on main uses SIGMA-RH. Prompt 34's demonstration spec wrote SIGMA-HR; that is the wrong name and would say the client's own system's name wrong in front of their executives. Any build of the demonstration page defaults its system-name constant to SIGMA-RH. Final confirmation with Employer A's own people is still worth taking before the room, but canon already sides with RH. Prompt 34a operationalizes this as a Settings toggle on the SIGMA portal, defaulting to SIGMA-RH and flipping the name across every screen in one action if Employer A confirms the other spelling.
 
 ### D14. CRTW acronym expansion
 **Ruling: Connected Return-to-Work platform, ruled by Gary on 2026-07-21.** CRTW expands to Connected Return-to-Work platform venture-wide (the Prompt 34 demonstration expansion, the better fit for a sales room). The earlier Corporate Recovery, Training and Workforce Intelligence expansion from the CRTW Intelligence PRD is superseded; the analytics layer is now read as the platform's Connected Return-to-Work Intelligence, and the crtw_predictive flag name is unchanged. The plain-language standard is updated to this expansion.

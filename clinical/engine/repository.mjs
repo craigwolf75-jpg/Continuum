@@ -36,7 +36,7 @@
 
    Pure data structures. No dashes anywhere. */
 
-// Build an in memory repository from a seed of plain arrays and maps. Test and dev only;
+// Build an in memory repository from a seed of plain arrays and maps. Worker 44 and dev only;
 // this is NOT the production adapter. Every write mutates the in memory store and appends an
 // audit event where the port promises one, mirroring the append only audit.event table.
 export function createInMemoryRepository(seed = {}) {

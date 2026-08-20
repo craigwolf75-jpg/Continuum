@@ -8,7 +8,7 @@
 > five roles (worker/hse/employer_admin/wcb_officer/nexus_physician; coordinator and
 > leadership retired), HSE sees pain/mobility scores, slider check-ins (no camera
 > session as a current feature), client hexes #0E1B2C / #C8972F, client cast
-> (Marcus Bedard / Worley / Dr. Owusu). The §0 missing-screens blocker is no longer
+> (Worker 15 / Worley / Attending Physician). The §0 missing-screens blocker is no longer
 > on the critical path. Retained for reference and for the gating/QA guidance, which
 > still applies to the static track if it continues.
 
@@ -103,7 +103,7 @@ Landing page + working app, all still static-hostable on the same Vercel project
 - **Cross-surface reactivity is the wow.** A worker check-in updates the
   coordinator's check-ins KPI and adherence calendar; pain ≥8 raises an
   escalation on the coordinator dashboard; Frank assigning a duty makes it
-  appear in Mateo's duties pending accept; Priya clearing a hazard check flips
+  appear in Mateo's duties pending accept; Worker 32 clearing a hazard check flips
   Frank's duty chip; Dr. Osei publishing a restriction update changes Frank's
   pinned RestrictionCard and Mateo's duties header; clearance READY →
   full_duty_pending → employer confirm closes the case.
@@ -142,9 +142,9 @@ design phase's matrix:
 
 | Role (picker)      | Surfaces in its nav set        | Clinical data? |
 |--------------------|--------------------------------|----------------|
-| Coordinator (Dana) | H2 Overview, H3 Case-file      | Yes (care team)|
+| Coordinator (Worker 49) | H2 Overview, H3 Case-file      | Yes (care team)|
 | Supervisor (Frank) | H4 Supervisor                  | No - functional only |
-| HSE (Priya)        | H5 HSE                         | No - functional only |
+| HSE (Worker 32)        | H5 HSE                         | No - functional only |
 | Physician (Osei)   | H6 Physician (+ clearance panel)| Yes            |
 | Claims             | H7 Claims / early-warning      | Per matrix     |
 | Leadership         | H8 Leadership analytics        | No - aggregates only |
@@ -161,11 +161,11 @@ status `light_duty`, onboarding **complete** (see below).
 
 Aggregates for the coordinator Overview: 28 / 18 / 24 / 64% / 76%,
 cost impact $142,680, time loss 624 hrs (carry the Prompt 03 evidence figures:
-63-day baseline WCB Alberta 2024; 763,326 / 274,022 / 1,056 AWCBC 2023).
+63-day baseline WCB Worker 36 2024; 763,326 / 274,022 / 1,056 AWCBC 2023).
 
 **Missing from the draft - add:** per-worker seed records for the eight named
-dashboard workers (Thompson, Miller, Johnson, Martinez, Anderson, O'Brien,
-Clark, Singh) - each needs a status, adherence, and any early-warning flag, or
+dashboard workers (Worker 03, Miller, Worker 17, Worker 04, Worker 14, Worker 12,
+Worker 20, Worker 33) - each needs a status, adherence, and any early-warning flag, or
 the coordinator case list, H7 early-warning board, and H8 analytics cannot
 render live rows from the aggregates alone.
 
@@ -200,7 +200,7 @@ after a reset that chooses to replay it) - it must NOT block the day-9 demo.
     `<meta name="robots" content="noindex, nofollow">` + `<link rel="canonical"
     href="/">` head block. The landing page `/` stays the only indexable route.
 - Demo cast only (Mateo R., claim 2408841, Northline Industrial,
-  Dana/Sarah/Dr. Osei/Frank/Priya, the eight dashboard workers). No real data.
+  Worker 49/Worker 17/Dr. Osei/Frank/Worker 32, the eight dashboard workers). No real data.
 
 ---
 
@@ -217,7 +217,7 @@ after a reset that chooses to replay it) - it must NOT block the day-9 demo.
 3. **Hub core loop:** login → role routing → coordinator Overview with live
    figures from the store; the check-in from step 2 visibly updates it.
 4. **The duty loop:** Frank assigns (restriction pinned, only fitting duties
-   listed) → Priya hazard-checks → Mateo accepts → Frank's confirmations show
+   listed) → Worker 32 hazard-checks → Mateo accepts → Frank's confirmations show
    Fine / Manageable / Too much from Mateo's next check-in (functional language
    only for Frank - §3).
 5. **The clinical loop:** Dr. Osei's signal review, restrictions editor (publish

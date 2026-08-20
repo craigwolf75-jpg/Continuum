@@ -27,8 +27,8 @@ ok("HSE: seven open cases", s.includes("seven open cases"));
 ok("board: nineteen open claims", s.includes("nineteen open claims"));
 ok("board: seven to acknowledge", s.includes("seven to acknowledge"));
 ok("clinical: twenty-four active cases", s.includes("twenty-four active cases"));
-ok("worker: Marcus at day nine", s.includes("day nine"));
-ok("SIGMA connection: Jordan Miller", s.includes("Jordan Miller"));
+ok("worker: Worker 15 at day nine", s.includes("day nine"));
+ok("SIGMA connection: Worker 11", s.includes("Worker 11"));
 
 // verbatim laws
 ok("routing phrase verbatim: per program rules", s.includes("per program rules"));

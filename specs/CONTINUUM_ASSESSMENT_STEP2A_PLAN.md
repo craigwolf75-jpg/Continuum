@@ -28,7 +28,7 @@
 
 **Files:**
 - Create: `deploy/assessment/config/crs-1.1.js`
-- Test: `deploy/assessment-config-11.test.mjs`
+- Worker 44: `deploy/assessment-config-11.test.mjs`
 
 **Interfaces:**
 - Produces the CRS_1.1 config object (UMD: `module.exports` in Node, `window.ContinuumCRS` in browser). It is CRS_1.0's shape PLUS: `changelog` (string), `opportunityTemplates` ({DIMENSION: string} for all six), an expanded `observations` array, `exposure[].allowExact` (boolean), and a `financial` block `{ enabled_when_inputs_present:true, operational_only_note:string, inputs:[{key,label,unit,required:boolean,industry_estimate:number|null}] }`. `version` is `"CRS_1.1"`.
@@ -85,7 +85,7 @@ console.log('assessment-config-11: PASS');
 
 **Files:**
 - Modify: `deploy/assessment/scoring.js`
-- Test: `deploy/assessment-scoring-11.test.mjs`
+- Worker 44: `deploy/assessment-scoring-11.test.mjs`
 
 **Interfaces:**
 - Consumes CRS_1.1 config. Adds to the `ContinuumScoring` export, all pure:
@@ -169,7 +169,7 @@ console.log('assessment-scoring-11: PASS');
 - Modify: `deploy/assessment/assessment.js`
 - Modify: `deploy/assessment/index.html`
 - Modify: `deploy/assessment/assessment.css`
-- Test: `deploy/assessment-smoke-11.test.mjs`
+- Worker 44: `deploy/assessment-smoke-11.test.mjs`
 
 **Interfaces:**
 - `index.html` loads `config/crs-1.1.js` (the active config) instead of `crs-1.0.js`.
@@ -220,7 +220,7 @@ console.log('assessment-smoke-11: PASS');
 
 **Files:**
 - Create: `deploy/assessment-guardrails-11.test.mjs`
-- Test: the whole `deploy/assessment-*.test.mjs` suite
+- Worker 44: the whole `deploy/assessment-*.test.mjs` suite
 
 - [ ] **Step 1: Write the guardrail test**
 

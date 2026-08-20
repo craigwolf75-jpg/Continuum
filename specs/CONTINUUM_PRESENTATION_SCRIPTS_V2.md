@@ -96,7 +96,7 @@ Q: "Can we use check-in data in performance reviews?" A: "No, and you agree to e
 
 **The Return to Work Coordination hub.** "Return to Work, or RTW for short. Seven open cases are on the board right now, with a seventy eight percent check-in completion rate across them. The coordinator sees every active recovery, its stage, and what needs doing next, in one place instead of in seven email threads."
 
-**The case queue.** "Each case shows where the person is in their program and what the next step is. One case here is escalated: Tyler Cardinal, a lower back case at day eighteen. It was escalated to the clinician per program rules. The coordinator did not have to notice it, weigh it, or remember it. The rule did the noticing. The clinician does the deciding."
+**The case queue.** "Each case shows where the person is in their program and what the next step is. One case here is escalated: Worker 08, a lower back case at day eighteen. It was escalated to the clinician per program rules. The coordinator did not have to notice it, weigh it, or remember it. The rule did the noticing. The clinician does the deciding."
 
 **The proxy check-in.** "Sometimes a worker cannot check in themselves: no phone that day, a bad morning, a language barrier. The coordinator can enter the check-in for them, and the screen marks it honestly: saved on the record as a coordinator entry. Here is the part that matters: the same escalation rules apply. If the coordinator enters pain of eight or more, it escalates to the clinician exactly as if the worker had typed it. There is no side door around the safety rules."
 
@@ -136,7 +136,7 @@ Q: "How much training does the coordinator need?" A: "The pilot starts with one 
 
 **The caseload.** "Twenty four active cases. The clinician sees each person's program, their recent check-ins, and anything the rules have escalated."
 
-**The case walkthrough.** "Take Marcus Bedard. He is at day nine of a twenty one day program. His pain today is four, his mobility is six. The clinician sees his real trend in his real numbers, and every note here can be as precise as medicine needs, because this is the one surface built for clinical language. Everywhere else in the platform, we simplify. Here, precision is the point, and simplifying it would be a medical decision, not a wording choice."
+**The case walkthrough.** "Take Worker 15. He is at day nine of a twenty one day program. His pain today is four, his mobility is six. The clinician sees his real trend in his real numbers, and every note here can be as precise as medicine needs, because this is the one surface built for clinical language. Everywhere else in the platform, we simplify. Here, precision is the point, and simplifying it would be a medical decision, not a wording choice."
 
 **Escalations.** "Whatever the rules escalate arrives here. The pain-eight rule, the flags, the coordinator's concerns. They all land on the clinician's desk because that is the only desk qualified to act on them."
 
@@ -170,7 +170,7 @@ Q: "Can the employer or the board see this screen?" A: "No. This surface exists 
 
 **Milestone alerts.** "Plain-words nudges like: return to work milestone approaching. Enough to keep a claim moving, nothing more."
 
-**The channels.** "Here is the honest map of how paperwork travels in Canada. Three boards can accept machine submissions: Ontario, through a business to business XML channel that returns a confirmation number, plus British Columbia and Alberta with their own formats. The other nine boards work portal assist: Continuum prepares the paperwork perfectly, and a person submits it on the board's own website. We show you which is which, because pretending everything is automated would be a lie with a nice interface."
+**The channels.** "Here is the honest map of how paperwork travels in Canada. Three boards can accept machine submissions: Ontario, through a business to business XML channel that returns a confirmation number, plus British Columbia and Worker 36 with their own formats. The other nine boards work portal assist: Continuum prepares the paperwork perfectly, and a person submits it on the board's own website. We show you which is which, because pretending everything is automated would be a lie with a nice interface."
 
 **The honest retrieval answer.** "And one more piece of honesty that surprises people: no compensation board in Canada offers a way for software to pull claim data back out. Nobody's software can do it, including ours. So anything flowing back, like rebates or claim outcomes, is labeled as an estimate on our screens until a person confirms the real number. When a vendor tells you their system syncs both ways with a board, ask them how."
 
@@ -204,7 +204,7 @@ Q: "Is the Ontario machine channel live tomorrow?" A: "No. Tomorrow the paperwor
 
 **The three panels.** "On one side, SIGMA. On the other, Continuum. Between them, a narrow, deliberate bridge. The bridge is small on purpose: the less that crosses, the less there is to secure, audit, and explain."
 
-**The guided walk, seven screens, one case.** "We follow one demonstration case end to end: Jordan Miller, case number GW-2026-1048. Screen by screen: the injury is reported in SIGMA, the way it is today, nothing changes for your intake. The basic reference data crosses the bridge. The recovery is coordinated in Continuum, with everything you saw in the earlier portals. Then the part that saves real time: duty matching. Continuum draws on an occupational database built for this: forty five positions, fifty tasks, twenty seven demand factors, fourteen injury profiles, and two hundred nine pre-matched duties across twenty six categories, organized under a twenty two code restriction system. When the clinician sets restrictions, the system proposes safe duties from that library instead of someone guessing from a binder. And at the end, the paperwork is prepared and held: nothing goes back toward SIGMA or out to a board until a person authorizes the send."
+**The guided walk, seven screens, one case.** "We follow one demonstration case end to end: Worker 11, case number GW-2026-1048. Screen by screen: the injury is reported in SIGMA, the way it is today, nothing changes for your intake. The basic reference data crosses the bridge. The recovery is coordinated in Continuum, with everything you saw in the earlier portals. Then the part that saves real time: duty matching. Continuum draws on an occupational database built for this: forty five positions, fifty tasks, twenty seven demand factors, fourteen injury profiles, and two hundred nine pre-matched duties across twenty six categories, organized under a twenty two code restriction system. When the clinician sets restrictions, the system proposes safe duties from that library instead of someone guessing from a binder. And at the end, the paperwork is prepared and held: nothing goes back toward SIGMA or out to a board until a person authorizes the send."
 
 **The privacy panel.** "What crosses the bridge is functional and administrative: safe duties, dates, claim status. Clinical content does not enter SIGMA. Your HR system stays an HR system."
 
@@ -268,7 +268,7 @@ Q: "What happens if the exchange breaks?" A: "It tells you, plainly. A failure l
 
 ### Section by section
 
-**Tenants.** "The platform runs multiple organizations side by side, each walled from the others: Worley with seven seats, GardaWorld with twelve, Ledcor with five, plus a sample employer for training."
+**Tenants.** "The platform runs multiple organizations side by side, each walled from the others: Worley with seven seats, Employer A with twelve, Employer C with five, plus a sample employer for training."
 
 **Guarded capabilities.** "Three advanced capabilities are built into the platform and switched off. Each sits behind its own independent gates, and nothing turns on quietly. You can see the off state with your own eyes right now."
 

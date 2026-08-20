@@ -11,7 +11,7 @@
 
 ## 1. PURPOSE
 
-The client has delivered an authoritative MVP build kit: locked scope decisions, a five-plus-six table data model, a server-guarded status machine, a field-level visibility matrix, proposed API contracts pending the Nexus Health and SiteDocs specs, a WCB-Alberta integration finding, and a ten-prompt agent build series. The internal design track (Prompts 01 through 04) was developed to a related but not identical specification. This document registers every conflict, states which side governs, and defines the corrected baseline for all future Continuum prompts.
+The client has delivered an authoritative MVP build kit: locked scope decisions, a five-plus-six table data model, a server-guarded status machine, a field-level visibility matrix, proposed API contracts pending the Nexus Health and SiteDocs specs, a WCB-Worker 36 integration finding, and a ten-prompt agent build series. The internal design track (Prompts 01 through 04) was developed to a related but not identical specification. This document registers every conflict, states which side governs, and defines the corrected baseline for all future Continuum prompts.
 
 **Precedence rule:** Client-locked decisions (handoff section 0 and any row marked Resolved in section 11) govern. Internal design law survives only where it does not contradict the client. Items the client left open belong to Gary.
 
@@ -46,14 +46,14 @@ The client has delivered an authoritative MVP build kit: locked scope decisions,
 - **Ruling:** client hexes are canonical. Internal extended palette (cream, ink, slate, mist, gold-soft) may continue as secondary tokens where they do not conflict. All future deliverables and code use #0E1B2C and #C8972F.
 
 ### C6. Cast and seed data - SPLIT RULING
-- Client worked example: Marcus Bedard, scaffolder, Worley (approx. 3,000 workers), Dr. A. Owusu, case NX-2026-00481, right shoulder, grade 1 supraspinatus strain, 21-day prognosis.
+- Client worked example: Worker 15, scaffolder, Worley (approx. 3,000 workers), Attending Physician, case NX-2026-00481, right shoulder, grade 1 supraspinatus strain, 21-day prognosis.
 - Internal demo cast: Mateo R., Northline Industrial, Dr. Osei, claim 2408841.
 - **Ruling:** production seed scripts and anything shown to the client use the client's cast and tenant (seed tenant is Worley per client Prompt 1). The internal cast remains permitted only inside the internal static demo if that track continues. No real data ever, in either track.
 
-### C7. WCB-Alberta integration - CLIENT GOVERNS (research finding)
+### C7. WCB-Worker 36 integration - CLIENT GOVERNS (research finding)
 - Finding: no public third-party claims API. Reporting runs through myWCB (employer report of injury, legally required within 72 hours), physician forms via HCP online services, and case-manager-routed forms (fitness-for-work, Notice to Injured Employee, PDA).
 - **Ruling:** no WCB API integration in MVP. Build document generation for the three milestone payloads, a submit-to-WCB hand-off step, and the wcb_notifications lifecycle: pending, generated, submitted, acknowledged, failed. Any internal screen implying a live WCB feed is re-labeled as document lifecycle tracking. Future EDI inquiry goes to WCB eBusiness Support before go-live.
-- Exact WCB form field sets must be confirmed against current WCB-Alberta forms before go-live (client open item 9).
+- Exact WCB form field sets must be confirmed against current WCB-Worker 36 forms before go-live (client open item 9).
 
 ### C8. Escalation rules - CLIENT GOVERNS
 - Rules: pain at or above 8 for 3 consecutive check-ins, OR mobility declining across 2 or more days, OR a configurable red-flag keyword in notes. Rule-based only, no ML in MVP. Escalations never auto-advance medical status; Nexus closes the loop via reassess.
@@ -63,7 +63,7 @@ The client has delivered an authoritative MVP build kit: locked scope decisions,
 - Workers: SMS OTP (6-digit, 5-minute expiry, single-use, rate-limited, E.164, managed provider). Dashboards: email plus OTP now, SiteDocs SSO seam for later. Never roll your own OTP infrastructure.
 
 ### C10. Data protection baseline - CLIENT GOVERNS, ALIGNED
-- PIPEDA plus Alberta Health Information Act posture; explicit timestamped revocable consent gating all collection; Canadian-region hosting for all PHI; TLS in transit, AES-256 at rest; signed-URL-only file access; append-only immutable audit_log on every read, edit, and export of health data; soft delete only, health records never hard-deleted; minimum-necessary field exposure per role. Canadian privacy-lawyer review before launch (client-owned).
+- PIPEDA plus Worker 36 Health Information Act posture; explicit timestamped revocable consent gating all collection; Canadian-region hosting for all PHI; TLS in transit, AES-256 at rest; signed-URL-only file access; append-only immutable audit_log on every read, edit, and export of health data; soft delete only, health records never hard-deleted; minimum-necessary field exposure per role. Canadian privacy-lawyer review before launch (client-owned).
 
 ---
 

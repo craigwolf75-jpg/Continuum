@@ -65,7 +65,7 @@ function onboardTo(mod, a, upTo) {
     ["injuries", INJURIES_OK],
     ["dutyMapping", [{ position_title: "Warehouse Associate", matched: "Warehouse Associate" }, { position_title: "Office Administrator", matched: "Office Administrator" }]],
     ["program", { goals: ["fewer lost time days", "faster first safe duties"], targetDays: 5, monthlyViewers: ["ceo@example.com"] }],
-    ["contacts", { coordinatorName: "K. Morgan", coordinatorEmail: "k.morgan@example.com", smsDefaultsConfirmed: true }]
+    ["contacts", { coordinatorName: "Worker 61", coordinatorEmail: "k.morgan@example.com", smsDefaultsConfirmed: true }]
   ];
   for (const [step, payload] of steps) {
     if (upTo && step === upTo) return;
@@ -193,8 +193,8 @@ function onboardTo(mod, a, upTo) {
   const a = fullAdapter(); mod.install(a); a._accept("ts");
   const badBand = mod.submit("organization", { legalName: "Acme", provinces: ["AB"], employeeBand: "a few" });
   ok("t14a employee band enforced", badBand.ok === false && badBand.errors.some(e => e.includes("employee count band")));
-  const badProv = mod.submit("organization", { legalName: "Acme", provinces: ["Alberta"], employeeBand: "1 to 49" });
-  ok("t14b province codes enforced", badProv.ok === false && badProv.errors.some(e => e.includes("Alberta")));
+  const badProv = mod.submit("organization", { legalName: "Acme", provinces: ["Worker 36"], employeeBand: "1 to 49" });
+  ok("t14b province codes enforced", badProv.ok === false && badProv.errors.some(e => e.includes("Worker 36")));
   ok("t14c a valid organization passes", mod.submit("organization", { legalName: "Acme", provinces: ["AB", "BC"], employeeBand: "1 to 49" }).ok === true);
 }
 
@@ -225,7 +225,7 @@ function onboardTo(mod, a, upTo) {
   mod.submit("roster", ROSTER_OK);
   mod.submit("dutyMapping", [{ position_title: "Clerk", matched: "Office Administrator" }]);
   mod.submit("program", { goals: ["fewer lost time days"] });
-  mod.submit("contacts", { coordinatorName: "K. Morgan", coordinatorEmail: "k.morgan@example.com" });
+  mod.submit("contacts", { coordinatorName: "Worker 61", coordinatorEmail: "k.morgan@example.com" });
   const done = mod.finish();
   ok("t15e injuries default to zero open cases when the optional step is skipped", done.ok === true && done.payload.injuries.length === 0 && done.payload.counts.openCases === 0);
 }
@@ -293,7 +293,7 @@ function onboardTo(mod, a, upTo) {
 {
   const { mod } = load();
   const a = fullAdapter(); mod.install(a); a._accept("ts");
-  const res = mod.submit("contacts", { coordinatorName: "K. Morgan", coordinatorEmail: "k.morgan@example.com", diagnosis_notes: "sneaks" });
+  const res = mod.submit("contacts", { coordinatorName: "Worker 61", coordinatorEmail: "k.morgan@example.com", diagnosis_notes: "sneaks" });
   ok("t18a a medical field name on a question step is refused with the promise verbatim", res.ok === false && res.errors[0].includes(PROMISE) && res.errors[0].includes("diagnosis_notes"));
   const res2 = mod.submit("dutyMapping", "not a mapping");
   ok("t18b duty mapping refuses anything but confirmed match objects", res2.ok === false);

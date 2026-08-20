@@ -21,7 +21,7 @@ ok("analytics no longer hardcodes 1.8 days literal", !/<div class="n">1\.8 days<
 ok("analytics renders ftdAvg", /ftdAvg\(\)\.toFixed\(1\)/.test(html));
 
 // 2. Step-up is an event stream, seeded with one, fired on qualifying assignment
-ok("step-up seeded once", /stepUps:\[\{worker:"Okafor"/.test(html));
+ok("step-up seeded once", /stepUps:\[\{worker:"Worker 60"/.test(html));
 ok("step-up count reads the stream", /var stepUps=S\.stepUps\.length/.test(html));
 ok("step-up fires only for suitable_onsite over standard_precaution",
   /S\.form\.cls==="suitable_onsite" && S\.duties\.some\(function\(d\)\{return d\.w===wid && d\.cls==="standard_precaution"/.test(html));
