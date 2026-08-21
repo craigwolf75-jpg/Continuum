@@ -1,474 +1,1024 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex">
+<script>document.documentElement.className+=" js";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="/support.js"></script>
+<title>Continuum: AI-powered return-to-work platform</title>
+<meta name="description" content="Continuum is the AI-powered return-to-work platform connecting clinicians, workers and employers throughout workplace injury recovery.">
+<link rel="canonical" href="https://continuumrtw.com/">
+<link rel="icon" href="/continuum-logo.svg" type="image/svg+xml">
+
+<meta property="og:title" content="Continuum: AI-powered return-to-work platform">
+<meta property="og:description" content="Where medical decisions become safe work. Continuum keeps clinicians, workers and employers connected as restrictions change, recovery progresses and the worker moves safely back to work.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://continuumrtw.com/">
+<!-- BLOCKER carried forward from the previous homepage: og-image.png 1200x630 still needs to be added. -->
+<meta property="og:image" content="https://continuumrtw.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Continuum: AI-powered return-to-work platform">
+<meta name="twitter:description" content="Where medical decisions become safe work.">
+<meta name="twitter:image" content="https://continuumrtw.com/og-image.png">
+
+<style>
+/* ==========================================================================
+   CONTINUUM PUBLIC LANDING PAGE
+   Single static HTML file, matching the convention the existing site already
+   uses (inline style, inline script, no build step, no dependencies).
+
+   TOKEN BRIDGE
+   The site already ships /continuum_tokens.css, which exposes at least:
+     --bg-page  --bg-surface  --text-primary  --text-secondary
+     --text-on-fill  --border-divider  --action-600  --stop-700  --radius-md
+   Those values could not be read from outside the access gate, so this page
+   declares its own fully specified palette below rather than inheriting
+   values it cannot verify. To adopt the shared tokens later, change only the
+   right hand side of the block marked PALETTE. Nothing else in this file
+   references a colour literal.
+   ========================================================================== */
+
+/* ---- PALETTE ---- */
+:root{
+  /* surfaces */
+  --page:#FBF8F3;          /* warm cream */
+  --page-warm:#F6F0E6;     /* second cream band */
+  --surface:#FFFFFF;
+  --surface-sunk:#F4F6F8;
+
+  /* ink */
+  --ink-900:#0E1B2C;
+  --ink-800:#1B2C3F;
+  --ink-700:#2C3E52;
+  --ink-600:#41556B;
+  --ink-500:#5A6D80;
+  --ink-400:#5D7085;
+
+  /* lines */
+  --line:#E3DCCF;          /* hairline on cream */
+  --line-cool:#E4EAF0;     /* hairline on white */
+  --line-strong:#CFD8E1;
+
+  /* accent, used selectively */
+  --gold:#C39A45;          /* decoration only: rules, nodes, rings */
+  --gold-deep:#8A6414;     /* text safe gold, 5.4:1 on white */
+  --gold-wash:#FAF3E4;
+
+  /* positive status, carried from the product palette */
+  --ok:#0F7A55;
+  --ok-wash:#E6F5EE;
+
+  /* type */
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  /* shape */
+  --r-sm:8px;
+  --r-md:12px;
+  --r-lg:18px;
+  --shadow-sm:0 1px 2px rgba(14,27,44,.04);
+  --shadow-md:0 10px 30px -14px rgba(14,27,44,.22);
+  --shadow-lg:0 26px 60px -30px rgba(14,27,44,.34);
+
+  /* rhythm */
+  --gap:clamp(20px,3vw,34px);
+  --band:clamp(64px,7.5vw,116px);
+  --shell:1240px;
+}
+
+/* ---- BASE ---- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--page);color:var(--ink-700);
+  font-family:var(--font);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3,h4{color:var(--ink-900);margin:0;font-weight:640;letter-spacing:-.018em;line-height:1.14}
+h1{font-size:clamp(30px,3.3vw,46px);text-wrap:balance}
+h2{font-size:clamp(27px,3.1vw,40px)}
+h3{font-size:clamp(18px,1.4vw,20px);letter-spacing:-.01em;line-height:1.3}
+p{margin:0}
+img,svg{max-width:100%}
+a{color:inherit}
+ul,ol{margin:0;padding:0;list-style:none}
+:focus-visible{outline:3px solid var(--gold-deep);outline-offset:3px;border-radius:6px}
+.shell{width:100%;max-width:var(--shell);margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.band{padding:var(--band) 0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip:focus{
+  position:fixed;top:12px;left:12px;z-index:100;width:auto;height:auto;margin:0;clip:auto;
+  padding:12px 18px;background:var(--ink-900);color:#fff;border-radius:var(--r-sm);
+  font-size:15px;font-weight:620;text-decoration:none;
+}
+
+/* section furniture */
+.eyebrow{
+  font-size:11.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--gold-deep);margin:0 0 18px;display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:"";width:26px;height:2px;background:var(--gold);border-radius:2px;flex:none}
+.lede{font-size:clamp(17px,1.35vw,19px);color:var(--ink-600);max-width:62ch}
+.section-head{max-width:760px;margin-bottom:clamp(38px,4.4vw,60px)}
+.section-head h2 + .lede{margin-top:18px}
+
+/* ---- BUTTONS ---- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:52px;padding:0 26px;border-radius:var(--r-sm);
+  font-size:15.5px;font-weight:620;text-decoration:none;border:1px solid transparent;
+  cursor:pointer;font-family:inherit;
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.btn-primary{background:var(--ink-900);color:#fff;border-color:var(--ink-900);box-shadow:var(--shadow-sm)}
+.btn-primary:hover{background:var(--ink-800);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-secondary{background:transparent;color:var(--ink-900);border-color:var(--line-strong)}
+.btn-secondary:hover{border-color:var(--ink-900);background:rgba(14,27,44,.03)}
+.btn-invert{background:#fff;color:var(--ink-900);border-color:#fff}
+.btn-invert:hover{background:var(--gold-wash);transform:translateY(-1px)}
+.btn-quiet{
+  background:none;border:0;padding:0;min-height:0;
+  font:inherit;font-size:15.5px;font-weight:620;color:var(--gold-deep);
+  cursor:pointer;display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+}
+.btn-quiet .arw{transition:transform .18s ease}
+.btn-quiet:hover .arw{transform:translateX(4px)}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.site-header{
+  position:sticky;top:0;z-index:60;
+  background:rgba(251,248,243,.86);
+  backdrop-filter:saturate(160%) blur(12px);
+  -webkit-backdrop-filter:saturate(160%) blur(12px);
+  border-bottom:1px solid transparent;transition:border-color .2s ease,box-shadow .2s ease;
+}
+.site-header.is-stuck{border-bottom-color:var(--line);box-shadow:0 1px 0 rgba(14,27,44,.02)}
+.header-inner{display:flex;align-items:center;gap:clamp(18px,3vw,44px);min-height:76px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex:none}
+.brand img{height:30px;width:auto;display:block}
+.brand-text{display:flex;flex-direction:column;line-height:1.05}
+.brand-name{font-size:19px;font-weight:660;color:var(--ink-900);letter-spacing:-.015em}
+.brand-sub{font-size:11px;color:var(--ink-500);letter-spacing:.01em;margin-top:3px}
+.site-nav{display:flex;align-items:center;gap:6px;margin-left:auto}
+.site-nav a{
+  text-decoration:none;color:var(--ink-600);font-size:15px;font-weight:540;
+  padding:9px 14px;border-radius:var(--r-sm);transition:color .16s ease,background-color .16s ease;
+}
+.site-nav a:hover{color:var(--ink-900);background:rgba(14,27,44,.04)}
+.header-signin{
+  margin-left:14px;text-decoration:none;color:var(--ink-900);font-size:15px;font-weight:620;
+  padding:10px 20px;border:1px solid var(--line-strong);border-radius:var(--r-sm);
+  transition:border-color .16s ease,background-color .16s ease;
+}
+.header-signin:hover{border-color:var(--ink-900);background:rgba(14,27,44,.03)}
+.nav-toggle{display:none}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.hero{padding:clamp(44px,5.2vw,80px) 0 clamp(56px,6vw,96px);position:relative}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(60% 70% at 78% 24%,rgba(195,154,69,.10),transparent 62%);
+}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:45fr 55fr;gap:clamp(32px,4.2vw,64px);align-items:center}
+.hero h1{margin-bottom:26px}
+.hero h1 .accent{
+  color:var(--ink-900);background-image:linear-gradient(var(--gold),var(--gold));
+  background-repeat:no-repeat;background-size:100% 5px;background-position:0 92%;
+  padding-bottom:2px;
+}
+.hero-copy p + p{margin-top:16px}
+.hero-close{
+  margin-top:26px;font-size:16px;font-weight:620;color:var(--ink-900);
+  padding-left:16px;border-left:2px solid var(--gold);
+}
+.hero .cta-row{margin-top:34px}
+.mock-note{margin-top:20px;font-size:12px;color:var(--ink-400);letter-spacing:.01em}
+
+/* ---- product visual language, mirrored from the Continuum interface ---- */
+.ui{
+  background:var(--surface);border:1px solid var(--line-cool);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-lg);overflow:hidden;
+}
+.ui-bar{
+  display:flex;align-items:center;gap:10px;padding:13px 20px;
+  border-bottom:1px solid var(--line-cool);background:#fff;
+}
+.ui-mark{width:22px;height:22px;border-radius:6px;background:var(--ink-900);position:relative;flex:none}
+.ui-mark::after{
+  content:"";position:absolute;left:5px;top:10px;width:12px;height:2px;background:#fff;border-radius:2px;
+  box-shadow:0 3.5px 0 rgba(255,255,255,.45),0 -3.5px 0 rgba(255,255,255,.45);
+}
+.ui-bar b{font-size:13.5px;font-weight:640;color:var(--ink-900)}
+.ui-bar .ui-id{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-400)}
+.ui-head{padding:20px 22px 18px;border-bottom:1px solid var(--line-cool)}
+.ui-head .who{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ui-head .who b{font-size:20px;font-weight:640;color:var(--ink-900);letter-spacing:-.015em}
+.ui-head .who span{font-size:13px;color:var(--ink-500)}
+.ui-head .dx{margin-top:6px;font-size:13.5px;color:var(--ink-600)}
+.ui-body{padding:20px 22px 22px}
+.ui-label{display:block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-500)}
+.ui-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ui-tile{border:1px solid var(--line-cool);border-radius:var(--r-sm);padding:12px 14px;background:#fff}
+.ui-tile b{display:block;margin-top:7px;font-size:15px;font-weight:600;color:var(--ink-900);letter-spacing:-.01em}
+.ui-tile i{font-style:normal;display:block;margin-top:3px;font-size:12.5px;color:var(--ink-500)}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:680;
+  letter-spacing:.03em;padding:3px 10px;border-radius:999px;border:1px solid;
+}
+.pill-ok{color:var(--ok);background:var(--ok-wash);border-color:rgba(15,122,85,.32)}
+.pill-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.ui-trend{margin-top:14px;border:1px solid var(--line-cool);border-radius:var(--r-sm);padding:13px 14px 9px}
+.ui-trend .trend-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.ui-trend .trend-head i{font-style:normal;font-size:12px;color:var(--ok);font-weight:620}
+.ui-trend svg{display:block;margin-top:9px;width:100%;height:52px}
+.ui-foot{
+  display:flex;align-items:center;gap:8px;padding:11px 22px;
+  border-top:1px solid var(--line-cool);background:var(--surface-sunk);
+  font-size:12px;color:var(--ink-500);
+}
+.ui-foot .fdot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none}
+
+/* ---- hero stage: dashboard plus overlapping worker phone ---- */
+.stage{position:relative;padding-left:184px;padding-bottom:34px}
+.stage .ui{position:relative;z-index:1}
+.phone{
+  position:absolute;left:0;bottom:0;width:198px;z-index:2;
+  background:var(--surface);border:1px solid var(--line-cool);border-radius:22px;
+  box-shadow:var(--shadow-lg);padding:16px 15px 15px;
+}
+.phone .phone-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.phone .phone-top b{font-size:13px;font-weight:640;color:var(--ink-900)}
+.phone .phone-top span{font-family:var(--mono);font-size:10px;color:var(--ink-400)}
+.phone .pain{border:1px solid var(--line-cool);border-radius:10px;padding:11px 12px}
+.phone .pain b{display:block;margin-top:5px;font-size:23px;font-weight:640;color:var(--ink-900);letter-spacing:-.02em}
+.phone .scale{display:flex;gap:3px;margin-top:9px}
+.phone .scale span{height:4px;flex:1;border-radius:2px;background:var(--line-cool)}
+.phone .scale span.on{background:var(--ok)}
+.phone .prow{padding:11px 0;border-bottom:1px solid var(--line-cool)}
+.phone .prow:last-of-type{border-bottom:0;padding-bottom:0}
+.phone .prow span{display:block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-500)}
+.phone .prow b{display:block;margin-top:3px;font-size:13.5px;font-weight:620;color:var(--ink-900)}
+
+/* ==========================================================================
+   THREE CONNECTED PERSPECTIVES
+   ========================================================================== */
+.perspectives{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.persp-rail{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);padding-top:46px}
+.persp-rail::before{
+  content:"";position:absolute;left:8%;right:8%;top:9px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--line-strong),var(--gold),var(--line-strong));
+}
+.persp{position:relative;padding-top:8px}
+.persp::before{
+  content:"";position:absolute;top:-45px;left:50%;transform:translateX(-50%);
+  width:16px;height:16px;border-radius:50%;background:var(--surface);
+  border:2px solid var(--gold);box-shadow:0 0 0 6px var(--surface);
+}
+.persp h3{margin-bottom:10px;text-align:center}
+.persp p{font-size:15.5px;color:var(--ink-600);text-align:center;max-width:34ch;margin:0 auto}
+.persp-close{
+  margin-top:clamp(38px,4vw,56px);text-align:center;font-size:16px;color:var(--ink-900);font-weight:600;
+}
+.persp-close span{color:var(--gold-deep)}
+
+/* ==========================================================================
+   MORE HAPPENING BEHIND EVERY RECOVERY
+   ========================================================================== */
+.caps{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(34px,5vw,72px)}
+.cap{padding:28px 0;border-top:1px solid var(--line)}
+.caps .cap:nth-child(1),.caps .cap:nth-child(2){border-top:0;padding-top:0}
+.cap h3{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.cap h3::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
+.cap p{font-size:15.5px;color:var(--ink-600);max-width:46ch}
+
+/* ==========================================================================
+   THE CONTINUUM PATHWAY
+   ========================================================================== */
+.pathway{position:relative;background:var(--page-warm);border-top:1px solid var(--line);overflow:hidden}
+.pathway .contours{
+  position:absolute;left:0;right:0;bottom:0;height:46%;width:100%;
+  pointer-events:none;opacity:.72;z-index:0;
+}
+.pathway .shell{position:relative;z-index:1}
+.pathway h2 span{display:block}
+.path-rail{position:relative;margin-top:clamp(46px,5vw,72px);padding:76px 0 92px}
+.path-line{
+  position:absolute;left:6.25%;right:6.25%;top:50%;height:2px;border-radius:2px;transform:translateY(-1px);
+  background:linear-gradient(90deg,var(--line-strong) 0%,rgba(195,154,69,.55) 42%,var(--gold) 100%);
+}
+.path-steps{position:relative;display:grid;grid-template-columns:repeat(8,1fr)}
+.step{position:relative;display:flex;justify-content:center}
+.step .node{
+  width:15px;height:15px;border-radius:50%;background:var(--page-warm);
+  border:2px solid var(--gold);position:relative;z-index:2;
+  transition:transform .5s cubic-bezier(.2,.7,.3,1),background-color .5s ease,box-shadow .5s ease;
+}
+.step .node::after{
+  content:"";position:absolute;inset:-9px;border-radius:50%;
+  border:1px solid rgba(195,154,69,.34);opacity:0;transition:opacity .5s ease;
+}
+.step:last-child .node{background:var(--gold);width:19px;height:19px;margin-top:-2px}
+.step .lbl{
+  position:absolute;left:50%;transform:translateX(-50%);width:min(140px,15vw);
+  text-align:center;font-size:13px;line-height:1.35;color:var(--ink-700);font-weight:560;
+}
+.step .lbl::before{
+  content:"";position:absolute;left:50%;width:1px;background:rgba(195,154,69,.75);
+}
+.step.up .lbl{bottom:calc(100% + 24px)}
+.step.up .lbl::before{top:calc(100% + 5px);height:19px}
+.step.down .lbl{top:calc(100% + 24px)}
+.step.down .lbl::before{bottom:calc(100% + 5px);height:19px}
+.step .idx{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-500);margin-bottom:4px;letter-spacing:.06em}
+.path-close{
+  margin-top:clamp(26px,3vw,44px);text-align:center;font-size:16.5px;color:var(--ink-900);font-weight:600;
+}
+.path-close em{font-style:normal;color:var(--gold-deep)}
+
+/* ==========================================================================
+   PRODUCT DEPTH
+   ========================================================================== */
+.depth-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(34px,4.6vw,72px);align-items:center}
+.piece-list{position:relative;padding-left:26px}
+.piece-list::before{
+  content:"";position:absolute;left:5px;top:12px;bottom:12px;width:1px;
+  background:linear-gradient(180deg,var(--line-strong),var(--gold),var(--line-strong));
+}
+.piece{position:relative;padding:11px 0;display:flex;align-items:baseline;gap:12px}
+.piece::before{
+  content:"";position:absolute;left:-26px;top:19px;width:11px;height:11px;border-radius:50%;
+  background:var(--page);border:2px solid var(--gold);
+}
+.piece b{font-size:15.5px;font-weight:600;color:var(--ink-900);flex:none}
+.piece i{font-style:normal;font-size:13.5px;color:var(--ink-500)}
+.depth-copy{margin-top:clamp(30px,3.4vw,46px);max-width:66ch}
+.depth-copy .btn-quiet{margin-top:22px}
+
+/* the depth product card, a case view with tabs */
+.ui-tabs{display:flex;gap:2px;padding:0 22px;border-bottom:1px solid var(--line-cool);background:#fff;flex-wrap:wrap}
+.ui-tabs span{
+  padding:12px 12px 10px;font-size:12.5px;font-weight:580;color:var(--ink-500);
+  border-bottom:2px solid transparent;
+}
+.ui-tabs span.on{color:var(--ink-900);border-bottom-color:var(--gold)}
+.ui-rows{margin-top:4px}
+.ui-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-cool)}
+.ui-row:last-child{border-bottom:0}
+.ui-row .rl b{display:block;font-size:14.5px;font-weight:600;color:var(--ink-900)}
+.ui-row .rl i{font-style:normal;font-size:12.5px;color:var(--ink-500)}
+.tick{
+  font-size:11px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:6px;border:1px solid;
+  white-space:nowrap;
+}
+.tick-ok{color:var(--ok);background:var(--ok-wash);border-color:rgba(15,122,85,.3)}
+.tick-lim{color:var(--gold-deep);background:var(--gold-wash);border-color:rgba(195,154,69,.45)}
+.tick-neutral{color:var(--ink-600);background:var(--surface-sunk);border-color:var(--line-strong)}
+
+/* ==========================================================================
+   FINAL CTA + FOOTER
+   ========================================================================== */
+.final{background:var(--ink-900);color:#fff;position:relative;overflow:hidden}
+.final::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(52% 78% at 82% 8%,rgba(195,154,69,.20),transparent 62%);
+}
+.final .shell{position:relative;z-index:1;text-align:center}
+.final h2{color:#fff;max-width:20ch;margin:0 auto}
+.final p{color:rgba(255,255,255,.76);max-width:60ch;margin:20px auto 0;font-size:17px}
+.final .cta-row{justify-content:center;margin-top:34px}
+.final .alt{margin-top:20px;font-size:14px;color:rgba(255,255,255,.6)}
+.final .alt a{color:rgba(255,255,255,.86);text-decoration:underline;text-underline-offset:3px}
+.final .alt a:hover{color:#fff}
+
+.site-footer{background:var(--page);border-top:1px solid var(--line);padding:clamp(46px,5vw,68px) 0 34px}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:clamp(26px,4vw,56px)}
+.footer-brand .brand-name{font-size:18px}
+.footer-brand p{margin-top:10px;font-size:13.5px;color:var(--ink-500);max-width:34ch}
+.footer-col h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.11em;color:var(--ink-500);margin-bottom:14px}
+.footer-col li{margin-bottom:10px}
+.footer-col a{font-size:14.5px;color:var(--ink-700);text-decoration:none}
+.footer-col a:hover{color:var(--ink-900);text-decoration:underline;text-underline-offset:3px}
+.footer-base{
+  margin-top:clamp(34px,4vw,52px);padding-top:22px;border-top:1px solid var(--line);
+  display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-400);
+}
+.footer-base .spacer{margin-left:auto}
+
+/* ==========================================================================
+   MOTION
+   ========================================================================== */
+.js .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.js .reveal.in{opacity:1;transform:none}
+.path-rail.lit .step .node{transform:scale(1.06)}
+.path-rail.lit .step .node::after{opacity:1}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  .js .reveal{opacity:1;transform:none}
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width:1180px){
+  .stage{padding-left:166px}
+  .phone{width:180px}
+  .step .lbl{font-size:12px;width:min(120px,13vw)}
+}
+@media (max-width:1024px){
+  body{font-size:16.5px}
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .hero .stage{max-width:660px;margin:0 auto;padding-left:182px}
+  .phone{width:196px}
+  .depth-grid{grid-template-columns:1fr;gap:40px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .footer-brand{grid-column:1 / -1}
+
+  /* pathway becomes a vertical spine */
+  .path-rail{margin-top:40px;padding:0}
+  .path-line{display:none}
+  /* exact segment connectors, so the spine ends on the last node */
+  .step::before{
+    content:"";position:absolute;left:8px;top:19px;bottom:-3px;width:2px;border-radius:2px;
+    background:linear-gradient(180deg,rgba(195,154,69,.34),rgba(195,154,69,.8));
+  }
+  .step:last-child::before{display:none}
+  .path-steps{grid-template-columns:1fr;gap:0}
+  .step{display:block;padding:0 0 26px 42px;min-height:44px}
+  .step:last-child{padding-bottom:0}
+  .step .node{position:absolute;left:2px;top:3px}
+  .step:last-child .node{left:0;margin-top:0}
+  .step .lbl{position:static;transform:none;width:auto;text-align:left;font-size:15px;line-height:1.4}
+  .step .lbl::before{display:none}
+  .step .idx{display:inline-block;margin:0 8px 0 0}
+  .path-close{text-align:left}
+}
+@media (max-width:860px){
+  .site-nav,.header-signin{display:none}
+  .nav-toggle{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-left:auto;
+    min-height:44px;padding:0 16px;border:1px solid var(--line-strong);border-radius:var(--r-sm);
+    background:transparent;color:var(--ink-900);font:inherit;font-size:14.5px;font-weight:620;cursor:pointer;
+  }
+  .site-header.open .site-nav{
+    display:flex;flex-direction:column;align-items:stretch;gap:2px;margin:0;
+    padding:8px 0 18px;border-top:1px solid var(--line);
+  }
+  .site-header.open .site-nav a{padding:13px 4px;font-size:16px}
+  .site-header.open .header-signin{display:inline-flex;justify-content:center;margin:12px 0 0}
+  .header-inner{flex-wrap:wrap}
+  .site-header.open .header-inner{padding-bottom:4px}
+  .site-nav,.header-signin{width:100%}
+
+  .persp-rail{grid-template-columns:1fr;gap:0;padding-top:0}
+  .persp-rail::before{
+    left:8px;right:auto;top:14px;bottom:14px;width:2px;height:auto;
+    background:linear-gradient(180deg,var(--line-strong),var(--gold),var(--line-strong));
+  }
+  .persp{padding:20px 0 20px 40px;text-align:left}
+  .persp::before{top:26px;left:1px;transform:none;box-shadow:0 0 0 6px var(--surface)}
+  .persp h3,.persp p{text-align:left;margin-left:0}
+  .persp p{max-width:52ch}
+  .persp-close{text-align:left}
+  .caps{grid-template-columns:1fr}
+  .caps .cap:nth-child(2){border-top:1px solid var(--line);padding-top:28px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .hero{padding-top:30px}
+  .hero .cta-row{gap:12px}
+  .hero .cta-row .btn{width:100%}
+  .ui-grid{grid-template-columns:1fr}
+  .phone{
+    position:static;width:100%;max-width:340px;margin:18px auto 0;
+    box-shadow:var(--shadow-md);
+  }
+  .hero .stage{padding:0}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+  .final .cta-row .btn{width:100%}
+}
+@media (max-width:480px){
+  /* keep the brand and the menu control on one row */
+  .brand-sub{display:none}
+  .brand img{height:26px}
+  .brand-name{font-size:17.5px}
+  .nav-toggle{padding:0 14px}
+}
+@media (max-width:380px){
+  .ui-head .who b{font-size:18px}
+  .btn{font-size:15px;padding:0 20px}
+  .header-inner{gap:12px}
+  .nav-toggle{padding:0 11px;font-size:13.5px}
+  .brand{gap:9px}
+}
+</style>
 </head>
 <body>
-<x-dc>
-<helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  html,body{margin:0;padding:0;background:#0E1B2C}
-  body{font-family:'Inter',sans-serif}
-  a{color:#C8972F;text-decoration:none}
-  a:hover{color:#E3B968}
-  .rv{opacity:0;transform:translateY(14px);transition:opacity .45s ease-out,transform .45s ease-out}
-  .rv.in{opacity:1;transform:none}
-  button:focus-visible,a:focus-visible{outline:2px solid #C8972F;outline-offset:2px}
-</style>
-</helmet>
+<a class="sr-only skip" href="#main">Skip to main content</a>
 
-<div style="font-family:'Inter',sans-serif;color:#16202E;background:#0E1B2C">
+<!-- ======================================================================
+     HEADER
+     ====================================================================== -->
+<header class="site-header" id="siteHeader">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label="Continuum home">
+      <img src="/continuum-logo-dark.svg" alt="" width="240" height="86" onerror="this.style.display='none'">
+      <span class="brand-text">
+        <span class="brand-name">Continuum</span>
+        <span class="brand-sub">AI-powered return-to-work platform</span>
+      </span>
+    </a>
 
-  <!-- ================= HEADER ================= -->
-  <div style="position:sticky;top:0;z-index:80;background:rgba(14,27,46,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)">
-    <div style="max-width:1200px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-      <img src="/continuum-logo.svg" alt="Continuum Return to Work" style="height:48px;width:auto;display:block;flex-shrink:0">
-      <div class="hdr-desktop" style="display:flex;align-items:center;gap:18px;flex-wrap:nowrap;justify-content:flex-end;min-width:0;overflow-x:auto">
-        <a href="#home" style="font-size:13px;color:#fff;font-weight:500;white-space:nowrap">Home</a>
-        <a href="#how" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">How It Works</a>
-        <a href="#roles" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">For Employers</a>
-        <a href="#doctrine" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">For Clinicians</a>
-        <a href="#roles" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">For Workers</a>
-        <a href="#privacy" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">Privacy &amp; Trust</a>
-        <a href="#evidence" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">Evidence</a>
-        <a href="https://continuumrtw.com/book" style="font-size:13px;color:#AAB6C6;font-weight:500;white-space:nowrap" style-hover="color:#fff">Start a Pilot</a>
-        <a href="/hub" style="background:#C8972F;color:#0E1B2C;font-size:13px;font-weight:600;padding:10px 18px;border-radius:10px;white-space:nowrap;flex-shrink:0" style-hover="background:#E3B968;color:#0E1B2C">Sign In</a>
-      </div>
-      <div class="hdr-mobile" style="align-items:center;gap:12px">
-        <a href="/hub" style="background:#C8972F;color:#0E1B2C;font-size:13px;font-weight:600;padding:9px 15px;border-radius:9px;white-space:nowrap" style-hover="background:#E3B968;color:#0E1B2C">Sign In</a>
-        <button class="mnav-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-      </div>
-    </div>
-  </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="siteNav">
+      Menu
+    </button>
 
-  <!-- ============ MOBILE NAV DRAWER (home header only) ============ -->
-  <style>
-    .hdr-mobile{display:none}
-    .mnav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:40px;padding:0 9px;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:9px;cursor:pointer;flex-shrink:0}
-    .mnav-toggle span{display:block;height:2px;background:#fff;border-radius:2px}
-    .mnav-backdrop{position:fixed;inset:0;background:rgba(6,12,22,.6);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility 0s linear .25s;z-index:90}
-    .mnav-backdrop.open{opacity:1;visibility:visible;transition:opacity .25s ease}
-    .mnav-drawer{display:flex;position:fixed;top:0;right:0;height:100%;width:284px;max-width:82vw;box-sizing:border-box;flex-direction:column;padding:18px 18px 26px;background:#0E1B2C;border-left:1px solid rgba(255,255,255,.08);box-shadow:-16px 0 44px rgba(0,0,0,.4);transform:translateX(100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s;z-index:100;overflow-y:auto;-webkit-overflow-scrolling:touch}
-    .mnav-drawer.open{transform:none;visibility:visible;transition:transform .25s ease}
-    .mnav-dhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .mnav-dhead b{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#8492A6}
-    .mnav-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:8px;color:#fff;font-size:22px;line-height:1;cursor:pointer}
-    .mnav-links{display:flex;flex-direction:column}
-    .mnav-links a{display:block;padding:14px 6px;font-size:15px;font-weight:500;color:#D7DEE8;border-bottom:1px solid rgba(255,255,255,.06)}
-    .mnav-links a:hover{color:#fff}
-    @media(max-width:1200px){
-      .hdr-desktop{display:none !important}
-      .hdr-mobile{display:flex !important}
-      .mnav-toggle{display:inline-flex}
-    }
-  </style>
-  <div class="mnav-backdrop"></div>
-  <aside class="mnav-drawer" role="dialog" aria-modal="true" aria-label="Site menu">
-    <div class="mnav-dhead">
-      <b>Menu</b>
-      <button class="mnav-close" type="button" aria-label="Close menu">&times;</button>
-    </div>
-    <nav class="mnav-links">
-      <a href="#home">Home</a>
-      <a href="#how">How It Works</a>
-      <a href="#roles">For Employers</a>
-      <a href="#doctrine">For Clinicians</a>
-      <a href="#roles">For Workers</a>
-      <a href="#privacy">Privacy &amp; Trust</a>
-      <a href="#evidence">Evidence</a>
-      <a href="https://continuumrtw.com/book">Start a Pilot</a>
+    <nav class="site-nav" id="siteNav" aria-label="Primary">
+      <a data-route="howItWorks" href="#pathway">How It Works</a>
+      <a data-route="employers" href="#perspectives">Employers</a>
+      <a data-route="clinicians" href="#perspectives">Clinicians</a>
+      <a data-route="about" href="#depth">About</a>
     </nav>
-  </aside>
-  <script>
-    function mnavEls(){return {d:document.querySelector('.mnav-drawer'),b:document.querySelector('.mnav-backdrop'),t:document.querySelector('.mnav-toggle')};}
-    function mnavOpen(){var e=mnavEls();if(!e.d)return;e.b.classList.add('open');e.d.classList.add('open');if(e.t)e.t.setAttribute('aria-expanded','true');document.documentElement.style.overflow='hidden';}
-    function mnavClose(){var e=mnavEls();if(!e.d)return;e.b.classList.remove('open');e.d.classList.remove('open');if(e.t)e.t.setAttribute('aria-expanded','false');document.documentElement.style.overflow='';}
-    function mnavToggle(){var e=mnavEls();if(!e.d)return;(e.d.classList.contains('open')?mnavClose:mnavOpen)();}
-    document.addEventListener('click',function(ev){
-      if(ev.target.closest('.mnav-toggle')){mnavToggle();return;}
-      if(ev.target.closest('.mnav-close')||(ev.target.classList&&ev.target.classList.contains('mnav-backdrop'))){mnavClose();return;}
-      if(ev.target.closest('.mnav-links a')){mnavClose();}
-    });
-    document.addEventListener('keydown',function(ev){if(ev.key==='Escape')mnavClose();});
-  </script>
 
-  <style>@media (prefers-reduced-motion: reduce){ #home .hero-vid{display:none !important} }</style>
-  <style>
-  /* Mobile responsive sweep. Every rule is scoped to narrow viewports, so the
-     desktop path is untouched. On a phone the hero's 16:9 aspect ratio loses to
-     min-height:520px and CSS resolves the conflict by widening the box to
-     924px, which is why the whole page scrolled sideways; releasing the ratio
-     on small screens lets the hero take the viewport width instead. */
-  @media (max-width:920px){
-    #home{aspect-ratio:auto !important}
-  }
-  @media (max-width:640px){
-    #home{padding:72px 20px !important;min-height:0 !important}
-    #home h1{font-size:38px !important}
-    #home p{font-size:16px !important}
-    /* The page runtime rewrites style attributes with a space after each
-       colon, so every attribute selector below carries both spellings. */
-    h2[style*="font-size:42px"],h2[style*="font-size: 42px"]{font-size:31px !important}
-    [style*="font-size:96px"],[style*="font-size: 96px"]{font-size:64px !important}
-    /* Side-by-side flex columns stack at phone width: released min-width plus
-       a full-width basis, so no column gets starved next to a wide sibling. */
-    [style*="min-width:400px"],[style*="min-width: 400px"],
-    [style*="min-width:320px"],[style*="min-width: 320px"],
-    [style*="min-width:300px"],[style*="min-width: 300px"]{min-width:0 !important;flex-basis:100% !important}
-    [style*="padding:112px 32px"],[style*="padding: 112px 32px"]{padding:72px 20px !important}
-    [style*="padding:48px 44px"],[style*="padding: 48px 44px"]{padding:34px 24px !important}
-    [style*="padding:38px 36px"],[style*="padding: 38px 36px"]{padding:28px 22px !important}
-    /* Footer link grid: four fixed columns cannot fit a phone, stack them. */
-    [style*="grid-template-columns:1.4fr 1fr 1fr 1fr"],
-    [style*="grid-template-columns: 1.4fr 1fr 1fr 1fr"]{grid-template-columns:1fr !important;gap:28px !important}
-  }
-  </style>
-  <!-- ================= S1 HERO (navy, background video) ================= -->
-  <div id="home" style="box-sizing:border-box;position:relative;overflow:hidden;background:linear-gradient(175deg,#0E1B2C 0%,#0A1526 100%);aspect-ratio:16/9;min-height:520px;display:flex;align-items:center;padding:40px 32px">
-    <!-- Hero background video (Prompt 36), served same-origin from deploy/hero-video.mp4. The hero is 16:9 to match the clip, so object-fit:cover fills the whole hero edge to edge with no cropping. -->
-    <video class="hero-vid" autoplay muted loop playsinline preload="auto" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0" src="/hero-video.mp4"></video>
-    <div class="hero-overlay" style="position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(14,27,44,.9) 0%,rgba(14,27,44,.58) 30%,rgba(14,27,44,.12) 52%,rgba(14,27,44,0) 66%)"></div>
-    <div style="position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%">
-      <div style="max-width:600px">
-        <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:22px">The new standard for workplace injury management</div>
-        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;letter-spacing:-0.025em;line-height:1.06;color:#fff;margin:0 0 26px;text-shadow:0 2px 26px rgba(10,21,38,.7)">Where care ends,<br><span style="color:#C8972F">Continuum begins.</span></h1>
-        <p style="font-size:18px;line-height:1.6;color:#AAB6C6;margin:0 0 36px;max-width:540px;text-shadow:0 1px 16px rgba(10,21,38,.7)">The visit gets the worker to a doctor. Continuum manages everything after: daily check-ins, safe duties, and WCB-ready reporting, all the way back to full duty.</p>
-        <div style="display:flex;gap:14px;flex-wrap:wrap">
-          <a href="/hub" style="background:#C8972F;color:#0E1B2C;font-size:15px;font-weight:600;padding:15px 30px;border-radius:12px;display:inline-block" style-hover="background:#E3B968;color:#0E1B2C">Sign In</a>
-          <a href="#how" style="border:1px solid rgba(255,255,255,.25);color:#fff;font-size:15px;font-weight:600;padding:15px 30px;border-radius:12px;display:inline-block" style-hover="border-color:#E3B968;color:#E3B968">See How It Works</a>
-          <a href="/assessment/" style="background:#C8972F;color:#0E1B2C;font-size:15px;font-weight:600;padding:15px 30px;border-radius:12px;display:inline-block" style-hover="background:#E3B968;color:#0E1B2C">Start Your Assessment</a>
-        </div>
+    <a class="header-signin" data-route="signIn" href="/hub">Sign In</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ======================================================================
+     HERO
+     ====================================================================== -->
+<section class="hero">
+  <div class="shell hero-grid">
+
+    <div class="hero-copy reveal">
+      <p class="eyebrow">AI-powered return-to-work platform</p>
+      <h1>Where medical decisions become <span class="accent">safe work</span>.</h1>
+      <p class="lede">The appointment is only one part of recovery.</p>
+      <p class="lede">Continuum keeps clinicians, workers and employers connected as restrictions change, recovery progresses and the worker moves safely back to work.</p>
+      <p class="hero-close">One recovery. One connected pathway.</p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" data-route="assessment" href="/assessment">Get an Assessment</a>
+        <a class="btn btn-secondary" href="#pathway">See How It Works</a>
       </div>
+    </div>
+
+    <div class="hero-visual reveal">
+      <div class="stage">
+
+        <!-- Clinician and employer facing case view. Fictional data. -->
+        <div class="ui" role="img" aria-label="Illustration of the Continuum case view showing a fictional worker, Michael Thompson, an electrician with a lower back strain. Recovery status improving, restrictions modified lifting and limited bending, three safe duties identified, next review August 26.">
+          <div class="ui-bar">
+            <span class="ui-mark" aria-hidden="true"></span>
+            <b>Recovery Case</b>
+            <span class="ui-id">CN-4182</span>
+          </div>
+
+          <div class="ui-head">
+            <div class="who">
+              <b>Michael Thompson</b>
+              <span>Electrician</span>
+            </div>
+            <p class="dx">Lower Back Strain &nbsp;&middot;&nbsp; Day 12 of recovery</p>
+          </div>
+
+          <div class="ui-body">
+            <div class="ui-grid">
+              <div class="ui-tile">
+                <span class="ui-label">Recovery Status</span>
+                <b><span class="pill pill-ok"><span class="pill-dot" aria-hidden="true"></span>Improving</span></b>
+              </div>
+              <div class="ui-tile">
+                <span class="ui-label">Next Review</span>
+                <b>August 26</b>
+                <i>Clinician follow-up</i>
+              </div>
+              <div class="ui-tile">
+                <span class="ui-label">Current Restrictions</span>
+                <b>Modified lifting</b>
+                <i>Limited bending</i>
+              </div>
+              <div class="ui-tile">
+                <span class="ui-label">Safe Work</span>
+                <b>3 duties identified</b>
+                <i>Matched to current abilities</i>
+              </div>
+            </div>
+
+            <div class="ui-trend">
+              <div class="trend-head">
+                <span class="ui-label">Recovery Trend</span>
+                <i>Steady improvement</i>
+              </div>
+              <svg viewBox="0 0 300 52" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0F7A55" stop-opacity=".16"/>
+                    <stop offset="100%" stop-color="#0F7A55" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M4 44 L52 40 L100 34 L148 33 L196 24 L244 16 L296 9 L296 52 L4 52 Z" fill="url(#trendFill)"/>
+                <path d="M4 44 L52 40 L100 34 L148 33 L196 24 L244 16 L296 9"
+                      fill="none" stroke="#0F7A55" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="296" cy="9" r="3.5" fill="#0F7A55"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="ui-foot">
+            <span class="fdot" aria-hidden="true"></span>
+            Plan updates as recovery changes
+          </div>
+        </div>
+
+        <!-- Worker mobile experience. Restrained on purpose. Fictional data. -->
+        <div class="phone" role="img" aria-label="Illustration of the Continuum worker check-in on a phone. Pain three out of ten, recovery status improving, today's plan is to follow modified duties, next review August 26.">
+          <div class="phone-top">
+            <b>Today&rsquo;s Check-In</b>
+            <span>08:14</span>
+          </div>
+          <div class="pain">
+            <span class="ui-label">Pain</span>
+            <b>3 / 10</b>
+            <div class="scale" aria-hidden="true">
+              <span class="on"></span><span class="on"></span><span class="on"></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="prow"><span>Recovery status</span><b>Improving</b></div>
+          <div class="prow"><span>Today&rsquo;s plan</span><b>Follow modified duties</b></div>
+          <div class="prow"><span>Next review</span><b>Aug 26</b></div>
+        </div>
+
+      </div>
+      <p class="mock-note">Illustrative interface. Fictional example data.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================================================================
+     THREE CONNECTED PERSPECTIVES
+     ====================================================================== -->
+<section class="band perspectives" id="perspectives">
+  <div class="shell">
+    <div class="section-head reveal">
+      <h2>One injury. Three connected perspectives.</h2>
+    </div>
+
+    <div class="persp-rail reveal">
+      <article class="persp" id="for-workers">
+        <h3>Worker</h3>
+        <p>Understands the recovery plan, completes check-ins and knows what comes next.</p>
+      </article>
+      <article class="persp" id="for-clinicians">
+        <h3>Clinician</h3>
+        <p>Sees relevant workplace and recovery information and documents restrictions with greater context.</p>
+      </article>
+      <article class="persp" id="for-employers">
+        <h3>Employer</h3>
+        <p>Understands what work is appropriate, what restrictions apply and how recovery is progressing.</p>
+      </article>
+    </div>
+
+    <p class="persp-close reveal">One recovery pathway. <span>Not three separate systems.</span></p>
+  </div>
+</section>
+
+<!-- ======================================================================
+     MORE HAPPENING BEHIND EVERY RECOVERY
+     ====================================================================== -->
+<section class="band" id="capabilities">
+  <div class="shell">
+    <div class="section-head reveal">
+      <p class="eyebrow">Depth</p>
+      <h2>More happening behind every recovery.</h2>
+    </div>
+
+    <div class="caps reveal">
+      <article class="cap">
+        <h3>Clinical Context</h3>
+        <p>Relevant workplace and recovery information stays connected to the clinical decision.</p>
+      </article>
+      <article class="cap">
+        <h3>Safe Work</h3>
+        <p>Restrictions and functional information help support clearer decisions about appropriate work.</p>
+      </article>
+      <article class="cap">
+        <h3>Recovery Intelligence</h3>
+        <p>Recovery can continue to be followed beyond the appointment so meaningful changes are not lost between visits.</p>
+      </article>
+      <article class="cap">
+        <h3>Connected Documentation</h3>
+        <p>Important recovery information follows the process instead of becoming separated between participants.</p>
+      </article>
     </div>
   </div>
-  <script>
-  (function(){
-    if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    /* The page's reactive runtime re-renders the hero and can reset the video
-       (muted back to false, currentTime to 0). Self-heal on a throttled interval,
-       re-querying each time, and never bind a pause->play listener (that loops). */
-    function heal(){
-      var v=document.querySelector("#home .hero-vid");
-      if(!v) return;
-      if(!v.muted) v.muted=true;
-      if(!v.loop) v.loop=true;
-      if(v.paused){ if(v.ended){ try{ v.currentTime=0; }catch(e){} } var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); }
-    }
-    heal();
-    window.addEventListener("DOMContentLoaded",heal);
-    window.addEventListener("load",heal);
-    document.addEventListener("visibilitychange",function(){ if(!document.hidden) heal(); });
-    window.addEventListener("focus",heal);
-    var n=0, fi=setInterval(function(){ heal(); if(++n>40){ clearInterval(fi); setInterval(heal,2000); } }, 500); /* fast heal ~20s, then a 2s heartbeat so loop/muted resets never stick */
-  })();
-  </script>
+</section>
 
-  <!-- ================= S2 PROBLEM IN NUMBERS (cream) ================= -->
-  <div style="background:#F7F4EE;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">Canada, every year</div>
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 48px;line-height:1.1">A workplace injury isn't rare. <span style="color:#C8972F">It's routine.</span></h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
-        <div class="rv" style="background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 34px">
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;letter-spacing:-0.02em;color:#C8972F;line-height:1">763,326</div>
-          <div style="font-size:14.5px;color:#5E6B7C;margin-top:14px;line-height:1.5">claims reported nationally (2023)</div>
+<!-- ======================================================================
+     THE CONTINUUM PATHWAY
+     ====================================================================== -->
+<section class="band pathway" id="pathway">
+  <svg class="contours" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M0 250 C 240 190, 420 262, 660 214 S 1080 128, 1440 176" fill="none" stroke="#C39A45" stroke-opacity=".42" stroke-width="1.5"/>
+    <path d="M0 286 C 260 232, 440 300, 700 252 S 1110 172, 1440 214" fill="none" stroke="#C39A45" stroke-opacity=".30" stroke-width="1.5"/>
+    <path d="M0 318 C 280 272, 470 336, 740 290 S 1140 214, 1440 252" fill="none" stroke="#0E1B2C" stroke-opacity=".11" stroke-width="1.5"/>
+  </svg>
+
+  <div class="shell">
+    <div class="section-head reveal">
+      <p class="eyebrow">The Continuum Pathway</p>
+      <h2><span>More than a visit.</span><span>A continuous journey.</span></h2>
+      <p class="lede">Continuum connects clinical decisions with worker recovery, workplace action and safe return to work.</p>
+    </div>
+
+    <div class="path-rail reveal" id="pathRail">
+      <div class="path-line" aria-hidden="true"></div>
+      <ol class="path-steps">
+        <li class="step up">   <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">01</span>Injury occurs</span></li>
+        <li class="step down"> <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">02</span>Continuum gathers context</span></li>
+        <li class="step up">   <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">03</span>Clinician assesses</span></li>
+        <li class="step down"> <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">04</span>Restrictions and abilities established</span></li>
+        <li class="step up">   <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">05</span>Safe work identified</span></li>
+        <li class="step down"> <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">06</span>Recovery monitored</span></li>
+        <li class="step up">   <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">07</span>Plan adapts as recovery changes</span></li>
+        <li class="step down"> <span class="node" aria-hidden="true"></span><span class="lbl"><span class="idx">08</span>Return to work</span></li>
+      </ol>
+    </div>
+
+    <p class="path-close reveal">The plan is not fixed at the appointment. <em>It moves as the worker recovers.</em></p>
+  </div>
+</section>
+
+<!-- ======================================================================
+     PRODUCT DEPTH AND CURIOSITY
+     ====================================================================== -->
+<section class="band" id="depth">
+  <div class="shell">
+    <div class="section-head reveal">
+      <h2>One recovery. A lot happening behind it.</h2>
+    </div>
+
+    <div class="depth-grid">
+
+      <div class="reveal">
+        <div class="ui" role="img" aria-label="Illustration of a Continuum recovery case view for a fictional worker. Tabs for recovery, restrictions, safe work and documentation. Rows show lifting limited to ten kilograms, no repeated bending, three matched duties available and the current return-to-work status as modified duties.">
+          <div class="ui-bar">
+            <span class="ui-mark" aria-hidden="true"></span>
+            <b>Michael Thompson</b>
+            <span class="ui-id">CN-4182</span>
+          </div>
+          <div class="ui-tabs">
+            <span class="on">Recovery</span><span>Restrictions</span><span>Safe Work</span><span>Documentation</span>
+          </div>
+          <div class="ui-body">
+            <div class="ui-rows">
+              <div class="ui-row">
+                <span class="rl"><b>Lifting</b><i>Reported by clinician, Aug 19</i></span>
+                <span class="tick tick-lim">LIMITED 10 KG</span>
+              </div>
+              <div class="ui-row">
+                <span class="rl"><b>Repeated bending</b><i>Reported by clinician, Aug 19</i></span>
+                <span class="tick tick-lim">AVOID</span>
+              </div>
+              <div class="ui-row">
+                <span class="rl"><b>Standing and walking</b><i>Reported by clinician, Aug 19</i></span>
+                <span class="tick tick-ok">ABLE</span>
+              </div>
+              <div class="ui-row">
+                <span class="rl"><b>Safe work identified</b><i>3 duties matched to current abilities</i></span>
+                <span class="tick tick-ok">AVAILABLE</span>
+              </div>
+              <div class="ui-row">
+                <span class="rl"><b>Return-to-work status</b><i>Modified duties, reviewed Aug 26</i></span>
+                <span class="tick tick-neutral">IN PROGRESS</span>
+              </div>
+            </div>
+          </div>
+          <div class="ui-foot">
+            <span class="fdot" aria-hidden="true"></span>
+            Each participant sees only what their role requires
+          </div>
         </div>
-        <div class="rv" style="background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 34px">
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;letter-spacing:-0.02em;color:#C8972F;line-height:1">274,022</div>
-          <div style="font-size:14.5px;color:#5E6B7C;margin-top:14px;line-height:1.5">lost-time claims</div>
-        </div>
-        <div class="rv" style="background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 34px">
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:700;letter-spacing:-0.02em;color:#C8972F;line-height:1">1,056</div>
-          <div style="font-size:14.5px;color:#5E6B7C;margin-top:14px;line-height:1.5">lives lost</div>
-        </div>
+        <p class="mock-note">Illustrative interface. Fictional example data.</p>
       </div>
-      <p class="rv" style="font-size:16px;color:#5E6B7C;margin:36px 0 0;max-width:640px;line-height:1.6">About 2,091 claims a day. Behind every number is a worker, a crew, and a recovery someone has to manage.</p>
-      <div class="rv" style="font-size:12px;color:#AAB6C6;margin-top:14px">Source: AWCBC Key Statistical Measures, 2023</div>
+
+      <div class="reveal">
+        <ul class="piece-list">
+          <li class="piece"><b>Worker Check-Ins</b><i>how recovery is actually going</i></li>
+          <li class="piece"><b>Clinical Restrictions</b><i>what the clinician has decided</i></li>
+          <li class="piece"><b>Functional Abilities</b><i>what the worker can safely do</i></li>
+          <li class="piece"><b>Safe Work</b><i>which duties fit today</i></li>
+          <li class="piece"><b>Recovery Progress</b><i>what has changed since the visit</i></li>
+          <li class="piece"><b>Follow-Up</b><i>what comes next, and when</i></li>
+          <li class="piece"><b>Documentation</b><i>the record that follows the case</i></li>
+          <li class="piece"><b>Return-to-Work Status</b><i>where the worker is on the pathway</i></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="depth-copy reveal">
+      <p class="lede">Continuum keeps the pieces of workplace injury recovery connected so each participant can see what they need without having to manage the entire process themselves.</p>
+      <a class="btn-quiet" href="#pathway">Explore How Continuum Works <span class="arw" aria-hidden="true">&rarr;</span></a>
     </div>
   </div>
+</section>
 
-  <!-- ================= S3 THE GAP (navy) ================= -->
-  <div style="background:#0E1B2C;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto;display:flex;gap:64px;align-items:center;flex-wrap:wrap">
-      <div style="flex:1.2;min-width:400px">
-        <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">The problem</div>
-        <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 24px;line-height:1.1">The visit ends. <span style="color:#C8972F">The recovery doesn't.</span></h2>
-        <p class="rv" style="font-size:17px;line-height:1.65;color:#AAB6C6;margin:0;max-width:540px">Care gets the worker to a doctor quickly. That part works. Then they go home, and for weeks no one can see how the recovery is actually going. Restrictions get forgotten. Light duty never gets arranged. A claim quietly drifts.</p>
+<!-- ======================================================================
+     FINAL CTA
+     ====================================================================== -->
+<section class="band final" id="contact">
+  <div class="shell">
+    <h2 class="reveal">Ready to rethink workplace injury recovery?</h2>
+    <p class="reveal">See how Continuum can connect clinical decisions, worker recovery and safe return to work for your organization.</p>
+    <div class="cta-row reveal">
+      <a class="btn btn-invert" data-route="contact" href="https://calendly.com/craig-continuumrtw">Talk to Our Team</a>
+    </div>
+    <p class="alt reveal">Or email <a href="mailto:info@continuumrtw.com">info@continuumrtw.com</a></p>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================================================================
+     FOOTER
+     ====================================================================== -->
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="brand-name">Continuum</span>
+        <p>AI-powered return-to-work platform connecting clinicians, workers and employers throughout workplace injury recovery.</p>
       </div>
-      <div class="rv" style="flex:1;min-width:320px;background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:48px 44px;text-align:center">
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;letter-spacing:-0.03em;color:#C8972F;line-height:1">63<span style="font-size:40px"> days</span></div>
-        <div style="font-size:15px;color:#AAB6C6;margin-top:18px;line-height:1.6;max-width:340px;margin-left:auto;margin-right:auto">The average lost-time claim duration. Two months of recovery that today no one is watching closely.</div>
-        <div style="font-size:12px;color:#5E6B7C;margin-top:16px">Source: WCB Alberta 2024 Annual Report</div>
+
+      <div class="footer-col">
+        <h3>Product</h3>
+        <ul>
+          <li><a data-route="howItWorks" href="#pathway">How It Works</a></li>
+          <li><a data-route="employers" href="#perspectives">Employers</a></li>
+          <li><a data-route="clinicians" href="#perspectives">Clinicians</a></li>
+          <li><a data-route="signIn" href="/hub">Sign In</a></li>
+        </ul>
       </div>
+
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a data-route="about" href="#depth">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-base">
+      <span>&copy; <span id="yr">2026</span> Continuum</span>
+      <span class="spacer"></span>
+      <a href="mailto:info@continuumrtw.com" style="color:inherit;text-decoration:none">info@continuumrtw.com</a>
     </div>
   </div>
+</footer>
 
-  <!-- ================= S4 THE HANDOFF (cream) ================= -->
-  <div style="background:#F7F4EE;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">From care to recovery</div>
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 48px;line-height:1.1">One starts the process. <span style="color:#C8972F">The other keeps it moving.</span></h2>
-      <div class="rv" style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap">
-        <div style="flex:1;min-width:300px;background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:38px 36px">
-          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:14px">Your clinician</div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:#16202E;margin-bottom:12px">The care</div>
-          <div style="font-size:15.5px;color:#5E6B7C;line-height:1.7">Doctor access, assessment, light-duty paperwork, WCB documentation.</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 22px;min-width:120px">
-          <svg width="64" height="24" viewBox="0 0 64 24" fill="none"><path d="M2 12h56m0 0l-9-9m9 9l-9 9" stroke="#C8972F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-          <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-top:10px;white-space:nowrap">Paperwork complete</div>
-        </div>
-        <div style="flex:1;min-width:300px;background:#0E1B2C;border-radius:16px;padding:38px 36px">
-          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:14px">Continuum</div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:#fff;margin-bottom:12px">The recovery</div>
-          <div style="font-size:15.5px;color:#AAB6C6;line-height:1.7">Check-ins, functional guidance, return to work, all the way to full duty.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= S5 ONE RECORD, EVERY ROLE (navy) ================= -->
-  <div id="roles" style="background:#0E1B2C;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">The solution</div>
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">One recovery, one timeline. <span style="color:#C8972F">Each sees only their part.</span></h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Worker</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">What do I do next in my recovery?</div></div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Supervisor</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">What work is safe for this person today?</div></div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">HSE advisor</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">Is every assigned duty within the limits?</div></div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Employer</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">What is this worker's functional status, never a diagnosis?</div></div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Disability and claims</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">Where does this claim stand?</div></div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">WCB case manager</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">Are the required reports ready?</div></div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Physician</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">What has changed since the last visit, and only they decide?</div></div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px 24px"><div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:6px">Leadership</div><div style="font-size:14px;color:#AAB6C6;line-height:1.5">How is recovery trending across our workforce?</div></div>
-      </div>
-      <p class="rv" style="font-size:16px;color:#AAB6C6;margin:40px 0 0;text-align:center">One record, one channel, one standard. Privacy protected. <span style="color:#E3B968;font-weight:600">It coordinates everyone, replaces no one.</span></p>
-    </div>
-  </div>
-
-  <!-- ================= TRY THE APP (Prompt 12d) ================= -->
-  <section id="try-app">
-    <style>
-      #try-app{background:#0E1B2C;color:#E9EEF6;padding:88px 24px;font-family:Inter,system-ui,sans-serif}
-      #try-app .ta-wrap{max-width:1120px;margin:0 auto;display:flex;gap:56px;align-items:center;flex-wrap:wrap}
-      #try-app .ta-left{flex:1 1 380px;min-width:300px}
-      #try-app .ta-right{flex:0 0 auto;margin:0 auto}
-      #try-app .ta-kicker{color:#C8972F;font-family:"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
-      #try-app h2{font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:34px;line-height:1.15;letter-spacing:-.01em;margin:12px 0 16px}
-      #try-app p{color:#AAB6C6;font-size:16px;line-height:1.6;margin:0 0 14px;max-width:480px}
-      #try-app .ta-disc{color:#6E87AD;font-size:13px;border-left:2px solid #27395A;padding-left:12px;margin:18px 0 22px}
-      #try-app .ta-btns{display:flex;gap:12px;flex-wrap:wrap}
-      #try-app .ta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:12px;font-family:"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer}
-      #try-app .ta-primary{background:#C8972F;color:#14100a}
-      #try-app .ta-primary:hover{background:#E3B85C}
-      #try-app .ta-ghost{background:transparent;color:#E9EEF6;border:1px solid #27395A}
-      #try-app .ta-ghost:hover{border-color:#6E87AD}
-      #try-app .ta-bezel{position:relative;width:390px;max-width:88vw;height:760px;max-height:78vh;border-radius:44px;border:2px solid #27395A;background:#0E1B2C;box-shadow:0 30px 70px rgba(0,0,0,.55);overflow:hidden}
-      #try-app .ta-bezel iframe{width:100%;height:100%;border:0;display:block}
-      #try-app .ta-full{display:block;text-align:center;margin-top:12px;color:#AAB6C6;font-size:13px;text-decoration:none}
-      #try-app .ta-full:hover{color:#E9EEF6}
-      @media(max-width:900px){#try-app{padding:56px 20px}#try-app .ta-wrap{flex-direction:column;gap:36px}#try-app h2{font-size:28px}#try-app .ta-left{text-align:center}#try-app p,#try-app .ta-disc{margin-left:auto;margin-right:auto}#try-app .ta-btns{justify-content:center}#try-app .ta-disc{text-align:left}}
-    </style>
-    <div class="ta-wrap">
-      <div class="ta-left">
-        <div class="ta-kicker">See it live</div>
-        <h2>A quick look at the whole thing</h2>
-        <p>See it live in a 30 or 45 minute demo. We walk through how a recovery stays coordinated from injury to full duty.</p>
-        <div class="ta-btns">
-          <a class="ta-btn ta-primary" href="https://continuumrtw.com/book">Book a demo</a>
-        </div>
-      </div>
-      <div class="ta-right">
-        <!-- Swappable teaser image slot. Owner picks one of 3 candidates out of band.
-             To swap: set data-teaser-image to the chosen filename and replace the
-             fallback card below with: <img src="/teaser-<name>.jpg" alt="Continuum overview" style="width:390px;max-width:88vw;border-radius:24px;display:block"> -->
-        <div class="ta-shot" data-teaser-image="pending" style="width:390px;max-width:88vw;min-height:320px;border-radius:24px;border:1px solid #27395A;background:#14243B;display:flex;align-items:center;justify-content:center;text-align:center;padding:32px">
-          <div style="color:#AAB6C6;font-size:15px;line-height:1.6">A short guided walkthrough,<br>shown live on the call.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= S7 PRIVACY BY TRANSLATION (navy) ================= -->
-  <div id="privacy" style="background:#0E1B2C;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">Privacy by design</div>
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">Work limits, <span style="color:#C8972F">not medical details.</span></h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px">
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:36px">
-          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:22px">The employer sees</div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#fff;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8972F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"></path></svg>
-            What the worker can safely do
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#fff;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8972F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"></path></svg>
-            What they should avoid
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#fff;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8972F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"></path></svg>
-            Which light duties suit them
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#fff;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8972F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"></path></svg>
-            When the plan should be reviewed
-          </div>
-        </div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:36px">
-          <div style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#AAB6C6;font-weight:600;margin-bottom:22px">Stays in the clinic</div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#AAB6C6;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6B7C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
-            The diagnosis
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#AAB6C6;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6B7C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
-            Private medical notes
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#AAB6C6;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6B7C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
-            Test results and history
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px;color:#AAB6C6;line-height:1.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6B7C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
-            Anything the workplace doesn&rsquo;t need
-          </div>
-        </div>
-      </div>
-      <p class="rv" style="font-size:16px;color:#AAB6C6;margin:36px 0 0;text-align:center">Privacy by translation: <span style="color:#fff;font-weight:600">the workplace gets capacity, the clinic keeps the medicine.</span></p>
-    </div>
-  </div>
-
-  <!-- ================= S9 THE DOCTRINE (navy) ================= -->
-  <div id="doctrine" style="background:#0E1B2C;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">The doctrine</div>
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">AI tracks. <span style="color:#C8972F">Clinicians decide.</span></h2>
-      <p class="rv" style="font-size:17px;line-height:1.65;color:#AAB6C6;margin:0;max-width:620px">Continuum keeps the recovery in view and surfaces what changed for the doctor to review, and every medical and return to work decision stays with the treating physician.</p>
-    </div>
-  </div>
-
-  <!-- ================= S10 FITS WHAT YOU RUN (cream) ================= -->
-  <div id="how" style="background:#F7F4EE;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">How it works</div>
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#16202E;margin:0 0 48px;line-height:1.1">Three things stay true, <span style="color:#C8972F">every day.</span></h2>
-      <div class="rv" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
-        <div style="background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:34px 32px"><div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:#16202E;line-height:1.4">The worker stays supported every day.</div></div>
-        <div style="background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:34px 32px"><div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:#16202E;line-height:1.4">The employer always knows what work is safe.</div></div>
-        <div style="background:#fff;border:1px solid rgba(22,32,46,.10);border-radius:16px;padding:34px 32px"><div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:#16202E;line-height:1.4">The doctor decides with better information.</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= S11 THE PAYOFF (navy) ================= -->
-  <div id="evidence" style="background:#0E1B2C;padding:112px 32px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div class="rv" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#C8972F;font-weight:600;margin-bottom:16px">The payoff</div>
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 48px;line-height:1.1">Employers don't buy software. <span style="color:#C8972F">They buy certainty.</span></h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:34px 32px;transition:transform .2s ease,box-shadow .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.3)">
-          <div style="width:42px;height:42px;border-radius:50%;background:rgba(201,150,60,.12);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8972F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM12 6v6l4 2"></path></svg>
-          </div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;color:#fff;margin-bottom:10px">Workers back sooner</div>
-          <div style="font-size:14.5px;color:#AAB6C6;line-height:1.6">Light duty gets arranged instead of forgotten.</div>
-        </div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:34px 32px;transition:transform .2s ease,box-shadow .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.3)">
-          <div style="width:42px;height:42px;border-radius:50%;background:rgba(201,150,60,.12);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8972F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
-          </div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;color:#fff;margin-bottom:10px">Fewer surprises</div>
-          <div style="font-size:14.5px;color:#AAB6C6;line-height:1.6">A clear daily answer: can this worker work today?</div>
-        </div>
-        <div class="rv" style="background:#14243B;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:34px 32px;transition:transform .2s ease,box-shadow .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.3)">
-          <div style="width:42px;height:42px;border-radius:50%;background:rgba(201,150,60,.12);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8972F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-          </div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;color:#fff;margin-bottom:10px">Lower claim drift</div>
-          <div style="font-size:14.5px;color:#AAB6C6;line-height:1.6">Early warnings catch a stall before it gets costly.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= S12 CTA BAND + FOOTER ================= -->
-  <!-- Booking URL single source: deploy/site-links.js CONTINUUM_LINKS.bookingUrl.
-       Every Book a demo and Start a Pilot href on this page is a literal copy
-       of that one value; update all of them together when it changes. -->
-  <div id="cta" style="background:#0A1526;padding:104px 32px;text-align:center;border-top:1px solid rgba(255,255,255,.08)">
-    <div style="max-width:760px;margin:0 auto">
-      <h2 class="rv" style="font-family:'Space Grotesk',sans-serif;font-size:46px;font-weight:700;letter-spacing:-0.02em;color:#fff;margin:0 0 18px">Green-light <span style="color:#C8972F">the pilot.</span></h2>
-      <p class="rv" style="font-size:17px;color:#AAB6C6;margin:0 0 36px;line-height:1.6">One employer. Real claims. Measured against the 63-day national baseline.</p>
-      <div class="rv" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-        <a href="/hub" style="background:#C8972F;color:#0E1B2C;font-size:15px;font-weight:600;padding:15px 32px;border-radius:12px;display:inline-block" style-hover="background:#E3B968;color:#0E1B2C">Sign In</a>
-        <a href="https://continuumrtw.com/book" style="border:1px solid rgba(255,255,255,.25);color:#fff;font-size:15px;font-weight:600;padding:15px 32px;border-radius:12px;display:inline-block" style-hover="border-color:#E3B968;color:#E3B968">Book a demo</a>
-      </div>
-    </div>
-  </div>
-
-  <div style="background:#0A1526;border-top:1px solid rgba(255,255,255,.08);padding:72px 32px 40px">
-    <div style="max-width:1200px;margin:0 auto">
-      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px">
-        <div>
-          <img src="/continuum-logo.svg" alt="Continuum Return to Work" style="height:52px;width:auto;display:block">
-          <div style="font-size:13.5px;color:#AAB6C6;margin-top:12px;line-height:1.6;max-width:260px">The coordination layer for workplace injury recovery.</div>
-        </div>
-        <div>
-          <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:16px">Product</div>
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
-            <a href="#how" style="color:#AAB6C6" style-hover="color:#fff">How It Works</a>
-            <a href="#try-app" style="color:#AAB6C6" style-hover="color:#fff">See It Live</a>
-            <a href="#privacy" style="color:#AAB6C6" style-hover="color:#fff">Privacy &amp; Trust</a>
-            <a href="#evidence" style="color:#AAB6C6" style-hover="color:#fff">Evidence</a>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:16px">Audiences</div>
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
-            <a href="#roles" style="color:#AAB6C6" style-hover="color:#fff">For Employers</a>
-            <a href="#doctrine" style="color:#AAB6C6" style-hover="color:#fff">For Clinicians</a>
-            <a href="#roles" style="color:#AAB6C6" style-hover="color:#fff">For Workers</a>
-            <a href="https://continuumrtw.com/book" style="color:#AAB6C6" style-hover="color:#fff">Start a Pilot</a>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5E6B7C;font-weight:600;margin-bottom:16px">Contact &amp; legal</div>
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
-            <a href="https://continuumrtw.com/book" style="color:#AAB6C6" style-hover="color:#fff">Book a demo</a>
-            <a href="mailto:info@continuumrtw.com" style="color:#AAB6C6" style-hover="color:#fff">info@continuumrtw.com</a>
-            <a href="/privacy" style="color:#AAB6C6" style-hover="color:#fff">Privacy Policy</a>
-            <a href="/terms" style="color:#AAB6C6" style-hover="color:#fff">Terms of Service</a>
-            <span style="color:#5E6B7C">PIPEDA / PHIA compliance: documentation on request</span>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08);margin-top:56px;padding-top:26px;font-size:12.5px;color:#5E6B7C">
-        <span>© 2026 Continuum. Built in Canada.</span>
-        <span style="color:#C8972F;font-weight:600">Where care ends, Continuum begins.</span>
-      </div>
-    </div>
-  </div>
-
-</div>
-</x-dc>
 <script>
 (function(){
-  var els = document.querySelectorAll('.rv');
-  if(!('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); return; }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  els.forEach(function(e){ io.observe(e); });
-  setTimeout(function(){ document.querySelectorAll('.rv:not(.in)').forEach(function(e){e.classList.add('in');}); }, 6000);
+  "use strict";
+
+  /* ----------------------------------------------------------------------
+     ROUTES
+     One place to point the page at real destinations. Every entry below was
+     either verified on the live site or deliberately left as an in-page
+     anchor so nothing on this page can 404.
+
+       signIn      "/hub"          NEEDS CONFIRMATION. The hub sign-in exists;
+                                   the path is from the July 30 walkthrough,
+                                   not re-verified from outside the gate.
+       assessment  "/assessment"   ROUTE NEEDS CONFIRMATION. No approved
+                                   assessment destination is known. While this
+                                   value stays "/assessment" the button does
+                                   NOT navigate: it falls back to the contact
+                                   section, so it cannot land on a 404. Set the
+                                   real path here and the fallback switches off
+                                   by itself.
+       contact     Calendly        The Continuum booking page. This replaces the
+                                   "#booking-url-pending" placeholder that was
+                                   left on the previous homepage.
+       employers / clinicians / about / howItWorks
+                                   In-page anchors by default. If the gated
+                                   marketing pages are published, put their real
+                                   paths here.
+     ---------------------------------------------------------------------- */
+  var ROUTES = {
+    signIn:      "/hub",
+    assessment:  "/assessment",
+    contact:     "https://calendly.com/craig-continuumrtw",
+    howItWorks:  "#pathway",
+    employers:   "#perspectives",
+    clinicians:  "#perspectives",
+    about:       "#depth"
+  };
+  var ASSESSMENT_PLACEHOLDER = "/assessment";
+
+  document.querySelectorAll("[data-route]").forEach(function(el){
+    var key = el.getAttribute("data-route");
+    if (ROUTES[key]) el.setAttribute("href", ROUTES[key]);
+  });
+
+  /* While the assessment route is unconfirmed, keep the visitor on the page. */
+  if (ROUTES.assessment === ASSESSMENT_PLACEHOLDER) {
+    document.querySelectorAll('[data-route="assessment"]').forEach(function(el){
+      el.setAttribute("href", "#contact");
+      el.addEventListener("click", function(e){
+        e.preventDefault();
+        scrollToId("contact");
+      });
+    });
+  }
+
+  /* ---- smooth scroll for in-page links ---- */
+  function scrollToId(id){
+    var t = document.getElementById(id);
+    if (!t) return;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var top = t.getBoundingClientRect().top + window.pageYOffset - 84;
+    window.scrollTo({ top: top, behavior: reduce ? "auto" : "smooth" });
+    t.setAttribute("tabindex","-1");
+    t.focus({ preventScroll:true });
+  }
+
+  document.addEventListener("click", function(e){
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute("href").slice(1);
+    if (!id || !document.getElementById(id)) return;
+    e.preventDefault();
+    closeNav();
+    scrollToId(id);
+  });
+
+  /* ---- mobile navigation ---- */
+  var header = document.getElementById("siteHeader");
+  var toggle = document.getElementById("navToggle");
+  function closeNav(){
+    if (!header) return;
+    header.classList.remove("open");
+    if (toggle) toggle.setAttribute("aria-expanded","false");
+  }
+  if (toggle){
+    toggle.addEventListener("click", function(){
+      var open = header.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.textContent = open ? "Close" : "Menu";
+    });
+  }
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && header && header.classList.contains("open")){
+      closeNav();
+      if (toggle){ toggle.textContent = "Menu"; toggle.focus(); }
+    }
+  });
+
+  /* ---- header hairline once the page has moved ---- */
+  var onScroll = function(){
+    if (!header) return;
+    header.classList.toggle("is-stuck", window.pageYOffset > 8);
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive:true });
+
+  /* ---- gentle reveal, and the pathway lighting up once ---- */
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reveals = document.querySelectorAll(".reveal");
+  if (reduce || !("IntersectionObserver" in window)){
+    reveals.forEach(function(el){ el.classList.add("in"); });
+    var railNow = document.getElementById("pathRail");
+    if (railNow) railNow.classList.add("lit");
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        if (entry.target.id === "pathRail") entry.target.classList.add("lit");
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin:"0px 0px -8% 0px", threshold:0.08 });
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  /* ---- footer year ---- */
+  var yr = document.getElementById("yr");
+  if (yr) yr.textContent = String(new Date().getFullYear());
 })();
 </script>
-<template id="__bundler_thumbnail">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0E1B2C"/><rect x="30" y="30" width="40" height="40" rx="11" fill="#14243B"/><text x="50" y="63" text-anchor="middle" font-family="sans-serif" font-size="30" font-weight="700" fill="#C8972F">C</text></svg>
-</template>
 </body>
 </html>
