@@ -51,10 +51,25 @@ ok("/continuum-logo-dark.svg allows without a cookie", decideSiteAccess("/contin
 ok("/gate/holding.html allows without a cookie", decideSiteAccess("/gate/holding.html", false, undefined) === "allow");
 ok("/gate/some-asset.css allows without a cookie", decideSiteAccess("/gate/some-asset.css", false, undefined) === "allow");
 
-// -- "/" is special: it is NOT in ALWAYS_PUBLIC, it holds without a cookie
-// and allows with one, same as any other gated path --
-ok("/ without a cookie holds", decideSiteAccess("/", false, undefined) === "holding");
+// -- Prompt 67: "/" is now the public landing page and allows without a cookie.
+// The hub sign in and every portal stay gated (asserted below). --
+ok("/ without a cookie allows (public landing page)", decideSiteAccess("/", false, undefined) === "allow");
 ok("/ with a valid cookie allows", decideSiteAccess("/", true, undefined) === "allow");
+ok("/index.html without a cookie allows", decideSiteAccess("/index.html", false, undefined) === "allow");
+
+// -- Prompt 67: the public assessment and its shared script deps allow without
+// a cookie. --
+ok("/assessment without a cookie allows", decideSiteAccess("/assessment", false, undefined) === "allow");
+ok("/assessment/ without a cookie allows", decideSiteAccess("/assessment/", false, undefined) === "allow");
+ok("/assessment/assessment.js without a cookie allows", decideSiteAccess("/assessment/assessment.js", false, undefined) === "allow");
+ok("/assessment/config/crs-1.1.js without a cookie allows", decideSiteAccess("/assessment/config/crs-1.1.js", false, undefined) === "allow");
+ok("/supabase.js without a cookie allows (assessment dep)", decideSiteAccess("/supabase.js", false, undefined) === "allow");
+ok("/site-links.js without a cookie allows (assessment dep)", decideSiteAccess("/site-links.js", false, undefined) === "allow");
+
+// -- Prompt 67 must NOT open the portals or the hub sign in. --
+for (const stillGated of ["/hse-portal", "/employer-dashboard", "/clinical-dashboard", "/wcb-portal", "/sigma-portal", "/admin-portal", "/admin-hub-users", "/admin-site-codes", "/worker-dashboard"]) {
+  ok(stillGated + " without a cookie still holds (portal stays gated, Prompt 67)", decideSiteAccess(stillGated, false, undefined) === "holding");
+}
 
 // -- ordinary gated paths hold without a cookie, allow with a valid one --
 for (const gatedPath of ["/hub", "/admin-portal", "/continuum_workflow_app"]) {
@@ -83,7 +98,7 @@ ok('gateEnabledEnv "" still gates /hub', decideSiteAccess("/hub", false, "") ===
 // decideSiteAccess itself must hold them (they are not on the allowlist). --
 ok("/hub/roles.js without a cookie holds (gated bundle, not exempted by extension)", decideSiteAccess("/hub/roles.js", false, undefined) === "holding");
 ok("/store.js without a cookie holds (gated bundle, not exempted by extension)", decideSiteAccess("/store.js", false, undefined) === "holding");
-ok("/config.js without a cookie holds (gated bundle, not exempted by extension)", decideSiteAccess("/config.js", false, undefined) === "holding");
+ok("/config.js without a cookie allows (public assessment dep, Prompt 67)", decideSiteAccess("/config.js", false, undefined) === "allow");
 ok("/hub/roles.js with a valid cookie allows", decideSiteAccess("/hub/roles.js", true, undefined) === "allow");
 ok("/store.js with a valid cookie allows", decideSiteAccess("/store.js", true, undefined) === "allow");
 ok("/config.js with a valid cookie allows", decideSiteAccess("/config.js", true, undefined) === "allow");

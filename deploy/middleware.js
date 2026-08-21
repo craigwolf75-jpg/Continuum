@@ -57,6 +57,18 @@ const config = {
 // force the prefix rule to also accept an attacker suffix like
 // continuum-logo-evil.
 const ALWAYS_PUBLIC_EXACT = new Set([
+  // Prompt 67: the public landing page and the public assessment become
+  // readable without an access code. The hub sign in and every portal stay
+  // gated; the holding page (served on any gated path) keeps the code box, so
+  // "Sign In" still leads to the access code experience with the endpoint
+  // untouched. Only the assessment's own shared script dependencies are opened
+  // (config.js, supabase.js, site-links.js), never the gated bundles
+  // (store.js, hub/roles.js).
+  "/",
+  "/index.html",
+  "/config.js",
+  "/supabase.js",
+  "/site-links.js",
   "/privacy",
   "/privacy.html",
   "/terms",
@@ -78,7 +90,7 @@ const ALWAYS_PUBLIC_EXACT = new Set([
 // also matching /continuum-logout, and /og-image from also matching
 // /og-image-x: in both bad cases the character right after the prefix is a
 // letter (or a hyphen introducing a different token), not a boundary.
-const ALWAYS_PUBLIC_BOUNDED_PREFIX = ["/favicon", "/og-image", "/continuum-logo"];
+const ALWAYS_PUBLIC_BOUNDED_PREFIX = ["/favicon", "/og-image", "/continuum-logo", "/assessment"];
 
 // Raw prefix match: "/gate/" already ends in "/", so the boundary is baked
 // into the string itself; anything under it is the holding page or its
@@ -186,7 +198,6 @@ function decideSiteAccess(pathname, hasValidCookie, gateEnabledEnv) {
 
   const isAlwaysPublic =
     !isSuspiciousPath(pathname) &&
-    pathname !== "/" &&
     (ALWAYS_PUBLIC_EXACT.has(pathname) ||
       ALWAYS_PUBLIC_BOUNDED_PREFIX.some((p) => isBoundedPrefixMatch(pathname, p)) ||
       ALWAYS_PUBLIC_RAW_PREFIX.some((p) => pathname.startsWith(p)));
