@@ -13,16 +13,15 @@ test("single booking-URL source exists", () => {
   const cfg = readFileSync(join(dir, "site-links.js"), "utf8");
   assert.ok(/bookingUrl\s*:/.test(cfg));
 });
-test("no Calendly and no Nexus address anywhere on the homepage", () => {
-  assert.ok(!/calendly/i.test(home));
+test("Calendly is the booking source; no Nexus reference (Prompt 67)", () => {
+  assert.ok(/calendly\.com\/craig-continuumrtw/.test(home), "the Continuum Calendly booking URL should be present");
   assert.ok(!/nexus/i.test(home));
 });
 test("no 15 minute call is offered", () => {
   assert.ok(!/15[ -]?min/i.test(home));
 });
-test("Book a demo and Start a Pilot use anchor text, not a raw URL as the label", () => {
-  assert.ok(home.includes(">Book a demo<"));
-  assert.ok(home.includes(">Start a Pilot<"));
+test("the booking CTA uses anchor text, not a raw URL as the label (Prompt 67)", () => {
+  assert.ok(home.includes(">Talk to Our Team<"));
   assert.ok(!/>https?:\/\//.test(home), "a raw URL is used as visible link text");
 });
 test("footer carries the contact email", () => {
@@ -30,22 +29,14 @@ test("footer carries the contact email", () => {
 });
 test("contact page is em-dash clean", () => { assert.ok(!Array.from(home).some((c) => c.charCodeAt(0) === 8211 || c.charCodeAt(0) === 8212)); });
 
-test("every Book a demo and Start a Pilot anchor resolves to the single-sourced booking URL", () => {
-  const cfg = readFileSync(join(dir, "site-links.js"), "utf8");
-  const cfgMatch = cfg.match(/bookingUrl\s*:\s*'([^']+)'/);
-  assert.ok(cfgMatch, "bookingUrl not found in site-links.js");
-  const bookingUrl = cfgMatch[1];
-  const demoHrefs = [...home.matchAll(/href="([^"]+)"[^>]*>Book a demo</g)].map((m) => m[1]);
-  const pilotHrefs = [...home.matchAll(/href="([^"]+)"[^>]*>Start a Pilot</g)].map((m) => m[1]);
-  assert.ok(demoHrefs.length >= 2, "expected at least two Book a demo anchors");
-  assert.ok(pilotHrefs.length >= 2, "expected at least two Start a Pilot anchors");
-  for (const href of [...demoHrefs, ...pilotHrefs]) {
-    assert.equal(href, bookingUrl, "anchor href does not match CONTINUUM_LINKS.bookingUrl");
-  }
+test("the contact route is the single-sourced Calendly booking URL (Prompt 67)", () => {
+  const m = home.match(/contact:\s*"([^"]+)"/);
+  assert.ok(m, "ROUTES.contact not found");
+  assert.ok(/calendly\.com\/craig-continuumrtw/.test(m[1]), "ROUTES.contact should be the Calendly booking URL");
 });
 test("no leftover self-referential Talk to Us CTA", () => {
   assert.ok(!home.includes(">Talk to Us<"));
 });
-test("the CTA band references site-links.js as the single source", () => {
-  assert.ok(/site-links\.js/.test(home));
+test("links are single-sourced in a ROUTES object (Prompt 67)", () => {
+  assert.ok(/ROUTES\s*=\s*\{/.test(home));
 });

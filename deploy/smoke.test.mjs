@@ -43,11 +43,10 @@ ok("smoke surfaces dash clean", !PORTALS.some(p => /[–—]/.test(read(p + ".ht
 
 // Prompt 36: homepage hero background video
 const home = read("index.html");
-ok("hero uses the background video", home.includes('class="hero-vid"') && home.includes('src="/hero-video.mp4"'));
-ok("hero mockups removed", !home.includes("Good morning, Worker 15") && !home.includes("hub.continuum.ca") && !home.includes("product vignette"));
-ok("hero copy preserved", home.includes("Continuum begins.") && home.includes(">Sign In<") && home.includes(">See How It Works<"));
-ok("hero has overlay and reduced-motion path", home.includes("hero-overlay") && home.includes("prefers-reduced-motion"));
-ok("hero video is autoplay muted playsinline", home.includes("autoplay") && home.includes("muted") && home.includes("playsinline"));
+ok("hero has no background video (Prompt 67 static hero)", !home.includes('class="hero-vid"') && !home.includes('src="/hero-video.mp4"'));
+ok("hero mockups are illustrative and captioned", home.includes("Illustrative interface") && !home.includes("Good morning, Worker 15"));
+ok("hero copy is the approved line", home.includes("Where medical decisions become safe work") && home.includes(">Sign In<") && home.includes(">See How It Works<"));
+ok("reduced-motion path present", home.includes("prefers-reduced-motion"));
 ok("homepage dash clean", !/[–—]/.test(home));
 
 console.log("\nsmoke suite: " + pass + " passed, " + fail + " failed");

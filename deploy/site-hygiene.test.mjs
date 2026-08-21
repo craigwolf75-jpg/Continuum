@@ -61,10 +61,11 @@ const gatedFiles = [
   "screens/index.html",
   "screens/legacy/demo.html",
   "demo/index.html",
-  "index.html",
   "privacy.html",
   "terms.html"
 ];
+// Prompt 67: index.html is now the PUBLIC landing page and must be indexable,
+// so it is deliberately not in the noindex sweep above.
 for (const f of gatedFiles) {
   ok(f + ' carries content="noindex"', /content=["'][^"']*noindex/i.test(read(f)));
 }

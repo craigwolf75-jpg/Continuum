@@ -29,8 +29,8 @@ test("no link scrolls to its own containing section (#cta band has no #cta link)
 });
 
 test("audience links resolve to real sections", () => {
-  assert.ok(home.includes('href="#roles"'));
-  assert.ok(home.includes('href="#doctrine"'));
+  assert.ok(home.includes('href="#perspectives"'));
+  assert.ok(home.includes('href="#depth"'));
 });
 
 test("links page is em-dash clean", () => { assert.ok(!/[\u2013\u2014]/.test(home)); });

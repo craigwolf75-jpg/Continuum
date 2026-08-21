@@ -20,20 +20,11 @@ test("Workflow Demo link absent from nav and footer", () => {
   assert.ok(!home.includes("Workflow Demo"));
   assert.ok(!home.includes("/continuum_workflow_app"));
 });
-test("teaser line and Book a demo present, image slot is swappable", () => {
-  assert.ok(home.includes("See it live in a 30 or 45 minute demo"));
-  assert.ok(home.includes(">Book a demo<"));
-  assert.ok(home.includes('data-teaser-image="pending"'));
-});
-test("hero locked lines unchanged", () => {
-  assert.ok(home.includes("The new standard for workplace injury management"));
-  assert.ok(home.includes("Where care ends,"));
-  assert.ok(home.includes("Continuum begins."));
-});
-test("three outcome statements replace How it works mechanics", () => {
-  assert.ok(home.includes("The worker stays supported every day."));
-  assert.ok(home.includes("The employer always knows what work is safe."));
-  assert.ok(home.includes("The doctor decides with better information."));
+// Prompt 67: the teaser and the old locked hero lines are retired. The hero is
+// the approved new line; the founding line must be gone.
+test("hero shows the approved Prompt 67 line and retires the founding line", () => {
+  assert.ok(home.includes("Where medical decisions become safe work"));
+  assert.ok(!home.includes("Where care ends,"));
 });
 test("mechanism and interface vocabulary removed from the homepage", () => {
   // NOTE: "check-in" was adjusted to "thirty-second check-in" (2026-07-30).
@@ -46,9 +37,8 @@ test("mechanism and interface vocabulary removed from the homepage", () => {
     assert.ok(!home.includes(term), "still present: " + term);
   }
 });
-test("AI section trimmed to headline plus one supporting sentence", () => {
-  assert.ok(home.includes("AI tracks."));
-  assert.ok(home.includes("Clinicians decide."));
+test("AI positioning is a single supporting line (Prompt 67)", () => {
+  assert.ok(home.includes("AI-powered return-to-work platform"));
   assert.ok(!home.includes("aiDoes") && !home.includes("aiNever"));
 });
 test("no banned clinical-authority terms", () => {
