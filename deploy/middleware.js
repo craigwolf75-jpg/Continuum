@@ -112,11 +112,11 @@ const HUB_GROUP1_PREFIXES = ["/employer-dashboard", "/hse-portal", "/worker-dash
 const HUB_GROUP2_PREFIXES = ["/clinical-dashboard", "/wcb-portal", "/sigma-portal"];
 const HUB_ADMIN_PREFIXES = ["/admin-portal", "/admin-hub-users", "/admin-site-codes"];
 
-// Phase B Task 6 addition: the two mechanism demo pages. These require ANY
-// authenticated hub session (any group, including admin), not a specific
-// group, so they are checked separately from the three group prefix sets
-// above rather than being folded into one of them.
-const HUB_AUTHED_PREFIXES = ["/continuum_workflow_app", "/worker-embed"];
+// Phase B Task 6 addition: pages that require ANY authenticated hub session
+// (any group, including admin), not a specific group, so they are checked
+// separately from the three group prefix sets above rather than being folded
+// into one of them.
+const HUB_AUTHED_PREFIXES = ["/worker-embed"];
 
 function matchesAnyBoundedPrefix(pathname, prefixes) {
   return prefixes.some((p) => isBoundedPrefixMatch(pathname, p));
