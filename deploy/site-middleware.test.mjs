@@ -51,11 +51,12 @@ ok("/continuum-logo-dark.svg allows without a cookie", decideSiteAccess("/contin
 ok("/gate/holding.html allows without a cookie", decideSiteAccess("/gate/holding.html", false, undefined) === "allow");
 ok("/gate/some-asset.css allows without a cookie", decideSiteAccess("/gate/some-asset.css", false, undefined) === "allow");
 
-// -- Prompt 67: "/" is now the public landing page and allows without a cookie.
-// The hub sign in and every portal stay gated (asserted below). --
-ok("/ without a cookie allows (public landing page)", decideSiteAccess("/", false, undefined) === "allow");
+// -- The landing ("/" and "/index.html") is GATED again (pre-landing-page
+// behavior): no cookie shows the holding page, a valid cookie allows through.
+// The public assessment stays open (asserted below). --
+ok("/ without a cookie shows the holding page", decideSiteAccess("/", false, undefined) === "holding");
 ok("/ with a valid cookie allows", decideSiteAccess("/", true, undefined) === "allow");
-ok("/index.html without a cookie allows", decideSiteAccess("/index.html", false, undefined) === "allow");
+ok("/index.html without a cookie shows the holding page", decideSiteAccess("/index.html", false, undefined) === "holding");
 
 // -- Prompt 67: the public assessment and its shared script deps allow without
 // a cookie. --

@@ -57,15 +57,15 @@ const config = {
 // force the prefix rule to also accept an attacker suffix like
 // continuum-logo-evil.
 const ALWAYS_PUBLIC_EXACT = new Set([
-  // Prompt 67: the public landing page and the public assessment become
-  // readable without an access code. The hub sign in and every portal stay
-  // gated; the holding page (served on any gated path) keeps the code box, so
-  // "Sign In" still leads to the access code experience with the endpoint
-  // untouched. Only the assessment's own shared script dependencies are opened
-  // (config.js, supabase.js, site-links.js), never the gated bundles
+  // The landing page ("/" and "/index.html") is GATED again, as it was before
+  // the Prompt 67 landing page: a visitor without a valid ct_site cookie gets
+  // the holding page (with the code box) at the site root. The public
+  // ASSESSMENT stays open (see /assessment in ALWAYS_PUBLIC_BOUNDED_PREFIX),
+  // so its shared script dependencies (config.js, supabase.js, site-links.js)
+  // remain public here. The hub sign in and every portal stay gated; the
+  // holding page keeps the code box, so "Sign In" still leads to the access
+  // code experience with the endpoint untouched. Never open the gated bundles
   // (store.js, hub/roles.js).
-  "/",
-  "/index.html",
   "/config.js",
   "/supabase.js",
   "/site-links.js",
