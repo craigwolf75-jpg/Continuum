@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuum: privacy and consent</title>
+<style>
+/* SCR-WRK-07 Privacy and consent. Prompt 56 / Document 3.6.
+   Every consent kind, its plain meaning, its state, when it changed, and what
+   stops working if it is off. Revocable in one tap inside sixty seconds. The
+   worker's own access log in plain language. The employer-disclosure revocation
+   sentence is verbatim and must not imply a past lawful disclosure can be
+   recalled. No dashes, no banned vocabulary. */
+:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
+  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--ok-700:#0F7A55;--ok-050:#E6F5EE;--ok-800:#0B5C40;
+  --warn-700:#8A5300;--warn-050:#FDF3E3;--stop-700:#A8201A;
+  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
+  --border-divider:var(--ink-200);--border-card:#AFBBC7;--focus-ring:var(--action-600);
+  --font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+*,*::before,*::after{box-sizing:border-box}
+html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
+body{margin:0;line-height:1.5}h1,h2{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3}p{margin:0}
+button,a{font:inherit;cursor:pointer;min-height:var(--target)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:6px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 16px 24px}
+.head{display:flex;align-items:center;gap:8px;padding:16px 0 6px}
+.back{color:var(--action-700);text-decoration:none;font-weight:500;font-size:.9rem;display:inline-flex;align-items:center}
+.title{padding:6px 4px}.title h1{font-size:1.5rem}.title p{font-size:.9rem;color:var(--text-tertiary);margin-top:4px}
+.consent{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:var(--r);padding:16px;margin-top:12px}
+.consent .row{display:flex;align-items:flex-start;gap:12px}
+.consent .row .txt{flex:1}
+.consent b{font-size:1.02rem;color:var(--text-primary)}
+.consent .mean{font-size:.85rem;color:var(--text-secondary);margin-top:4px}
+.consent .state{font-size:.78rem;color:var(--text-tertiary);margin-top:6px}
+.toggle{flex:none;width:56px;height:32px;border-radius:16px;border:1px solid var(--border-card);background:var(--ink-200);position:relative;padding:0}
+.toggle[aria-pressed="true"]{background:var(--ok-700);border-color:var(--ok-700)}
+.toggle .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .12s}
+.toggle[aria-pressed="true"] .knob{left:27px}
+.offnote{display:none;font-size:.85rem;color:var(--warn-700);background:var(--warn-050);border:1px solid var(--warn-700);border-radius:10px;padding:10px 12px;margin-top:10px}
+.offnote.show{display:block}
+.gated{opacity:.6}
+.gated .toggle{pointer-events:none}
+.gatedtag{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-tertiary)}
+.log{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:var(--r);padding:16px;margin-top:16px}
+.log h2{font-size:1rem}
+.log .entry{padding:10px 0;border-bottom:1px solid var(--border-divider);font-size:.9rem}
+.log .entry:last-child{border-bottom:0}
+.log .entry .w{color:var(--text-primary);font-weight:500}.log .entry .m{color:var(--text-tertiary);font-size:.8rem;margin-top:2px}
+.foot{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px 0}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="head"><a class="back" href="today.html">Back</a></div>
+  <div class="title"><h1>Privacy and consent</h1><p>Turn anything on or off in one tap. Your care is exactly the same either way.</p></div>
+
+  <div class="consent">
+    <div class="row">
+      <div class="txt"><b>Use the Companion</b><p class="mean">Check in and see your plan.</p><p class="state">On since 12 Aug 2026.</p></div>
+      <button class="toggle" aria-pressed="true" aria-label="Use the Companion"><span class="knob" aria-hidden="true"></span></button>
+    </div>
+  </div>
+
+  <div class="consent">
+    <div class="row">
+      <div class="txt"><b>Share work updates with my employer</b><p class="mean">Short coded updates, for example completed or stopped a duty. No symptoms, ever.</p><p class="state">On since 12 Aug 2026.</p></div>
+      <button class="toggle" id="empToggle" aria-pressed="true" aria-label="Share work updates with my employer"><span class="knob" aria-hidden="true"></span></button>
+    </div>
+    <!-- Verbatim. Must not imply a past lawful disclosure can be recalled. -->
+    <p class="offnote" id="empOff">Your employer stops seeing your work reports within one minute. They still see the duties and hours your doctor approved, because that is their own work information. What they have already seen cannot be taken back.</p>
+  </div>
+
+  <div class="consent">
+    <div class="row">
+      <div class="txt"><b>Record my check in answers</b><p class="mean">So your care team can see what you reported over time.</p><p class="state">On since 12 Aug 2026.</p></div>
+      <button class="toggle" aria-pressed="true" aria-label="Record my check in answers"><span class="knob" aria-hidden="true"></span></button>
+    </div>
+  </div>
+
+  <div class="consent">
+    <div class="row">
+      <div class="txt"><b>Speech to text</b><p class="mean">Let you answer by voice. Turning it off means you type instead.</p><p class="state">Not asked yet.</p></div>
+      <button class="toggle" aria-pressed="false" aria-label="Speech to text"><span class="knob" aria-hidden="true"></span></button>
+    </div>
+  </div>
+
+  <div class="consent">
+    <div class="row">
+      <div class="txt"><b>Share with a clinician when I ask</b><p class="mean">Only when you connect on the clinician route, and only what you choose that time.</p><p class="state">Not asked yet.</p></div>
+      <button class="toggle" aria-pressed="false" aria-label="Share with a clinician when I ask"><span class="knob" aria-hidden="true"></span></button>
+    </div>
+  </div>
+
+  <div class="consent gated">
+    <div class="row">
+      <div class="txt"><b>Camera movement check</b> <span class="gatedtag">Not available in your deployment</span><p class="mean">Take your own movement measurements with the camera. Off unless your care setup offers it.</p></div>
+      <button class="toggle" aria-pressed="false" aria-label="Camera movement check, not available" disabled><span class="knob" aria-hidden="true"></span></button>
+    </div>
+  </div>
+
+  <section class="log">
+    <h2>Who has looked at my information</h2>
+    <div class="entry"><span class="w">Dr. A. Owusu looked at your plan</span><p class="m">21 Aug 2026, 09:14 · to review your check in before your appointment</p></div>
+    <div class="entry"><span class="w">Your coordinator opened your case</span><p class="m">20 Aug 2026, 15:02 · to update your appointment</p></div>
+    <div class="entry"><span class="w">Your employer viewed your work updates</span><p class="m">20 Aug 2026, 08:30 · duties and hours only, no clinical information</p></div>
+  </section>
+
+  <p class="foot">Illustrative interface. Fictional example data. These settings are yours only and are never shown to anyone else.</p>
+</div>
+<script>
+(function(){
+  // one-tap revocation; the employer note appears when sharing is turned off
+  document.querySelectorAll('.toggle:not([disabled])').forEach(function(t){
+    t.addEventListener('click',function(){
+      var on=t.getAttribute('aria-pressed')==='true'; t.setAttribute('aria-pressed', on?'false':'true');
+      if(t.id==='empToggle'){ document.getElementById('empOff').classList.toggle('show', on); }
+    });
+  });
+})();
+</script>
+
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="app/app.js"></script>
+<script>
+(function(){
+  if(!window.WK) return;
+  var MAP={'Use the Companion':'w1_participation','Share work updates with my employer':'w2_employer_disclosure','Record my check in answers':'w3_check_in_capture','Speech to text':'w4_voice_stt','Share with a clinician when I ask':'w6_clinician_handoff'};
+  WK.guard().then(function(s){ if(!s) return;
+    WK.resolveCase().then(function(caseId){ if(!caseId) return;
+      WK.rpc.myConsents(caseId).then(function(cons){
+        document.querySelectorAll('.toggle:not([disabled])').forEach(function(t){
+          var kind=MAP[t.getAttribute('aria-label')]; if(!kind) return;
+          var c=cons[kind]; var on = c && c.granted && !c.revoked;
+          t.setAttribute('aria-pressed', on?'true':'false');
+          if(t.id==='empToggle') document.getElementById('empOff').classList.toggle('show', !on);
+        });
+      }).catch(function(e){ console.error('[WK privacy]',e); });
+      // persist each toggle to the server (one-tap revocation)
+      document.querySelectorAll('.toggle:not([disabled])').forEach(function(t){
+        t.addEventListener('click', function(){
+          var kind=MAP[t.getAttribute('aria-label')]; if(!kind) return;
+          var granted=t.getAttribute('aria-pressed')==='true'; // state after the base handler toggled it
+          WK.rpc.setConsent(caseId, kind, granted, kind+'-2026').catch(function(e){ console.error('[WK setConsent]',e); });
+        });
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

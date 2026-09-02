@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuum: connect with a clinician</title>
+<style>
+/* SCR-WRK-06 Clinician handoff. Prompt 56 / Document 3.6.
+   Reach a clinician without starting again elsewhere, and know exactly what
+   travels. An itemised list of exactly what will be sent, item by item, each
+   individually removable, BEFORE anything is sent. Nothing travels without an
+   explicit consent action for THIS handoff: a standing consent is not enough.
+   No dashes, no banned vocabulary. */
+:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
+  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--ok-700:#0F7A55;--ok-050:#E6F5EE;--ok-800:#0B5C40;--stop-700:#A8201A;
+  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
+  --border-divider:var(--ink-200);--border-card:#AFBBC7;--focus-ring:var(--action-600);--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+*,*::before,*::after{box-sizing:border-box}
+html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
+body{margin:0;line-height:1.5}h1,h2{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3}p{margin:0}
+button,a{font:inherit;cursor:pointer;min-height:var(--target)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:6px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 16px 24px}
+.head{display:flex;align-items:center;gap:8px;padding:16px 0 6px}.back{color:var(--action-700);text-decoration:none;font-weight:500;font-size:.9rem}
+.title{padding:6px 4px}.title h1{font-size:1.4rem}.title p{font-size:.9rem;color:var(--text-tertiary);margin-top:4px}
+.dest{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:12px;padding:14px 16px;margin-top:12px;font-size:.95rem}
+.dest b{color:var(--text-primary)}
+.list{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:var(--r);margin-top:14px;overflow:hidden}
+.list .lh{padding:12px 16px;background:var(--ink-050);border-bottom:1px solid var(--border-divider);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-tertiary)}
+.item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border-divider)}
+.item:last-child{border-bottom:0}
+.item .t{flex:1}.item .t b{display:block;font-size:1rem;color:var(--text-primary)}.item .t span{font-size:.8rem;color:var(--text-tertiary)}
+.item.removed .t{opacity:.5;text-decoration:line-through}
+.item .rm{border:1px solid var(--border-card);background:var(--bg-surface);border-radius:10px;min-height:40px;padding:0 12px;font-size:.85rem;color:var(--text-secondary)}
+.item.removed .rm{border-color:var(--action-600);color:var(--action-700)}
+.consent{display:flex;align-items:flex-start;gap:12px;background:var(--ok-050);border:1px solid var(--ok-700);border-radius:12px;padding:14px 16px;margin-top:14px}
+.consent input{width:22px;height:22px;margin-top:2px;flex:none}
+.consent label{font-size:.9rem;color:var(--ok-800)}
+.actions{margin-top:16px}
+.connect{width:100%;min-height:56px;border:1px solid var(--action-600);background:var(--action-600);color:#fff;border-radius:var(--r);font-size:1.05rem;font-weight:600}
+.connect:disabled{opacity:.5}
+.cancel{display:block;text-align:center;margin-top:12px;color:var(--text-secondary);text-decoration:none;min-height:var(--target);line-height:var(--target)}
+.foot{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px 0}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="head"><a class="back" href="get-help.html">Back</a></div>
+  <div class="title"><h1>Connect with a clinician</h1><p>You decide exactly what goes. Nothing is sent until you say so, this time.</p></div>
+
+  <div class="dest">Connecting to <b>the Riverbend care team</b>, available Monday to Friday, 08:00 to 16:00 Mountain Time.</div>
+
+  <div class="list" id="list">
+    <div class="lh">Exactly what will be sent</div>
+    <div class="item"><div class="t"><b>Your injury</b><span>Lower back strain</span></div><button class="rm" type="button">Remove</button></div>
+    <div class="item"><div class="t"><b>Your current restrictions</b><span>What your doctor recorded</span></div><button class="rm" type="button">Remove</button></div>
+    <div class="item"><div class="t"><b>Your last 14 days of check ins</b><span>Your own reported record</span></div><button class="rm" type="button">Remove</button></div>
+    <div class="item"><div class="t"><b>Hours planned against hours worked</b><span>From your check ins</span></div><button class="rm" type="button">Remove</button></div>
+    <div class="item"><div class="t"><b>Your movement observations</b><span>The numbers you captured yourself</span></div><button class="rm" type="button">Remove</button></div>
+    <div class="item"><div class="t"><b>Your current plan</b><span>Duties, hours and next appointment</span></div><button class="rm" type="button">Remove</button></div>
+  </div>
+
+  <div class="consent">
+    <input type="checkbox" id="ok" aria-label="I agree to send the items above to the care team, this time">
+    <label for="ok">I agree to send the items above to the care team, this time.</label>
+  </div>
+
+  <div class="actions">
+    <button class="connect" id="connect" type="button" disabled>Connect and send</button>
+    <a class="cancel" href="get-help.html">Cancel</a>
+  </div>
+
+  <p class="foot">Illustrative interface. Fictional example data.</p>
+</div>
+<script>
+(function(){
+  document.querySelectorAll('.item .rm').forEach(function(b){
+    b.addEventListener('click',function(){
+      var it=b.closest('.item'); var off=it.classList.toggle('removed');
+      b.textContent=off?'Add back':'Remove';
+    });
+  });
+  var ok=document.getElementById('ok'), connect=document.getElementById('connect');
+  ok.addEventListener('change',function(){ connect.disabled=!ok.checked; });
+})();
+</script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="app/app.js"></script>
+<script>
+(function(){
+  if(!window.WK) return;
+  WK.guard().then(function(s){ if(!s) return;
+    var connect=document.getElementById('connect'); if(!connect) return;
+    connect.addEventListener('click',function(){
+      if(connect.disabled) return;
+      var items=[]; document.querySelectorAll('.item:not(.removed) .t b').forEach(function(x){ items.push(x.textContent); });
+      WK.resolveCase().then(function(caseId){ if(!caseId) return;
+        // per-handoff consent is recorded, then the send is logged; a standing consent alone is not enough
+        WK.rpc.setConsent(caseId,'w6_clinician_handoff', true, 'w6-2026')
+          .then(function(){ return WK.rpc.logEvent(caseId,'HANDOFF_SENT',{items:items}); })
+          .then(function(){ connect.textContent='Sent to the care team'; connect.disabled=true; })
+          .catch(function(e){ console.error('[WK handoff]',e); });
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

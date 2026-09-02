@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuum: progress</title>
+<style>
+/* SCR-WRK-03 Progress. Prompt 56 / Document 3.6.
+   The worker's OWN numbers, drawn clearly, with NO interpretation: no band,
+   grade, target, average, projection, comparison, streak, or colour that means
+   better or worse. Worker view only, no export, no employer
+   equivalent. Movement observations in their own area, labelled worker-captured.
+   No dashes, no banned vocabulary. */
+:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
+  --action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--gold:#8A6414;
+  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-tertiary:var(--ink-500);
+  --border-divider:var(--ink-200);--border-card:var(--ink-300,#AFBBC7);--focus-ring:var(--action-600);
+  --font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+*,*::before,*::after{box-sizing:border-box}
+html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
+body{margin:0;line-height:1.5}h1,h2{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3}p{margin:0}
+button,a{font:inherit;cursor:pointer;min-height:var(--target)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:6px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 16px calc(72px + env(safe-area-inset-bottom,0))}
+.head{padding:18px 4px 6px}.head h1{font-size:1.5rem}.head p{font-size:.9rem;color:var(--text-tertiary);margin-top:4px}
+.ranges{display:flex;gap:8px;margin:12px 0}
+.ranges button{flex:1;min-height:44px;border:1px solid var(--border-card);background:var(--bg-surface);border-radius:10px;font-size:.9rem;color:var(--text-primary)}
+.ranges button[aria-pressed="true"]{border-color:var(--action-600);background:var(--action-050);font-weight:600;color:var(--action-800,#0E4680)}
+.series{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.series h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-tertiary)}
+.series .vals{font-size:1.5rem;font-weight:600;color:var(--text-primary);margin-top:8px;letter-spacing:.01em}
+.series svg{display:block;width:100%;height:56px;margin-top:10px}
+.series .cap{font-size:.75rem;color:var(--text-tertiary);margin-top:8px}
+.mvarea{border-color:var(--gold)}
+.empty{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:var(--r);padding:24px 16px;text-align:center;color:var(--text-body);font-size:1rem}
+.foot{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px 0}
+.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--bg-surface);border-top:1px solid var(--border-divider);display:flex;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom,0)}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;font-size:.72rem;color:var(--text-tertiary);text-decoration:none}
+.tabbar a .ic{width:22px;height:22px;border-radius:6px;background:currentColor;opacity:.55}
+.tabbar a[aria-current="page"]{color:var(--action-700)}.tabbar a[aria-current="page"] .ic{opacity:1}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="head"><h1>Your record</h1><p>These are your own numbers, over time. What they mean is for you and your doctor.</p></div>
+  <div class="ranges" role="group" aria-label="Range">
+    <button type="button" aria-pressed="true">7 days</button>
+    <button type="button" aria-pressed="false">14 days</button>
+    <button type="button" aria-pressed="false">This claim</button>
+  </div>
+
+  <section class="series">
+    <h2>Pain, as you described it</h2>
+    <p class="vals">7 to 6 to 5 to 4</p>
+    <svg viewBox="0 0 300 56" preserveAspectRatio="none" role="img" aria-label="Pain: 7, 6, 5, 4"><polyline fill="none" stroke="var(--action-600)" stroke-width="3" points="10,10 100,22 200,34 290,46"/><circle cx="10" cy="10" r="4" fill="var(--action-600)"/><circle cx="100" cy="22" r="4" fill="var(--action-600)"/><circle cx="200" cy="34" r="4" fill="var(--action-600)"/><circle cx="290" cy="46" r="4" fill="var(--action-600)"/></svg>
+    <p class="cap">Your last four check ins.</p>
+  </section>
+
+  <section class="series">
+    <h2>Hours planned against hours worked</h2>
+    <p class="vals">4 to 4 to 6 to 6</p>
+    <p class="cap">Planned and worked matched on your last two days.</p>
+  </section>
+
+  <section class="series mvarea">
+    <h2>Movement you captured</h2>
+    <p class="vals">81&deg; to 94&deg; to 103&deg; to 112&deg;</p>
+    <svg viewBox="0 0 300 56" preserveAspectRatio="none" role="img" aria-label="Movement: 81, 94, 103, 112 degrees"><polyline fill="none" stroke="var(--gold)" stroke-width="3" points="10,48 100,32 200,20 290,10"/><circle cx="10" cy="48" r="4" fill="var(--gold)"/><circle cx="100" cy="32" r="4" fill="var(--gold)"/><circle cx="200" cy="20" r="4" fill="var(--gold)"/><circle cx="290" cy="10" r="4" fill="var(--gold)"/></svg>
+    <p class="cap">You captured these with the movement check. They are your own observations.</p>
+  </section>
+
+  <p class="foot">Illustrative interface. Fictional example data. This screen is yours only. It has no employer version and no export.</p>
+</div>
+<nav class="tabbar" aria-label="Main">
+  <a href="today.html"><span class="ic" aria-hidden="true"></span>Today</a>
+  <a href="check-in.html"><span class="ic" aria-hidden="true"></span>Check in</a>
+  <a href="progress.html" aria-current="page"><span class="ic" aria-hidden="true"></span>Progress</a>
+  <a href="get-help.html"><span class="ic" aria-hidden="true"></span>Get help</a>
+</nav>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="app/app.js"></script>
+<script>
+(function(){
+  if(!window.WK) return;
+  WK.guard().then(function(s){ if(!s) return;
+    WK.resolveCase().then(function(caseId){ if(!caseId) return;
+      WK.rpc.myProgress(caseId).then(function(p){
+        var ci=p.check_ins||[], mv=p.movements||[];
+        var series=document.querySelectorAll('.series');
+        // 1: pain
+        var pains=ci.map(function(x){return x.pain;}).filter(function(v){return v!=null;});
+        if(series[0]){ var v=series[0].querySelector('.vals'); if(v) v.textContent = pains.length ? pains.join(' to ') : 'No pain recorded yet'; }
+        // 2: hours planned against worked
+        var hrs=ci.map(function(x){return (x.hours_worked!=null?x.hours_worked:'-');});
+        if(series[1]){ var v2=series[1].querySelector('.vals'); if(v2) v2.textContent = ci.length ? hrs.join(' to ') : 'No hours recorded yet'; }
+        // 3: movement you captured
+        if(series[2]){ var v3=series[2].querySelector('.vals'); if(v3) v3.textContent = mv.length ? mv.map(function(m){return m.angle+'°';}).join(' to ') : 'No movement checks yet'; }
+        if(!ci.length && !mv.length){ var host=document.querySelector('.head'); }
+      }).catch(function(e){ console.error('[WK progress]',e); });
+    });
+  });
+})();
+</script>
+</body>
+</html>

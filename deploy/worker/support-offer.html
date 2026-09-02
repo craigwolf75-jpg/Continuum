@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuum: a note from your team</title>
+<style>
+/* SCR-WRK-10 Support offer. Prompt 56 / Document 3.6.
+   After a difficult event at work, offer support without asking the worker to
+   relive anything and without treating a normal reaction as a condition. Five
+   choices. The wording states plainly that they do not need to explain what
+   happened. No question about the event, no question about how they feel, no
+   repeat offer. Choosing no further check in is honoured immediately. The
+   worker's response is never visible to the employer. No dashes, no banned
+   vocabulary. */
+:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-050:#F5F7F9;--white:#fff;
+  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--ok-700:#0F7A55;--ok-050:#E6F5EE;--ok-800:#0B5C40;--stop-600:#C62828;--stop-700:#A8201A;
+  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
+  --border-card:#AFBBC7;--focus-ring:var(--action-600);--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+*,*::before,*::after{box-sizing:border-box}
+html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
+body{margin:0;line-height:1.5}h1{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3;font-size:1.5rem}p{margin:0}
+button,a{font:inherit;cursor:pointer;min-height:var(--target)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:6px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 20px 24px;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:12px;padding:20px 0 8px}
+.avatar{width:48px;height:48px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 38%, #DCC79A, #C8972F 70%);position:relative;overflow:hidden;border:2px solid var(--white)}
+.avatar::after{content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);width:30px;height:30px;border-radius:50%;background:var(--ink-900)}
+.top span{font-size:.75rem;color:var(--text-tertiary)}
+.msg{font-size:1.1rem;color:var(--text-body);margin-top:8px}
+.msg b{color:var(--text-primary)}
+.choices{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.choices button{width:100%;text-align:left;padding:16px;border:1px solid var(--border-card);background:var(--bg-surface);border-radius:12px;font-size:1.02rem;color:var(--text-primary);min-height:56px}
+.choices button:first-child{border-color:var(--action-600);background:var(--action-050);font-weight:600}
+.choices button[aria-pressed="true"]{border-color:var(--ok-700);background:var(--ok-050);font-weight:600}
+.support{display:block;text-align:center;margin-top:16px;color:var(--action-700);text-decoration:none;font-weight:500;min-height:var(--target);line-height:var(--target)}
+.confirm{display:none;background:var(--ok-050);border:1px solid var(--ok-700);border-radius:12px;padding:16px;margin-top:16px;color:var(--ok-800);font-size:1rem}
+.confirm.show{display:block}
+.spacer{flex:1}
+.foot{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px 0}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><span class="avatar" aria-hidden="true"></span><span>Continuum's AI Recovery Companion</span></div>
+  <h1>A note from your team</h1>
+  <p class="msg">Today was a hard day at work. <b>You do not need to explain what happened.</b> If it would help, someone is here. What would you like?</p>
+
+  <div class="choices" id="choices" role="group" aria-label="Your choice">
+    <button type="button" data-c="now">Talk to someone now</button>
+    <button type="button" data-c="today">Check in with me later today</button>
+    <button type="button" data-c="am">Check in tomorrow morning</button>
+    <button type="button" data-c="pm">Check in tomorrow evening</button>
+    <button type="button" data-c="none">No further check in</button>
+  </div>
+
+  <div class="confirm" id="confirm"></div>
+
+  <a class="support" href="get-help.html">See support resources</a>
+
+  <div class="spacer"></div>
+  <p class="foot">Illustrative interface. Fictional example data. Your choice here is never shown to your employer.</p>
+</div>
+<script>
+(function(){
+  var confirm=document.getElementById('confirm');
+  var msgs={now:'Connecting you to someone now.', today:'I will check in with you later today.', am:'I will check in tomorrow morning.', pm:'I will check in tomorrow evening.', none:'That is okay. There will be no further check in about this, and nothing changes for you.'};
+  document.querySelectorAll('#choices button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#choices button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      confirm.textContent=msgs[b.getAttribute('data-c')]; confirm.classList.add('show');
+    });
+  });
+})();
+</script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="app/app.js"></script>
+<script>
+(function(){
+  if(!window.WK) return;
+  WK.guard().then(function(s){ if(!s) return;
+    document.querySelectorAll('#choices button').forEach(function(b){
+      b.addEventListener('click',function(){
+        WK.resolveCase().then(function(caseId){ if(!caseId) return;
+          // the choice reaches the coordinator, never the employer (just the coded choice)
+          WK.rpc.logEvent(caseId,'SUPPORT_RESPONSE',{choice:b.getAttribute('data-c')}).catch(function(e){ console.error('[WK support]',e); });
+        });
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

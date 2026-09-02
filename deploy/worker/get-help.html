@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuum: get help</title>
+<style>
+/* SCR-WRK-05 Get help. Prompt 56 / Document 3.6.
+   Reach a human, on the worker's initiative, in one tap. Three routes, chosen by
+   the worker, never inferred. The support resource and emergency number are
+   always visible; the emergency number is first and largest and is a device dial.
+   Ask to be contacted names the recipient on the screen where they type. The note
+   never reaches the employer. No dashes, no banned vocabulary. */
+:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
+  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--ok-800:#0B5C40;--ok-700:#0F7A55;--ok-050:#E6F5EE;
+  --stop-700:#A8201A;--stop-600:#C62828;--stop-050:#FDECEA;
+  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600,#41556B);--text-tertiary:var(--ink-500);
+  --border-divider:var(--ink-200);--border-card:#AFBBC7;--focus-ring:var(--action-600);
+  --font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+*,*::before,*::after{box-sizing:border-box}
+html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
+body{margin:0;line-height:1.5}h1,h2{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3}p{margin:0}
+button,a{font:inherit;cursor:pointer;min-height:var(--target)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:6px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 16px calc(72px + env(safe-area-inset-bottom,0))}
+.head{padding:18px 4px 6px}.head h1{font-size:1.5rem}
+
+/* emergency, first and largest, device dial, offline safe */
+.emergency{display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:var(--stop-600);color:var(--white);
+  border-radius:var(--r);padding:18px 20px;margin-top:12px;text-decoration:none;min-height:76px;justify-content:center}
+.emergency .big{font-size:1.35rem;font-weight:700}.emergency .sub{font-size:.85rem;opacity:.92}
+
+.routes{margin-top:16px}
+.routes h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-tertiary);margin-bottom:8px}
+.route{width:100%;text-align:left;display:block;padding:16px;border:1px solid var(--border-card);background:var(--bg-surface);border-radius:12px;margin-bottom:10px;text-decoration:none;color:var(--text-primary)}
+.route b{display:block;font-size:1.05rem}.route span{display:block;font-size:.82rem;color:var(--text-tertiary);margin-top:4px}
+
+.contact{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:var(--r);padding:16px;margin-top:14px}
+.contact h2{font-size:1rem}.contact p{font-size:.82rem;color:var(--text-tertiary);margin-top:4px}
+.contact .recip{display:flex;gap:8px;margin-top:10px}
+.contact .recip button{flex:1;min-height:44px;border:1px solid var(--border-card);background:var(--bg-surface);border-radius:10px;font-size:.9rem;color:var(--text-primary)}
+.contact .recip button[aria-pressed="true"]{border-color:var(--action-600);background:var(--action-050);font-weight:600}
+.contact textarea{width:100%;min-height:80px;margin-top:10px;padding:12px;font:inherit;font-size:1rem;border:1px solid var(--border-card);border-radius:10px;resize:vertical}
+.contact .who{font-size:.82rem;color:var(--ok-800);background:var(--ok-050);border:1px solid var(--ok-700);border-radius:8px;padding:8px 12px;margin-top:10px}
+.contact .send{width:100%;margin-top:12px;min-height:52px;border:1px solid var(--action-600);background:var(--action-600);color:var(--white);border-radius:12px;font-weight:600}
+
+.support{display:block;background:var(--ok-050);border:1px solid var(--ok-700);border-radius:var(--r);padding:16px;margin-top:14px;text-decoration:none;color:var(--ok-800)}
+.support b{display:block;font-size:1rem}.support span{font-size:.82rem}
+.avail{font-size:.82rem;color:var(--text-secondary);margin-top:12px;padding:0 4px}
+.foot{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px 0}
+.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--bg-surface);border-top:1px solid var(--border-divider);display:flex;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom,0)}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;font-size:.72rem;color:var(--text-tertiary);text-decoration:none}
+.tabbar a .ic{width:22px;height:22px;border-radius:6px;background:currentColor;opacity:.55}
+.tabbar a[aria-current="page"]{color:var(--action-700)}.tabbar a[aria-current="page"] .ic{opacity:1}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="head"><h1>Get help</h1></div>
+
+  <a class="emergency" href="tel:911">
+    <span class="big">Call 911</span>
+    <span class="sub">If this is an emergency. This dials your phone and works with no connection.</span>
+  </a>
+
+  <div class="routes">
+    <h2>Reach a person</h2>
+    <a class="route" href="#coordinator"><b>I have a question about my plan</b><span>Goes to your coordinator.</span></a>
+    <a class="route" href="clinician-handoff.html"><b>I want a clinician to look at this</b><span>Raises a clinical review and offers a clinician connection where one is set up.</span></a>
+    <a class="route" href="#helpnow"><b>I need help now</b><span>Shows support resources for your province and the emergency number.</span></a>
+  </div>
+
+  <div class="contact">
+    <h2>Ask to be contacted</h2>
+    <p>Optional. You choose who it goes to. This is not a chat, and it never reaches your employer.</p>
+    <div class="recip" role="group" aria-label="Who this goes to">
+      <button type="button" aria-pressed="true" data-recip="coordinator">My coordinator</button>
+      <button type="button" aria-pressed="false" data-recip="care">My care team</button>
+    </div>
+    <textarea placeholder="A short note in your own words (optional)" aria-label="Short note"></textarea>
+    <p class="who" id="who">This goes to your coordinator only.</p>
+    <button class="send" type="button">Ask them to contact me</button>
+  </div>
+
+  <a class="support" href="#resources">
+    <b>Support resources for your province</b>
+    <span>Free, confidential, and always here. Available any time.</span>
+  </a>
+
+  <p class="avail">Your coordinator is available Monday to Friday, 08:00 to 16:00 Mountain Time. Outside those hours, use the support resources above or call 911.</p>
+
+  <p class="foot">Illustrative interface. Fictional example data.</p>
+</div>
+<nav class="tabbar" aria-label="Main">
+  <a href="today.html"><span class="ic" aria-hidden="true"></span>Today</a>
+  <a href="check-in.html"><span class="ic" aria-hidden="true"></span>Check in</a>
+  <a href="progress.html"><span class="ic" aria-hidden="true"></span>Progress</a>
+  <a href="get-help.html" aria-current="page"><span class="ic" aria-hidden="true"></span>Get help</a>
+</nav>
+<script>
+(function(){
+  var who=document.getElementById('who');
+  document.querySelectorAll('.recip button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.recip button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      who.textContent = b.getAttribute('data-recip')==='care' ? 'This goes to your care team only.' : 'This goes to your coordinator only.';
+    });
+  });
+})();
+</script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="app/app.js"></script>
+<script>
+(function(){
+  if(!window.WK) return;
+  WK.guard().then(function(s){ if(!s) return;
+    var send=document.querySelector('.contact .send');
+    if(send){ send.addEventListener('click',function(){
+      var recip=(document.querySelector('.recip button[aria-pressed="true"]')||{}).getAttribute?document.querySelector('.recip button[aria-pressed="true"]').getAttribute('data-recip'):'coordinator';
+      WK.resolveCase().then(function(caseId){ if(!caseId) return;
+        WK.rpc.logEvent(caseId,'CONTACT_REQUESTED',{recipient:recip}).catch(function(e){ console.error('[WK gethelp]',e); });
+        send.textContent='They will contact you'; send.disabled=true;
+      });
+    }); }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuum: welcome</title>
+<style>
+/* ============================================================================
+   SCR-WRK-11 First run. Prompt 56 / Document 3.6.
+   Four ideas, one per screen, in order: what this is and is not; the doctor
+   decides; exactly what the employer will and will not see; you can say no and
+   your care is the same. Then choose your Companion (skippable; skipping leaves
+   the neutral mark and everything works). Every step's decline control ("Not
+   now") is the SAME visual weight as Continue and is never made quieter.
+   Unanswered consent is stored as not_asked. No dashes, no banned vocabulary.
+   The four always-true sentences appear verbatim.
+   ========================================================================== */
+:root{
+  --ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;
+  --ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
+  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;
+  --ok-800:#0B5C40;--ok-700:#0F7A55;--ok-050:#E6F5EE;--stop-700:#A8201A;--stop-050:#FDECEA;--gold:#C8972F;
+  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);
+  --text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
+  --border-divider:var(--ink-200);--border-card:var(--ink-300);--focus-ring:var(--action-600);
+  --font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r-md:12px;--r-lg:16px;--target:52px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
+body{margin:0;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1{margin:0;color:var(--text-primary);line-height:1.25;font-weight:600;font-size:1.6rem}
+p{margin:0}button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:8px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:0 20px 24px}
+.dots{display:flex;gap:6px;justify-content:center;padding:18px 0 8px}
+.dots span{width:8px;height:8px;border-radius:50%;background:var(--ink-200)}
+.dots span[data-on="true"]{background:var(--action-600)}
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0}
+.mark{width:64px;height:64px;border-radius:18px;background:var(--ink-900);position:relative;margin-bottom:20px}
+.mark::after{content:"";position:absolute;left:16px;top:30px;width:32px;height:3px;background:#fff;border-radius:3px;box-shadow:0 9px 0 rgba(255,255,255,.5),0 -9px 0 rgba(255,255,255,.5)}
+.step p.body{font-size:1.05rem;color:var(--text-body);margin-top:14px}
+.step .true{font-size:1.05rem;color:var(--ok-800);background:var(--ok-050);border:1px solid var(--ok-700);border-radius:var(--r-md);padding:14px 16px;margin-top:16px;font-weight:600}
+.step .never{font-size:1rem;color:var(--stop-700);background:var(--stop-050);border:1px solid var(--stop-700);border-radius:var(--r-md);padding:14px 16px;margin-top:14px}
+.controls{padding-top:16px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;border-radius:var(--r-md);
+  font-size:1.05rem;font-weight:600;border:2px solid var(--action-600);background:var(--action-600);color:var(--white)}
+/* the decline control is the SAME size and weight, only the fill differs */
+.btn-decline{margin-top:12px;background:var(--white);color:var(--action-800);border-color:var(--action-600)}
+
+/* choose companion */
+.chars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.char{aspect-ratio:1;border-radius:16px;border:2px solid var(--border-card);background:var(--bg-surface);position:relative;overflow:hidden}
+.char span{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%, #DCC79A, var(--gold) 72%)}
+.char span::after{content:"";position:absolute;left:50%;bottom:-14%;transform:translateX(-50%);width:56%;height:56%;border-radius:50%;background:var(--ink-900)}
+.char[aria-pressed="true"]{border-color:var(--action-600);box-shadow:0 0 0 3px var(--action-050)}
+.field{margin-top:16px}
+.field label{display:block;font-size:.85rem;font-weight:600;color:var(--text-primary);margin-bottom:8px}
+.field input{width:100%;min-height:var(--target);padding:0 14px;font:inherit;font-size:1rem;border:1px solid var(--border-card);border-radius:10px}
+.modes{display:flex;gap:10px;margin-top:8px}
+.modes button{flex:1;min-height:var(--target);border:1px solid var(--border-card);background:var(--bg-surface);border-radius:10px;font-size:.95rem;color:var(--text-primary)}
+.modes button[aria-pressed="true"]{border-color:var(--action-600);background:var(--action-050);font-weight:600}
+.neutralnote{font-size:.8rem;color:var(--text-tertiary);margin-top:12px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="step" id="step"></div>
+  </div>
+  <div class="controls">
+    <button class="btn" id="primary">Continue</button>
+    <button class="btn btn-decline" id="decline">Not now</button>
+  </div>
+</div>
+
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="app/app.js"></script>
+<script>
+(function(){
+  "use strict";
+  var WK_CASE=null;
+  if(window.WK){ WK.guard().then(function(s){ if(s) WK.resolveCase().then(function(id){ WK_CASE=id; }); }); }
+  var STEPS=[
+    { title:'Welcome to Continuum',
+      body:'Continuum is a recovery companion that keeps you and your care team connected while you get back to work. It is not your medical record, and it is not your doctor. What you type here never changes your medical record.',
+      primary:'Continue', decline:'Not now' },
+    { title:'The doctor decides',
+      trueLine:'The doctor decides. Continuum shows the information.',
+      body:'Continuum never makes a medical decision and never changes what your doctor recorded. It shows you, in plain words, what your doctor decided.',
+      primary:'Continue', decline:'Not now' },
+    { title:'What your employer sees',
+      body:'Your employer sees the duties and hours your doctor approved, and short coded work updates. You can see the exact view any time.',
+      neverLine:'Your employer would NEVER be shown: your diagnosis, your symptoms, your medications, or anything the doctor found on examination.',
+      primary:'Turn on work updates for my employer', decline:'Not now' },
+    { title:'You are in control',
+      trueLine:'You can say no. Your care will be exactly the same either way.',
+      body:'You can say no to any part of this, and turn anything off later in one tap. Nothing about your care changes.',
+      primary:'I understand', decline:'Not now' },
+    { title:'Choose your Companion', companion:true,
+      body:'Pick who checks in with you. You can change this any time, and you can skip it for now.',
+      primary:'Use this Companion', decline:'Skip for now' }
+  ];
+  var i=0, consents={}, chosen={character:null,name:'',mode:'voice'};
+  var el=function(id){return document.getElementById(id);};
+
+  function dots(){ var d=el('dots'); d.innerHTML=''; STEPS.forEach(function(_,n){ var s=document.createElement('span'); s.setAttribute('data-on', n<=i?'true':'false'); d.appendChild(s); }); }
+
+  function render(){
+    dots();
+    var st=STEPS[i], host=el('step'); host.innerHTML='';
+    var mark=document.createElement('div'); mark.className='mark'; mark.setAttribute('aria-hidden','true'); host.appendChild(mark);
+    var h=document.createElement('h1'); h.textContent=st.title; host.appendChild(h);
+    if(st.trueLine){ var t=document.createElement('p'); t.className='true'; t.textContent=st.trueLine; host.appendChild(t); }
+    if(st.body){ var b=document.createElement('p'); b.className='body'; b.textContent=st.body; host.appendChild(b); }
+    if(st.neverLine){ var n=document.createElement('p'); n.className='never'; n.textContent=st.neverLine; host.appendChild(n); }
+    if(st.companion){ renderCompanion(host); }
+    el('primary').textContent=st.primary;
+    el('decline').textContent=st.decline;
+  }
+
+  function renderCompanion(host){
+    var grid=document.createElement('div'); grid.className='chars';
+    for(var c=0;c<6;c++){ var btn=document.createElement('button'); btn.type='button'; btn.className='char'; btn.setAttribute('aria-pressed','false');
+      btn.setAttribute('aria-label','Companion character '+(c+1)); var sp=document.createElement('span'); sp.setAttribute('aria-hidden','true'); btn.appendChild(sp);
+      (function(idx,b){ b.addEventListener('click',function(){ Array.prototype.forEach.call(grid.children,function(x){x.setAttribute('aria-pressed','false');}); b.setAttribute('aria-pressed','true'); chosen.character=idx; }); })(c,btn);
+      grid.appendChild(btn); }
+    host.appendChild(grid);
+    var nameF=document.createElement('div'); nameF.className='field';
+    nameF.innerHTML='<label for="cname">Give them a name (optional)</label><input id="cname" type="text" autocomplete="off">';
+    host.appendChild(nameF);
+    nameF.querySelector('input').addEventListener('input',function(e){ chosen.name=e.target.value; });
+    var modeF=document.createElement('div'); modeF.className='field';
+    modeF.innerHTML='<label>How would you like them to talk with you?</label><div class="modes"><button type="button" data-mode="voice" aria-pressed="true">Voice</button><button type="button" data-mode="voice_captions" aria-pressed="false">Voice and captions</button><button type="button" data-mode="text" aria-pressed="false">Text</button></div>';
+    host.appendChild(modeF);
+    modeF.querySelectorAll('button').forEach(function(mb){ mb.addEventListener('click',function(){ modeF.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed','false');}); mb.setAttribute('aria-pressed','true'); chosen.mode=mb.getAttribute('data-mode'); }); });
+    var note=document.createElement('p'); note.className='neutralnote'; note.textContent='Nothing is chosen for you. Until you pick, a neutral mark stands in. Your choice is never guessed from your name or anything else.'; host.appendChild(note);
+  }
+
+  function next(consentValue){
+    var st=STEPS[i];
+    if(st.title==='What your employer sees'){ consents.w2_employer_disclosure = (consentValue===true);
+      if(window.WK && WK_CASE){ WK.rpc.setConsent(WK_CASE,'w2_employer_disclosure', consentValue===true, 'w2-2026').catch(function(){}); } }
+    if(i>=STEPS.length-1){
+      if(window.WK && WK_CASE){
+        var ch = chosen.character!=null ? String(chosen.character) : null;
+        WK.rpc.setCompanion(ch, chosen.name||null, chosen.mode||null).catch(function(){})
+          .then(function(){ return WK.rpc.firstRunComplete().catch(function(){}); })
+          .then(function(){ location.href='today.html'; });
+        return;
+      }
+      location.href='today.html'; return;
+    }
+    i++; render();
+  }
+
+  el('primary').addEventListener('click',function(){ next(true); });
+  el('decline').addEventListener('click',function(){
+    // Not now = the consent for this step is stored not_asked (absence), care unchanged.
+    next(false);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuum: companion settings</title>
+<style>
+/* SCR-WRK-09 Companion settings. Prompt 56 / Document 3.6.
+   Shape the thing you talk to, without a configuration maze. One character from
+   the curated set of six, one voice from the two or three offered, one language,
+   one mode. No character creation, no sliders, no accessories. Nothing is
+   preselected; a neutral mark stands in until chosen, and the choice is never
+   inferred from name, sex or gender. None of these settings is visible to anyone
+   else. No dashes, no banned vocabulary. */
+:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
+  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--gold:#C8972F;
+  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
+  --border-divider:var(--ink-200);--border-card:#AFBBC7;--focus-ring:var(--action-600);--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+*,*::before,*::after{box-sizing:border-box}
+html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
+body{margin:0;line-height:1.5}h1,h2{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3}p{margin:0}
+button,a,select,input{font:inherit;cursor:pointer;min-height:var(--target)}
+button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:6px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 16px 24px}
+.head{display:flex;align-items:center;gap:8px;padding:16px 0 6px}.back{color:var(--action-700);text-decoration:none;font-weight:500;font-size:.9rem}
+.title{padding:6px 4px}.title h1{font-size:1.5rem}
+.group{background:var(--bg-surface);border:1px solid var(--border-card);border-radius:var(--r);padding:16px;margin-top:14px}
+.group h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-tertiary);margin-bottom:10px}
+.chars{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.char{aspect-ratio:1;border-radius:14px;border:2px solid var(--border-card);background:var(--bg-surface);position:relative;overflow:hidden}
+.char span{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%, #DCC79A, var(--gold) 72%)}
+.char span::after{content:"";position:absolute;left:50%;bottom:-14%;transform:translateX(-50%);width:56%;height:56%;border-radius:50%;background:var(--ink-900)}
+.char[aria-pressed="true"]{border-color:var(--action-600);box-shadow:0 0 0 3px var(--action-050)}
+.field{margin-top:12px}.field:first-child{margin-top:0}
+.field label{display:block;font-size:.85rem;font-weight:600;color:var(--text-primary);margin-bottom:6px}
+.field input[type=text],.field select{width:100%;padding:0 12px;border:1px solid var(--border-card);border-radius:10px;font-size:1rem;color:var(--text-primary);background:var(--bg-surface)}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;min-height:var(--target);border:1px solid var(--border-card);background:var(--bg-surface);border-radius:10px;font-size:.9rem;color:var(--text-primary)}
+.seg button[aria-pressed="true"]{border-color:var(--action-600);background:var(--action-050);font-weight:600}
+.switchrow{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+.switchrow .lbl{font-size:1rem;color:var(--text-primary)}
+.toggle{width:56px;height:32px;border-radius:16px;border:1px solid var(--border-card);background:var(--ink-200);position:relative;padding:0}
+.toggle[aria-pressed="true"]{background:var(--action-600);border-color:var(--action-600)}
+.toggle .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .12s}
+.toggle[aria-pressed="true"] .knob{left:27px}
+.note{font-size:.8rem;color:var(--text-tertiary);margin-top:10px}
+.foot{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px 0}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="head"><a class="back" href="today.html">Back</a></div>
+  <div class="title"><h1>Companion settings</h1></div>
+
+  <div class="group">
+    <h2>Character</h2>
+    <div class="chars" id="chars"></div>
+    <p class="note">Nothing is chosen for you. Until you pick, a neutral mark stands in.</p>
+  </div>
+
+  <div class="group">
+    <div class="field"><label for="cname">Companion name</label><input id="cname" type="text" placeholder="Optional" autocomplete="off"></div>
+    <div class="field"><label for="voice">Voice</label>
+      <select id="voice"><option>Voice one</option><option>Voice two</option><option>Voice three</option></select></div>
+    <div class="field"><label for="lang">Language</label>
+      <select id="lang"><option>English</option><option disabled>Canadian French (coming when its review is complete)</option></select></div>
+    <div class="field"><label>Mode</label>
+      <div class="seg" role="group" aria-label="Mode">
+        <button type="button" aria-pressed="true">Voice</button>
+        <button type="button" aria-pressed="false">Voice and captions</button>
+        <button type="button" aria-pressed="false">Text</button>
+      </div></div>
+  </div>
+
+  <div class="group">
+    <h2>Reminders and accessibility</h2>
+    <div class="field"><label for="remind">Daily reminder</label>
+      <select id="remind"><option>08:00</option><option>12:00</option><option>18:00</option><option>No reminders</option></select></div>
+    <div class="switchrow"><span class="lbl">Movement checks</span><button class="toggle" aria-pressed="false" aria-label="Movement checks"><span class="knob" aria-hidden="true"></span></button></div>
+    <div class="switchrow"><span class="lbl">Larger text</span><button class="toggle" aria-pressed="false" aria-label="Larger text"><span class="knob" aria-hidden="true"></span></button></div>
+    <div class="switchrow"><span class="lbl">Reduced motion</span><button class="toggle" aria-pressed="false" aria-label="Reduced motion"><span class="knob" aria-hidden="true"></span></button></div>
+    <div class="field" style="margin-top:12px"><label for="rung">Companion detail</label>
+      <select id="rung"><option>Automatic (matches your connection)</option><option>Keep it light always</option></select>
+      <p class="note">A lighter setting uses less data and battery. Your Companion is the same either way.</p>
+    </div>
+  </div>
+
+  <p class="foot">Illustrative interface. Fictional example data. These settings are yours only and are never shown to anyone else.</p>
+</div>
+<script>
+(function(){
+  var grid=document.getElementById('chars');
+  for(var c=0;c<6;c++){ var b=document.createElement('button'); b.type='button'; b.className='char'; b.setAttribute('aria-pressed','false'); b.setAttribute('aria-label','Character '+(c+1));
+    var s=document.createElement('span'); s.setAttribute('aria-hidden','true'); b.appendChild(s);
+    b.addEventListener('click',function(ev){ var btn=ev.currentTarget; Array.prototype.forEach.call(grid.children,function(x){x.setAttribute('aria-pressed','false');}); btn.setAttribute('aria-pressed','true'); });
+    grid.appendChild(b); }
+  document.querySelectorAll('.seg button').forEach(function(b){ b.addEventListener('click',function(){ var p=b.parentNode; p.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed','false');}); b.setAttribute('aria-pressed','true'); }); });
+  document.querySelectorAll('.toggle').forEach(function(t){ t.addEventListener('click',function(){ t.setAttribute('aria-pressed', t.getAttribute('aria-pressed')==='true'?'false':'true'); }); });
+})();
+</script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="app/app.js"></script>
+<script>
+(function(){
+  if(!window.WK) return;
+  function current(){
+    var chars=document.querySelectorAll('#chars .char'), idx=null;
+    chars.forEach(function(c,n){ if(c.getAttribute('aria-pressed')==='true') idx=n; });
+    var mode='voice'; document.querySelectorAll('.seg button').forEach(function(b){ if(b.getAttribute('aria-pressed')==='true'){ mode=b.textContent.trim().toLowerCase()==='text'?'text':(b.textContent.indexOf('captions')>-1?'voice_captions':'voice'); } });
+    return { character: idx!=null?String(idx):null, name: (document.getElementById('cname')||{}).value||null, mode: mode };
+  }
+  function save(){ var c=current(); WK.rpc.setCompanion(c.character, c.name, c.mode).catch(function(e){ console.error('[WK companion]',e); }); }
+  WK.guard().then(function(s){ if(!s) return;
+    WK.whoami().then(function(me){ if(me&&me.companion_character!=null){ var b=document.querySelectorAll('#chars .char')[parseInt(me.companion_character,10)]; if(b){ document.querySelectorAll('#chars .char').forEach(function(x){x.setAttribute('aria-pressed','false');}); b.setAttribute('aria-pressed','true'); } } }).catch(function(){});
+    document.querySelectorAll('#chars .char').forEach(function(b){ b.addEventListener('click',save); });
+    document.querySelectorAll('.seg button').forEach(function(b){ b.addEventListener('click',save); });
+    var nm=document.getElementById('cname'); if(nm){ nm.addEventListener('change',save); }
+  });
+})();
+</script>
+</body>
+</html>
