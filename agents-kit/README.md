@@ -79,7 +79,7 @@ not remove the human gates, which still stop the run and surface to Gary.
 - .claude/agents/apollo.md: design and motion.
 - .claude/agents/calliope.md: voice, senior content strategist.
 - .claude/agents/heracles.md: quality control, senior quality architect.
-- .claude/agents/hermes.md: release.
+- .claude/agents/hermes.md: senior release engineer, deploys and verifies, keeps the deploy record.
 - .claude/agents/argus.md: the watcher.
 
 ## The roster
