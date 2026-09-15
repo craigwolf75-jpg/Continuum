@@ -7,11 +7,12 @@ QUEUED, IN PROGRESS, BLOCKED (waiting on a human gate), DONE.
 Each mission names its lead by nature of work, the gates it must clear, and any
 human gate that stops for Gary.
 
-Numbering note: the roster IDs (12 Zeus, 12a Athena, 12b Apollo, 12c Heracles,
-12d Hermes, 12e Argus, 12f Calliope) name the agents. Mission series references
-carry an S prefix (S12a, S12d, S12f, S13c) so no bare 12x tag ever collides with
-an agent ID. Each mission's own queue ID is DESIGN-1 or M1 to M5 (active) or B1
-onward (backlog); an S tag records only which site-build series item the mission
+Numbering note: the roster IDs (12 Zeus, 12a Athena, 12b Apollo, 24c Heracles,
+12d Hermes, 12e Argus, 12f Calliope) name the agents. Heracles is 24c: 12c was
+claimed by the worker-app arc. Mission series references carry an S prefix
+(S12a, S12d, S12f, S13c) so no bare 12x tag ever collides with an agent ID.
+Each mission's own queue ID is DESIGN-1 or M1 to M5 (active) or B1 onward
+(backlog); an S tag records only which site-build series item the mission
 folds in.
 
 ## Active queue
