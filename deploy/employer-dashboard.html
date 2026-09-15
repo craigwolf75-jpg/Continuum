@@ -328,7 +328,7 @@ function renderOverview(){
  /* locations + table */
  h+='<div style="display:grid;grid-template-columns:1fr 300px;gap:12px;margin-top:12px" class="lower">';
  h+='<div class="card">'+workerTable(actives().slice(0,8),true)+'</div>';
- h+='<div class="card bars"><div class="cardhead">Top injury locations</div>'+
+ h+='<div class="card bars"><div class="cardhead">Top case sites</div>'+
   Object.keys(locs).sort(function(a,b){return locs[b]-locs[a];}).map(function(k){var v=locs[k],pct=Math.round(v/Math.max(1,tot)*100);
    return '<div class="brow"><div class="bl"><b>'+k+'</b><span>'+v+' ('+pct+'%)</span></div><div class="bt"><i style="width:'+pct+'%;background:'+(k==="Site B"?"var(--ink-700)":k==="Field Crew"?"var(--ok-700)":"var(--action-600)")+'"></i></div></div>';}).join("")+
   '<div style="margin-top:10px"><a href="#" onclick="go(\'reports\');return false" style="font-size:12px">View full report &#8594;</a></div></div>';
@@ -355,7 +355,7 @@ function renderWorkers(){
  var h=pagehead("Duty status","Active workers","Every active case, functional status only",
   '<button class="btn" onclick="window.print()">Export PDF</button>');
  var c=counts();
- h+='<div class="filterbar"><input type="search" placeholder="Search worker, role, injury, location" value="'+esc(S.search)+'" oninput="S.search=this.value;save()" style="min-width:240px">'+
+ h+='<div class="filterbar"><input type="search" placeholder="Search worker, role, duty limit, area" value="'+esc(S.search)+'" oninput="S.search=this.value;save()" style="min-width:240px">'+
   '<span class="fchip'+(S.filter===null&&!S.catFilter?" on":"")+'" onclick="S.filter=null;S.catFilter=null;save()">All ('+actives().length+')</span>'+
   Object.keys(c).map(function(k){return '<span class="fchip'+(S.filter===k?" on":"")+'" onclick="S.filter=\''+k+'\';S.catFilter=null;save()">'+STATUS_META[k][0]+' ('+c[k]+')</span>';}).join("")+
   (S.catFilter?'<span class="fchip on" onclick="S.catFilter=null;save()">'+CAT_META[S.catFilter][0]+' ('+(catCounts()[S.catFilter]||0)+') &times;</span>':"")+'</div>';
