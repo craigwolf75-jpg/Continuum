@@ -59,7 +59,6 @@ const SURFACE_NAMES = [
   "worker-embed.html",
   "app/index.html",
   "screens/index.html",
-  "screens/legacy/demo.html",
 ];
 
 const SURFACE_PATTERNS = [

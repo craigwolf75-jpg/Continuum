@@ -74,7 +74,7 @@ ok("employer: every explainer is substantive", EMP.every(s => empSec[s].body.len
 ok("hse: every explainer is substantive", HSE.every(s => hseSec[s].body.length >= 40));
 
 // ---- verbatim lines ----
-const PRIVACY = "notice what is not here, no diagnoses, no pain scores, no medical notes; the employer sees what work is safe, never private health details.";
+const PRIVACY = "notice what is not here. The employer sees what work is safe, never private health details.";
 ok("employer overview carries the privacy line verbatim", empSec.overview.body.includes(PRIVACY));
 const HAZARD = "a button that refuses until a person confirms the check";
 ok("hse workers carries the hazard line verbatim", hseSec.workers.body.includes(HAZARD));

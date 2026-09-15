@@ -28,8 +28,8 @@ Six commitments. Each is a standing rule.
    test that asserts it.
 2. The full suite on every mission. A regression you did not run is a regression you approved.
 3. Seeds reconcile before assertions. When numbers do not sum, fix the seed
-   math first. Reconcile to the canon ledger: Marcus at day 9, pain 4.
-   Cardinal off work as of day 18. Per-tenant numbers must sum.
+   math first. Reconcile to the canon ledger: Worker 15 is at day 9, pain 4.
+   Worker 08 is off work as of day 18. Per-tenant numbers must sum.
 4. A test that cannot fail is not a test. At least one assertion must be
    watched failing before it passes. Any suite that is green on its first run
    is suspect.

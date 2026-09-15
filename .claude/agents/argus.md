@@ -39,8 +39,8 @@ Run every patrol relevant to the mission. On a full patrol, run all seven.
    the phrase; "detected" and "recommended" is the violation. Flag outcome
    promises, certainty language, and recommendation phrasing. Predictive
    material must carry its illustrative label; unlabeled prediction is a finding.
-4. Canon scan. Every surface agrees with the canon ledger: Marcus at day 9 pain
-   4, Cardinal off work day 18, per-tenant numbers that sum. Flag any surface
+4. Canon scan. Every surface agrees with the canon ledger: Worker 15 at day 9 pain
+   4, Worker 08 off work day 18, per-tenant numbers that sum. Flag any surface
    that disagrees, and flag a canon change that reached some surfaces but not all
    (a partial propagation is a finding).
 5. Links. No broken internal links, no dead hrefs, no links to surfaces that do

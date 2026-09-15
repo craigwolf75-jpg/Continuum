@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Continuum: Injury Management Dashboard</title>
+<title>Continuum: Duty Status Dashboard</title>
 <link rel="stylesheet" href="/continuum-vars.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -133,42 +133,42 @@ section.view{display:none}section.view.on{display:block}
 <script>
 "use strict";
 var WORKERS=[
-{name:"Worker 03",role:"Equipment operator",injury:"Lower back strain",cat:"back",days:21,status:"light_duty",restr:"No lifting over 20 lbs, no repetitive bending",review:"Jun 30, 2026",rtw:75,visits:3,loc:"Warehouse A"},
-{name:"Worker 27",role:"Warehouse worker",injury:"Right shoulder sprain",cat:"shoulder",days:17,status:"light_duty",restr:"No overhead lifting, no pushing over 30 lbs",review:"Jun 28, 2026",rtw:50,visits:2,loc:"Warehouse A"},
-{name:"Worker 17",role:"Material handler",injury:"Left knee strain",cat:"knee",days:13,status:"treating",restr:"No squatting, no climbing ladders",review:"Jun 26, 2026",rtw:25,visits:2,loc:"Site B"},
-{name:"Worker 04",role:"Driver",injury:"Neck strain",cat:"back",days:25,status:"modified",restr:"Limited range of motion, no long-distance driving",review:"Jul 3, 2026",rtw:80,visits:3,loc:"Field Crew"},
-{name:"Worker 14",role:"Packer",injury:"Wrist tendonitis",cat:"hand",days:9,status:"light_duty",restr:"No repetitive gripping, use ergonomic tools",review:"Jun 27, 2026",rtw:30,visits:2,loc:"Warehouse A"},
-{name:"Worker 12",role:"Scaffolder",injury:"Right ankle sprain",cat:"strain",days:11,status:"light_duty",restr:"Ground-level work only, no ladders or scaffolds",review:"Jun 29, 2026",rtw:40,visits:2,loc:"Site B"},
-{name:"Worker 20",role:"Welder",injury:"Elbow tendonitis",cat:"other",days:19,status:"treating",restr:"No repetitive tool use beyond 10 minutes",review:"Jul 1, 2026",rtw:35,visits:3,loc:"Field Crew"},
-{name:"Worker 33",role:"Millwright",injury:"Shoulder strain",cat:"shoulder",days:27,status:"modified",restr:"No work above shoulder height",review:"Jul 4, 2026",rtw:85,visits:3,loc:"Warehouse C"},
-{name:"Worker 32",role:"Labourer",injury:"Wrist strain",cat:"strain",days:2,status:"awaiting",restr:"Awaiting assessment",review:"Jun 24, 2026",rtw:5,visits:1,loc:"Warehouse A"},
-{name:"Worker 35",role:"Forklift operator",injury:"Ankle sprain",cat:"strain",days:3,status:"light_duty",restr:"Seated tasks preferred",review:"Jun 25, 2026",rtw:15,visits:1,loc:"Site B"},
-{name:"Worker 05",role:"Assembler",injury:"Finger strain",cat:"strain",days:4,status:"light_duty",restr:"No fine repetitive gripping",review:"Jun 25, 2026",rtw:15,visits:1,loc:"Warehouse A"},
-{name:"Worker 19",role:"Shipper",injury:"Hip strain",cat:"strain",days:5,status:"treating",restr:"No prolonged standing",review:"Jun 26, 2026",rtw:10,visits:2,loc:"Other"},
-{name:"Worker 30",role:"Rigger",injury:"Calf strain",cat:"strain",days:5,status:"light_duty",restr:"Ground-level work only",review:"Jun 26, 2026",rtw:20,visits:1,loc:"Field Crew"},
-{name:"Worker 25",role:"Picker",injury:"Shoulder strain",cat:"strain",days:6,status:"treating",restr:"No overhead reach",review:"Jun 27, 2026",rtw:20,visits:1,loc:"Warehouse A"},
-{name:"Worker 36",role:"Yard hand",injury:"Groin strain",cat:"strain",days:7,status:"light_duty",restr:"No heavy pushing or pulling",review:"Jun 27, 2026",rtw:25,visits:1,loc:"Other"},
-{name:"Worker 42",role:"Inspector",injury:"Low back strain",cat:"back",days:10,status:"treating",restr:"No lifting over 15 lbs",review:"Jun 28, 2026",rtw:35,visits:2,loc:"Warehouse C"},
-{name:"Worker 01",role:"Loader",injury:"Knee strain",cat:"knee",days:12,status:"treating",restr:"No kneeling or squatting",review:"Jun 29, 2026",rtw:30,visits:2,loc:"Site B"},
-{name:"Worker 49",role:"Sorter",injury:"Thumb strain",cat:"hand",days:14,status:"light_duty",restr:"Use adaptive tooling",review:"Jun 30, 2026",rtw:45,visits:2,loc:"Warehouse A"},
-{name:"Worker 09",role:"Maintenance",injury:"Back strain",cat:"back",days:18,status:"light_duty",restr:"No lifting over 20 lbs",review:"Jul 1, 2026",rtw:55,visits:2,loc:"Warehouse C"},
-{name:"Worker 34",role:"Machine operator",injury:"Shoulder strain",cat:"shoulder",days:22,status:"light_duty",restr:"No work above chest height",review:"Jul 2, 2026",rtw:60,visits:3,loc:"Warehouse C"},
-{name:"Worker 39",role:"Electrician helper",injury:"Hamstring strain",cat:"strain",days:26,status:"light_duty",restr:"Limited climbing",review:"Jul 3, 2026",rtw:65,visits:3,loc:"Field Crew"},
-{name:"Worker 26",role:"Cleaner",injury:"Elbow strain",cat:"strain",days:29,status:"light_duty",restr:"No repetitive wiping motions",review:"Jul 4, 2026",rtw:70,visits:3,loc:"Other"},
-{name:"Worker 22",role:"Carpenter",injury:"Back strain",cat:"back",days:35,status:"light_duty",restr:"No lifting over 10 lbs",review:"Jul 5, 2026",rtw:70,visits:3,loc:"Site B"},
-{name:"Worker 21",role:"Press operator",injury:"Shoulder strain",cat:"shoulder",days:45,status:"light_duty",restr:"One-handed tasks only",review:"Jul 6, 2026",rtw:75,visits:3,loc:"Warehouse A"},
-{name:"Worker 10",role:"Boilermaker",injury:"Knee strain",cat:"knee",days:52,status:"modified",restr:"Seated work station",review:"Jul 7, 2026",rtw:80,visits:4,loc:"Field Crew"},
-{name:"Worker 69",role:"Technician",injury:"Strain, multiple",cat:"strain",days:58,status:"light_duty",restr:"Half days, light bench work",review:"Jul 8, 2026",rtw:80,visits:3,loc:"Warehouse A"},
-{name:"Worker 06",role:"Warehouse lead",injury:"Back strain",cat:"back",days:75,status:"light_duty",restr:"Supervisory duties only",review:"Jul 10, 2026",rtw:85,visits:3,loc:"Site B"},
-{name:"Worker 31",role:"Order builder",injury:"Other, gradual onset",cat:"other",days:102,status:"light_duty",restr:"Administrative duties",review:"Jul 12, 2026",rtw:90,visits:3,loc:"Other"}
+{name:"Worker 03",role:"Equipment operator",injury:"Lower back",cat:"back",days:21,status:"light_duty",restr:"No lifting over 20 lbs, no repetitive bending",review:"Jun 30, 2026",rtw:75,visits:3,loc:"Warehouse A"},
+{name:"Worker 27",role:"Warehouse worker",injury:"Right shoulder",cat:"shoulder",days:17,status:"light_duty",restr:"No overhead lifting, no pushing over 30 lbs",review:"Jun 28, 2026",rtw:50,visits:2,loc:"Warehouse A"},
+{name:"Worker 17",role:"Material handler",injury:"Left knee",cat:"knee",days:13,status:"treating",restr:"No squatting, no climbing ladders",review:"Jun 26, 2026",rtw:25,visits:2,loc:"Site B"},
+{name:"Worker 04",role:"Driver",injury:"Neck",cat:"back",days:25,status:"modified",restr:"Limited range of motion, no long-distance driving",review:"Jul 3, 2026",rtw:80,visits:3,loc:"Field Crew"},
+{name:"Worker 14",role:"Packer",injury:"Wrist",cat:"hand",days:9,status:"light_duty",restr:"No repetitive gripping, use ergonomic tools",review:"Jun 27, 2026",rtw:30,visits:2,loc:"Warehouse A"},
+{name:"Worker 12",role:"Scaffolder",injury:"Right ankle",cat:"strain",days:11,status:"light_duty",restr:"Ground-level work only, no ladders or scaffolds",review:"Jun 29, 2026",rtw:40,visits:2,loc:"Site B"},
+{name:"Worker 20",role:"Welder",injury:"Elbow",cat:"other",days:19,status:"treating",restr:"No repetitive tool use beyond 10 minutes",review:"Jul 1, 2026",rtw:35,visits:3,loc:"Field Crew"},
+{name:"Worker 33",role:"Millwright",injury:"Shoulder",cat:"shoulder",days:27,status:"modified",restr:"No work above shoulder height",review:"Jul 4, 2026",rtw:85,visits:3,loc:"Warehouse C"},
+{name:"Worker 32",role:"Labourer",injury:"Wrist",cat:"strain",days:2,status:"awaiting",restr:"Awaiting assessment",review:"Jun 24, 2026",rtw:5,visits:1,loc:"Warehouse A"},
+{name:"Worker 35",role:"Forklift operator",injury:"Ankle",cat:"strain",days:3,status:"light_duty",restr:"Seated tasks preferred",review:"Jun 25, 2026",rtw:15,visits:1,loc:"Site B"},
+{name:"Worker 05",role:"Assembler",injury:"Finger",cat:"strain",days:4,status:"light_duty",restr:"No fine repetitive gripping",review:"Jun 25, 2026",rtw:15,visits:1,loc:"Warehouse A"},
+{name:"Worker 19",role:"Shipper",injury:"Hip",cat:"strain",days:5,status:"treating",restr:"No prolonged standing",review:"Jun 26, 2026",rtw:10,visits:2,loc:"Other"},
+{name:"Worker 30",role:"Rigger",injury:"Calf",cat:"strain",days:5,status:"light_duty",restr:"Ground-level work only",review:"Jun 26, 2026",rtw:20,visits:1,loc:"Field Crew"},
+{name:"Worker 25",role:"Picker",injury:"Shoulder",cat:"strain",days:6,status:"treating",restr:"No overhead reach",review:"Jun 27, 2026",rtw:20,visits:1,loc:"Warehouse A"},
+{name:"Worker 36",role:"Yard hand",injury:"Hip / groin",cat:"strain",days:7,status:"light_duty",restr:"No heavy pushing or pulling",review:"Jun 27, 2026",rtw:25,visits:1,loc:"Other"},
+{name:"Worker 42",role:"Inspector",injury:"Lower back",cat:"back",days:10,status:"treating",restr:"No lifting over 15 lbs",review:"Jun 28, 2026",rtw:35,visits:2,loc:"Warehouse C"},
+{name:"Worker 01",role:"Loader",injury:"Knee",cat:"knee",days:12,status:"treating",restr:"No kneeling or squatting",review:"Jun 29, 2026",rtw:30,visits:2,loc:"Site B"},
+{name:"Worker 49",role:"Sorter",injury:"Thumb",cat:"hand",days:14,status:"light_duty",restr:"Use adaptive tooling",review:"Jun 30, 2026",rtw:45,visits:2,loc:"Warehouse A"},
+{name:"Worker 09",role:"Maintenance",injury:"Back",cat:"back",days:18,status:"light_duty",restr:"No lifting over 20 lbs",review:"Jul 1, 2026",rtw:55,visits:2,loc:"Warehouse C"},
+{name:"Worker 34",role:"Machine operator",injury:"Shoulder",cat:"shoulder",days:22,status:"light_duty",restr:"No work above chest height",review:"Jul 2, 2026",rtw:60,visits:3,loc:"Warehouse C"},
+{name:"Worker 39",role:"Electrician helper",injury:"Leg",cat:"strain",days:26,status:"light_duty",restr:"Limited climbing",review:"Jul 3, 2026",rtw:65,visits:3,loc:"Field Crew"},
+{name:"Worker 26",role:"Cleaner",injury:"Elbow",cat:"strain",days:29,status:"light_duty",restr:"No repetitive wiping motions",review:"Jul 4, 2026",rtw:70,visits:3,loc:"Other"},
+{name:"Worker 22",role:"Carpenter",injury:"Back",cat:"back",days:35,status:"light_duty",restr:"No lifting over 10 lbs",review:"Jul 5, 2026",rtw:70,visits:3,loc:"Site B"},
+{name:"Worker 21",role:"Press operator",injury:"Shoulder",cat:"shoulder",days:45,status:"light_duty",restr:"One-handed tasks only",review:"Jul 6, 2026",rtw:75,visits:3,loc:"Warehouse A"},
+{name:"Worker 10",role:"Boilermaker",injury:"Knee",cat:"knee",days:52,status:"modified",restr:"Seated work station",review:"Jul 7, 2026",rtw:80,visits:4,loc:"Field Crew"},
+{name:"Worker 69",role:"Technician",injury:"Multiple areas",cat:"strain",days:58,status:"light_duty",restr:"Half days, light bench work",review:"Jul 8, 2026",rtw:80,visits:3,loc:"Warehouse A"},
+{name:"Worker 06",role:"Warehouse lead",injury:"Back",cat:"back",days:75,status:"light_duty",restr:"Supervisory duties only",review:"Jul 10, 2026",rtw:85,visits:3,loc:"Site B"},
+{name:"Worker 31",role:"Order builder",injury:"Other",cat:"other",days:102,status:"light_duty",restr:"Administrative duties",review:"Jul 12, 2026",rtw:90,visits:3,loc:"Other"}
 ];
 
 var LSKEY="continuum_employer_v1";
-var STATUS_META={light_duty:["Light duty","var(--ld)"],treating:["Treating","var(--tr)"],modified:["Modified work","var(--mw)"],awaiting:["Awaiting review","var(--aw)"],returned:["Returned","var(--good)"]};
-var CAT_META={strain:["Strain / sprain","var(--action-600)"],back:["Back / spine","var(--ink-700)"],shoulder:["Shoulder","var(--action-600)"],knee:["Knee / leg","var(--ok-700)"],hand:["Hand / wrist","var(--warn-500)"],other:["Other","var(--ink-300)"]};
+var STATUS_META={light_duty:["Light duty","var(--ld)"],treating:["Off full duty","var(--tr)"],modified:["Modified work","var(--mw)"],awaiting:["Awaiting review","var(--aw)"],returned:["Returned","var(--good)"]};
+var CAT_META={strain:["Soft tissue limit","var(--action-600)"],back:["Back","var(--ink-700)"],shoulder:["Shoulder","var(--action-600)"],knee:["Knee or leg","var(--ok-700)"],hand:["Hand / wrist","var(--warn-500)"],other:["Other","var(--ink-300)"]};
 var NAV=[["overview","Overview",null],
-["_g","INJURY MANAGEMENT",null],
-["workers","Injured Workers","g"],["claims","Claims & Documentation","g"],["rtw","Return to Work","g"],["visits","Doctor Visits","g"],["notes","Case Notes","g"],
+["_g","DUTY STATUS",null],
+["workers","Active workers","g"],["claims","Claims & Documentation","g"],["rtw","Return to Work","g"],["visits","Appointments","g"],["notes","Case Notes","g"],
 ["_g2","ANALYTICS",null],
 ["dashboards","Dashboards","g"],["reports","Reports","g"],["trends","Trends","g"],["benchmarking","Benchmarking","g"],
 ["_g3","ADMIN",null],
@@ -200,7 +200,7 @@ function readBridge(){
  var rtw=liveRtw(b);
  if(b.status==="escalated" && prevRtw!==null){ rtw=prevRtw; }
  else if(b.status!=="escalated"){ prevRtw=rtw; }
- var nl={name:b.name||"Worker 15", role:b.trade||"Scaffolder", injury:b.injury||"Shoulder strain",
+ var nl={name:b.name||"Worker 15", role:b.trade||"Scaffolder", injury:b.injury||"Shoulder",
    cat:"shoulder", days:b.day||0, status:mapped, restr:b.restr||"", review:"Live",
    rtw:rtw, visits:0, loc:"Field Crew", live:true,
    clinicianReviewing:(b.status==="escalated"||!!b.escalated)};
@@ -284,13 +284,13 @@ function renderOverview(){
  kpiCard("New injuries, 7 days",newThisWeek(),DEM?'<span class="down">&#8595; 17% vs last 7 days</span>':"pilot period",spark(DEM?[7,6,7,6,5,5]:FLAT(newThisWeek()),64,34,"var(--ok-700)"))+
  kpiCard("Currently on light duty",c.light_duty,Math.round(c.light_duty/Math.max(1,tot)*100)+"% of active cases",donut([{v:c.light_duty,c:"var(--action-600)"},{v:tot-c.light_duty,c:"var(--ink-100)"}],tot,54,8,[Math.round(c.light_duty/Math.max(1,tot)*100)+"%",""]))+
  kpiCard("Avg days injured",avgDays(),DEM?'<span class="down">&#8595; 5% vs last 7 days</span>':"pilot period",spark(DEM?[27,26,25,25,24,24]:FLAT(avgDays()),64,34,"var(--ok-700)"))+
- kpiCard("Total doctor visits",totalVisits(),"this period",spark(DEM?[6,9,7,12,10,14]:FLAT(totalVisits()),64,34,"var(--ink-700)"))+
+ kpiCard("Total appointments",totalVisits(),"this period",spark(DEM?[6,9,7,12,10,14]:FLAT(totalVisits()),64,34,"var(--ink-700)"))+
  kpiCard("Return to work rate",rtwRate()+"%",DEM?'<span class="up">&#8593; 6% vs last 7 days</span>':"pilot period",spark(DEM?[70,71,72,73,75,rtwRate()]:FLAT(rtwRate()),64,34,"var(--ok-700)",true))+
  '</div>';
  /* row 2 */
  var segs=Object.keys(c).map(function(k){return {v:c[k],c:STATUS_META[k][1].indexOf("var")===0?{light_duty:"var(--action-600)",treating:"var(--ink-700)",modified:"var(--ok-700)",awaiting:"var(--ink-300)"}[k]:STATUS_META[k][1]};});
  h+='<div class="grid row2" style="margin-top:12px">';
- h+='<div class="card"><div class="cardhead">Injured workers by status</div><div style="display:flex;gap:16px;align-items:center">'+
+ h+='<div class="card"><div class="cardhead">Active workers by status</div><div style="display:flex;gap:16px;align-items:center">'+
   donut(segs,tot,128,16,[tot,"Total"])+
   '<ul class="legend" style="flex:1">'+Object.keys(c).map(function(k){var col={light_duty:"var(--action-600)",treating:"var(--ink-700)",modified:"var(--ok-700)",awaiting:"var(--ink-300)"}[k];
    return '<li onclick="S.filter=\''+k+'\';S.section=\'workers\';save()"><span class="sw" style="background:'+col+'"></span>'+STATUS_META[k][0]+'<b>'+c[k]+'</b><span class="pct">('+Math.round(c[k]/Math.max(1,tot)*100)+'%)</span></li>';}).join("")+'</ul></div>'+
@@ -336,15 +336,15 @@ function renderOverview(){
  return h;}
 function workerTable(list,preview){
  var h='<div class="cardhead">Active injured workers &middot; '+actives().length+'</div>';
- h+='<table><thead><tr><th>Worker</th><th>Injury</th><th>Days</th><th>Status</th><th>Light duty / restrictions</th><th>Next review</th><th>Return to work</th></tr></thead><tbody>';
+ h+='<table><thead><tr><th>Worker</th><th>Duty limit area</th><th>Days</th><th>Status</th><th>Light duty / restrictions</th><th>Next review</th><th>Return to work</th></tr></thead><tbody>';
  list.forEach(function(w){var idx=S.workers.indexOf(w);var lv=w.live;
   h+='<tr class="rowlink"'+(lv?' style="background:rgba(200,151,47,.07)"':'')+' onclick="'+(lv?'openLiveDrawer()':'openDrawer('+idx+')')+'"><td><b>'+esc(w.name)+'</b>'+(lv?'<span class="live-badge">Live</span>':'')+'<div style="color:var(--muted);font-size:11px">'+esc(w.role)+'</div></td>'+
-  '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Awaiting clinical review</span>':'')+'</td>'+
+  '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Duty plan under review</span>':'')+'</td>'+
   '<td style="max-width:230px;color:var(--muted)">'+esc(w.restr)+'</td><td>'+esc(w.review)+'</td><td style="min-width:110px">'+rtwBar(w.rtw)+'</td></tr>';});
  h+='</tbody></table>';
  h+='<div class="tfoot">'+(preview?'Showing '+list.length+' of '+actives().length+' injured workers &middot; ':"")+'<span class="prov derived">Derived functional status</span> &nbsp; Functional status only, never medical detail &nbsp; <a href="#" onclick="peekFirewall();return false">What this view cannot see</a></div>';
  return h;}
-function peekFirewall(){toast("Not hidden, <b>not present</b>: pain scores, diagnosis, worker notes, photos never enter this view's data.");}
+function peekFirewall(){toast("Not hidden. Not present: private scores, case detail, worker notes, and photos never enter this view.");}
 /* ---------- workers section ---------- */
 function renderWorkers(){
  var list=actives().filter(function(w){
@@ -352,7 +352,7 @@ function renderWorkers(){
   if(S.catFilter&&w.cat!==S.catFilter)return false;
   if(S.search&&(w.name+" "+w.role+" "+w.injury+" "+w.loc).toLowerCase().indexOf(S.search.toLowerCase())<0)return false;
   return true;});
- var h=pagehead("Injury management","Injured Workers","Every active case, functional status only",
+ var h=pagehead("Duty status","Active workers","Every active case, functional status only",
   '<button class="btn" onclick="window.print()">Export PDF</button>');
  var c=counts();
  h+='<div class="filterbar"><input type="search" placeholder="Search worker, role, injury, location" value="'+esc(S.search)+'" oninput="S.search=this.value;save()" style="min-width:240px">'+
@@ -371,9 +371,9 @@ function openDrawer(idx){
  '<div class="sub">'+esc(w.role)+' &middot; '+esc(w.loc)+'</div>'+
  '<div style="margin:12px 0">'+chipFor(w.status)+'</div>'+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Case</div>'+
- '<table><tbody><tr><td>Injury</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
+ '<table><tbody><tr><td>Duty limit area</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
  '<tr><td>Days injured</td><td><b>'+w.days+'</b></td></tr>'+
- '<tr><td>Doctor visits</td><td><b>'+w.visits+'</b></td></tr>'+
+ '<tr><td>Appointments</td><td><b>'+w.visits+'</b></td></tr>'+
  '<tr><td>Next review</td><td><b>'+esc(w.review)+'</b></td></tr>'+
  '<tr><td>Restrictions</td><td>'+esc(w.restr)+'</td></tr>'+
  '<tr><td>Return progress</td><td>'+rtwBar(w.rtw)+'</td></tr></tbody></table></div>'+
@@ -381,7 +381,7 @@ function openDrawer(idx){
  docs.map(function(d){return '<div class="admin-row"><span>'+d[0]+'</span><span class="pill'+(d[1]==="pending"?" off":"")+'">'+d[1]+'</span></div>';}).join("")+
  '<p class="tfoot">Document lifecycle tracking. Filing happens through the payer\'s existing channel.</p></div>'+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Not in this view</div>'+
- ["Pain scores","Mobility scores","Diagnosis","Worker notes","Photos"].map(function(g){return '<span class="ghost">'+g+'</span>';}).join("")+
+ ["Private fields","Private scores","Case detail","Notes","Photos"].map(function(g){return '<span class="ghost">'+g+'</span>';}).join("")+
  '<p class="tfoot">Not hidden. Not present in this view\'s data at all.</p></div>';
  if(w.status==="modified"&&w.rtw>=80){
   h+='<div class="card" style="border-color:var(--gold)"><div class="cardhead">Action needed</div>'+
@@ -402,17 +402,17 @@ function openLiveDrawer(){
  if(!LIVE)return; var w=LIVE;
  var h='<div class="kicker">Live from the worker app</div><h1 style="font-size:21px">'+esc(w.name)+'<span class="live-badge">Live</span></h1>'+
  '<div class="sub">'+esc(w.role)+' &middot; '+esc(w.loc)+'</div>'+
- '<div style="margin:12px 0">'+chipFor(w.status)+(w.clinicianReviewing?'<span class="rev-tag">Awaiting clinical review</span>':'')+'</div>'+
- (w.clinicianReviewing?'<p style="font-size:12px;color:var(--muted);margin-bottom:10px">The treating physician makes every medical and return-to-work decision.</p>':'')+
+ '<div style="margin:12px 0">'+chipFor(w.status)+(w.clinicianReviewing?'<span class="rev-tag">Duty plan under review</span>':'')+'</div>'+
+ (w.clinicianReviewing?'<p style="font-size:12px;color:var(--muted);margin-bottom:10px">Per program rules, the care team decides next steps. The platform informs. People decide.</p>':'')+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Case (functional only)</div>'+
- '<table><tbody><tr><td>Injury</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
+ '<table><tbody><tr><td>Duty limit area</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
  '<tr><td>Days injured</td><td><b>'+w.days+'</b></td></tr>'+
  '<tr><td>Restrictions</td><td>'+esc(w.restr||"none")+'</td></tr>'+
  '<tr><td>Return progress</td><td>'+rtwBar(w.rtw)+'</td></tr></tbody></table></div>'+
  '<div class="card" style="margin-bottom:10px;border-color:var(--gold)"><div class="cardhead">The seam</div>'+
- '<p style="font-size:12.5px">This row is a live reflection of the worker app, read through a functional only bridge. The bridge has no field for pain, mobility, or notes, so this dashboard never receives them, even in memory. The projection happens in the worker app, where the data is born.</p></div>'+
+ '<p style="font-size:12.5px">This row is a live reflection of the worker app, read through a functional-only bridge. The bridge has no field for private scores or notes, so this dashboard never receives them, even in memory.</p></div>'+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Not in this view</div>'+
- ["Pain scores","Mobility scores","Diagnosis","Worker notes","Photos"].map(function(g){return '<span class="ghost">'+g+'</span>';}).join("")+
+ ["Private fields","Private scores","Case detail","Notes","Photos"].map(function(g){return '<span class="ghost">'+g+'</span>';}).join("")+
  '<p class="tfoot">Not hidden. Not present in this feed at all.</p></div>'+
  '<div style="margin-top:14px"><button class="btn" onclick="closeDrawer()">Close</button></div>';
  document.getElementById("drawer").innerHTML=h;
@@ -421,7 +421,7 @@ function openLiveDrawer(){
 }
 /* ---------- other sections ---------- */
 function renderClaims(){
- var h=pagehead("Injury management","Claims &amp; Documentation","WCB document lifecycle across all active cases");
+ var h=pagehead("Duty status","Claims &amp; Documentation","WCB document lifecycle across all active cases");
  var rows=actives().map(function(w,i){return {w:w,i:S.workers.indexOf(w)};});
  var pend=0,sub=0;rows.forEach(function(r){if(r.w.status==="treating"||r.w.status==="awaiting")pend++;else sub++;});
  h+='<div class="grid kpis" style="grid-template-columns:repeat(3,1fr)">'+
@@ -437,7 +437,7 @@ function renderClaims(){
  '</tbody></table><div class="tfoot">Document tracking only; no live WCB API exists. The 72 hour employer reporting window is enforced at intake.</div></div>';
  return h;}
 function renderRtw(){
- var h=pagehead("Injury management","Return to Work","The pipeline from treating to full duty");
+ var h=pagehead("Duty status","Return to Work","The path from restricted duty to full duty");
  var c=counts();
  h+='<div class="grid" style="grid-template-columns:repeat(4,1fr)">'+
  Object.keys(c).map(function(k){
@@ -454,7 +454,7 @@ function renderRtw(){
   rl2.map(function(w){return '<div class="admin-row"><b>'+esc(w.name)+'</b>'+(w.live?'<span class="live-badge">Live</span>':'')+'<span class="chip c-returned">Returned</span></div>';}).join("")+'</div>';}
  return h;}
 function renderVisits(){
- var h=pagehead("Injury management","Doctor Visits","Visit counts this period, no clinical content");
+ var h=pagehead("Duty status","Appointments","Visit counts this period. No private health detail.");
  h+='<div class="grid kpis" style="grid-template-columns:repeat(3,1fr)">'+
  kpiCard("Total visits",totalVisits(),"this period")+
  kpiCard("Avg per active case",(totalVisits()/Math.max(1,actives().length)).toFixed(1),"visits")+
@@ -465,7 +465,7 @@ function renderVisits(){
  '</tbody></table><div class="tfoot">Counts only. What happens inside a visit stays at the clinic.</div></div>';
  return h;}
 function renderNotes(){
- var h=pagehead("Injury management","Case Notes","Functional coordination notes, never medical detail");
+ var h=pagehead("Duty status","Case Notes","Coordination notes only. No private health detail.");
  h+='<div class="card" style="margin-bottom:12px"><div class="cardhead">Add a note</div>'+
  '<div style="display:flex;gap:8px;flex-wrap:wrap"><select id="noteWorker">'+actives().map(function(w){return '<option>'+esc(w.name)+'</option>';}).join("")+'</select>'+
  '<input type="text" id="noteText" placeholder="Functional note, for example: duties confirmed manageable" style="flex:1;min-width:220px">'+
@@ -499,7 +499,7 @@ function renderTrends(){
  '<div class="card"><div class="cardhead">Injuries over time</div>'+multiline([{v:[8,7,7,6,5,5],c:"var(--action-600)"},{v:[33,32,31,30,29,28],c:"var(--ink-700)"},{v:[10,13,16,19,22,25],c:"var(--ok-700)"}],420,190,MONTHS)+'</div>'+
  '<div class="card"><div class="cardhead">Return to work rate</div>'+multiline([{v:[64,67,70,72,74,rtwRate()],c:"var(--ok-700)",fill:true}],420,190,MONTHS)+'</div>'+
  '<div class="card"><div class="cardhead">Avg days injured</div>'+multiline([{v:[29,28,27,26,25,avgDays()],c:"var(--ink-700)"}],420,190,MONTHS)+'</div>'+
- '<div class="card"><div class="cardhead">Doctor visits per week</div>'+multiline([{v:[6,9,7,12,10,14],c:"var(--action-600)"}],420,190,MONTHS)+'</div>'+
+ '<div class="card"><div class="cardhead">Appointments per week</div>'+multiline([{v:[6,9,7,12,10,14],c:"var(--action-600)"}],420,190,MONTHS)+'</div>'+
  '</div>';
  return h;}
 function renderBenchmarking(){
@@ -514,12 +514,12 @@ function adminCard(title,rows){return '<div class="card" style="margin-bottom:12
 function renderUsers(){
  return pagehead("Admin","Users &amp; Roles","Who can see this workspace")+
  adminCard("Workspace members",[["Worker 59 &middot; Employer admin","Full functional view, confirms returns",true],["Site HSE (2 seats)","Duty assignment, scores visible for operational need",true],["Finance (read only)","Cost and time loss summaries",true]])+
- '<div class="card"><div class="cardhead">Role law</div><p style="font-size:12.5px">Employer roles never carry pain scores, diagnosis, notes, or photos. That rule is enforced below the interface, in what each role\'s view can read at all.</p></div>';}
+ '<div class="card"><div class="cardhead">Role law</div><p style="font-size:12.5px">Employer roles never carry private scores, case detail, notes, or photos. That rule is enforced below the interface, in what each role can read at all.</p></div>';}
 function renderSettings(){
  return pagehead("Admin","Settings","Workspace configuration")+
  adminCard("Notifications",[["Weekly summary email","Mondays 7:00","true"?true:true],["New injury alert","Immediate",true],["Review reminders","48 hours ahead",true]])+
  adminCard("Data",[["Retention schedule","Per custodian direction and statute",true],["Export on request","Right of access supported",true]])+
- '<div class="card"><div class="cardhead">Access log</div><p style="font-size:12.5px;margin-bottom:8px">Reads of the functional worker list are recorded here, in symmetry with the clinical and admin trails.</p>'+((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-top:1px solid var(--line)"><span>'+esc(a.msg)+'</span><span style="color:var(--muted)">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p style="font-size:12px;color:var(--muted)">No reads yet. Open the Injured Workers view to record one.</p>')+'</div>';}
+ '<div class="card"><div class="cardhead">Access log</div><p style="font-size:12.5px;margin-bottom:8px">Reads of the functional worker list are recorded here, in symmetry with other role trails and the admin trail.</p>'+((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-top:1px solid var(--line)"><span>'+esc(a.msg)+'</span><span style="color:var(--muted)">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p style="font-size:12px;color:var(--muted)">No reads yet. Open the Active workers view to record one.</p>')+'</div>';}
 function renderIntegrations(){
  return pagehead("Admin","Integrations","Works with the systems you already run")+
  adminCard("Connected",[["Safety platform intake","Incident opens the case automatically",true],["Clinical provider","Clinical Partner sign-offs and restrictions",true]])+
@@ -542,11 +542,11 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
 /* ---------- Prompt 32: presenter kit (self-contained, wraps render, touches nothing else) ---------- */
 (function(){
  var CPSEC={
-  overview:{title:"The employer overview",body:"The employer overview carries one promise: notice what is not here, no diagnoses, no pain scores, no medical notes; the employer sees what work is safe, never private health details."},
-  workers:{title:"Injured workers, functional list",body:"The injured workers list, shown as functional status only: can they work today, and which duties are safe. No health details appear here."},
+  overview:{title:"The employer overview",body:"The employer overview carries one promise: notice what is not here. The employer sees what work is safe, never private health details."},
+  workers:{title:"Active workers, functional list",body:"The active workers list, shown as functional status only: can they work today, and which duties are safe. No health details appear here."},
   claims:{title:"Claims and documentation",body:"The claim record and its documents. The employer sees the claim status and the paperwork, not the worker's health information."},
   rtw:{title:"Return to work",body:"The plan to bring each worker back to safe, suitable duties, tracked by status. What is shown is the work, not the medicine."},
-  visits:{title:"Doctor visits",body:"Doctor visits as a schedule: when an appointment happened and whether the worker is cleared for duties. The employer sees that a visit occurred and the work outcome, never what was discussed."},
+  visits:{title:"Appointments",body:"Appointments as a schedule: when an appointment happened and whether the worker is cleared for duties. The employer sees that a visit occurred and the work outcome, never private health details."},
   notes:{title:"Case notes",body:"Case notes about the return-to-work plan. These are functional notes, never medical notes."},
   reports:{title:"Reports",body:"Reports you can export and share, built from the functional data only."},
   trends:{title:"Trends",body:"How the caseload moves over time, as totals and rates. Descriptive, not forecasted."},
@@ -631,7 +631,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
      injury:String(x.incident_category||"other").replace(/_/g," ").replace(/^./,function(ch){return ch.toUpperCase();}),
      cat:CATMAP[x.incident_category]||"other",days:days,
      status:x.work_status==="modified_duties"?"modified":x.work_status==="full_duties"?"returned":"treating",
-     restr:"Awaiting clinical restrictions",review:"To be scheduled",
+     restr:"Awaiting duty limits",review:"To be scheduled",
      rtw:x.work_status==="full_duties"?100:0,visits:0,
      loc:siteName[x.site_id]||x.site_id,claim:x.claim_number||""};
     if(w.status==="returned"){S.returned.push(w);}else{S.workers.push(w);}
@@ -648,7 +648,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
  function ecsv(k,label,tpl){return '<label style="display:block;font-size:12px;font-weight:700;margin:10px 0 4px">'+label+' <a href="/'+tpl+'" download style="font-weight:400">Download the template</a></label><textarea style="width:100%;min-height:110px;padding:9px 10px;border:1px solid var(--ink-200);border-radius:8px;font:12px/1.5 monospace" placeholder="Paste your CSV here, first line is the header" oninput="C37UI.f.'+k+'=this.value">'+(ui.f[k]||"")+'</textarea>';}
  function errsHtml(){return ui.errs.length?'<div style="background:var(--stop-050);border:1px solid var(--ink-300);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12.5px;color:var(--stop-800)">'+ui.errs.map(function(e){return '<div>'+e+'</div>';}).join("")+'</div>':"";}
  function stepBody(id){
-  if(id==="welcome")return '<p>Setup collects your sites, your people, and your goals, in about fifteen minutes. It never collects medical information: not a diagnosis, not a pain score, not a note. That is the deal, and the next step puts it on the record.</p>';
+  if(id==="welcome")return '<p>Setup collects your sites, your people, and your goals, in about fifteen minutes. It never collects private health detail: not a case detail, not a private score, not a note. That is the deal, and the next step puts it on the record.</p>';
   if(id==="commitments")return '<p>Two commitments, one at a time, each on the record with a timestamp.</p>'+
    '<div style="border:1px solid var(--ink-200);border-radius:8px;padding:12px;margin:8px 0"><b>1.</b> '+ACK1+'<div style="margin-top:8px">'+(acks.a1?'<span class="pill">Accepted '+acks.a1+'</span>':'<button class="btn" onclick="C37UI.accept(1)">I acknowledge</button>')+'</div></div>'+
    '<div style="border:1px solid var(--ink-200);border-radius:8px;padding:12px;margin:8px 0"><b>2.</b> '+ACK2+'<div style="margin-top:8px">'+(acks.a2?'<span class="pill">Accepted '+acks.a2+'</span>':'<button class="btn" onclick="C37UI.accept(2)">I acknowledge</button>')+'</div></div>';
