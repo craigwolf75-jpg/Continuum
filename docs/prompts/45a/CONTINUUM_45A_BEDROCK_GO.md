@@ -230,7 +230,7 @@ The page defines `data_retention_mode` `none` as zero data retention. Verbatim:
 
 Continuum treats `none` as the only retention mode compatible with the no-train checklist. Modes `default`, `aws_review`, and `provider_data_share` fail the checklist until a no-share clause is recorded for the specific model.
 
-Some models require a more permissive retention mode as a condition of access. The 45a brief names Claude Mythos 5 and Claude Fable 5 as models that require `provider_data_share`. The data-retention page retrieved 2026-09-15 lists Claude Fable 5 and Claude Fable 5.1 as models whose `allowed_modes` require `aws_review` or `provider_data_share`. Those models FAIL the no-train checklist until a no-share clause is recorded for them.
+Some models require a more permissive retention mode as a condition of access. The AWS data-retention page retrieved 2026-09-15 currently lists Claude Mythos 5 and Claude Fable 5 as models that require `provider_data_share`. Those models FAIL the no-train checklist until a no-share clause is recorded for them.
 
 STOP if a chosen alternate lacks the no-train clause. Do not substitute a sibling model. Do not treat "Bedrock in general" as coverage for a model that requires provider share or AWS human review.
 
@@ -243,7 +243,7 @@ Gary records, in writing:
 3. The data-retention `none` sentence in 5.3.
 4. The source URLs and the retrieval date (2026-09-15, or a later date if Gary re-retrieves).
 5. The chosen in-region model ID (or "no model chosen").
-6. Confirmation that the chosen model is not Claude Mythos 5, Claude Fable 5, Claude Fable 5.1, or any other model whose `allowed_modes` exclude `none`.
+6. Confirmation that the chosen model is not Claude Mythos 5, Claude Fable 5, or any other model whose `allowed_modes` exclude `none`.
 
 45a flag names, documented as `UNVERIFIED` by default:
 
