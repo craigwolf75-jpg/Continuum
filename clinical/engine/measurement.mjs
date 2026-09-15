@@ -135,15 +135,21 @@ export const ELEMENT_NAME_TO_AXIS = {
 // that an axis present on the form is not silently omitted from resolve_axes.
 export function formCapabilityAxesFromSeed(sqlText) {
   const text = String(sqlText || "");
-  const marker = "where fd.jurisdiction_code='AB' and fd.form_id='";
+  const marker = "where fd.jurisdiction_code='";
   const out = {};
   let searchFrom = 0;
   while (true) {
     const idx = text.indexOf(marker, searchFrom);
     if (idx < 0) break;
     const start = idx + marker.length;
-    const endQuote = text.indexOf("'", start);
-    const formId = text.slice(start, endQuote);
+    const jurEnd = text.indexOf("'", start);
+    const afterJur = text.slice(jurEnd + 1);
+    const formKey = " and fd.form_id='";
+    const formAt = afterJur.indexOf(formKey);
+    if (formAt < 0) { searchFrom = jurEnd + 1; continue; }
+    const formStart = jurEnd + 1 + formAt + formKey.length;
+    const endQuote = text.indexOf("'", formStart);
+    const formId = text.slice(formStart, endQuote);
     const blockStart = text.lastIndexOf("join (values", idx);
     const values = blockStart >= 0 ? text.slice(blockStart, idx) : "";
     const axes = [];

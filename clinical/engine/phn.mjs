@@ -1,11 +1,11 @@
-/* Continuum Prompt 40 (Prompt 39A Section 1.4 and 1.5): the PHN format gate.
+/* Continuum Prompt 40 (Prompt 39A Section 1.4 and 1.5): the worker identifier
+   format gate (Prompt 45: the pattern lives on the jurisdiction row).
 
-   The validation schema types PID.3/CX.1 (the Alberta PHN) as stSINPHN with
-   pattern \d{0,9}, so it PERMITS a short PHN. The exact nine digit requirement
-   comes from the workbook, not the schema, so it must be enforced in application
-   code (39A Section 1.4). Do not rely on schema validation to catch a truncated
-   PHN. PID.2/CX.1 (the claim reference number) has the same trap: schema \d{0,7},
-   a workbook max of 7.
+   The validation schema types PID.3/CX.1 as stSINPHN with pattern \d{0,9}, so it
+   PERMITS a short value. The exact pattern comes from
+   jurisdiction.worker_identifier_pattern, never from a hard coded province
+   string. PID.2/CX.1 (the claim reference number) has the same trap: schema
+   \d{0,7}, a workbook max of 7.
 
    The check digit is a SEPARATE, default OFF stage (39A Section 1.5, board
    enquiry B1). The workbook Glossary references a SIN/PHN check digit but the
@@ -15,23 +15,39 @@
    a pluggable hook that is off unless a board confirmed algorithm is configured;
    with it off, the board rejects a bad check digit and the error is catalogued.
 
-   This gate validates FORMAT only. Presence and the PHN polarity inversion
-   (blank when the no PHN indicator is Yes) are owned by valX01 in validation.mjs.
-   Pure functions, failure shape { id, element, message }. No dashes anywhere. */
+   This gate validates FORMAT only. Presence and the polarity inversion
+   (blank when the no identifier indicator is Yes) are owned by valX01 in
+   validation.mjs. Pure functions, failure shape { id, element, message }.
+   No dashes anywhere. */
 
 const norm = (v) => String(v === null || v === undefined ? "" : v).trim();
 const isBlank = (v) => norm(v) === "";
 const fail = (id, element, message) => ({ id, element, message });
 
-// Stage 1: exactly nine digits when a PHN is present. Blank is not a format
-// failure here (valX01 owns presence). The schema would accept a short value, so
-// this local check is where the length is actually enforced (acceptance
-// criterion 8: an eight digit PHN is rejected by application code).
-export function phnLength(value) {
+function identifierLabel(profile) {
+  return (profile && profile.worker_identifier_label) || "Worker identifier";
+}
+
+function identifierPattern(profile) {
+  return profile && profile.worker_identifier_pattern
+    ? String(profile.worker_identifier_pattern)
+    : "";
+}
+
+// Stage 1: the jurisdiction pattern when a value is present. Blank is not a
+// format failure here (valX01 owns presence). A missing profile is a named
+// failure, never a silent default to one province.
+export function phnLength(value, profile) {
+  const label = identifierLabel(profile);
+  const pattern = identifierPattern(profile);
+  if (!pattern) return [fail("PHN-PROFILE", label, "worker identifier pattern is not configured for this jurisdiction")];
   if (isBlank(value)) return [];
-  return /^\d{9}$/.test(norm(value))
+  let re;
+  try { re = new RegExp(pattern); }
+  catch (e) { return [fail("PHN-PROFILE", label, "worker identifier pattern is not a valid regular expression")]; }
+  return re.test(norm(value))
     ? []
-    : [fail("PHN-LENGTH", "Alberta PHN", "Alberta PHN must be exactly 9 digits (the validation schema permits a shorter value; the length is enforced here)")];
+    : [fail("PHN-LENGTH", label, label + " does not match the jurisdiction pattern")];
 }
 
 // Stage 2: the check digit, default OFF. config: { enabled, validator }. When
@@ -44,16 +60,17 @@ export function phnCheckDigit(value, config) {
   if (!c.enabled) return [];               // default off
   if (isBlank(value)) return [];
   const v = norm(value);
+  const label = identifierLabel(c);
   if (typeof c.validator !== "function")
-    return [fail("PHN-CHECKDIGIT-CONFIG", "Alberta PHN", "check digit validation is enabled but no board confirmed validator is configured; refusing to guess an algorithm (board enquiry B1)")];
-  return c.validator(v) ? [] : [fail("PHN-CHECKDIGIT", "Alberta PHN", "Alberta PHN fails the configured check digit validation")];
+    return [fail("PHN-CHECKDIGIT-CONFIG", label, "check digit validation is enabled but no board confirmed validator is configured; refusing to guess an algorithm (board enquiry B1)")];
+  return c.validator(v) ? [] : [fail("PHN-CHECKDIGIT", label, label + " fails the configured check digit validation")];
 }
 
 // The full PHN gate: the hard length check always, then the check digit stage
 // (default off). If the length is wrong the check digit is not run, so the
 // message names the real problem.
 export function phnGate(value, config) {
-  const lengthFails = phnLength(value);
+  const lengthFails = phnLength(value, config);
   if (lengthFails.length) return lengthFails;
   return phnCheckDigit(value, config);
 }

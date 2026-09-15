@@ -35,6 +35,7 @@ import { rawMeasurementInPayload } from "./employer_schema.mjs";
 import { pinkCopy } from "./pinkcopy.mjs";
 import { productionSubmissionEnabled, disabledUploader } from "./submission_gate.mjs";
 import { ignoreModelAdapter } from "./ai_sign_guard.mjs";
+import { assertClinicAccess } from "./jurisdiction.mjs";
 
 const nn = async (v) => (v && typeof v.then === "function" ? await v : v);
 
@@ -84,6 +85,7 @@ export async function signReport(repo, params, opts = {}) {
 export async function runClinicBatch(repo, effects, params, opts = {}) {
   const env = opts.env || {};
   const clinic = await nn(repo.getClinic(params.clinicId));
+  if (opts.jurisdictions) assertClinicAccess(clinic, opts.jurisdictions);
   const signed = await nn(repo.getSignedReports(params.clinicId));
   if (!signed.length) { await nn(repo.recordBatchOutcome({ clinic_id: params.clinicId, status: "empty", transmitted: false })); return { status: "empty" }; }
 

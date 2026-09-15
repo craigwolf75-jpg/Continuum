@@ -1,9 +1,9 @@
 /* Continuum Prompt 43: consent B and revocation (Section 6, criteria 6 and 7).
 
-   Consent B gates the employer view and the worker plan ONLY. It never gates the board
-   submission, because the duty to report is statutory and survives the worker's refusal
-   (Section 6, criterion 7). It never gates the Pink Copy either: the Pink Copy is the
-   worker's own copy, unaffected by consent B (Section 5, Section 6).
+   Consent B gates the employer view and the worker plan ONLY under the Alberta
+   statutory report profile. Board submission is profile data: statutory duty,
+   requires consent, or blocked. It never gates the Pink Copy: the Pink Copy is
+   the worker's own copy, unaffected by consent B (Section 5, Section 6).
 
    Revocation withdraws the employer view within 60 seconds and writes withdrawn_at
    (criterion 6). The notice shown to the worker states plainly that information already
@@ -23,9 +23,23 @@ export function employerViewAllowed(consentB) { return active(consentB); }
 // view AND the worker plan).
 export function workerPlanAllowed(consentB) { return active(consentB); }
 
-// The board submission is NEVER gated by consent B (criterion 7): the duty to report is
-// statutory and survives the worker's refusal. Always allowed, regardless of consent.
-export function boardSubmissionAllowed() { return true; }
+// Board submission depends on the jurisdiction consent profile, never on a
+// hard coded province. alberta_statutory_report: statutory duty, always allowed.
+// requires_consent: gated by consent B. blocked: never allowed.
+export function boardSubmissionAllowed(consentB, consentProfile) {
+  const mode = consentProfile && consentProfile.board_submission;
+  if (!mode) {
+    const e = new Error("boardSubmissionAllowed requires an explicit consent profile. Never default.");
+    e.code = "CONSENT-PROFILE-MISSING";
+    throw e;
+  }
+  if (mode === "statutory") return true;
+  if (mode === "blocked") return false;
+  if (mode === "requires_consent") return Boolean(consentB && consentB.granted === true && !consentB.revoked_at);
+  const e = new Error("Unknown consent profile board_submission mode: " + mode);
+  e.code = "CONSENT-PROFILE-UNKNOWN";
+  throw e;
+}
 
 // The Pink Copy is NEVER gated by consent B (Section 5, Section 6): it is the worker's own
 // copy. Always available once the report is complete.

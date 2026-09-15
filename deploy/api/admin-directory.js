@@ -20,6 +20,7 @@
    Fails closed: missing env or any unexpected error denies. No dashes anywhere. */
 
 import { verifyHubSession, parseCookies, isAuthorizedAdmin } from "./_hub_session.js";
+import { boardNameForCode } from "./jurisdiction-boards.mjs";
 
 // DB role -> the admin portal's role vocabulary (its filter chips). Any role
 // ending in "_physician" maps to "physician" via mapRole below, so the physician
@@ -36,13 +37,6 @@ function mapRole(role) {
   if (typeof role === "string" && /physician$/.test(role)) return "physician";
   return ROLE_MAP[role] || role;
 }
-
-// province code -> the board label the admin portal shows.
-const BOARD_MAP = {
-  ab: "WCB Alberta", bc: "WorkSafeBC", sk: "WCB Saskatchewan", mb: "WCB Manitoba",
-  on: "WSIB Ontario", qc: "CNESST", nb: "WorkSafeNB", ns: "WCB Nova Scotia",
-  pe: "WCB PEI", nl: "WorkplaceNL", yt: "WCB Yukon", nt: "WSCC", nu: "WSCC"
-};
 
 // Pure: a compact relative time from an ISO timestamp, matching the admin's
 // "12m ago" / "3d ago" style. Never throws.
@@ -120,7 +114,7 @@ async function handler(req, res) {
     const tenants = dbTenants.map(function (t) {
       return {
         id: t.id, name: t.name,
-        board: BOARD_MAP[t.province] || (t.province ? t.province.toUpperCase() : "Unknown"),
+        board: boardNameForCode(t.province),
         paused: false, pose: false, committee: "",
         active: 0, completion: 0, onboarded: 0, weeks: 0,
         pilot: false, sandbox: (t.status === "sandbox")

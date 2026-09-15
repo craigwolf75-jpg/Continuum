@@ -171,3 +171,23 @@ asserted against its board `5.xx` sample XML (the transcription docs' definition
 of done) and, per the clinical pre-flight rule, Hannah signs off the structured
 set before any of it drives a live form. The engine code in `clinical/engine/`
 already validates against these tables once they are populated.
+
+## Prompt 45: provincial rules (apply after 020)
+
+16. **`021_migration_provincial_rules.sql`** widens `clinical.jurisdiction` by ALTER
+    TABLE only (never drop or recreate): adds `board_name`,
+    `practitioner_credential_label`, `practitioner_credential_pattern`,
+    `worker_identifier_label`, `worker_identifier_pattern`,
+    `employer_disclosure_profile`, `consent_profile`, `timezone`. Creates
+    `clinical.jurisdiction_deadline`. Adds `clinic.jurisdiction_code`, widens
+    `worker.phn` to varchar(32), and scopes the contract and role matrix with
+    `jurisdiction_code`. Schema is a human gate: Gary applies. Claude does not
+    live apply.
+17. **`022_seed_provincial_rules.sql`** fills the Alberta row from sourced values,
+    keeps the 002 inactive BC through YT rows inactive with placeholder profiles
+    and no form packs, and seeds the unmistakably fake ZZ synthetic pack (TEST01,
+    TEST02, Synthetic in `board_name`). Also seeds Alberta 2026 holidays, Alberta
+    and ZZ deadlines, and ZZ fees. Source of truth:
+    `provincial_rules.data.mjs`. Resolvers live in
+    `clinical/engine/jurisdiction.mjs` and the generic form pack path in
+    `clinical/engine/formpack.mjs`.
