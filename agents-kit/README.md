@@ -78,14 +78,15 @@ not remove the human gates, which still stop the run and surface to Gary.
 - .claude/agents/athena.md: architecture and code.
 - .claude/agents/apollo.md: design and motion.
 - .claude/agents/calliope.md: content and voice.
-- .claude/agents/heracles.md: quality and tests.
+- .claude/agents/heracles.md: quality control, senior quality architect.
 - .claude/agents/hermes.md: release.
 - .claude/agents/argus.md: the watcher.
 
 ## The roster
 
-The group carries prompt-family IDs: 12 Zeus, 12a Athena, 12b Apollo, 12c
-Heracles, 12d Hermes, 12e Argus, 12f Calliope.
+The group carries prompt-family IDs: 12 Zeus, 12a Athena, 12b Apollo, 24c
+Heracles, 12d Hermes, 12e Argus, 12f Calliope. Heracles is 24c because 12c
+was claimed by the worker-app arc.
 
 Zeus, Athena, Apollo, Calliope, Heracles, Hermes, Argus. These names are
 deliberately distinct from the ViaConnect roster; different platform, different
