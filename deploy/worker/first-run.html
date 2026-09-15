@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Continuum: welcome</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <style>
 /* ============================================================================
    SCR-WRK-11 First run. Prompt 56 / Document 3.6.
@@ -16,10 +17,7 @@
    The four always-true sentences appear verbatim.
    ========================================================================== */
 :root{
-  --ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;
-  --ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
-  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;
-  --ok-800:#0B5C40;--ok-700:#0F7A55;--ok-050:#E6F5EE;--stop-700:#A8201A;--stop-050:#FDECEA;--gold:#C8972F;
+  --gold:var(--warn-500);
   --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);
   --text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
   --border-divider:var(--ink-200);--border-card:var(--ink-300);--focus-ring:var(--action-600);
@@ -38,7 +36,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--focus-ring);out
 .dots span[data-on="true"]{background:var(--action-600)}
 .stage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0}
 .mark{width:64px;height:64px;border-radius:18px;background:var(--ink-900);position:relative;margin-bottom:20px}
-.mark::after{content:"";position:absolute;left:16px;top:30px;width:32px;height:3px;background:#fff;border-radius:3px;box-shadow:0 9px 0 rgba(255,255,255,.5),0 -9px 0 rgba(255,255,255,.5)}
+.mark::after{content:"";position:absolute;left:16px;top:30px;width:32px;height:3px;background:var(--white);border-radius:3px;box-shadow:0 9px 0 rgba(255,255,255,.5),0 -9px 0 rgba(255,255,255,.5)}
 .step p.body{font-size:1.05rem;color:var(--text-body);margin-top:14px}
 .step .true{font-size:1.05rem;color:var(--ok-800);background:var(--ok-050);border:1px solid var(--ok-700);border-radius:var(--r-md);padding:14px 16px;margin-top:16px;font-weight:600}
 .step .never{font-size:1rem;color:var(--stop-700);background:var(--stop-050);border:1px solid var(--stop-700);border-radius:var(--r-md);padding:14px 16px;margin-top:14px}
@@ -51,7 +49,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--focus-ring);out
 /* choose companion */
 .chars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
 .char{aspect-ratio:1;border-radius:16px;border:2px solid var(--border-card);background:var(--bg-surface);position:relative;overflow:hidden}
-.char span{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%, #DCC79A, var(--gold) 72%)}
+.char span{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%, var(--warn-050), var(--gold) 72%)}
 .char span::after{content:"";position:absolute;left:50%;bottom:-14%;transform:translateX(-50%);width:56%;height:56%;border-radius:50%;background:var(--ink-900)}
 .char[aria-pressed="true"]{border-color:var(--action-600);box-shadow:0 0 0 3px var(--action-050)}
 .field{margin-top:16px}
