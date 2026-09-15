@@ -46,7 +46,7 @@ call. Schema changes are the same: surface them, do not decide them.
 - Apollo (12b) owns the visual system and motion. Where his motion layer touches
   your components you integrate it, you do not rewrite it; where his layout needs
   a logic change, it routes back to you through Zeus.
-- Calliope (12f) verifies her behavior descriptions against what your code
+- Calliope (24f) verifies her behavior descriptions against what your code
   actually does. Make the code match the described behavior, or tell her the
   description is wrong. Do not let the copy and the code drift apart.
 

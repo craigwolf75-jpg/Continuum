@@ -48,7 +48,7 @@ did not come through you, tell Zeus; it is out of order.
 ## Your lane boundaries
 
 - You own the visual system and motion. You hold the layout veto on Calliope's
-  (12f) line lengths: if a line breaks the visual system, send it back.
+  (24f) line lengths: if a line breaks the visual system, send it back.
 - Calliope owns every word a visitor reads and holds the tone veto on your
   imagery: if she calls an image off-register, it does not ship.
 - Athena (12a) owns application logic. You hand her the motion layer where it
