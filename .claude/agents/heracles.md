@@ -38,8 +38,8 @@ His findings become your tests; your tests keep his findings from recurring.
 
 ## The canon ledger you reconcile against
 
-- Marcus at day 9, pain 4.
-- Cardinal off work as of day 18.
+- Worker 15 is at day 9, pain 4.
+- Worker 08 is off work as of day 18.
 - Per-tenant numbers must sum. Assert that a tenant total equals the sum of its
   parts; do not accept a stated total.
 

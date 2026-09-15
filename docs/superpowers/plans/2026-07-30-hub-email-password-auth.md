@@ -24,31 +24,31 @@
 ## File Structure
 
 Created:
-- `supabase/migrations/20260730120000_hub_profiles.sql` — `public.hub_profiles` table, RLS on, no policies, indexes for the admin queue. No seed insert (the FK to `auth.users` cannot be satisfied ahead of a real signup; gary@'s admin row is self healed on first successful sign in).
-- `deploy/api/_hub_auth.js` — Supabase Auth REST helper module: input validators, response parsers, `createAuthUser`, `verifyPassword`.
-- `deploy/api/hub-signup.js` — `POST /api/hub-signup`: creates the auth user and the pending `hub_profiles` row. Neutral response on duplicate email (no enumeration).
-- `deploy/api/hub-signin.js` — `POST /api/hub-signin`: verifies password, applies the approval gate, self heals gary@'s admin row, issues `ct_session`.
-- `deploy/api/hub-signout.js` — `POST /api/hub-signout`: clears `ct_session`.
-- `deploy/api/hub-whoami.js` — `GET /api/hub-whoami`: read only report of the caller's own verified session (authenticated, group, isAdmin), used by the hub page after a reload to decide whether to show the admin card and whether to redirect to sign in.
-- `deploy/api/hub-admin.js` — `GET`/`POST /api/hub-admin`: lists pending/approved/rejected `hub_profiles`, approves (assigns group1 or group2), rejects. Guarded by `requireHubAdmin` (reuses `_hub_session.js`).
-- `deploy/admin-hub-users.html` — admin only hub user management UI (mirrors `deploy/admin-site-codes.html`'s pattern; standalone URL, not linked from `admin-portal.html`, matching that file's own precedent).
-- `deploy/hub-profiles-migration.test.mjs` — static assertions on the migration SQL text.
-- `deploy/hub-auth.test.mjs` — `_hub_auth.js` validators/parsers + mocked network, plus `_hub_session.js` cookie serialize/clear round trip.
-- `deploy/hub-signup.test.mjs` — endpoint integration (CSRF, validation, duplicate handling, fail closed), mocked `fetch`.
-- `deploy/hub-signin.test.mjs` — endpoint integration (`resolveAccess` pure mapping, admin self heal, CSRF, fail closed), mocked `fetch`.
-- `deploy/hub-signout.test.mjs` — endpoint integration (CSRF, cookie clear).
-- `deploy/hub-whoami.test.mjs` — endpoint integration (authenticated/not, admin impostor rejection, expiry).
-- `deploy/hub-middleware-access.test.mjs` — `decideHubAccess` pure mapping across every portal path and every group, including the impostor case.
-- `deploy/hub-index.test.mjs` — static assertions on the rewritten `deploy/hub/index.html` (email+password fields present, one time code copy gone, Presenter Controls gone, signup/awaiting states present, dash clean).
-- `deploy/hub-admin.test.mjs` — endpoint integration (guard reuse, approve/reject validation, CSRF, fail closed).
+- `supabase/migrations/20260730120000_hub_profiles.sql` - `public.hub_profiles` table, RLS on, no policies, indexes for the admin queue. No seed insert (the FK to `auth.users` cannot be satisfied ahead of a real signup; gary@'s admin row is self healed on first successful sign in).
+- `deploy/api/_hub_auth.js` - Supabase Auth REST helper module: input validators, response parsers, `createAuthUser`, `verifyPassword`.
+- `deploy/api/hub-signup.js` - `POST /api/hub-signup`: creates the auth user and the pending `hub_profiles` row. Neutral response on duplicate email (no enumeration).
+- `deploy/api/hub-signin.js` - `POST /api/hub-signin`: verifies password, applies the approval gate, self heals gary@'s admin row, issues `ct_session`.
+- `deploy/api/hub-signout.js` - `POST /api/hub-signout`: clears `ct_session`.
+- `deploy/api/hub-whoami.js` - `GET /api/hub-whoami`: read only report of the caller's own verified session (authenticated, group, isAdmin), used by the hub page after a reload to decide whether to show the admin card and whether to redirect to sign in.
+- `deploy/api/hub-admin.js` - `GET`/`POST /api/hub-admin`: lists pending/approved/rejected `hub_profiles`, approves (assigns group1 or group2), rejects. Guarded by `requireHubAdmin` (reuses `_hub_session.js`).
+- `deploy/admin-hub-users.html` - admin only hub user management UI (mirrors `deploy/admin-site-codes.html`'s pattern; standalone URL, not linked from `admin-portal.html`, matching that file's own precedent).
+- `deploy/hub-profiles-migration.test.mjs` - static assertions on the migration SQL text.
+- `deploy/hub-auth.test.mjs` - `_hub_auth.js` validators/parsers + mocked network, plus `_hub_session.js` cookie serialize/clear round trip.
+- `deploy/hub-signup.test.mjs` - endpoint integration (CSRF, validation, duplicate handling, fail closed), mocked `fetch`.
+- `deploy/hub-signin.test.mjs` - endpoint integration (`resolveAccess` pure mapping, admin self heal, CSRF, fail closed), mocked `fetch`.
+- `deploy/hub-signout.test.mjs` - endpoint integration (CSRF, cookie clear).
+- `deploy/hub-whoami.test.mjs` - endpoint integration (authenticated/not, admin impostor rejection, expiry).
+- `deploy/hub-middleware-access.test.mjs` - `decideHubAccess` pure mapping across every portal path and every group, including the impostor case.
+- `deploy/hub-index.test.mjs` - static assertions on the rewritten `deploy/hub/index.html` (email+password fields present, one time code copy gone, Presenter Controls gone, signup/awaiting states present, dash clean).
+- `deploy/hub-admin.test.mjs` - endpoint integration (guard reuse, approve/reject validation, CSRF, fail closed).
 
 Modified:
-- `deploy/api/_hub_session.js` — add `serializeHubCookie`/`clearHubCookie`; update the header comment (the hub LOGIN this file was staged ahead of now exists).
-- `deploy/middleware.js` — add `decideHubAccess`, the group/prefix constants, wire hub gating into `middleware()` after the site gate decision, import `verifyHubSession`/`ADMIN_EMAILS`.
-- `deploy/hub/index.html` — replace the one time code sign in with email+password sign in, a create account path, an awaiting approval state; remove the Presenter Controls panel; call `/api/hub-whoami` to gate `#roles` and to show the admin card only to gary@.
-- `hub-roles/src/main.jsx` — `mount(el, opts)` accepts `{ isAdmin }` and filters the Platform Admin card out of `RolesView` when `isAdmin` is falsy. All seven `CARDS` entries stay in source, unchanged copy/order/routing (existing `hub-roles.test.mjs` assertions keep passing).
-- `deploy/hub/roles.js` — regenerated by `npm run build` inside `hub-roles/` (Vite lib build, `outDir: ../deploy/hub`); not hand edited.
-- `deploy/hub-roles.test.mjs` — add assertions for the `isAdmin` mount option and the admin card filter.
+- `deploy/api/_hub_session.js` - add `serializeHubCookie`/`clearHubCookie`; update the header comment (the hub LOGIN this file was staged ahead of now exists).
+- `deploy/middleware.js` - add `decideHubAccess`, the group/prefix constants, wire hub gating into `middleware()` after the site gate decision, import `verifyHubSession`/`ADMIN_EMAILS`.
+- `deploy/hub/index.html` - replace the one time code sign in with email+password sign in, a create account path, an awaiting approval state; remove the Presenter Controls panel; call `/api/hub-whoami` to gate `#roles` and to show the admin card only to gary@.
+- `hub-roles/src/main.jsx` - `mount(el, opts)` accepts `{ isAdmin }` and filters the Platform Admin card out of `RolesView` when `isAdmin` is falsy. All seven `CARDS` entries stay in source, unchanged copy/order/routing (existing `hub-roles.test.mjs` assertions keep passing).
+- `deploy/hub/roles.js` - regenerated by `npm run build` inside `hub-roles/` (Vite lib build, `outDir: ../deploy/hub`); not hand edited.
+- `deploy/hub-roles.test.mjs` - add assertions for the `isAdmin` mount option and the admin card filter.
 
 ---
 
@@ -93,13 +93,13 @@ ok("no seeded row is inserted", !/insert into public\.hub_profiles/i.test(sql));
 ok("never references access_codes (hard wall vs the SITE gate)", !/access_codes/i.test(sql));
 ok("never references access_log (hard wall vs the SITE gate)", !/access_log/i.test(sql));
 ok("wrapped in a transaction", /^begin;/m.test(sql) && /^commit;$/m.test(sql));
-ok("migration is dash clean", !/[–—]/.test(sql));
+ok("migration is dash clean", !/[\u2013\u2014]/.test(sql));
 
 console.log("\nhub-profiles-migration suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
 ```
 
-- [ ] Run: `node deploy/hub-profiles-migration.test.mjs` — expect FAIL (file does not exist yet, throws on read).
+- [ ] Run: `node deploy/hub-profiles-migration.test.mjs` - expect FAIL (file does not exist yet, throws on read).
 - [ ] Write the migration.
 
 `supabase/migrations/20260730120000_hub_profiles.sql`:
@@ -153,7 +153,7 @@ alter table public.hub_profiles enable row level security;
 commit;
 ```
 
-- [ ] Run: `node deploy/hub-profiles-migration.test.mjs` — expect PASS (17 assertions).
+- [ ] Run: `node deploy/hub-profiles-migration.test.mjs` - expect PASS (17 assertions).
 - [ ] Commit: `git add supabase/migrations/20260730120000_hub_profiles.sql deploy/hub-profiles-migration.test.mjs && git commit -m "Add hub_profiles migration for the hub approval gate"`.
 
 ---
@@ -259,7 +259,7 @@ async function main() {
 main();
 ```
 
-- [ ] Run: `node deploy/hub-auth.test.mjs` — expect FAIL (`./api/_hub_auth.js` does not exist; `serializeHubCookie`/`clearHubCookie` not exported).
+- [ ] Run: `node deploy/hub-auth.test.mjs` - expect FAIL (`./api/_hub_auth.js` does not exist; `serializeHubCookie`/`clearHubCookie` not exported).
 - [ ] Add `serializeHubCookie`/`clearHubCookie` to `deploy/api/_hub_session.js`. Replace the file's header comment paragraph beginning `PENDING PROMPT 39: the hub LOGIN endpoint...` (current lines 13 to 19) with:
 
 ```
@@ -304,11 +304,11 @@ export { signHubSession, verifyHubSession, parseCookies, HUB_COOKIE_NAME, ADMIN_
    cookie issued by deploy/api/hub-signin.js.
 
    Two network calls:
-   - createAuthUser: POST {baseUrl}/auth/v1/admin/users (GoTrue admin API).
+ - createAuthUser: POST {baseUrl}/auth/v1/admin/users (GoTrue admin API).
      email_confirm: true is set on every create, matching the design's "no
      email confirmation on signup": the approval gate, not email
      confirmation, is what blocks access.
-   - verifyPassword: POST {baseUrl}/auth/v1/token?grant_type=password
+ - verifyPassword: POST {baseUrl}/auth/v1/token?grant_type=password
      (GoTrue's standard password grant; safe to call server side with the
      service role key as apikey, the same endpoint supabase-js calls client
      side, just not exposed to the browser here).
@@ -432,7 +432,7 @@ export {
 };
 ```
 
-- [ ] Run: `node deploy/hub-auth.test.mjs` — expect PASS (about 27 assertions).
+- [ ] Run: `node deploy/hub-auth.test.mjs` - expect PASS (about 27 assertions).
 - [ ] Commit: `git add deploy/api/_hub_session.js deploy/api/_hub_auth.js deploy/hub-auth.test.mjs && git commit -m "Add hub session cookie helpers and the Supabase Auth REST helper module"`.
 
 ---
@@ -531,7 +531,7 @@ async function main() {
 main();
 ```
 
-- [ ] Run: `node deploy/hub-signup.test.mjs` — expect FAIL (`./api/hub-signup.js` does not exist).
+- [ ] Run: `node deploy/hub-signup.test.mjs` - expect FAIL (`./api/hub-signup.js` does not exist).
 - [ ] Write `deploy/api/hub-signup.js`:
 
 ```js
@@ -659,7 +659,7 @@ export { isCrossSiteRequest, insertPendingProfile };
 export default handler;
 ```
 
-- [ ] Run: `node deploy/hub-signup.test.mjs` — expect PASS (about 10 assertions).
+- [ ] Run: `node deploy/hub-signup.test.mjs` - expect PASS (about 10 assertions).
 - [ ] Commit: `git add deploy/api/hub-signup.js deploy/hub-signup.test.mjs && git commit -m "Add the hub sign up endpoint"`.
 
 ---
@@ -805,7 +805,7 @@ async function main() {
 main();
 ```
 
-- [ ] Run: `node deploy/hub-signin.test.mjs` — expect FAIL (`./api/hub-signin.js` does not exist).
+- [ ] Run: `node deploy/hub-signin.test.mjs` - expect FAIL (`./api/hub-signin.js` does not exist).
 - [ ] Write `deploy/api/hub-signin.js`:
 
 ```js
@@ -996,7 +996,7 @@ export { isCrossSiteRequest, resolveAccess, loadProfile, upsertAdminProfile };
 export default handler;
 ```
 
-- [ ] Run: `node deploy/hub-signin.test.mjs` — expect PASS (about 20 assertions).
+- [ ] Run: `node deploy/hub-signin.test.mjs` - expect PASS (about 20 assertions).
 - [ ] Commit: `git add deploy/api/hub-signin.js deploy/hub-signin.test.mjs && git commit -m "Add the hub sign in endpoint with the approval gate and admin self heal"`.
 
 ---
@@ -1105,7 +1105,7 @@ async function main() {
 main();
 ```
 
-- [ ] Run both: `node deploy/hub-signout.test.mjs` and `node deploy/hub-whoami.test.mjs` — expect FAIL (files do not exist).
+- [ ] Run both: `node deploy/hub-signout.test.mjs` and `node deploy/hub-whoami.test.mjs` - expect FAIL (files do not exist).
 - [ ] Write `deploy/api/hub-signout.js`:
 
 ```js
@@ -1214,7 +1214,7 @@ async function handler(req, res) {
 export default handler;
 ```
 
-- [ ] Run both tests again — expect PASS (`hub-signout`: 6 assertions; `hub-whoami`: 6 assertions).
+- [ ] Run both tests again - expect PASS (`hub-signout`: 6 assertions; `hub-whoami`: 6 assertions).
 - [ ] Commit: `git add deploy/api/hub-signout.js deploy/api/hub-whoami.js deploy/hub-signout.test.mjs deploy/hub-whoami.test.mjs && git commit -m "Add the hub sign out and whoami endpoints"`.
 
 ---
@@ -1281,7 +1281,7 @@ console.log("\nhub-middleware-access suite: " + pass + " passed, " + fail + " fa
 process.exit(fail ? 1 : 0);
 ```
 
-- [ ] Run: `node deploy/hub-middleware-access.test.mjs` — expect FAIL (`decideHubAccess` not exported).
+- [ ] Run: `node deploy/hub-middleware-access.test.mjs` - expect FAIL (`decideHubAccess` not exported).
 - [ ] Run: `node deploy/site-middleware.test.mjs` to record the current baseline (all pass); this suite must still fully pass after the edit, unmodified, proving the SITE gate is untouched.
 - [ ] Edit `deploy/middleware.js`. Change the import line (current line 40) to also import from `_hub_session.js`:
 
@@ -1405,8 +1405,8 @@ Update the export line (current line 186) to:
 export { config, decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch, decideHubAccess };
 ```
 
-- [ ] Run: `node deploy/hub-middleware-access.test.mjs` — expect PASS (about 25 assertions).
-- [ ] Run: `node deploy/site-middleware.test.mjs` — expect PASS, unchanged from the baseline recorded above (proves the SITE gate is untouched).
+- [ ] Run: `node deploy/hub-middleware-access.test.mjs` - expect PASS (about 25 assertions).
+- [ ] Run: `node deploy/site-middleware.test.mjs` - expect PASS, unchanged from the baseline recorded above (proves the SITE gate is untouched).
 - [ ] Commit: `git add deploy/middleware.js deploy/hub-middleware-access.test.mjs && git commit -m "Wire hub group gating into the edge middleware"`.
 
 ---
@@ -1455,13 +1455,13 @@ ok("roles view is gated on an authenticated session", /if\(!session\.authenticat
 ok("the admin card mount option is wired", /mount\(host,\s*\{\s*isAdmin:\s*session\.isAdmin\s*\}\)/.test(hub));
 ok("dashboard copy line is unchanged", hub.includes("Dashboard access for HSE, employer, Clinical Partner, and WCB."));
 ok("worker app link is unchanged", /href="\/app"/.test(hub));
-ok("page stays dash clean", !/[–—]/.test(hub));
+ok("page stays dash clean", !/[\u2013\u2014]/.test(hub));
 
 console.log("\nhub-index suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
 ```
 
-- [ ] Run: `node deploy/hub-index.test.mjs` — expect FAIL (current page has the one time code form, no whoami call, Presenter Controls present).
+- [ ] Run: `node deploy/hub-index.test.mjs` - expect FAIL (current page has the one time code form, no whoami call, Presenter Controls present).
 - [ ] Add two rules to `deploy/hub/index.html`'s `<style>` block (after the `.presenter` rules, current lines 32 to 34):
 
 ```css
@@ -1631,7 +1631,7 @@ process.exit(fail ? 1 : 0);
 </script>
 ```
 
-- [ ] Run: `node deploy/hub-index.test.mjs` — expect PASS (16 assertions).
+- [ ] Run: `node deploy/hub-index.test.mjs` - expect PASS (16 assertions).
 - [ ] Edit `hub-roles/src/main.jsx`: change `mount` (current lines 171 to 179) to:
 
 ```jsx
@@ -1667,7 +1667,7 @@ ok("built bundle carries the isAdmin filter", bundle.includes("isAdmin"));
 ```
 
 - [ ] Run: `cd hub-roles && npm run build` (Vite lib build; `node_modules` already installed; output goes straight to `deploy/hub/roles.js` per `vite.config.mjs`'s `outDir`).
-- [ ] Run: `node deploy/hub-roles.test.mjs` — expect PASS (all pre-existing assertions plus the 3 new ones; the pre-existing ones assert only against `main.jsx`'s source text and the built bundle's text, both of which still carry every card's copy, order, and routing unchanged).
+- [ ] Run: `node deploy/hub-roles.test.mjs` - expect PASS (all pre-existing assertions plus the 3 new ones; the pre-existing ones assert only against `main.jsx`'s source text and the built bundle's text, both of which still carry every card's copy, order, and routing unchanged).
 - [ ] Commit: `git add deploy/hub/index.html hub-roles/src/main.jsx deploy/hub/roles.js deploy/hub-roles.test.mjs deploy/hub-index.test.mjs && git commit -m "Replace the hub one time code sign in with email and password auth; admin card is admin only"`.
 
 ---
@@ -1794,7 +1794,7 @@ async function main() {
 main();
 ```
 
-- [ ] Run: `node deploy/hub-admin.test.mjs` — expect FAIL (`./api/hub-admin.js` does not exist).
+- [ ] Run: `node deploy/hub-admin.test.mjs` - expect FAIL (`./api/hub-admin.js` does not exist).
 - [ ] Write `deploy/api/hub-admin.js`:
 
 ```js
@@ -2146,7 +2146,7 @@ loadAll();
 </html>
 ```
 
-- [ ] Run: `node deploy/hub-admin.test.mjs` — expect PASS (about 28 assertions).
+- [ ] Run: `node deploy/hub-admin.test.mjs` - expect PASS (about 28 assertions).
 - [ ] Commit: `git add deploy/api/hub-admin.js deploy/admin-hub-users.html deploy/hub-admin.test.mjs && git commit -m "Add the hub admin approval surface"`.
 
 ---

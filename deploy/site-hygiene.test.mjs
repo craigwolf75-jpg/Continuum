@@ -57,7 +57,6 @@ const gatedFiles = [
   "hub/index.html",
   "app/index.html",
   "screens/index.html",
-  "screens/legacy/demo.html",
   "demo/index.html",
   "privacy.html",
   "terms.html"
