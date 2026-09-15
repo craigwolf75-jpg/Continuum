@@ -41,6 +41,7 @@ ok("/api/site-access allows without a cookie", decideSiteAccess("/api/site-acces
 ok("/api/marketing-lead allows without a cookie (lead form posts from the gate)", decideSiteAccess("/api/marketing-lead", false, undefined) === "allow");
 ok("/book allows without a cookie (access-request page)", decideSiteAccess("/book", false, undefined) === "allow");
 ok("/book.html allows without a cookie", decideSiteAccess("/book.html", false, undefined) === "allow");
+ok("/continuum_tokens.css allows without a cookie (book and holding token file)", decideSiteAccess("/continuum_tokens.css", false, undefined) === "allow");
 ok("/worker allows without a cookie (live worker sign in and sign up)", decideSiteAccess("/worker", false, undefined) === "allow");
 ok("/worker/login.html allows without a cookie", decideSiteAccess("/worker/login.html", false, undefined) === "allow");
 

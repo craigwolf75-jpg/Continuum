@@ -2,8 +2,10 @@
    Every colour on a product surface must be a design token, so no page carries
    a raw #RRGGBB/#RGB colour literal. Hex lives only in the token files
    (continuum_tokens.css, continuum-vars.css). Out of scope by design: the
-   marketing landing (index.html), the legal pages, the 404, the demo and the
-   legacy screens keep their own look. Character entities (&#8594; etc.) are
+   marketing landing (index.html), the legal pages, the 404, the demo, the
+   live worker drop under worker/ (inline palette from the 12-screen ship;
+   an Apollo token pass is a later mission), and the legacy screens keep
+   their own look. Character entities (&#8594; etc.) are
    4 to 5 digits and never match the 6/3-digit colour pattern. No dashes. */
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -27,6 +29,7 @@ function scan(dir, prefix) {
       const rel = prefix + f.name;
       if (prefix === "" && EXCLUDE.has(f.name)) continue;      // root marketing/legal/404
       if (rel === "demo/index.html") continue;                 // demo surface, own look
+      if (rel.startsWith("worker/")) continue;                 // live worker drop, own look
       const html = readFileSync(join(dir, f.name), "utf8").replace(/https?:\/\/[^"'\s]+/g, " "); // drop URLs
       const hits = [...new Set(html.match(hexRe) || [])];
       if (hits.length) out.push(`${rel}: ${hits.slice(0, 6).join(", ")}`);

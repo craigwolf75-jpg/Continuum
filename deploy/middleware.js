@@ -76,6 +76,7 @@ const ALWAYS_PUBLIC_EXACT = new Set([
   "/terms.html",
   "/book",
   "/book.html",
+  "/continuum_tokens.css",
   "/robots.txt",
   "/sitemap.xml",
   "/api/site-access",

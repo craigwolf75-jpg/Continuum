@@ -27,6 +27,7 @@ ok("signup offers Sign up", /<h1>Sign up<\/h1>/.test(signup));
 ok("signup Create an account control present", signup.includes("Create an account"));
 ok("signup links back to login.html", /href="login\.html"/.test(signup) && /Sign in/.test(signup));
 ok("signup posts through WK.signUp", /WK\.signUp\(/.test(signup));
+ok("signup page has no raw colour hex", !/#[0-9A-Fa-f]{3,6}\b/.test(signup.replace(/https?:\/\/[^"'\s]+/g, " ")));
 ok("login posts through WK.signIn", /WK\.signIn\(/.test(login));
 ok("app.js defines WK.validateSignup", /WK\.validateSignup\s*=\s*function/.test(app));
 ok("app.js defines WK.signUp", /WK\.signUp\s*=\s*function/.test(app));

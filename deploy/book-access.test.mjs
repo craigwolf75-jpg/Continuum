@@ -27,6 +27,7 @@ ok("book page Request access control present", book.includes("Request access"));
 ok("book page work email field present", /id="reqEmail"/.test(book) && /type="email"/.test(book));
 ok("book page fail copy keeps the info@ mailto fallback", book.includes("email info@continuumrtw.com"));
 ok("book page success copy is the holding thanks line", book.includes("Thanks. We will be in touch shortly."));
+ok("book page loads design tokens, not raw hex", book.includes("/continuum_tokens.css") && !/#[0-9A-Fa-f]{3,6}\b/.test(book.replace(/https?:\/\/[^"'\s]+/g, " ")));
 ok("book page does not load a locked email template", !/emails\//.test(book) && !/resend\.dev/.test(book));
 ok("holding Book a demo CTA points at /book", /href="\/book"/.test(holding) && holding.includes("Book a demo"));
 ok("holding no longer uses the pending booking placeholder", !holding.includes("#booking-url-pending"));
