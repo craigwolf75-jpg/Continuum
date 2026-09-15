@@ -48,6 +48,8 @@ async function main() {
   ok("hub cookie name is ct_session", HUB_COOKIE_NAME === "ct_session");
   ok("hub cookie name is never ct_site", HUB_COOKIE_NAME !== "ct_site");
   ok("ADMIN_EMAILS seeds gary@farmceuticawellness.com", ADMIN_EMAILS.includes("gary@farmceuticawellness.com"));
+  ok("ADMIN_EMAILS seeds craig@continuumrtw.com", ADMIN_EMAILS.includes("craig@continuumrtw.com"));
+  ok("ADMIN_EMAILS seeds craigwolf75@gmail.com", ADMIN_EMAILS.includes("craigwolf75@gmail.com"));
 
   // -- sign then verify with the same secret returns the payload --
   const payload = { iat: now, exp: now + 30 * 24 * 60 * 60 };

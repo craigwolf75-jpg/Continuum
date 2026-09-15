@@ -30,7 +30,7 @@ const HUB_COOKIE_NAME = "ct_session";
 // carrying an actual email claim on every sign in, so isAuthorizedAdmin
 // below requires that email to be present in this list; a missing or empty
 // email claim is never treated as authorized.
-const ADMIN_EMAILS = ["gary@farmceuticawellness.com", "craig@continuumrtw.com"];
+const ADMIN_EMAILS = ["gary@farmceuticawellness.com", "craig@continuumrtw.com", "craigwolf75@gmail.com"];
 
 function getSubtle() {
   const c = globalThis.crypto;
