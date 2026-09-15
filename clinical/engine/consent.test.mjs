@@ -8,6 +8,7 @@ import {
   employerViewAllowed, workerPlanAllowed, boardSubmissionAllowed, pinkCopyAllowed,
   revokeConsentB, revocationNotice, withinRevocationSla, REVOCATION_SLA_SECONDS,
 } from "./consent.mjs";
+import { CONSENT_PROFILES } from "../db/provincial_rules.data.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
@@ -23,9 +24,13 @@ ok("a revoked consent B allows no employer view", employerViewAllowed(revoked) =
 ok("absent consent B allows no employer view (Section 5)", employerViewAllowed(null) === false && employerViewAllowed(undefined) === false);
 
 // -- criterion 7: consent never gates the board submission or the Pink Copy ------------
-ok("criterion 7: the board submission is allowed even when consent B is declined", boardSubmissionAllowed() === true);
+const statutory = CONSENT_PROFILES.alberta_statutory_report;
+ok("criterion 7: the board submission is allowed even when consent B is declined (statutory profile)", boardSubmissionAllowed(declined, statutory) === true);
 ok("criterion 7: the Pink Copy is available even when consent B is declined", pinkCopyAllowed() === true);
-ok("the board submission does not depend on the consent argument at all (statutory duty)", boardSubmissionAllowed(declined) === true && boardSubmissionAllowed(revoked) === true);
+ok("the statutory profile does not depend on the consent argument (duty to report)", boardSubmissionAllowed(declined, statutory) === true && boardSubmissionAllowed(revoked, statutory) === true);
+ok("a missing consent profile fails named, never defaults", (() => { try { boardSubmissionAllowed(declined); return false; } catch (e) { return e.code === "CONSENT-PROFILE-MISSING"; } })());
+ok("a requires_consent profile blocks when consent B is declined", boardSubmissionAllowed(declined, CONSENT_PROFILES.synthetic_test) === false);
+ok("a requires_consent profile allows when consent B is granted", boardSubmissionAllowed(granted, CONSENT_PROFILES.synthetic_test) === true);
 
 // -- revocation withdraws the employer view and stamps withdrawn_at --------------------
 const published = { id: "prs-1", employer_id: "e1", access: "active" };

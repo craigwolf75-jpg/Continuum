@@ -17,11 +17,13 @@ const norm = (v) => String(v === null || v === undefined ? "" : v).trim();
 const fail = (id, element, message) => ({ id, element, message });
 
 // ---------------------------------------------------------------------------
-// PHN polarity inversion (Section 5.3). The board element is "Patient does not
-// have an Alberta PHN" (Y means NO PHN), carried as PID.3/CX.5, with the PHN
-// value in PID.3/CX.1. The New XPath target Claimant/HavePersonalHealthNumber
-// has the INVERSE name, so its value is inverted deliberately. Verified against
-// the board samples on 2026-08-09: every sample carries CX.5=Y with CX.1 blank.
+// Worker identifier polarity inversion (Section 5.3). The board element is
+// "Patient does not have a [worker identifier]" (Y means NO identifier), carried
+// as PID.3/CX.5, with the value in PID.3/CX.1. The New XPath target
+// Claimant/HavePersonalHealthNumber has the INVERSE name, so its value is
+// inverted deliberately. Verified against the board samples on 2026-08-09:
+// every sample carries CX.5=Y with CX.1 blank. The element label comes from
+// the jurisdiction worker_identifier_label, never a hard coded province name.
 // ---------------------------------------------------------------------------
 
 // The two PID.3 fields the board expects.
@@ -35,11 +37,13 @@ export function havePhnXpathValue(doesNotHavePhn) {
   return doesNotHavePhn ? "N" : "Y"; // deliberate inversion
 }
 
-// VAL-X01: Alberta PHN blank when the no PHN indicator is Yes, present when No.
-export function valX01(doesNotHavePhn, phnValue) {
+// VAL-X01: worker identifier blank when the no identifier indicator is Yes,
+// present when No. profile.worker_identifier_label is the element name.
+export function valX01(doesNotHavePhn, phnValue, profile) {
+  const label = (profile && profile.worker_identifier_label) || "Worker identifier";
   const fails = [];
-  if (doesNotHavePhn && !isBlank(phnValue)) fails.push(fail("VAL-X01", "Alberta PHN", "PHN must be blank when the no PHN indicator is Yes"));
-  if (!doesNotHavePhn && isBlank(phnValue)) fails.push(fail("VAL-X01", "Alberta PHN", "PHN is required when the no PHN indicator is No"));
+  if (doesNotHavePhn && !isBlank(phnValue)) fails.push(fail("VAL-X01", label, "identifier must be blank when the no identifier indicator is Yes"));
+  if (!doesNotHavePhn && isBlank(phnValue)) fails.push(fail("VAL-X01", label, "identifier is required when the no identifier indicator is No"));
   return fails;
 }
 

@@ -9,13 +9,17 @@ import {
   collectSigned, blockedByInactivePractitioner, onValidationFailure, runBatch,
   DEFAULT_BATCH_SCHEDULE,
 } from "./batch.mjs";
+import { createProvincialStore } from "../db/provincial_rules.data.mjs";
+import { holidaySet, resolveDeadline } from "./jurisdiction.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
-// concrete anchors: 2026-07-31 is a Friday, 2026-08-03 is a Monday (Alberta Heritage Day).
+// concrete anchors: 2026-07-31 is a Friday, 2026-08-03 is a Monday (Heritage Day in the holiday table).
 const FRI = "2026-07-31", MON_HOL = "2026-08-03", TUE = "2026-08-04";
-const holidays = new Set([MON_HOL]);
+const store = createProvincialStore();
+const holidays = holidaySet(store, "AB");
+const sameDay = resolveDeadline("AB", "same_day_cutoff", FRI + "T16:30:00", store);
 const dow = (d) => new Date(d + "T00:00:00Z").getUTCDay();
 
 ok("the anchor dates are the expected days of the week", dow(FRI) === 5 && dow(MON_HOL) === 1);
@@ -28,18 +32,19 @@ ok("next business day skips the weekend and the Monday holiday to Tuesday", next
 ok("without the holiday, next business day after Friday is Monday", nextBusinessDay(FRI, new Set()) === MON_HOL);
 
 // -- the same day tier deadline (Section 4.1) -----------------------------------------
-ok("the same day tier deadline is 10:00 the next business day", (() => { const d = sameDayTierDeadline(FRI, holidays); return d.date === TUE && d.time === "10:00"; })());
+ok("the same day tier deadline is the configured cutoff the next business day", (() => { const d = sameDayTierDeadline(FRI, holidays, sameDay.time); return d.date === TUE && d.time === sameDay.time; })());
+ok("sameDayTierDeadline without a cutoff fails named", (() => { try { sameDayTierDeadline(FRI, holidays); return false; } catch (e) { return e.code === "DEADLINE-MISSING"; } })());
 
 // -- criterion 6: signed 16:30 Friday targets the 17:00 same day batch, not 00:05 ------
-const target = targetBatch({ date: FRI, time: "16:30" }, { holidays });
+const target = targetBatch({ date: FRI, time: "16:30" }, { holidays, deadline: sameDay });
 ok("criterion 6: the target batch is the same day 17:00 batch", target.date === FRI && target.time === "17:00");
 ok("criterion 6: it is NOT deferred to the overnight 00:05 batch", !(target.time === "00:05"));
 ok("criterion 6: the chosen batch meets the same day tier", target.meetsTier === true);
-ok("criterion 6: the deadline it was computed against is Tuesday 10:00", target.deadline.date === TUE && target.deadline.time === "10:00");
+ok("criterion 6: the deadline it was computed against is Tuesday at the configured cutoff", target.deadline.date === TUE && target.deadline.time === sameDay.time);
 
 // -- other scheduling cases -----------------------------------------------------------
-ok("a report signed 09:30 targets the 14:00 batch the same day", (() => { const t = targetBatch({ date: FRI, time: "09:30" }, { holidays }); return t.date === FRI && t.time === "14:00"; })());
-ok("a report signed 23:00 targets the next day 00:05 batch", (() => { const t = targetBatch({ date: FRI, time: "23:00" }, { holidays }); return t.date === "2026-08-01" && t.time === "00:05"; })());
+ok("a report signed 09:30 targets the 14:00 batch the same day", (() => { const t = targetBatch({ date: FRI, time: "09:30" }, { holidays, deadline: sameDay }); return t.date === FRI && t.time === "14:00"; })());
+ok("a report signed 23:00 targets the next day 00:05 batch", (() => { const t = targetBatch({ date: FRI, time: "23:00" }, { holidays, deadline: sameDay }); return t.date === "2026-08-01" && t.time === "00:05"; })());
 ok("the default schedule is the four board slots", DEFAULT_BATCH_SCHEDULE.length === 4 && DEFAULT_BATCH_SCHEDULE.includes("17:00"));
 
 // -- the batch state machine ----------------------------------------------------------
