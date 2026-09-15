@@ -21,8 +21,8 @@ ok("gate off allows / without a cookie", decideSiteAccess("/", false, "false") =
 ok("gate off allows /hub without a cookie", decideSiteAccess("/hub", false, "false") === "allow");
 ok("gate off allows /admin-portal without a cookie", decideSiteAccess("/admin-portal", false, "false") === "allow");
 ok(
-  "gate off allows /continuum_workflow_app without a cookie",
-  decideSiteAccess("/continuum_workflow_app", false, "false") === "allow"
+  "gate off allows /demo without a cookie",
+  decideSiteAccess("/demo", false, "false") === "allow"
 );
 
 // -- ALWAYS_PUBLIC exact paths allow without a cookie (gate on) --
@@ -39,6 +39,10 @@ ok("/robots.txt allows without a cookie", decideSiteAccess("/robots.txt", false,
 ok("/sitemap.xml allows without a cookie", decideSiteAccess("/sitemap.xml", false, undefined) === "allow");
 ok("/api/site-access allows without a cookie", decideSiteAccess("/api/site-access", false, undefined) === "allow");
 ok("/api/marketing-lead allows without a cookie (lead form posts from the gate)", decideSiteAccess("/api/marketing-lead", false, undefined) === "allow");
+ok("/book allows without a cookie (access-request page)", decideSiteAccess("/book", false, undefined) === "allow");
+ok("/book.html allows without a cookie", decideSiteAccess("/book.html", false, undefined) === "allow");
+ok("/worker allows without a cookie (live worker sign in and sign up)", decideSiteAccess("/worker", false, undefined) === "allow");
+ok("/worker/login.html allows without a cookie", decideSiteAccess("/worker/login.html", false, undefined) === "allow");
 
 // -- ALWAYS_PUBLIC prefix and exact asset paths allow without a cookie --
 ok("/favicon.ico allows without a cookie", decideSiteAccess("/favicon.ico", false, undefined) === "allow");
@@ -73,7 +77,7 @@ for (const stillGated of ["/hse-portal", "/employer-dashboard", "/clinical-dashb
 }
 
 // -- ordinary gated paths hold without a cookie, allow with a valid one --
-for (const gatedPath of ["/hub", "/admin-portal", "/continuum_workflow_app"]) {
+for (const gatedPath of ["/hub", "/admin-portal", "/demo"]) {
   ok(gatedPath + " without a cookie holds", decideSiteAccess(gatedPath, false, undefined) === "holding");
   ok(gatedPath + " with a valid cookie allows", decideSiteAccess(gatedPath, true, undefined) === "allow");
 }

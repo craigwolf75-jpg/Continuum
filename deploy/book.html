@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continuum: Request access</title>
+<meta name="description" content="Request Continuum access. Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://continuumrtw.com/book">
+<link rel="icon" href="/continuum-logo.svg" type="image/svg+xml">
+<style>
+:root{
+  --ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-500:#55697E;--ink-200:#D6DDE4;
+  --white:#fff;--action-600:#1A66BC;--stop-700:#A8201A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:#F5F7F9;
+  color:var(--ink-900);
+  font:16px/1.6 -apple-system,"Segoe UI",Roboto,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:32px 20px;
+}
+.wrap{width:100%;max-width:560px;text-align:center}
+.logo{height:34px;width:auto;margin:0 auto 44px;display:block}
+h1{
+  font-weight:600;
+  font-size:clamp(28px,5vw,40px);
+  letter-spacing:-0.01em;
+  line-height:1.2;
+  margin-bottom:14px;
+}
+.locked{
+  color:var(--action-600);
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-bottom:26px;
+}
+.desc{
+  color:var(--ink-500);
+  font-size:16px;
+  line-height:1.65;
+  max-width:440px;
+  margin:0 auto 36px;
+}
+.actions{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.btn{
+  display:inline-block;
+  padding:13px 26px;
+  border-radius:12px;
+  font-size:14.5px;
+  font-weight:600;
+  text-decoration:none;
+  min-height:44px;
+}
+.btn-primary{background:var(--action-600);color:var(--white);border:none;cursor:pointer;font:inherit}
+.btn-primary:disabled{opacity:.5;cursor:default}
+.req-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.req-form input{
+  padding:12px 16px;
+  border-radius:12px;
+  border:1px solid var(--ink-200);
+  background:var(--white);
+  color:var(--ink-900);
+  font-size:14.5px;
+  min-width:220px;
+  min-height:44px;
+}
+.req-msg{color:var(--ink-500);font-size:13.5px;max-width:440px;margin:0 auto 40px}
+.req-msg.err{color:var(--stop-700)}
+footer{
+  border-top:1px solid var(--ink-200);
+  padding-top:22px;
+  color:var(--ink-500);
+  font-size:12.5px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+footer a{color:var(--ink-500);text-decoration:none}
+footer a:hover{color:var(--ink-900)}
+.dot{color:var(--ink-200)}
+:focus-visible{outline:2px solid var(--action-600);outline-offset:2px}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+@media (max-width:520px){
+  .req-form{flex-direction:column;align-items:stretch}
+  .req-form input,.btn-primary{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo" src="/continuum-logo.svg" alt="Continuum" width="240" height="86">
+  <h1>Request access</h1>
+  <div class="locked">THE NEW STANDARD FOR WORKPLACE INJURY MANAGEMENT</div>
+  <p class="desc">Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.</p>
+  <div class="actions">
+    <form class="req-form" id="reqForm" novalidate>
+      <label for="reqEmail" class="sr-only">Your work email</label>
+      <input type="email" id="reqEmail" name="email" placeholder="Your work email" autocomplete="email" required>
+      <button type="submit" class="btn btn-primary" id="reqSubmit">Request access</button>
+    </form>
+  </div>
+  <p class="req-msg" id="reqMsg" role="status" aria-live="polite" hidden></p>
+  <footer>
+    <a href="mailto:info@continuumrtw.com">info@continuumrtw.com</a>
+    <span class="dot">&middot;</span>
+    <a href="/privacy">Privacy</a>
+    <span class="dot">&middot;</span>
+    <a href="/terms">Terms</a>
+  </footer>
+</div>
+<script>
+(function(){
+  var form = document.getElementById("reqForm");
+  var input = document.getElementById("reqEmail");
+  var submitBtn = document.getElementById("reqSubmit");
+  var msg = document.getElementById("reqMsg");
+  if (!form) return;
+
+  function setMsg(text, isError){
+    if (!text) { msg.hidden = true; msg.textContent = ""; msg.classList.remove("err"); return; }
+    msg.hidden = false;
+    msg.textContent = text;
+    msg.classList.toggle("err", Boolean(isError));
+  }
+
+  var FAIL = "That did not go through. Please try again, or email info@continuumrtw.com.";
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var email = input.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      setMsg("Please enter a valid email address.", true);
+      input.focus();
+      return;
+    }
+    setMsg("");
+    submitBtn.disabled = true;
+
+    fetch("/api/marketing-lead", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: email, source: "/book" })
+    }).then(function(res){
+      if (res.status === 200) {
+        form.reset();
+        setMsg("Thanks. We will be in touch shortly.");
+      } else {
+        setMsg(FAIL, true);
+      }
+      submitBtn.disabled = false;
+    }).catch(function(){
+      setMsg(FAIL, true);
+      submitBtn.disabled = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -16,6 +16,27 @@
 
   WK.session = function () { return sb.auth.getSession().then(function (r) { return r.data.session; }); };
   WK.signIn = function (email, password) { return sb.auth.signInWithPassword({ email: email, password: password }); };
+  // Pure: shape check for worker sign up. No I/O. Mirrors hub min length 8.
+  WK.validateSignup = function (email, password) {
+    var e = typeof email === "string" ? email.trim().toLowerCase() : "";
+    var p = typeof password === "string" ? password : "";
+    if (!e || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return { ok: false, error: "a valid email is required" };
+    if (!p || p.length < 8) return { ok: false, error: "password must be at least 8 characters" };
+    return { ok: true, email: e, password: p };
+  };
+  // Live supabase signUp, then a typed error object, then a safe default.
+  // Never throws to the page. Session may be null when email confirm is on.
+  WK.signUp = function (email, password) {
+    var v = WK.validateSignup(email, password);
+    if (!v.ok) return Promise.resolve({ data: { user: null, session: null }, error: { message: v.error } });
+    try {
+      return sb.auth.signUp({ email: v.email, password: v.password }).catch(function (e) {
+        return { data: { user: null, session: null }, error: { message: (e && e.message) || "Sign up failed." } };
+      });
+    } catch (e) {
+      return Promise.resolve({ data: { user: null, session: null }, error: { message: "Sign up failed." } });
+    }
+  };
   WK.signOut = function () { return sb.auth.signOut(); };
   WK.guard = function (loginUrl) {
     return WK.session().then(function (s) { if (!s) { location.href = loginUrl || "login.html"; return null; } return s; });

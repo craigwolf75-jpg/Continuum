@@ -29,21 +29,19 @@ ok("functional fields are kept", r.name === "Worker 15" && r.status === "light_d
 ok("ts is auto-added when absent", typeof r.ts === "number");
 ok("a provided ts is preserved", project({ ts: 123 }).ts === 123);
 
-// all three worker surfaces route through the one shared projection
-const w = read("worker-dashboard.html"), wf = read("continuum_workflow_app.html"), we = read("worker-embed.html");
+// remaining live worker surfaces route through the one shared projection
+const w = read("worker-dashboard.html"), we = read("worker-embed.html");
 ok("worker-dashboard loads bridge.js", w.includes('src="/bridge.js"'));
-ok("workflow app loads bridge.js", wf.includes('src="/bridge.js"'));
 ok("worker-embed loads bridge.js", we.includes('src="/bridge.js"'));
 ok("worker-dashboard writes via ContinuumBridge", /ContinuumBridge\.writeBridgeShared\(/.test(w));
-ok("workflow app writes via ContinuumBridge", /ContinuumBridge\.writeBridgeShared\(/.test(wf));
 ok("worker-embed writes via ContinuumBridge", /ContinuumBridge\.writeBridgeShared\(/.test(we));
 
 // no surface hand-rolls a direct write to the bridge key; only bridge.js does
-ok("no direct bridge setItem left in the worker surfaces", ![w, wf, we].some(s => /setItem\(\s*["']continuum_worker_bridge_v1|setItem\(BRIDGE_KEY/.test(s)));
+ok("no direct bridge setItem left in the worker surfaces", ![w, we].some(s => /setItem\(\s*["']continuum_worker_bridge_v1|setItem\(BRIDGE_KEY/.test(s)));
 ok("bridge.js is the single writer of the key", /localStorage\.setItem\(KEY/.test(js));
 
 // dash rule across the bridge files
-ok("bridge files dash clean", ![js, w, wf, we].some(s => /[–—]/.test(s)));
+ok("bridge files dash clean", ![js, w, we].some(s => /[–—]/.test(s)));
 
 console.log("\nbridge suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
