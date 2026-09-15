@@ -11,7 +11,7 @@ let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
 const GROUP1_PATHS = ["/employer-dashboard.html", "/hse-portal.html", "/worker-dashboard.html"];
-const GROUP2_PATHS = ["/clinical-dashboard.html", "/wcb-portal.html", "/sigma-portal.html"];
+const GROUP2_PATHS = ["/clinical-dashboard.html", "/wcb-portal.html", "/sigma-portal.html", "/sigma-panel.html", "/sigma-crtw-connection.html"];
 const ADMIN_PATHS = ["/admin-portal.html", "/admin-hub-users.html", "/admin-site-codes.html"];
 const ADMIN_EMAIL = "gary@farmceuticawellness.com";
 
