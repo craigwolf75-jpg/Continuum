@@ -103,6 +103,10 @@ ok("middleware decides not_found before parseCookies", firstDecide !== -1 && par
 ok("middleware decides not_found before verifySession", firstDecide !== -1 && verifyIdx !== -1 && firstDecide < verifyIdx);
 ok("middleware maps not_found to JSON 404", /status:\s*404/.test(mw) && mw.includes('"not found"'));
 ok("catch 404s /api/test before holding rewrite", catchBody.includes("not_found") && catchBody.indexOf("not_found") < catchBody.indexOf("rewriteToHolding"));
+ok("catch JSON-denies hub auth APIs before holding rewrite", catchBody.includes("site_access_required") && catchBody.indexOf("site_access_required") < catchBody.indexOf("rewriteToHolding"));
+ok("/api/hub-signin is absent from ALWAYS_PUBLIC_EXACT", !exactAllow.includes("/api/hub-signin"));
+ok("/api/hub-signup is absent from ALWAYS_PUBLIC_EXACT", !exactAllow.includes("/api/hub-signup"));
+ok("/api/hub-signin is absent from all ALWAYS_PUBLIC lists", !allAllow.includes("/api/hub-signin") && !allAllow.includes("/api/hub-signup"));
 
 console.log("\ntestability-guard suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

@@ -217,7 +217,7 @@
     var password=document.getElementById('signupPassword').value;
     var result=await postJson('/api/hub-signup',{email:email,password:password});
     if(result.ok&&result.data&&result.data.ok){ location.hash='#awaiting'; return; }
-    var msg=(result.data&&result.data.errors&&result.data.errors[0])||'Could not create account.';
+    var msg=(result.data&&(result.data.error||(result.data.errors&&result.data.errors[0])))||'Could not create account.';
     showErr('signupErr',msg);
   }
 

@@ -34,6 +34,8 @@ ok("/app is no longer the live worker entry", !hub.includes("Workers use the") &
 ok("worker card is the live companion", hub.includes("Your live recovery companion. Sign in with your email to open it.") && hub.includes('class="role role-worker" data-nav="/worker"'));
 ok("mixed check-in duties copy is off the worker card", !hub.includes("Your space for recovery. Do a quick check-in"));
 ok("page stays dash clean", !/[–—]/.test(hub));
+ok("signin reads data.error so a site cookie miss is not a password failure", /function doSignin[\s\S]*?result\.data\.error/.test(hub));
+ok("signup reads data.error so a site cookie miss is not a create failure", /function doSignup[\s\S]*?result\.data\.error/.test(hub));
 
 console.log("\nhub-index suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

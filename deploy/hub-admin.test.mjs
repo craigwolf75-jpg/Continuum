@@ -3,13 +3,23 @@
    fails closed (missing/wrong signature/expired ct_session, every action,
    zero Supabase calls), and the approve/reject Supabase writes carry the
    right status and access_group. No dashes anywhere. */
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import handler, { validateApproveInput, isCrossSiteRequest, GROUPS } from "./api/hub-admin.js";
-import { signHubSession } from "./api/_hub_session.js";
+import { signHubSession, ADMIN_EMAILS } from "./api/_hub_session.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
 ok("GROUPS is exactly group1 and group2 (admin is never assignable here)", GROUPS.length === 2 && GROUPS.includes("group1") && GROUPS.includes("group2") && !GROUPS.includes("admin"));
+
+const adminUsersHtml = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "admin-hub-users.html"), "utf8");
+ok("admin hub users copy lists gary@farmceuticawellness.com", adminUsersHtml.includes("gary@farmceuticawellness.com"));
+ok("admin hub users copy lists craig@continuumrtw.com", adminUsersHtml.includes("craig@continuumrtw.com"));
+ok("admin hub users copy lists craigwolf75@gmail.com", adminUsersHtml.includes("craigwolf75@gmail.com"));
+ok("admin hub users copy matches ADMIN_EMAILS membership", ADMIN_EMAILS.every((email) => adminUsersHtml.includes(email)));
+ok("admin hub users copy is dash clean", !/[–—]/.test(adminUsersHtml));
 
 ok("missing id is an error", validateApproveInput({ access_group: "group1" }).ok === false);
 ok("missing access_group is an error", validateApproveInput({ id: "u1" }).ok === false);

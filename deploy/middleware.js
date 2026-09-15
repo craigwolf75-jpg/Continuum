@@ -188,10 +188,27 @@ function isSuspiciousPath(pathname) {
   return lower.includes("..") || lower.includes("%2e") || lower.includes("%2f") || lower.includes("%5c");
 }
 
+// Hub auth API paths stay SITE gated: they are not on ALWAYS_PUBLIC. A missing
+// or invalid ct_site must not rewrite POST to holding HTML (that surfaces as
+// HTTP 405 HTML and the hub UI reports a password failure). These paths return
+// JSON instead. isHubAuthApiPath is exact (plus an optional trailing slash) so
+// /api/hub-signin-foo and traversal suffixes cannot ride this rule.
+function isHubAuthApiPath(pathname) {
+  if (typeof pathname !== "string") return false;
+  const lower = pathname.toLowerCase();
+  return (
+    lower === "/api/hub-signin" ||
+    lower === "/api/hub-signin/" ||
+    lower === "/api/hub-signup" ||
+    lower === "/api/hub-signup/"
+  );
+}
+
 // Pure decision function: no I/O, no crypto, no globals. Given a pathname, a
 // pre computed "is the cookie valid" boolean, the raw SITE_GATE_ENABLED
 // env string, and an optional vercelEnv (VERCEL_ENV), decide whether the
-// request should be allowed through, shown the holding page, or hard 404.
+// request should be allowed through, shown the holding page, answered with
+// JSON site access required (hub auth APIs only), or hard 404.
 // Fully unit testable in plain node. Callers that omit vercelEnv get the
 // same default as an unset VERCEL_ENV: /api/test is not_found.
 function decideSiteAccess(pathname, hasValidCookie, gateEnabledEnv, vercelEnv) {
@@ -220,6 +237,8 @@ function decideSiteAccess(pathname, hasValidCookie, gateEnabledEnv, vercelEnv) {
 
   if (isAlwaysPublic) return "allow";
 
+  if (!hasValidCookie && isHubAuthApiPath(pathname)) return "site_access_required";
+
   return hasValidCookie ? "allow" : "holding";
 }
 
@@ -228,6 +247,23 @@ function jsonNotFound() {
     status: 404,
     headers: { "content-type": "application/json", "cache-control": "no-store" }
   });
+}
+
+const SITE_ACCESS_ERROR = "Site access required. Unlock the site then try again.";
+
+function jsonSiteAccessRequired() {
+  return new Response(
+    JSON.stringify({
+      ok: false,
+      code: "SITE_ACCESS_REQUIRED",
+      error: SITE_ACCESS_ERROR,
+      errors: [SITE_ACCESS_ERROR]
+    }),
+    {
+      status: 403,
+      headers: { "content-type": "application/json", "cache-control": "no-store" }
+    }
+  );
 }
 
 async function middleware(request) {
@@ -261,6 +297,9 @@ async function middleware(request) {
     const decision = decideSiteAccess(url.pathname, hasValidCookie, gateEnabledEnv, vercelEnv);
     if (decision === "not_found") {
       return jsonNotFound();
+    }
+    if (decision === "site_access_required") {
+      return jsonSiteAccessRequired();
     }
     if (decision === "holding") {
       return rewriteToHolding(request);
@@ -304,8 +343,12 @@ async function middleware(request) {
     // Fail closed on any unexpected error: show the holding page rather than
     // risk leaking a gated route. /api/test on production and default still
     // 404s; holding HTML is forbidden for those paths.
-    if (decideSiteAccess(url.pathname, false, gateEnabledEnv, vercelEnv) === "not_found") {
+    const failClosed = decideSiteAccess(url.pathname, false, gateEnabledEnv, vercelEnv);
+    if (failClosed === "not_found") {
       return jsonNotFound();
+    }
+    if (failClosed === "site_access_required") {
+      return jsonSiteAccessRequired();
     }
     return rewriteToHolding(request);
   }
@@ -340,5 +383,5 @@ function passThrough(init) {
   return init ? next(init) : next();
 }
 
-export { config, decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch, decideHubAccess };
+export { config, decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch, decideHubAccess, isHubAuthApiPath };
 export default middleware;

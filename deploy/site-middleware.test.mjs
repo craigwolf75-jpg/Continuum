@@ -5,13 +5,12 @@
    bundles are never exempted by file extension, that the public allowlist
    uses bounded matches instead of loose prefixes, and that path traversal
    sequences never qualify for the allowlist.
-   PENDING CREDS: this proves the pure decision function only. The default
-   exported middleware(request) function, and the x-middleware-rewrite /
-   x-middleware-next header contract it depends on to rewrite (not redirect)
-   to the holding page, can only be proven inside an actual Vercel Edge
-   deployment, which is not available yet.
+   PENDING CREDS: holding page rewrites still depend on the Vercel Edge
+   rewrite contract. The JSON site_access_required path on POST
+   /api/hub-signin and /api/hub-signup is proven here by calling middleware.
    No dashes anywhere. */
-import { decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch, decideHubAccess } from "./middleware.js";
+import middleware, { decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch, decideHubAccess, isHubAuthApiPath } from "./middleware.js";
+import { issueSiteCookie, parseCookies } from "./api/_site_session.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
@@ -184,6 +183,79 @@ ok("/api/test/reset with cookie on preview allows", decideSiteAccess("/api/test/
 ok('kill switch "false" on preview allows /api/test/reset', decideSiteAccess("/api/test/reset", false, "false", "preview") === "allow");
 ok('kill switch "false" on production still not_found for /api/test/reset', decideSiteAccess("/api/test/reset", false, "false", "production") === "not_found");
 ok('kill switch "false" on default still not_found for /api/test/reset', decideSiteAccess("/api/test/reset", false, "false") === "not_found");
+
+// -- Hub auth APIs stay SITE gated: missing ct_site is site_access_required,
+//    never allow, and never a holding rewrite that would 405 a POST. --
+ok("isHubAuthApiPath matches /api/hub-signin", isHubAuthApiPath("/api/hub-signin") === true);
+ok("isHubAuthApiPath matches /api/hub-signup", isHubAuthApiPath("/api/hub-signup") === true);
+ok("isHubAuthApiPath matches a trailing slash", isHubAuthApiPath("/api/hub-signin/") === true);
+ok("isHubAuthApiPath rejects a suffix ride", isHubAuthApiPath("/api/hub-signin-foo") === false);
+ok("isHubAuthApiPath rejects /api/hub-whoami", isHubAuthApiPath("/api/hub-whoami") === false);
+ok("/api/hub-signin without a cookie is site_access_required, not allow", decideSiteAccess("/api/hub-signin", false, undefined) === "site_access_required");
+ok("/api/hub-signup without a cookie is site_access_required, not allow", decideSiteAccess("/api/hub-signup", false, undefined) === "site_access_required");
+ok("/api/hub-signin without a cookie is never allow", decideSiteAccess("/api/hub-signin", false, undefined) !== "allow");
+ok("/api/hub-signin without a cookie is never holding (JSON, not HTML rewrite)", decideSiteAccess("/api/hub-signin", false, undefined) !== "holding");
+ok("/api/hub-signin/ without a cookie is site_access_required", decideSiteAccess("/api/hub-signin/", false, undefined) === "site_access_required");
+ok("/API/hub-signin without a cookie is site_access_required", decideSiteAccess("/API/hub-signin", false, undefined) === "site_access_required");
+ok("/api/hub-signin with a valid cookie allows", decideSiteAccess("/api/hub-signin", true, undefined) === "allow");
+ok("/api/hub-signup with a valid cookie allows", decideSiteAccess("/api/hub-signup", true, undefined) === "allow");
+ok("/api/hub-signin-foo without a cookie still holds (not swallowed)", decideSiteAccess("/api/hub-signin-foo", false, undefined) === "holding");
+ok("/api/hub-whoami without a cookie still holds (other APIs stay gated)", decideSiteAccess("/api/hub-whoami", false, undefined) === "holding");
+ok('kill switch "false" still allows /api/hub-signin without a cookie', decideSiteAccess("/api/hub-signin", false, "false") === "allow");
+
+async function assertHubAuthJsonDeny(pathname, cookieHeader) {
+  const headers = { "content-type": "application/json" };
+  if (cookieHeader) headers.cookie = cookieHeader;
+  const res = await middleware(new Request("https://continuumrtw.com" + pathname, {
+    method: "POST",
+    headers,
+    body: "{}"
+  }));
+  const text = await res.text();
+  let body = null;
+  try { body = JSON.parse(text); } catch (e) { body = null; }
+  const label = pathname + (cookieHeader ? " invalid cookie" : " missing cookie");
+  ok(label + " middleware status is 403, not 405", res.status === 403 && res.status !== 405);
+  ok(label + " middleware content-type is JSON", (res.headers.get("content-type") || "").indexOf("application/json") !== -1);
+  ok(label + " middleware body is not HTML", text.indexOf("<") === -1);
+  ok(label + " middleware code is SITE_ACCESS_REQUIRED", body && body.code === "SITE_ACCESS_REQUIRED");
+  ok(label + " middleware error is the site access string", body && body.error === "Site access required. Unlock the site then try again.");
+  ok(label + " middleware ok is false", body && body.ok === false);
+  ok(label + " middleware errors[0] matches error", body && Array.isArray(body.errors) && body.errors[0] === body.error);
+}
+
+const prevGate = process.env.SITE_GATE_ENABLED;
+const prevSecret = process.env.CONTINUUM_SITE_SESSION_SECRET;
+const prevVercel = process.env.VERCEL_ENV;
+try {
+  delete process.env.SITE_GATE_ENABLED;
+  delete process.env.VERCEL_ENV;
+  delete process.env.CONTINUUM_SITE_SESSION_SECRET;
+
+  await assertHubAuthJsonDeny("/api/hub-signin");
+  await assertHubAuthJsonDeny("/api/hub-signup");
+
+  process.env.CONTINUUM_SITE_SESSION_SECRET = "site-middleware-hub-auth-test-secret";
+  await assertHubAuthJsonDeny("/api/hub-signin", "ct_site=not-a-valid-token");
+  await assertHubAuthJsonDeny("/api/hub-signup", "ct_site=not-a-valid-token");
+
+  const issued = await issueSiteCookie(process.env.CONTINUUM_SITE_SESSION_SECRET, Math.floor(Date.now() / 1000));
+  const validToken = parseCookies(issued).ct_site;
+  const allowed = await middleware(new Request("https://continuumrtw.com/api/hub-signin", {
+    method: "POST",
+    headers: { "content-type": "application/json", cookie: "ct_site=" + validToken },
+    body: "{}"
+  }));
+  ok("valid ct_site on /api/hub-signin is not SITE_ACCESS_REQUIRED", allowed.status !== 403);
+  ok("valid ct_site on /api/hub-signin is not 405", allowed.status !== 405);
+} finally {
+  if (prevGate === undefined) delete process.env.SITE_GATE_ENABLED;
+  else process.env.SITE_GATE_ENABLED = prevGate;
+  if (prevSecret === undefined) delete process.env.CONTINUUM_SITE_SESSION_SECRET;
+  else process.env.CONTINUUM_SITE_SESSION_SECRET = prevSecret;
+  if (prevVercel === undefined) delete process.env.VERCEL_ENV;
+  else process.env.VERCEL_ENV = prevVercel;
+}
 
 console.log("\nsite-middleware suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
