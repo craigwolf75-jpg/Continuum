@@ -15,11 +15,15 @@ const sql = names.map((f) => readFileSync(join(migDir, f), "utf8")).join("\n");
 const shim = readFileSync(join(root, "supabase", "ci", "01_clinical_identity_shim.sql"), "utf8");
 const yml = readFileSync(join(root, ".github", "workflows", "exposure-proof.yml"), "utf8");
 const tests = readFileSync(join(root, "supabase", "tests", "worker_schema.sql"), "utf8");
+const gateTests = readFileSync(join(root, "supabase", "tests", "worker_provision_gate.sql"), "utf8");
 const archive = readFileSync(join(root, "supabase", "archive", "clinician-fork", "README.md"), "utf8");
+const gateMigName = "20260915150000_worker_provision_invite_gate.sql";
+const gateMig = readFileSync(join(migDir, gateMigName), "utf8");
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
-ok("five 20260915 worker migrations present", names.length === 5);
+ok("six 20260915 worker migrations present", names.length === 6);
+ok("invite-gate migration is present", names.includes(gateMigName));
 ok("creates schema worker", /create schema if not exists worker/i.test(sql));
 ok("shipping worker SQL has no clinician. token", !sql.includes("clinician."));
 ok("has auth.users trigger", /after insert on auth\.users/i.test(sql));
@@ -46,12 +50,31 @@ ok("CI shim is dash clean", !/[–—]/.test(shim));
 
 ok("exposure-proof applies 01 after 00", /01_clinical_identity_shim\.sql/.test(yml));
 ok("exposure-proof runs worker_schema.sql", /supabase\/tests\/worker_schema\.sql/.test(yml));
+ok("exposure-proof runs worker_provision_gate.sql", /supabase\/tests\/worker_provision_gate\.sql/.test(yml));
 ok("workflow is dash clean", !/[–—]/.test(yml));
 
 ok("worker_schema.sql tests the trigger", /worker\.worker_account/.test(tests) && /auth\.users/.test(tests));
 ok("worker_schema.sql tests owns_case", /worker\.owns_case/.test(tests));
 ok("worker_schema.sql forbids clinician. in pg_get_functiondef", /pg_get_functiondef/.test(tests) && /clinician\./.test(tests));
 ok("worker_schema.sql is dash clean", !/[–—]/.test(tests));
+
+ok("gate migration records provision_worker revoke from public, anon, authenticated",
+  /revoke execute on function worker\.provision_worker\(uuid, text\)\s+from public, anon, authenticated;/i.test(gateMig));
+ok("gate migration creates worker.case_invite", /create table if not exists worker\.case_invite/i.test(gateMig));
+ok("gate migration refuses uninvited case bind", /not invited to this case/.test(gateMig));
+ok("gate migration invite check precedes case lookup",
+  gateMig.indexOf("not invited to this case") < gateMig.indexOf("case not found"));
+ok("gate migration does not grant execute on provision_worker",
+  !/grant execute on function worker\.provision_worker/i.test(gateMig));
+ok("gate migration is dash clean", !/[–—]/.test(gateMig));
+
+ok("worker_provision_gate.sql denies anon execute", /set role anon/.test(gateTests) && /insufficient_privilege/.test(gateTests));
+ok("worker_provision_gate.sql denies authenticated execute",
+  /authenticated still has execute on provision_worker/.test(gateTests)
+  && /authenticated executed provision_worker/.test(gateTests));
+ok("worker_provision_gate.sql denies uninvited bind", /uninvited caller bound an arbitrary case/.test(gateTests));
+ok("worker_provision_gate.sql proves invited bind", /invited bind did not set clinical_worker_id/.test(gateTests));
+ok("worker_provision_gate.sql is dash clean", !/[–—]/.test(gateTests));
 
 ok("archive note exists", /unused fork/i.test(archive) && /public\.workers/.test(archive));
 ok("archive note is dash clean", !/[–—]/.test(archive));
