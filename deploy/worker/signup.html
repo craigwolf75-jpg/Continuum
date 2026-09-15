@@ -4,22 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Continuum: sign up</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <style>
-:root{--ink-900:#0E1B2C;--white:#fff;--ink-050:#F5F7F9;--ink-200:#D6DDE4;--ink-400:#6E7E8E;--ink-500:#55697E;--ink-700:#2C3E52;
-  --action-600:#1A66BC;--action-700:#12559E;--stop-700:#A8201A;--stop-050:#FDECEA;
-  --font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:12px;--target:52px}
+:root{--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:12px;--target:52px}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;font-family:var(--font-ui);background:var(--ink-050);color:var(--ink-700);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;font-size:112.5%}
 .card{background:var(--white);border:1px solid var(--ink-200);border-radius:16px;width:100%;max-width:420px;padding:28px}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .mark{width:34px;height:34px;border-radius:9px;background:var(--ink-900);position:relative;flex:none}
-.mark::after{content:"";position:absolute;left:8px;top:16px;width:18px;height:2px;background:#fff;border-radius:2px;box-shadow:0 6px 0 rgba(255,255,255,.45),0 -6px 0 rgba(255,255,255,.45)}
+.mark::after{content:"";position:absolute;left:8px;top:16px;width:18px;height:2px;background:var(--white);border-radius:2px;box-shadow:0 6px 0 rgba(255,255,255,.45),0 -6px 0 rgba(255,255,255,.45)}
 .brand b{font-size:1.15rem;color:var(--ink-900)}
 h1{font-size:1.3rem;margin:0 0 4px;color:var(--ink-900)}p.sub{margin:0 0 20px;font-size:.9rem;color:var(--ink-500)}
 label{display:block;font-size:.9rem;font-weight:600;color:var(--ink-900);margin:0 0 8px}
 input{width:100%;min-height:var(--target);padding:0 14px;font:inherit;font-size:1rem;border:1px solid var(--ink-400);border-radius:var(--r);margin-bottom:16px;color:var(--ink-900)}
 input:focus{outline:2px solid var(--action-600);outline-offset:2px}
-button{width:100%;min-height:var(--target);border:1px solid var(--action-600);background:var(--action-600);color:#fff;font:inherit;font-weight:600;border-radius:var(--r);cursor:pointer}
+button{width:100%;min-height:var(--target);border:1px solid var(--action-600);background:var(--action-600);color:var(--white);font:inherit;font-weight:600;border-radius:var(--r);cursor:pointer}
 button:hover:not(:disabled){background:var(--action-700)}button:disabled{opacity:.6}
 .err{display:none;margin:0 0 16px;font-size:.9rem;color:var(--stop-700);background:var(--stop-050);border:1px solid var(--stop-700);border-radius:8px;padding:12px}
 .err.show{display:block}

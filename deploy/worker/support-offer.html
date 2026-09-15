@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Continuum: a note from your team</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <style>
 /* SCR-WRK-10 Support offer. Prompt 56 / Document 3.6.
    After a difficult event at work, offer support without asking the worker to
@@ -13,10 +14,8 @@
    repeat offer. Choosing no further check in is honoured immediately. The
    worker's response is never visible to the employer. No dashes, no banned
    vocabulary. */
-:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-050:#F5F7F9;--white:#fff;
-  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--ok-700:#0F7A55;--ok-050:#E6F5EE;--ok-800:#0B5C40;--stop-600:#C62828;--stop-700:#A8201A;
-  --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
-  --border-card:#AFBBC7;--focus-ring:var(--action-600);--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+:root{--bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
+  --border-card:var(--ink-300);--focus-ring:var(--action-600);--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
 *,*::before,*::after{box-sizing:border-box}
 html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
 body{margin:0;line-height:1.5}h1{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3;font-size:1.5rem}p{margin:0}
@@ -24,7 +23,7 @@ button,a{font:inherit;cursor:pointer;min-height:var(--target)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:6px}
 .app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 20px 24px;display:flex;flex-direction:column}
 .top{display:flex;align-items:center;gap:12px;padding:20px 0 8px}
-.avatar{width:48px;height:48px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 38%, #DCC79A, #C8972F 70%);position:relative;overflow:hidden;border:2px solid var(--white)}
+.avatar{width:48px;height:48px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 38%, var(--warn-050), var(--warn-500) 70%);position:relative;overflow:hidden;border:2px solid var(--white)}
 .avatar::after{content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);width:30px;height:30px;border-radius:50%;background:var(--ink-900)}
 .top span{font-size:.75rem;color:var(--text-tertiary)}
 .msg{font-size:1.1rem;color:var(--text-body);margin-top:8px}

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Continuum: today</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <style>
 /* ============================================================================
    SCR-WRK-01 Today. Prompt 56 / Document 3.6.
@@ -14,13 +15,7 @@
    No em/en dashes. No banned vocabulary.
    ========================================================================== */
 :root{
-  --ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;
-  --ink-400:#6E7E8E;--ink-300:#AFBBC7;--ink-200:#D6DDE4;--ink-100:#EAEFF3;
-  --ink-050:#F5F7F9;--white:#fff;
-  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;
-  --ok-800:#0B5C40;--ok-700:#0F7A55;--ok-050:#E6F5EE;
-  --warn-700:#8A5300;--warn-050:#FDF3E3;--stop-700:#A8201A;--stop-050:#FDECEA;
-  --gold:#8A6414;
+  --gold:var(--warn-700);
   --bg-page:var(--ink-050);--bg-surface:var(--white);--bg-subtle:var(--ink-100);
   --text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);
   --text-tertiary:var(--ink-500);--text-on-fill:var(--white);
@@ -44,7 +39,7 @@ button,a{min-height:var(--target)}
 
 /* companion greeting */
 .hello{display:flex;align-items:center;gap:12px;padding:20px 4px 8px}
-.avatar{width:52px;height:52px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 38%, #DCC79A, #C8972F 70%);
+.avatar{width:52px;height:52px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 38%, var(--warn-050), var(--warn-500) 70%);
   position:relative;overflow:hidden;border:2px solid var(--white);box-shadow:0 1px 4px rgb(14 27 44/15%)}
 .avatar::after{content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:var(--ink-900)}
 .hello .who b{display:block;font-size:.95rem;color:var(--text-primary)}
@@ -52,9 +47,9 @@ button,a{min-height:var(--target)}
 
 /* appointment line: first, every time */
 .appt{background:var(--ink-900);color:var(--white);border-radius:var(--r-lg);padding:18px 20px;margin-top:8px}
-.appt .lbl{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#AFC0D6}
+.appt .lbl{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-300)}
 .appt .when{font-size:1.5rem;font-weight:600;margin-top:6px}
-.appt .with{font-size:.9rem;color:#C7D4E4;margin-top:4px}
+.appt .with{font-size:.9rem;color:var(--ink-200);margin-top:4px}
 
 /* the disclosure line, directly under, every time */
 .disclose{background:var(--ok-050);border:1px solid var(--ok-700);border-radius:var(--r-md);

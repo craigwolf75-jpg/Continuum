@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Continuum: companion settings</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <style>
 /* SCR-WRK-09 Companion settings. Prompt 56 / Document 3.6.
    Shape the thing you talk to, without a configuration maze. One character from
@@ -12,10 +13,9 @@
    preselected; a neutral mark stands in until chosen, and the choice is never
    inferred from name, sex or gender. None of these settings is visible to anyone
    else. No dashes, no banned vocabulary. */
-:root{--ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;--ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
-  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;--gold:#C8972F;
+:root{--gold:var(--warn-500);
   --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);--text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
-  --border-divider:var(--ink-200);--border-card:#AFBBC7;--focus-ring:var(--action-600);--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
+  --border-divider:var(--ink-200);--border-card:var(--ink-300);--focus-ring:var(--action-600);--font-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--r:14px;--target:48px}
 *,*::before,*::after{box-sizing:border-box}
 html{font-family:var(--font-ui);font-size:112.5%;background:var(--bg-page);color:var(--text-body);-webkit-text-size-adjust:100%}
 body{margin:0;line-height:1.5}h1,h2{margin:0;color:var(--text-primary);font-weight:600;line-height:1.3}p{margin:0}
@@ -28,7 +28,7 @@ button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(
 .group h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-tertiary);margin-bottom:10px}
 .chars{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .char{aspect-ratio:1;border-radius:14px;border:2px solid var(--border-card);background:var(--bg-surface);position:relative;overflow:hidden}
-.char span{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%, #DCC79A, var(--gold) 72%)}
+.char span{position:absolute;inset:0;background:radial-gradient(circle at 50% 36%, var(--warn-050), var(--gold) 72%)}
 .char span::after{content:"";position:absolute;left:50%;bottom:-14%;transform:translateX(-50%);width:56%;height:56%;border-radius:50%;background:var(--ink-900)}
 .char[aria-pressed="true"]{border-color:var(--action-600);box-shadow:0 0 0 3px var(--action-050)}
 .field{margin-top:12px}.field:first-child{margin-top:0}
@@ -41,7 +41,7 @@ button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(
 .switchrow .lbl{font-size:1rem;color:var(--text-primary)}
 .toggle{width:56px;height:32px;border-radius:16px;border:1px solid var(--border-card);background:var(--ink-200);position:relative;padding:0}
 .toggle[aria-pressed="true"]{background:var(--action-600);border-color:var(--action-600)}
-.toggle .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .12s}
+.toggle .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--white);transition:left .12s}
 .toggle[aria-pressed="true"] .knob{left:27px}
 .note{font-size:.8rem;color:var(--text-tertiary);margin-top:10px}
 .foot{font-size:.75rem;color:var(--text-tertiary);text-align:center;padding:16px 0}

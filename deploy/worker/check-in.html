@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Continuum: check in</title>
+<link rel="stylesheet" href="/continuum-vars.css">
 <style>
 /* ============================================================================
    SCR-WRK-02 Check in, the Companion conversation. Prompt 56 / Document 3.6.
@@ -15,10 +16,6 @@
    judgements ("I recorded", never "I think that is going well").
    ========================================================================== */
 :root{
-  --ink-900:#0E1B2C;--ink-700:#2C3E52;--ink-600:#41556B;--ink-500:#55697E;
-  --ink-400:#6E7E8E;--ink-200:#D6DDE4;--ink-100:#EAEFF3;--ink-050:#F5F7F9;--white:#fff;
-  --action-800:#0E4680;--action-700:#12559E;--action-600:#1A66BC;--action-050:#EAF2FB;
-  --ok-800:#0B5C40;--ok-700:#0F7A55;--ok-050:#E6F5EE;--warn-700:#8A5300;--warn-050:#FDF3E3;
   --bg-page:var(--ink-050);--bg-surface:var(--white);--text-primary:var(--ink-900);
   --text-body:var(--ink-700);--text-secondary:var(--ink-600);--text-tertiary:var(--ink-500);
   --border-divider:var(--ink-200);--border-card:var(--ink-300);--focus-ring:var(--action-600);
@@ -36,7 +33,7 @@ button{min-height:var(--target)}
 
 .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:0 16px 20px}
 .top{display:flex;align-items:center;gap:10px;padding:16px 4px 8px}
-.avatar{width:44px;height:44px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 38%, #DCC79A, #C8972F 70%);position:relative;overflow:hidden;border:2px solid var(--white)}
+.avatar{width:44px;height:44px;border-radius:50%;flex:none;background:radial-gradient(circle at 50% 38%, var(--warn-050), var(--warn-500) 70%);position:relative;overflow:hidden;border:2px solid var(--white)}
 .avatar::after{content:"";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;background:var(--ink-900)}
 .top .who b{display:block;font-size:.85rem}.top .who span{font-size:.72rem;color:var(--text-tertiary)}
 .top .prog{margin-left:auto;font-size:.75rem;color:var(--text-tertiary)}
