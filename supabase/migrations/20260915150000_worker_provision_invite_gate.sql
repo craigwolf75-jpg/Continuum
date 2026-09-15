@@ -1,13 +1,16 @@
 -- Continuum worker provision invite gate. Append only; never edit once applied.
--- Records the REVOKE of worker.provision_worker EXECUTE so the repo matches
--- live (Hermes is revoking EXECUTE on live). Then adds worker.case_invite so a
--- worker can bind only a case they were invited to. Clinic-staff path stays
+-- Records the live REVOKE: EXECUTE on worker.provision_worker is revoked from
+-- authenticated, anon, and public. Owner remains postgres only. Zeus has not
+-- approved restoring EXECUTE to authenticated. This migration does not GRANT
+-- EXECUTE to authenticated, anon, public, or service_role.
+-- Then adds worker.case_invite so a worker can bind only a case they were
+-- invited to, once Zeus later approves a grant. Clinic-staff path stays
 -- parked. Public /worker signup via the auth.users trigger is unchanged.
 -- No em dashes or en dashes.
 
 begin;
 
--- Match live: the function is not callable by arbitrary clients.
+-- Match live: owner postgres only. Not callable by arbitrary clients.
 revoke execute on function worker.provision_worker(uuid, text)
   from public, anon, authenticated;
 
@@ -97,12 +100,10 @@ begin
 end;
 $$;
 
--- Recreate privileges after replace. Authenticated gets EXECUTE only because
--- the body now requires a matching unconsumed worker.case_invite. That is not
--- a restore of bind-any-case. anon and public stay revoked.
+-- Recreate privileges after replace. CREATE OR REPLACE keeps ACLs, but
+-- REVOKE again so a default PUBLIC grant cannot linger. Do not GRANT
+-- EXECUTE to authenticated until Zeus explicitly restores it.
 revoke execute on function worker.provision_worker(uuid, text)
   from public, anon, authenticated;
-grant execute on function worker.provision_worker(uuid, text)
-  to authenticated;
 
 commit;

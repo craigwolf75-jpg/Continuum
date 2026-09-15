@@ -64,16 +64,14 @@ ok("gate migration creates worker.case_invite", /create table if not exists work
 ok("gate migration refuses uninvited case bind", /not invited to this case/.test(gateMig));
 ok("gate migration invite check precedes case lookup",
   gateMig.indexOf("not invited to this case") < gateMig.indexOf("case not found"));
-ok("gate migration does not grant execute to anon",
-  !/grant execute on function worker\.provision_worker\(uuid, text\)\s+to anon/i.test(gateMig));
-ok("gate migration grant to authenticated follows the invite gate", (() => {
-  const grantAt = gateMig.search(/grant execute on function worker\.provision_worker\(uuid, text\)\s+to authenticated/i);
-  const gateAt = gateMig.indexOf("not invited to this case");
-  return grantAt > -1 && gateAt > -1 && gateAt < grantAt;
-})());
+ok("gate migration does not grant execute on provision_worker",
+  !/grant execute on function worker\.provision_worker/i.test(gateMig));
 ok("gate migration is dash clean", !/[–—]/.test(gateMig));
 
 ok("worker_provision_gate.sql denies anon execute", /set role anon/.test(gateTests) && /insufficient_privilege/.test(gateTests));
+ok("worker_provision_gate.sql denies authenticated execute",
+  /authenticated still has execute on provision_worker/.test(gateTests)
+  && /authenticated executed provision_worker/.test(gateTests));
 ok("worker_provision_gate.sql denies uninvited bind", /uninvited caller bound an arbitrary case/.test(gateTests));
 ok("worker_provision_gate.sql proves invited bind", /invited bind did not set clinical_worker_id/.test(gateTests));
 ok("worker_provision_gate.sql is dash clean", !/[–—]/.test(gateTests));

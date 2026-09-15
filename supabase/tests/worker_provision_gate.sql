@@ -1,9 +1,10 @@
 -- Continuum worker provision invite gate suite.
 -- Run by exposure-proof after worker_schema.sql. Proves:
---   anon cannot execute worker.provision_worker
---   authenticated cannot bind an arbitrary case UUID they were not invited to
---   an invited email plus matching case still binds
--- Setup as postgres, calls as anon or authenticated. No em dashes or en dashes.
+--   EXECUTE stays revoked from anon and authenticated (owner postgres only)
+--   authenticated cannot bind an arbitrary case UUID (cannot execute)
+--   invited email plus matching case still binds when the owner calls with
+--   that caller's jwt (the gated body, not a restored authenticated EXECUTE)
+-- Setup as postgres. No em dashes or en dashes.
 
 set role postgres;
 
@@ -87,12 +88,19 @@ begin
   ) then
     raise exception 'worker_provision_gate: anon still has execute on provision_worker';
   end if;
-  if not has_function_privilege(
+  if has_function_privilege(
     'authenticated',
     'worker.provision_worker(uuid, text)',
     'execute'
   ) then
-    raise exception 'worker_provision_gate: authenticated missing execute on gated provision_worker';
+    raise exception 'worker_provision_gate: authenticated still has execute on provision_worker';
+  end if;
+  if not has_function_privilege(
+    'postgres',
+    'worker.provision_worker(uuid, text)',
+    'execute'
+  ) then
+    raise exception 'worker_provision_gate: owner postgres missing execute on provision_worker';
   end if;
 end $$;
 
@@ -119,8 +127,28 @@ select set_config(
 set role authenticated;
 
 do $$
-declare
-  v_bound uuid;
+begin
+  begin
+    perform worker.provision_worker(
+      'aa110000-0000-0000-0000-000000000012',
+      'attacker.provision@continuum.test'
+    );
+    raise exception 'worker_provision_gate: authenticated executed provision_worker';
+  exception
+    when insufficient_privilege then null;
+  end;
+end $$;
+
+reset role;
+
+-- Gate body, owner only: jwt is the attacker, EXECUTE is postgres.
+select set_config(
+  'request.jwt.claims',
+  '{"role":"authenticated","sub":"aa110000-0000-0000-0000-000000000002"}',
+  false
+);
+
+do $$
 begin
   begin
     perform worker.provision_worker(
@@ -149,13 +177,11 @@ begin
   end;
 end $$;
 
-reset role;
 select set_config(
   'request.jwt.claims',
   '{"role":"authenticated","sub":"aa110000-0000-0000-0000-000000000001"}',
   false
 );
-set role authenticated;
 
 do $$
 declare
@@ -182,8 +208,6 @@ begin
     raise exception 'worker_provision_gate: invited bind returned null';
   end if;
 end $$;
-
-reset role;
 
 do $$
 begin
@@ -219,7 +243,6 @@ select set_config(
   '{"role":"authenticated","sub":"aa110000-0000-0000-0000-000000000001"}',
   false
 );
-set role authenticated;
 
 do $$
 begin
