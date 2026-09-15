@@ -251,7 +251,7 @@ var MONTHS=["May 25","Jun 1","Jun 8","Jun 15","Jun 22","Jun 29"];
 
 /* ---------- navigation ---------- */
 function empAudit(msg){if(!S.audit)S.audit=[];S.audit.unshift({msg:msg,ts:Date.now()});if(S.audit.length>25)S.audit.pop();}
-function go(sec){S.section=sec==="dashboards"?"overview":sec;S.filter=null;S.catFilter=null;if(S.section==="workers")empAudit("Viewed the injured workers functional list");save();window.scrollTo(0,0);}
+function go(sec){S.section=sec==="dashboards"?"overview":sec;S.filter=null;S.catFilter=null;if(S.section==="workers")empAudit("Viewed the active workers functional list");save();window.scrollTo(0,0);}
 function renderSide(){
  var h='<div class="logo" style="display:block"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="width:168px;display:block"><i style="display:block;margin-top:7px;color:var(--ink-400);font-size:10.5px;font-style:normal">What work is safe today</i></div>';
  NAV.forEach(function(n){
@@ -277,13 +277,13 @@ function kpiCard(label,big,delta,extra){return '<div class="card kpi"><div class
 function renderOverview(){
  var c=counts(),tot=actives().length,cats=catCounts(),bk=bucketCounts(),locs=locCounts();
  var DEM=!S.org;var FLAT=function(v){return [v,v,v,v,v,v];};
- var h=pagehead("The employer view",'Every recovery on <span class="g">one screen.</span>',"What work is safe today &middot; live functional status of injured workers and return-to-work progress",
+ var h=pagehead("The employer view",'Every recovery on <span class="g">one screen.</span>',"What work is safe today &middot; live functional status of active workers and return-to-work progress",
   '<button class="btn" onclick="window.print()">Export PDF</button> <button class="btn" onclick="go(\'workers\')">Filters</button>');
  h+='<div class="grid kpis">'+
- kpiCard("Total injured workers",tot,DEM?'<span class="down">&#8595; 8% vs last 7 days</span>':"pilot period",spark(DEM?[31,30,29,30,29,28]:FLAT(tot),64,34,"var(--ok-700)"))+
- kpiCard("New injuries, 7 days",newThisWeek(),DEM?'<span class="down">&#8595; 17% vs last 7 days</span>':"pilot period",spark(DEM?[7,6,7,6,5,5]:FLAT(newThisWeek()),64,34,"var(--ok-700)"))+
+ kpiCard("Active workers",tot,DEM?'<span class="down">&#8595; 8% vs last 7 days</span>':"pilot period",spark(DEM?[31,30,29,30,29,28]:FLAT(tot),64,34,"var(--ok-700)"))+
+ kpiCard("New cases, 7 days",newThisWeek(),DEM?'<span class="down">&#8595; 17% vs last 7 days</span>':"pilot period",spark(DEM?[7,6,7,6,5,5]:FLAT(newThisWeek()),64,34,"var(--ok-700)"))+
  kpiCard("Currently on light duty",c.light_duty,Math.round(c.light_duty/Math.max(1,tot)*100)+"% of active cases",donut([{v:c.light_duty,c:"var(--action-600)"},{v:tot-c.light_duty,c:"var(--ink-100)"}],tot,54,8,[Math.round(c.light_duty/Math.max(1,tot)*100)+"%",""]))+
- kpiCard("Avg days injured",avgDays(),DEM?'<span class="down">&#8595; 5% vs last 7 days</span>':"pilot period",spark(DEM?[27,26,25,25,24,24]:FLAT(avgDays()),64,34,"var(--ok-700)"))+
+ kpiCard("Avg days on case",avgDays(),DEM?'<span class="down">&#8595; 5% vs last 7 days</span>':"pilot period",spark(DEM?[27,26,25,25,24,24]:FLAT(avgDays()),64,34,"var(--ok-700)"))+
  kpiCard("Total appointments",totalVisits(),"this period",spark(DEM?[6,9,7,12,10,14]:FLAT(totalVisits()),64,34,"var(--ink-700)"))+
  kpiCard("Return to work rate",rtwRate()+"%",DEM?'<span class="up">&#8593; 6% vs last 7 days</span>':"pilot period",spark(DEM?[70,71,72,73,75,rtwRate()]:FLAT(rtwRate()),64,34,"var(--ok-700)",true))+
  '</div>';
@@ -294,7 +294,7 @@ function renderOverview(){
   donut(segs,tot,128,16,[tot,"Total"])+
   '<ul class="legend" style="flex:1">'+Object.keys(c).map(function(k){var col={light_duty:"var(--action-600)",treating:"var(--ink-700)",modified:"var(--ok-700)",awaiting:"var(--ink-300)"}[k];
    return '<li onclick="S.filter=\''+k+'\';S.section=\'workers\';save()"><span class="sw" style="background:'+col+'"></span>'+STATUS_META[k][0]+'<b>'+c[k]+'</b><span class="pct">('+Math.round(c[k]/Math.max(1,tot)*100)+'%)</span></li>';}).join("")+'</ul></div>'+
-  '<div style="margin-top:8px"><a href="#" onclick="go(\'workers\');return false" style="font-size:12px">View all injured workers &#8594;</a></div></div>';
+  '<div style="margin-top:8px"><a href="#" onclick="go(\'workers\');return false" style="font-size:12px">View all active workers &#8594;</a></div></div>';
  h+='<div class="card bars"><div class="cardhead">Days injured distribution</div>'+
   Object.keys(bk).map(function(k){var v=bk[k],pct=Math.round(v/Math.max(1,tot)*100);
    return '<div class="brow"><div class="bl"><b>'+k+'</b><span>'+v+' ('+pct+'%)</span></div><div class="bt"><i style="width:'+pct+'%;background:'+(k==="15 to 30 days"?"var(--ink-700)":k==="8 to 14 days"?"var(--action-600)":k==="60+ days"?"var(--warn-500)":"var(--ink-300)")+'"></i></div></div>';}).join("")+'</div>';
@@ -303,11 +303,11 @@ function renderOverview(){
   donut(Object.keys(CAT_META).map(function(k){return {v:cats[k]||0,c:CAT_META[k][1]};}),catT,128,16,null)+
   '<ul class="legend" style="flex:1">'+Object.keys(CAT_META).map(function(k){var v=cats[k]||0;
    return '<li onclick="S.catFilter=\''+k+'\';S.filter=null;S.section=\'workers\';save()"><span class="sw" style="background:'+CAT_META[k][1]+'"></span>'+CAT_META[k][0]+'<b>'+v+'</b><span class="pct">('+Math.round(v/Math.max(1,catT)*100)+'%)</span></li>';}).join("")+'</ul></div>'+
-  '<div style="margin-top:8px"><a href="#" onclick="go(\'workers\');return false" style="font-size:12px">View all injured workers &#8594;</a></div></div>';
+  '<div style="margin-top:8px"><a href="#" onclick="go(\'workers\');return false" style="font-size:12px">View all active workers &#8594;</a></div></div>';
  h+='<div class="card"><div class="cardhead">Key insights</div>'+
   (DEM?'<div class="insight"><span class="ic" style="background:var(--ok-700)"></span><div><b>Return to work rate improved</b><span>Up 6% compared to last 7 days.</span></div></div>'+
-  '<div class="insight"><span class="ic" style="background:var(--ink-700)"></span><div><b>Avg days injured down</b><span>'+avgDays()+' days is 5% lower than last 7 days.</span></div></div>'+
-  '<div class="insight"><span class="ic" style="background:var(--action-600)"></span><div><b>New injuries decreased</b><span>'+newThisWeek()+' new injuries this week, down 17%.</span></div></div>'
+  '<div class="insight"><span class="ic" style="background:var(--ink-700)"></span><div><b>Avg days on case down</b><span>'+avgDays()+' days is 5% lower than last 7 days.</span></div></div>'+
+  '<div class="insight"><span class="ic" style="background:var(--action-600)"></span><div><b>New cases decreased</b><span>'+newThisWeek()+' new cases this week, down 17%.</span></div></div>'
   :'<div class="insight"><span class="ic" style="background:var(--ink-700)"></span><div><b>Baseline being established</b><span>Trends appear after the first weeks of check-ins.</span></div></div>')+'</div>';
  h+='</div>';
  /* row 3 */
@@ -316,7 +316,7 @@ function renderOverview(){
   multiline(DEM?[{v:[8,7,7,6,5,5],c:"var(--action-600)"},{v:[33,32,31,30,29,28],c:"var(--ink-700)"},{v:[10,13,16,19,22,25],c:"var(--ok-700)"}]:[{v:FLAT(newThisWeek()),c:"var(--action-600)"},{v:FLAT(tot),c:"var(--ink-700)"},{v:FLAT(returnedList().length),c:"var(--ok-700)"}],420,150,MONTHS)+'</div>';
  h+='<div class="card"><div class="cardhead">Return to work rate over time <b style="font-family:\'Space Grotesk\';font-size:18px;color:var(--ink-900)">'+rtwRate()+'%</b></div>'+
   multiline([{v:DEM?[64,67,70,72,74,rtwRate()]:FLAT(rtwRate()),c:"var(--ok-700)",fill:true}],420,150,MONTHS)+'</div>';
- h+='<div class="card"><div class="cardhead">Avg days injured over time <b style="font-family:\'Space Grotesk\';font-size:18px;color:var(--ink-900)">'+avgDays()+' days</b></div>'+
+ h+='<div class="card"><div class="cardhead">Avg days on case over time <b style="font-family:\'Space Grotesk\';font-size:18px;color:var(--ink-900)">'+avgDays()+' days</b></div>'+
   multiline([{v:DEM?[29,28,27,26,25,avgDays()]:FLAT(avgDays()),c:"var(--ink-700)"}],420,150,MONTHS)+'</div>';
  h+='<div style="display:grid;gap:12px">'+
   (DEM?'<div class="card"><div class="cardhead">Cost impact (est.)</div><div class="money">$'+costEst().toLocaleString("en-CA")+'</div><div class="d down" style="font-size:11px">&#8595; 9% vs last period ($156,890)</div></div>'
@@ -335,14 +335,14 @@ function renderOverview(){
  h+='</div>';
  return h;}
 function workerTable(list,preview){
- var h='<div class="cardhead">Active injured workers &middot; '+actives().length+'</div>';
+ var h='<div class="cardhead">Active workers &middot; '+actives().length+'</div>';
  h+='<table><thead><tr><th>Worker</th><th>Duty limit area</th><th>Days</th><th>Status</th><th>Light duty / restrictions</th><th>Next review</th><th>Return to work</th></tr></thead><tbody>';
  list.forEach(function(w){var idx=S.workers.indexOf(w);var lv=w.live;
   h+='<tr class="rowlink"'+(lv?' style="background:rgba(200,151,47,.07)"':'')+' onclick="'+(lv?'openLiveDrawer()':'openDrawer('+idx+')')+'"><td><b>'+esc(w.name)+'</b>'+(lv?'<span class="live-badge">Live</span>':'')+'<div style="color:var(--muted);font-size:11px">'+esc(w.role)+'</div></td>'+
   '<td>'+esc(w.injury)+'</td><td>'+w.days+'</td><td>'+chipFor(w.status)+(lv&&w.clinicianReviewing?'<span class="rev-tag">Duty plan under review</span>':'')+'</td>'+
   '<td style="max-width:230px;color:var(--muted)">'+esc(w.restr)+'</td><td>'+esc(w.review)+'</td><td style="min-width:110px">'+rtwBar(w.rtw)+'</td></tr>';});
  h+='</tbody></table>';
- h+='<div class="tfoot">'+(preview?'Showing '+list.length+' of '+actives().length+' injured workers &middot; ':"")+'<span class="prov derived">Derived functional status</span> &nbsp; Functional status only, never medical detail &nbsp; <a href="#" onclick="peekFirewall();return false">What this view cannot see</a></div>';
+ h+='<div class="tfoot">'+(preview?'Showing '+list.length+' of '+actives().length+' active workers &middot; ':"")+'<span class="prov derived">Derived functional status</span> &nbsp; Functional status only. No private health detail. &nbsp; <a href="#" onclick="peekFirewall();return false">What this view cannot see</a></div>';
  return h;}
 function peekFirewall(){toast("Not hidden. Not present: private scores, case detail, worker notes, and photos never enter this view.");}
 /* ---------- workers section ---------- */
@@ -385,7 +385,7 @@ function openDrawer(idx){
  '<p class="tfoot">Not hidden. Not present in this view\'s data at all.</p></div>';
  if(w.status==="modified"&&w.rtw>=80){
   h+='<div class="card" style="border-color:var(--gold)"><div class="cardhead">Action needed</div>'+
-  '<p style="font-size:12.5px;margin-bottom:10px">The clinician has cleared '+esc(w.name.split(" ")[0])+' for full duty. Confirming closes the case and generates the final WCB package.</p>'+
+  '<p style="font-size:12.5px;margin-bottom:10px">Per program rules, '+esc(w.name.split(" ")[0])+' is cleared for full duty. Confirming closes the case and generates the final WCB package.</p>'+
   '<button class="btn gold" onclick="confirmReturn('+idx+')">Confirm return to full duty</button></div>';}
  h+='<div style="margin-top:14px"><button class="btn" onclick="closeDrawer()">Close</button></div>';
  document.getElementById("drawer").innerHTML=h;
@@ -470,7 +470,7 @@ function renderNotes(){
  '<div style="display:flex;gap:8px;flex-wrap:wrap"><select id="noteWorker">'+actives().map(function(w){return '<option>'+esc(w.name)+'</option>';}).join("")+'</select>'+
  '<input type="text" id="noteText" placeholder="Functional note, for example: duties confirmed manageable" style="flex:1;min-width:220px">'+
  '<button class="btn gold" onclick="addNote()">Add note</button></div></div>';
- h+='<div class="card" style="margin-bottom:12px;border-left:4px solid var(--gold)"><div class="cardhead">Raise a concern or observation</div><p style="font-size:11.5px;color:var(--muted);margin:0 0 8px">A functional observation for the coordinator. Never medical. It flows to the HSE attention queue as a signal.</p>'+
+ h+='<div class="card" style="margin-bottom:12px;border-left:4px solid var(--gold)"><div class="cardhead">Raise a concern or observation</div><p style="font-size:11.5px;color:var(--muted);margin:0 0 8px">A functional observation for the coordinator. Never private health detail. It flows to the HSE attention queue as a signal.</p>'+
  '<div style="display:flex;gap:8px;flex-wrap:wrap"><select id="concWorker">'+actives().map(function(w){return '<option>'+esc(w.name)+'</option>';}).join("")+'</select>'+
  '<input type="text" id="concText" placeholder="For example: struggled with the tool crib duty this morning" style="flex:1;min-width:220px">'+
  '<button class="btn gold" onclick="raiseConcern()">Raise concern</button></div></div>';
@@ -498,7 +498,7 @@ function renderTrends(){
  h+='<div class="grid" style="grid-template-columns:1fr 1fr">'+
  '<div class="card"><div class="cardhead">Injuries over time</div>'+multiline([{v:[8,7,7,6,5,5],c:"var(--action-600)"},{v:[33,32,31,30,29,28],c:"var(--ink-700)"},{v:[10,13,16,19,22,25],c:"var(--ok-700)"}],420,190,MONTHS)+'</div>'+
  '<div class="card"><div class="cardhead">Return to work rate</div>'+multiline([{v:[64,67,70,72,74,rtwRate()],c:"var(--ok-700)",fill:true}],420,190,MONTHS)+'</div>'+
- '<div class="card"><div class="cardhead">Avg days injured</div>'+multiline([{v:[29,28,27,26,25,avgDays()],c:"var(--ink-700)"}],420,190,MONTHS)+'</div>'+
+ '<div class="card"><div class="cardhead">Avg days on case</div>'+multiline([{v:[29,28,27,26,25,avgDays()],c:"var(--ink-700)"}],420,190,MONTHS)+'</div>'+
  '<div class="card"><div class="cardhead">Appointments per week</div>'+multiline([{v:[6,9,7,12,10,14],c:"var(--action-600)"}],420,190,MONTHS)+'</div>'+
  '</div>';
  return h;}
@@ -522,7 +522,7 @@ function renderSettings(){
  '<div class="card"><div class="cardhead">Access log</div><p style="font-size:12.5px;margin-bottom:8px">Reads of the functional worker list are recorded here, in symmetry with other role trails and the admin trail.</p>'+((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-top:1px solid var(--line)"><span>'+esc(a.msg)+'</span><span style="color:var(--muted)">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p style="font-size:12px;color:var(--muted)">No reads yet. Open the Active workers view to record one.</p>')+'</div>';}
 function renderIntegrations(){
  return pagehead("Admin","Integrations","Works with the systems you already run")+
- adminCard("Connected",[["Safety platform intake","Incident opens the case automatically",true],["Clinical provider","Clinical Partner sign-offs and restrictions",true]])+
+ adminCard("Connected",[["Safety platform intake","Incident opens the case automatically",true],["Care partner","Care partner sign-offs and duty limits",true]])+
  adminCard("Available",[["Payroll export","Time loss to payroll codes",false],["SSO","Single sign on for dashboard roles",false]])+
  '<div class="card"><div class="cardhead">Posture</div><p style="font-size:12.5px">Continuum runs standalone; integration adds value without being required.</p></div>';}
 /* ---------- render ---------- */
@@ -547,7 +547,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
   claims:{title:"Claims and documentation",body:"The claim record and its documents. The employer sees the claim status and the paperwork, not the worker's health information."},
   rtw:{title:"Return to work",body:"The plan to bring each worker back to safe, suitable duties, tracked by status. What is shown is the work, not the medicine."},
   visits:{title:"Appointments",body:"Appointments as a schedule: when an appointment happened and whether the worker is cleared for duties. The employer sees that a visit occurred and the work outcome, never private health details."},
-  notes:{title:"Case notes",body:"Case notes about the return-to-work plan. These are functional notes, never medical notes."},
+  notes:{title:"Case notes",body:"Case notes about the return-to-work plan. These are functional notes only. No private health detail."},
   reports:{title:"Reports",body:"Reports you can export and share, built from the functional data only."},
   trends:{title:"Trends",body:"How the caseload moves over time, as totals and rates. Descriptive, not forecasted."},
   benchmarking:{title:"Benchmarking",body:"How this workplace compares to similar ones, at the aggregate level, with no individual identified."},
@@ -576,7 +576,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
    sidebar carries only the setup tab and the main area hosts the steps, so a
    new employer's first screen offers nothing that is not theirs. */
 (function(){
- var ACK1="This is a functional-only view. You will never see medical details.";
+ var ACK1="This is a functional-only view. You will never see private health detail.";
  var ACK2="A worker's participation is voluntary and never a performance matter.";
  var hooks={};
  var unonboarded=false;
@@ -596,7 +596,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
   _render();
   if(unonboarded){
    var m=document.getElementById("main");
-   m.innerHTML='<div class="pagehead"><div><div class="kicker">Welcome to Continuum</div><h1>Set up your <span class="g">organization.</span></h1><div class="sub">A better answer from less information. Nothing medical will ever be asked for or accepted.</div></div></div>';
+   m.innerHTML='<div class="pagehead"><div><div class="kicker">Welcome to Continuum</div><h1>Set up your <span class="g">organization.</span></h1><div class="sub">A better answer from less information. Private health detail is never asked for or accepted.</div></div></div>';
    var h=document.getElementById("cw37-host");
    if(h)m.appendChild(h);
   }
