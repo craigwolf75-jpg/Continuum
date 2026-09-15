@@ -81,9 +81,9 @@ const ALWAYS_PUBLIC_EXACT = new Set([
   "/api/site-access",
   "/api/marketing-lead",
   "/continuum-logo-dark.svg",
-  "/favicon-16x16.png",
-  "/favicon-32x32.png",
-  "/apple-touch-icon.png"
+  "/continuum-vars.css",
+  "/continuum_tokens.css",
+  "/legal-config.js"
 ]);
 
 // Bounded prefix matches: pathname must start with the prefix AND the

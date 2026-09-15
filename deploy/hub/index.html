@@ -70,7 +70,7 @@
   .p-pending{background:rgba(60,120,90,.14);color:var(--ok-700)}.p-signed{background:rgba(60,120,90,.2);color:var(--ok-800)}.p-esc{background:rgba(200,120,40,.18);color:var(--warn-700)}
   .prog{height:6px;border-radius:6px;background:var(--warn-050);position:relative;width:90px}.prog span{position:absolute;left:0;top:0;height:100%;border-radius:6px;background:var(--gold)}
   h2.sec{font-family:'Space Grotesk',sans-serif;font-size:18px;color:var(--ink);margin:0 0 12px}
-  .note{font-size:12px;color:var(--slate)}
+  .note{font-size:12px;color:var(--slate);line-height:1.45;text-wrap:balance;text-wrap:pretty}
   .alert{background:rgba(200,120,40,.12);border:1px solid rgba(200,120,40,.35);border-radius:11px;padding:13px 14px;color:var(--warn-700);margin-bottom:12px}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
   .chip{min-height:44px;padding:0 14px;border:1px solid rgba(22,32,46,.15);background:var(--white);border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
@@ -125,7 +125,9 @@
       '<button class="btn" id="loginBtn" data-action="signin" style="margin-top:12px">Sign in</button>'+
       '<p class="note" style="font-size:12px;color:var(--mist);text-align:center;margin-top:12px">By continuing you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>'+
       '<p class="note" style="color:var(--mist);margin-top:12px">New here? <a href="#signup" data-hashlink="signup">Create an account</a>.</p>'+
-      '<p class="note" style="color:var(--mist);margin-top:6px">Workers use the <a href="/app">worker app</a> with an SMS code.</p></div>'+
+      '<p class="note" style="color:var(--mist);margin-top:6px">Live companion: <a href="/worker">open the worker companion</a> to sign in.</p>'+
+      '<p class="note" style="color:var(--mist);margin-top:6px">Pilot dashboard: <a href="/worker-dashboard.html">open the pilot worker dashboard</a> for check-in and duties.</p>'+
+      '<p class="note" style="color:var(--mist);margin-top:6px">Demo: <a href="/app">open the demonstration worker app</a>. It uses a text message (SMS) code.</p></div>'+
       '</div></div>';
   }
 
@@ -150,7 +152,7 @@
   }
 
   function rolesView(isAdmin){
-    var worker='<button type="button" class="role role-worker" data-nav="/worker-dashboard.html"><h3>Worker</h3><p>Your space for recovery. Do a quick check-in, see your duties for today, and follow your plan. Open it to start.</p></button>';
+    var worker='<button type="button" class="role role-worker" data-nav="/worker"><h3>Worker</h3><p>Your live recovery companion. Sign in with your email to open it.</p></button>';
     var employer='<button type="button" class="role" data-nav="/employer-dashboard.html"><h3>Employer</h3><p>Employer dashboard. Functional status only, never medical detail.</p></button>';
     var wcb='<button type="button" class="role" data-nav="/wcb-portal.html"><h3>WCB</h3><p>Compensation board portal. Read only claims and milestone notifications.</p></button>';
     var hse='<button type="button" class="role" data-nav="/hse-portal.html"><h3>HSE</h3><p>Light duties workspace. Assign tasks within restrictions. Recovery scores visible.</p></button>';

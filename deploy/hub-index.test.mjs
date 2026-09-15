@@ -27,7 +27,12 @@ ok("calls the whoami endpoint", hub.includes("/api/hub-whoami"));
 ok("roles view is gated on an authenticated session", /if\(!session\.authenticated\)/.test(hub));
 ok("the admin card mount option is wired", /mount\(host,\s*\{\s*isAdmin:\s*session\.isAdmin\s*\}\)/.test(hub));
 ok("dashboard copy line is unchanged", hub.includes("Dashboard access for HSE, employer, Clinical Partner, and WCB."));
-ok("worker app link is unchanged", /href="\/app"/.test(hub));
+ok("live companion note links to /worker", hub.includes('Live companion: <a href="/worker">open the worker companion</a> to sign in.'));
+ok("pilot dashboard note links to /worker-dashboard.html", hub.includes('Pilot dashboard: <a href="/worker-dashboard.html">open the pilot worker dashboard</a> for check-in and duties.'));
+ok("demo note links to /app", hub.includes('Demo: <a href="/app">open the demonstration worker app</a>. It uses a text message (SMS) code.'));
+ok("/app is no longer the live worker entry", !hub.includes("Workers use the") && !hub.includes('href="/app">worker app'));
+ok("worker card is the live companion", hub.includes("Your live recovery companion. Sign in with your email to open it.") && hub.includes('class="role role-worker" data-nav="/worker"'));
+ok("mixed check-in duties copy is off the worker card", !hub.includes("Your space for recovery. Do a quick check-in"));
 ok("page stays dash clean", !/[–—]/.test(hub));
 
 console.log("\nhub-index suite: " + pass + " passed, " + fail + " failed");
