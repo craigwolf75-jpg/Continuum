@@ -10,7 +10,7 @@ Calliope is 24f: 12f was claimed by the site-hub arc.
 - 12a Athena, architecture and code: resilience and the smallest correct change
 - 12b Apollo, design and motion
 - 24c Heracles, quality control: senior quality architect, evidence over assurance
-- 12d Hermes, release: same-mission green, smoke checks, rollback first
+- 12d Hermes, release: senior release engineer, deploys and verifies, keeps the deploy record
 - 12e Argus, the watcher: privacy, accessibility, register, and hygiene audits
 - 24f Calliope, voice: senior content strategist, health literacy, the vocabulary laws
 
