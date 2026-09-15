@@ -52,7 +52,7 @@ body{
   max-width:740px;
   text-align:center;
 }
-.logo{width:min(474px,100%);height:auto;margin:0 auto 44px;display:block}
+.logo{width:min(474px,100%);height:auto;margin:0 auto 72px;display:block}
 .logo-dark{display:none}
 .logo-light{display:block}
 h1{
@@ -61,7 +61,7 @@ h1{
   font-size:clamp(16px,5vw,40px);
   letter-spacing:-0.01em;
   line-height:1.2;
-  margin-bottom:14px;
+  margin-bottom:32px;
   white-space:nowrap;
 }
 .locked{
@@ -70,21 +70,22 @@ h1{
   font-weight:600;
   letter-spacing:.16em;
   text-transform:uppercase;
-  margin-bottom:26px;
+  margin-bottom:40px;
 }
 .desc{
   color:var(--fg-muted);
   font-size:16px;
   line-height:1.65;
   max-width:440px;
-  margin:0 auto 36px;
+  margin:0 auto 56px;
 }
 .actions{
   display:flex;
-  gap:14px;
+  gap:12px;
   justify-content:center;
+  align-items:center;
   flex-wrap:wrap;
-  margin-bottom:56px;
+  margin-bottom:96px;
 }
 .btn{
   display:inline-block;
@@ -99,7 +100,7 @@ h1{
 .btn-primary{background:var(--gold);color:var(--text-on-fill);border:none;cursor:pointer}
 .btn-primary:disabled{opacity:.5;cursor:default}
 .btn-secondary{background:transparent;color:var(--fg);border:1px solid var(--border)}
-.req-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.req-form{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
 .req-form input{
   padding:12px 16px;
   border-radius:var(--radius-md);
@@ -108,6 +109,11 @@ h1{
   color:var(--fg);
   font-size:14.5px;
   min-width:220px;
+  min-height:48px;
+}
+.actions .btn{min-height:48px}
+@media (min-width:640px){
+  .actions,.req-form{flex-wrap:nowrap}
 }
 .req-msg{
   color:var(--fg-muted);
@@ -130,7 +136,7 @@ footer a{color:var(--fg-muted);text-decoration:none}
 footer a:hover{color:var(--fg)}
 .dot{color:var(--border)}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.gate{margin-bottom:56px}
+.gate{margin:0 0 56px}
 .gate-toggle{
   background:none;
   border:none;
@@ -193,7 +199,7 @@ footer a:hover{color:var(--fg)}
   <img class="logo logo-dark" src="/continuum-logo.svg" alt="Continuum" width="240" height="86">
   <img class="logo logo-light" src="/continuum-logo-dark.svg" alt="Continuum" width="240" height="86">
 
-  <h1>Where care ends, Continuum begins</h1>
+  <h1>Where care ends Continuum begins</h1>
   <div class="locked">THE NEW AI-POWERED STANDARD FOR WORKPLACE INJURY MANAGEMENT</div>
 
   <p class="desc">Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information</p>
