@@ -152,5 +152,23 @@ ok(
   decideSiteAccess("/gate/%2e%2e/admin-portal.html", true, undefined) === "allow"
 );
 
+// -- SB-005: production and default hard-404 /api/test; not on ALWAYS_PUBLIC.
+ok("/api/test/reset without cookie on default is not_found", decideSiteAccess("/api/test/reset", false, undefined) === "not_found");
+ok("/api/test/reset without cookie on production is not_found", decideSiteAccess("/api/test/reset", false, undefined, "production") === "not_found");
+ok("/api/test/reset without cookie on default is never allow", decideSiteAccess("/api/test/reset", false, undefined) !== "allow");
+ok("/api/test/reset without cookie on production is never allow", decideSiteAccess("/api/test/reset", false, undefined, "production") !== "allow");
+ok("/api/test/other without cookie on default is not_found", decideSiteAccess("/api/test/other", false, undefined) === "not_found");
+ok("/api/test/reset with cookie on default is not_found", decideSiteAccess("/api/test/reset", true, undefined) === "not_found");
+ok("/api/test/reset with cookie on production is not_found", decideSiteAccess("/api/test/reset", true, undefined, "production") === "not_found");
+ok("/api/test/other with cookie on default is not_found", decideSiteAccess("/api/test/other", true, undefined) === "not_found");
+ok("/api/test/other with cookie on production is not_found", decideSiteAccess("/api/test/other", true, undefined, "production") === "not_found");
+ok("/api/testing without cookie on default still holds (not swallowed by /api/test)", decideSiteAccess("/api/testing", false, undefined) === "holding");
+ok("/api/test-foo without cookie on default still holds (hyphen is not a /api/test boundary)", decideSiteAccess("/api/test-foo", false, undefined) === "holding");
+ok("/api/test/reset without cookie on preview holds", decideSiteAccess("/api/test/reset", false, undefined, "preview") === "holding");
+ok("/api/test/reset with cookie on preview allows", decideSiteAccess("/api/test/reset", true, undefined, "preview") === "allow");
+ok('kill switch "false" on preview allows /api/test/reset', decideSiteAccess("/api/test/reset", false, "false", "preview") === "allow");
+ok('kill switch "false" on production still not_found for /api/test/reset', decideSiteAccess("/api/test/reset", false, "false", "production") === "not_found");
+ok('kill switch "false" on default still not_found for /api/test/reset', decideSiteAccess("/api/test/reset", false, "false") === "not_found");
+
 console.log("\nsite-middleware suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

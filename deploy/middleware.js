@@ -189,10 +189,24 @@ function isSuspiciousPath(pathname) {
 }
 
 // Pure decision function: no I/O, no crypto, no globals. Given a pathname, a
-// pre computed "is the cookie valid" boolean, and the raw SITE_GATE_ENABLED
-// env string, decide whether the request should be allowed through or shown
-// the holding page. Fully unit testable in plain node.
-function decideSiteAccess(pathname, hasValidCookie, gateEnabledEnv) {
+// pre computed "is the cookie valid" boolean, the raw SITE_GATE_ENABLED
+// env string, and an optional vercelEnv (VERCEL_ENV), decide whether the
+// request should be allowed through, shown the holding page, or hard 404.
+// Fully unit testable in plain node. Callers that omit vercelEnv get the
+// same default as an unset VERCEL_ENV: /api/test is not_found.
+function decideSiteAccess(pathname, hasValidCookie, gateEnabledEnv, vercelEnv) {
+  // Production and default (unset) never reach the test API handler, even
+  // if the SITE_GATE_ENABLED kill switch is "false". Preview and
+  // development keep the existing gated or handler behavior. Bounded prefix
+  // so /api/testing and /api/test-foo are not swallowed.
+  if (
+    isBoundedPrefixMatch(pathname, "/api/test") &&
+    vercelEnv !== "preview" &&
+    vercelEnv !== "development"
+  ) {
+    return "not_found";
+  }
+
   // kill switch: the literal string "false" disables the gate entirely,
   // regardless of cookie state. Any other value (including unset) keeps the
   // gate on, so the secure default is ON, not OFF.
@@ -209,17 +223,30 @@ function decideSiteAccess(pathname, hasValidCookie, gateEnabledEnv) {
   return hasValidCookie ? "allow" : "holding";
 }
 
+function jsonNotFound() {
+  return new Response(JSON.stringify({ error: "not found" }), {
+    status: 404,
+    headers: { "content-type": "application/json", "cache-control": "no-store" }
+  });
+}
+
 async function middleware(request) {
   const url = new URL(request.url);
+  // process.env in Vercel Edge Middleware exposes only the configured
+  // project env vars; this is edge safe.
+  const gateEnabledEnv = typeof process !== "undefined" && process.env ? process.env.SITE_GATE_ENABLED : undefined;
+  const vercelEnv = typeof process !== "undefined" && process.env ? process.env.VERCEL_ENV : undefined;
+  // Production and default /api/test must 404 before cookie parse or HMAC
+  // verify. A throw there must not rewrite these paths to holding HTML.
+  if (decideSiteAccess(url.pathname, false, gateEnabledEnv, vercelEnv) === "not_found") {
+    return jsonNotFound();
+  }
   try {
     const cookieHeader = request.headers.get("cookie");
     const cookies = parseCookies(cookieHeader);
     const token = cookies.ct_site;
 
-    // process.env in Vercel Edge Middleware exposes only the configured
-    // project env vars; this is edge safe.
     const secret = typeof process !== "undefined" && process.env ? process.env.CONTINUUM_SITE_SESSION_SECRET : undefined;
-    const gateEnabledEnv = typeof process !== "undefined" && process.env ? process.env.SITE_GATE_ENABLED : undefined;
 
     let hasValidCookie = false;
     // Fail closed: with no secret configured, no cookie can ever verify, so
@@ -231,7 +258,10 @@ async function middleware(request) {
       hasValidCookie = payload !== null;
     }
 
-    const decision = decideSiteAccess(url.pathname, hasValidCookie, gateEnabledEnv);
+    const decision = decideSiteAccess(url.pathname, hasValidCookie, gateEnabledEnv, vercelEnv);
+    if (decision === "not_found") {
+      return jsonNotFound();
+    }
     if (decision === "holding") {
       return rewriteToHolding(request);
     }
@@ -272,7 +302,11 @@ async function middleware(request) {
     return passThrough(refreshInit);
   } catch (e) {
     // Fail closed on any unexpected error: show the holding page rather than
-    // risk leaking a gated route.
+    // risk leaking a gated route. /api/test on production and default still
+    // 404s; holding HTML is forbidden for those paths.
+    if (decideSiteAccess(url.pathname, false, gateEnabledEnv, vercelEnv) === "not_found") {
+      return jsonNotFound();
+    }
     return rewriteToHolding(request);
   }
 }

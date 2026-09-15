@@ -58,8 +58,51 @@ try {
 
 ok("reset.js has no database client", !/supabase|DATABASE_URL|createClient|\bpg\b|postgres/i.test(src));
 ok("reset.js is dash clean", !/[–—]/.test(src));
-ok("/api/test/reset is not always public", decideSiteAccess("/api/test/reset", false, undefined) === "holding");
-ok("middleware does not list /api/test", !/\/api\/test/.test(mw));
+
+function allowlistQuotedStrings(src, constName) {
+  const marker = "const " + constName;
+  const idx = src.indexOf(marker);
+  if (idx < 0) return [];
+  const slice = src.slice(idx);
+  const end = slice.indexOf(";");
+  const block = end < 0 ? slice : slice.slice(0, end);
+  return [...block.matchAll(/"([^"]*)"/g)].map((m) => m[1]);
+}
+
+const exactAllow = allowlistQuotedStrings(mw, "ALWAYS_PUBLIC_EXACT");
+const boundedAllow = allowlistQuotedStrings(mw, "ALWAYS_PUBLIC_BOUNDED_PREFIX");
+const rawAllow = allowlistQuotedStrings(mw, "ALWAYS_PUBLIC_RAW_PREFIX");
+const allAllow = exactAllow.concat(boundedAllow, rawAllow);
+ok("ALWAYS_PUBLIC_EXACT parsed", exactAllow.length > 0);
+ok("ALWAYS_PUBLIC_BOUNDED_PREFIX parsed", boundedAllow.length > 0);
+ok("ALWAYS_PUBLIC_RAW_PREFIX parsed", rawAllow.length > 0);
+ok("/api/test is absent from ALWAYS_PUBLIC_EXACT", !exactAllow.some((p) => p === "/api/test" || p.startsWith("/api/test")));
+ok("/api/test is absent from ALWAYS_PUBLIC_BOUNDED_PREFIX", !boundedAllow.some((p) => p === "/api/test" || p.startsWith("/api/test")));
+ok("/api/test is absent from ALWAYS_PUBLIC_RAW_PREFIX", !rawAllow.some((p) => p === "/api/test" || p.startsWith("/api/test")));
+ok("/api/test is absent from all ALWAYS_PUBLIC lists", !allAllow.some((p) => p === "/api/test" || p.startsWith("/api/test")));
+
+ok("/api/test/reset without cookie on default is not_found", decideSiteAccess("/api/test/reset", false, undefined) === "not_found");
+ok("/api/test/reset without cookie on default is never allow", decideSiteAccess("/api/test/reset", false, undefined) !== "allow");
+ok("/api/test/reset with cookie on default is not_found", decideSiteAccess("/api/test/reset", true, undefined) === "not_found");
+ok("/api/test/other without cookie on default is not_found", decideSiteAccess("/api/test/other", false, undefined) === "not_found");
+ok("/api/test/other with cookie on default is not_found", decideSiteAccess("/api/test/other", true, undefined) === "not_found");
+ok("/api/test/reset without cookie on production is not_found", decideSiteAccess("/api/test/reset", false, undefined, "production") === "not_found");
+ok("/api/test/reset with cookie on production is not_found", decideSiteAccess("/api/test/reset", true, undefined, "production") === "not_found");
+ok("/api/test/other without cookie on production is not_found", decideSiteAccess("/api/test/other", false, undefined, "production") === "not_found");
+ok("/api/test/other with cookie on production is not_found", decideSiteAccess("/api/test/other", true, undefined, "production") === "not_found");
+ok("production /api/test/reset without cookie is never allow", decideSiteAccess("/api/test/reset", false, undefined, "production") !== "allow");
+
+const mwFn = mw.slice(mw.indexOf("async function middleware"));
+const firstDecide = mwFn.indexOf("decideSiteAccess(url.pathname");
+const parseIdx = mwFn.indexOf("parseCookies");
+const verifyIdx = mwFn.indexOf("verifySession");
+const catchIdx = mwFn.lastIndexOf("catch");
+const catchBody = catchIdx >= 0 ? mwFn.slice(catchIdx) : "";
+ok("middleware function present", mwFn.indexOf("async function middleware") === 0);
+ok("middleware decides not_found before parseCookies", firstDecide !== -1 && parseIdx !== -1 && firstDecide < parseIdx);
+ok("middleware decides not_found before verifySession", firstDecide !== -1 && verifyIdx !== -1 && firstDecide < verifyIdx);
+ok("middleware maps not_found to JSON 404", /status:\s*404/.test(mw) && mw.includes('"not found"'));
+ok("catch 404s /api/test before holding rewrite", catchBody.includes("not_found") && catchBody.indexOf("not_found") < catchBody.indexOf("rewriteToHolding"));
 
 console.log("\ntestability-guard suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
