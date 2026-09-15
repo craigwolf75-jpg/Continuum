@@ -69,3 +69,6 @@ jobs:
 
       - name: Run the worker schema suite
         run: psql -v ON_ERROR_STOP=1 -f supabase/tests/worker_schema.sql
+
+      - name: Run the worker provision gate suite
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/worker_provision_gate.sql
