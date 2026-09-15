@@ -5,7 +5,8 @@
    No dashes anywhere. */
 
 import {
-  signMeasurement, signatureBlockers, canonicalPayload, snapshotHash, provenanceAudit,
+  signMeasurement, signatureBlockers, signatureWarnings, canonicalPayload, snapshotHash, provenanceAudit,
+  STALE_CARRIED_DAYS,
 } from "./sign_measurement.mjs";
 
 let pass = 0, fail = 0;
@@ -68,6 +69,40 @@ ok("signing never mutates the input axis values", (() => {
   signMeasurement({ report, practitioner, axisValues: axes }, { signedAt: "2026-08-10T12:00:00Z" });
   return JSON.stringify(axes) === JSON.stringify(before);
 })());
+
+// -- Section 6 fail loudly: hours, stale carried, weight warn --
+ok("measured hours exceeding work_hours_per_day blocks and names both values", (() => {
+  const b = signatureBlockers(
+    [{ axis: "sitting", answered: true, skipped: false, capability: "limited", measured_hours: 10, source: "measured" }],
+    practitioner,
+    { work_hours_per_day: 8 },
+  );
+  return b.some((x) => x.id === "HOURS-EXCEED-WORKDAY" && x.measured_hours === 10 && x.work_hours_per_day === 8);
+})());
+ok("hours within the work day do not block", signatureBlockers(
+  [{ axis: "sitting", answered: true, skipped: false, capability: "limited", measured_hours: 6, source: "measured" }],
+  practitioner,
+  { work_hours_per_day: 8 },
+).every((x) => x.id !== "HOURS-EXCEED-WORKDAY"));
+ok("a carried forward value older than 90 days blocks until confirmed", (() => {
+  const b = signatureBlockers(
+    [{ axis: "walking", answered: true, skipped: false, capability: "able", source: "carried_forward", carried_from_at: "2026-01-01T00:00:00Z" }],
+    practitioner,
+    { measured_at: "2026-08-10T00:00:00Z" },
+  );
+  return b.some((x) => x.id === "STALE-CARRIED-FORWARD" && x.age_days > STALE_CARRIED_DAYS);
+})());
+ok("confirming a stale carried forward value unblocks it", signatureBlockers(
+  [{ axis: "walking", answered: true, skipped: false, capability: "able", source: "carried_forward", carried_from_at: "2026-01-01T00:00:00Z", confirmed: true }],
+  practitioner,
+  { measured_at: "2026-08-10T00:00:00Z" },
+).every((x) => x.id !== "STALE-CARRIED-FORWARD"));
+ok("a measured weight above 100 kg warns and does not block", (() => {
+  const axisValues = [{ axis: "lifting_general", answered: true, skipped: false, capability: "limited", quantity_kind: "weight", code_list_name: "Weight Category Codes", measured_weight_kg: 120, source: "measured", provenance: "human" }];
+  const signed = signMeasurement({ report, practitioner, axisValues });
+  return signed.signed === true && signed.warnings.some((w) => w.id === "WEIGHT-ABOVE-100" && w.measured_weight_kg === 120);
+})());
+ok("8 kg does not raise the weight warning", signatureWarnings([{ measured_weight_kg: 8, axis: "lifting_general" }]).length === 0);
 
 console.log("\nsign measurement suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

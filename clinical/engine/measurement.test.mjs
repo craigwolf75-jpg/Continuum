@@ -5,10 +5,16 @@
    matrix exactly (criteria 2 and 3). Loads the real axis map the seed is built from.
    No dashes anywhere. */
 
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import { AXIS_MAP } from "../db/functional_measurement.data.mjs";
 import {
   deriveWeightBand, emitCode, codeListForSet, resolveAxes, indexAxisMap,
   BASIC_LIST, EXTENDED_LIST, WEIGHT_LIST,
+  formCapabilityAxesFromSeed, assertFormAxesCovered, missingAxesFromResolver,
+  migrateLegacyRestriction, axisRowState, axisRowConstraintViolations,
+  BAND_PROOFS, LEGACY_LABEL_NOTE,
 } from "./measurement.mjs";
 
 let pass = 0, fail = 0;
@@ -87,6 +93,34 @@ ok("an unknown form resolves to an empty axis set", resolveAxes("C999", idx).len
 
 // -- axis order is stable and by display_order --
 ok("C050S axis order starts with the tolerance group", JSON.stringify(c050s.slice(0, 4)) === JSON.stringify(["sitting", "standing", "walking", "driving"]));
+
+// -- shared band proofs (criteria 5, 6, 7) as a table the SQL probe also uses --
+ok("BAND_PROOFS covers 8, 25 and 3 kg", BAND_PROOFS.map((p) => p.kg).join(",") === "8,25,3");
+
+// -- form_element (Prompt 40) has no axis column: fail loudly if a form axis is omitted --
+const formSeed = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "db", "003_seed_form_elements.sql"), "utf8");
+const formAxes = formCapabilityAxesFromSeed(formSeed);
+ok("Prompt 40 form_element seed maps C050E lifting_general and overhead_reaching", formAxes.C050E.includes("lifting_general") && formAxes.C050E.includes("overhead_reaching"));
+ok("Prompt 40 form_element seed maps C050S planes, grasping, sided reaching, environment", ["lifting_floor_to_waist", "grasping_left", "reaching_left_above", "environment"].every((a) => formAxes.C050S.includes(a)));
+ok("C050E form definition axes are covered by resolve_axes", assertFormAxesCovered("C050E", formAxes.C050E, resolveAxes("C050E", idx)) === true);
+ok("C050S form definition axes are covered by resolve_axes", assertFormAxesCovered("C050S", formAxes.C050S, resolveAxes("C050S", idx)) === true);
+ok("C151 form definition axes are covered by resolve_axes", assertFormAxesCovered("C151", formAxes.C151, resolveAxes("C151", idx)) === true);
+ok("C151S form definition axes are covered by resolve_axes", assertFormAxesCovered("C151S", formAxes.C151S, resolveAxes("C151S", idx)) === true);
+ok("an axis present on the form but absent from resolve_axes fails the form build", (() => {
+  try { assertFormAxesCovered("C050E", ["sitting", "not_a_real_axis"], resolveAxes("C050E", idx)); return false; }
+  catch (e) { return e.code === "FORM-AXIS-MISSING" && e.missing.includes("not_a_real_axis"); }
+})());
+ok("missingAxesFromResolver is empty when the resolver covers the form", missingAxesFromResolver(formAxes.C050E, resolveAxes("C050E", idx)).length === 0);
+
+// -- Section 5: legacy R code migration never fabricates a measurement --
+ok("migrating a legacy R code sets has_underlying_measurement false", migrateLegacyRestriction({ case_id: "c1", r_code: "R01" }).has_underlying_measurement === false);
+ok("migrating a legacy R code fabricates no measurement", migrateLegacyRestriction({ case_id: "c1", r_code: "R01" }).fabricated_measurement === null);
+ok("the legacy note is the Prompt 39 default", migrateLegacyRestriction({ case_id: "c1", r_code: "R22" }).note === LEGACY_LABEL_NOTE);
+
+// -- criterion 10 and 11: three states, skip requires a reason --
+ok("unanswered is distinct from skipped and from answered able", axisRowState({ answered: false, skipped: false }) === "unanswered" && axisRowState({ answered: false, skipped: true, skip_reason: "n/a" }) === "skipped" && axisRowState({ answered: true, capability: "able" }) === "answered_able");
+ok("a skipped axis without a reason violates skip_requires_reason", axisRowConstraintViolations({ skipped: true }).includes("skip_requires_reason"));
+ok("an answered able row has no constraint violations", axisRowConstraintViolations({ answered: true, skipped: false, capability: "able" }).length === 0);
 
 console.log("\nmeasurement suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
