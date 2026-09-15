@@ -18,12 +18,16 @@ const tests = readFileSync(join(root, "supabase", "tests", "worker_schema.sql"),
 const gateTests = readFileSync(join(root, "supabase", "tests", "worker_provision_gate.sql"), "utf8");
 const archive = readFileSync(join(root, "supabase", "archive", "clinician-fork", "README.md"), "utf8");
 const gateMigName = "20260915150000_worker_provision_invite_gate.sql";
+const grantMigName = "20260915151000_worker_provision_grant_authenticated.sql";
 const gateMig = readFileSync(join(migDir, gateMigName), "utf8");
+const grantMig = readFileSync(join(migDir, grantMigName), "utf8");
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
 
-ok("six 20260915 worker migrations present", names.length === 6);
+ok("seven 20260915 worker migrations present", names.length === 7);
 ok("invite-gate migration is present", names.includes(gateMigName));
+ok("authenticated-grant migration is present", names.includes(grantMigName));
+ok("grant migration comes after gate migration", grantMigName > gateMigName);
 ok("creates schema worker", /create schema if not exists worker/i.test(sql));
 ok("shipping worker SQL has no clinician. token", !sql.includes("clinician."));
 ok("has auth.users trigger", /after insert on auth\.users/i.test(sql));
@@ -68,11 +72,27 @@ ok("gate migration does not grant execute on provision_worker",
   !/grant execute on function worker\.provision_worker/i.test(gateMig));
 ok("gate migration is dash clean", !/[–—]/.test(gateMig));
 
+ok("grant migration grants execute on provision_worker to authenticated",
+  /grant execute on function worker\.provision_worker\(uuid, text\)\s+to authenticated;/i.test(grantMig));
+ok("grant migration does not grant execute to anon or public",
+  !/grant execute on function worker\.provision_worker\([^)]*\)\s+to [^;]*\banon\b/i.test(grantMig)
+  && !/grant execute on function worker\.provision_worker\([^)]*\)\s+to [^;]*\bpublic\b/i.test(grantMig));
+ok("grant migration does not grant execute to service_role",
+  !/grant execute on function worker\.provision_worker\([^)]*\)\s+to [^;]*\bservice_role\b/i.test(grantMig));
+ok("grant migration records live GRANT Hermes already applied",
+  /records the live GRANT Hermes already applied/i.test(grantMig));
+ok("grant migration is dash clean", !/[–—]/.test(grantMig));
+
 ok("worker_provision_gate.sql denies anon execute", /set role anon/.test(gateTests) && /insufficient_privilege/.test(gateTests));
-ok("worker_provision_gate.sql denies authenticated execute",
-  /authenticated still has execute on provision_worker/.test(gateTests)
-  && /authenticated executed provision_worker/.test(gateTests));
-ok("worker_provision_gate.sql denies uninvited bind", /uninvited caller bound an arbitrary case/.test(gateTests));
+ok("worker_provision_gate.sql requires authenticated execute",
+  /authenticated missing execute on provision_worker/.test(gateTests));
+ok("worker_provision_gate.sql requires postgres execute",
+  /owner postgres missing execute on provision_worker/.test(gateTests));
+ok("worker_provision_gate.sql requires postgres owner",
+  /provision_worker owner is not postgres/.test(gateTests));
+ok("worker_provision_gate.sql denies uninvited bind",
+  /uninvited caller bound an arbitrary case/.test(gateTests)
+  && /not invited to this case/.test(gateTests));
 ok("worker_provision_gate.sql proves invited bind", /invited bind did not set clinical_worker_id/.test(gateTests));
 ok("worker_provision_gate.sql is dash clean", !/[–—]/.test(gateTests));
 
