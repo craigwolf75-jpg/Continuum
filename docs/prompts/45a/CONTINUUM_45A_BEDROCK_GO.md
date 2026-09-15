@@ -230,9 +230,9 @@ The page defines `data_retention_mode` `none` as zero data retention. Verbatim:
 
 Continuum treats `none` as the only retention mode compatible with the no-train checklist. Modes `default`, `aws_review`, and `provider_data_share` fail the checklist until a no-share clause is recorded for the specific model.
 
-Some models require a more permissive retention mode as a condition of access. The AWS data-retention page retrieved 2026-09-15 currently lists Claude Mythos 5 and Claude Fable 5 as models that require `provider_data_share`. Those models FAIL the no-train checklist until a no-share clause is recorded for them.
+Some models require a more permissive retention mode as a condition of access. The AWS data-retention page retrieved 2026-09-15 lists Claude Fable 5 and Claude Fable 5.1 with `allowed_modes` of `aws_review` and `provider_data_share` (`provider_data_share` is legacy). Those models FAIL Continuum's none-only checklist (FAIL-none) because their `allowed_modes` exclude `none`.
 
-STOP if a chosen alternate lacks the no-train clause. Do not substitute a sibling model. Do not treat "Bedrock in general" as coverage for a model that requires provider share or AWS human review.
+STOP if a chosen alternate lacks the no-train clause. Do not substitute a sibling model. Do not treat "Bedrock in general" as coverage for a model whose `allowed_modes` exclude `none`.
 
 ### 5.4 How Gary records Prerequisite 2
 
@@ -243,7 +243,7 @@ Gary records, in writing:
 3. The data-retention `none` sentence in 5.3.
 4. The source URLs and the retrieval date (2026-09-15, or a later date if Gary re-retrieves).
 5. The chosen in-region model ID (or "no model chosen").
-6. Confirmation that the chosen model is not Claude Mythos 5, Claude Fable 5, or any other model whose `allowed_modes` exclude `none`.
+6. Confirmation that the chosen model is not Claude Fable 5, Claude Fable 5.1, or any other model whose `allowed_modes` exclude `none`.
 
 45a flag names, documented as `UNVERIFIED` by default:
 
@@ -265,7 +265,7 @@ Checklist (identical for every alternate):
 2. Invocation against `https://bedrock.ca-central-1.amazonaws.com` or `https://bedrock-runtime.ca-central-1.amazonaws.com`.
 3. Startup assertion refuses to initialize unless the resolved Region is exactly `ca-central-1`.
 4. No-train clause present for that model, cited with source and retrieval date. STOP if absent.
-5. Retention mode compatible with `none`. Models that require `provider_data_share` or `aws_review` fail until a no-share clause is recorded.
+5. Retention mode compatible with `none`. Models whose `allowed_modes` exclude `none` FAIL-none. Claude Fable 5 and Claude Fable 5.1 list `aws_review` and legacy `provider_data_share`; they fail until a no-share clause is recorded.
 6. No application inference profile with a destination outside Canada.
 7. No live call is made to "check" availability from an unverified session.
 
