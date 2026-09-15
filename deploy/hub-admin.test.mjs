@@ -15,10 +15,10 @@ const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + 
 ok("GROUPS is exactly group1 and group2 (admin is never assignable here)", GROUPS.length === 2 && GROUPS.includes("group1") && GROUPS.includes("group2") && !GROUPS.includes("admin"));
 
 const adminUsersHtml = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "admin-hub-users.html"), "utf8");
-ok("admin hub users copy lists gary@farmceuticawellness.com", adminUsersHtml.includes("gary@farmceuticawellness.com"));
-ok("admin hub users copy lists craig@continuumrtw.com", adminUsersHtml.includes("craig@continuumrtw.com"));
-ok("admin hub users copy lists craigwolf75@gmail.com", adminUsersHtml.includes("craigwolf75@gmail.com"));
-ok("admin hub users copy matches ADMIN_EMAILS membership", ADMIN_EMAILS.every((email) => adminUsersHtml.includes(email)));
+const ADMIN_HUB_USERS_L58 = "gary@farmceuticawellness.com, craig@continuumrtw.com, and craigwolf75@gmail.com";
+ok("HYG-002 CANON-004 L58 lists the three admins in ADMIN_EMAILS order", adminUsersHtml.includes(ADMIN_HUB_USERS_L58));
+ok("Gary email spelling stays farmceuticawellness", adminUsersHtml.includes("gary@farmceuticawellness.com") && !/gary@farmaceutica/i.test(adminUsersHtml));
+ok("admin hub users copy matches ADMIN_EMAILS membership", ADMIN_EMAILS.length === 3 && ADMIN_EMAILS[0] === "gary@farmceuticawellness.com" && ADMIN_EMAILS[1] === "craig@continuumrtw.com" && ADMIN_EMAILS[2] === "craigwolf75@gmail.com" && ADMIN_EMAILS.every((email) => adminUsersHtml.includes(email)));
 ok("admin hub users copy is dash clean", !/[–—]/.test(adminUsersHtml));
 
 ok("missing id is an error", validateApproveInput({ access_group: "group1" }).ok === false);
