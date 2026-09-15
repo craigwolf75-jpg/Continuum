@@ -112,7 +112,7 @@ function isBoundedPrefixMatch(pathname, prefix) {
 // strictly AFTER decideSiteAccess above has already allowed the request; a
 // visitor with no valid ct_site cookie never reaches this code at all.
 const HUB_GROUP1_PREFIXES = ["/employer-dashboard", "/hse-portal", "/worker-dashboard"];
-const HUB_GROUP2_PREFIXES = ["/clinical-dashboard", "/wcb-portal", "/sigma-portal"];
+const HUB_GROUP2_PREFIXES = ["/clinical-dashboard", "/wcb-portal", "/sigma-portal", "/sigma-panel", "/sigma-crtw-connection"];
 const HUB_ADMIN_PREFIXES = ["/admin-portal", "/admin-hub-users", "/admin-site-codes"];
 
 // Pages that require ANY authenticated hub session (any group, including

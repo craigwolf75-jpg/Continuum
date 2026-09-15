@@ -11,7 +11,7 @@
    to the holding page, can only be proven inside an actual Vercel Edge
    deployment, which is not available yet.
    No dashes anywhere. */
-import { decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch } from "./middleware.js";
+import { decideSiteAccess, isSuspiciousPath, isBoundedPrefixMatch, decideHubAccess } from "./middleware.js";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
@@ -75,7 +75,7 @@ ok("/supabase.js without a cookie allows (assessment dep)", decideSiteAccess("/s
 ok("/site-links.js without a cookie allows (assessment dep)", decideSiteAccess("/site-links.js", false, undefined) === "allow");
 
 // -- Prompt 67 must NOT open the portals or the hub sign in. --
-for (const stillGated of ["/hse-portal", "/employer-dashboard", "/clinical-dashboard", "/wcb-portal", "/sigma-portal", "/admin-portal", "/admin-hub-users", "/admin-site-codes", "/worker-dashboard"]) {
+for (const stillGated of ["/hse-portal", "/employer-dashboard", "/clinical-dashboard", "/wcb-portal", "/sigma-portal", "/sigma-panel", "/sigma-crtw-connection", "/admin-portal", "/admin-hub-users", "/admin-site-codes", "/worker-dashboard"]) {
   ok(stillGated + " without a cookie still holds (portal stays gated, Prompt 67)", decideSiteAccess(stillGated, false, undefined) === "holding");
 }
 
@@ -91,6 +91,21 @@ for (const gatedPath of ["/hub", "/admin-portal", "/demo"]) {
 // not accidentally widen into a broader prefix. --
 ok("/admin-portal.html without a cookie still holds", decideSiteAccess("/admin-portal.html", false, undefined) === "holding");
 ok("/admin-portal.html with a valid cookie allows", decideSiteAccess("/admin-portal.html", true, undefined) === "allow");
+ok("/sigma-panel.html without a cookie still holds", decideSiteAccess("/sigma-panel.html", false, undefined) === "holding");
+ok("/sigma-panel.html with a valid cookie allows", decideSiteAccess("/sigma-panel.html", true, undefined) === "allow");
+ok("/sigma-crtw-connection.html without a cookie still holds", decideSiteAccess("/sigma-crtw-connection.html", false, undefined) === "holding");
+ok("/sigma-crtw-connection.html with a valid cookie allows", decideSiteAccess("/sigma-crtw-connection.html", true, undefined) === "allow");
+
+// -- PATH-006: SIGMA sibling surfaces join the same hub Group 2 family as
+// /sigma-portal. No session and group1 are blocked; group2 is allowed.
+// /sigma-portal.html is the control in the same loop. --
+const PATH006_GROUP2 = { sub: "u1", email: "e@x.com", group: "group2", iat: 0, exp: 9999999999 };
+const PATH006_GROUP1 = { sub: "u1", email: "e@x.com", group: "group1", iat: 0, exp: 9999999999 };
+for (const path of ["/sigma-portal.html", "/sigma-panel.html", "/sigma-crtw-connection.html"]) {
+  ok(path + " hub blocked with no session (PATH-006)", decideHubAccess(path, null) === "blocked");
+  ok(path + " hub allowed for group2 (PATH-006)", decideHubAccess(path, PATH006_GROUP2) === "allow");
+  ok(path + " hub blocked for group1 (PATH-006)", decideHubAccess(path, PATH006_GROUP1) === "blocked");
+}
 
 // -- the kill switch only fires on the exact string "false"; any other
 // gateEnabledEnv value (including unset) keeps the gate on, the secure
