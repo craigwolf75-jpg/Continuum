@@ -57,9 +57,7 @@ const SURFACE_NAMES = [
   "wcb-portal.html",
   "worker-dashboard.html",
   "worker-embed.html",
-  "continuum_workflow_app.html",
   "app/index.html",
-  "garda-demo.html",
   "screens/index.html",
   "screens/legacy/demo.html",
 ];

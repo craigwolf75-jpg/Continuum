@@ -33,7 +33,6 @@ for (const p of PORTALS) {
 // the remaining interactive surfaces must at least parse (deployable)
 parses(read("hub/index.html"), "hub");
 parses(read("worker-embed.html"), "worker-embed");
-parses(read("continuum_workflow_app.html"), "continuum_workflow_app");
 
 // the shared bridge module must parse on its own
 try { new Function(read("bridge.js")); ok("bridge.js parses", true); }

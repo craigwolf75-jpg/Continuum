@@ -54,8 +54,6 @@ const gatedFiles = [
   "sigma-crtw-connection.html",
   "worker-dashboard.html",
   "worker-embed.html",
-  "continuum_workflow_app.html",
-  "garda-demo.html",
   "hub/index.html",
   "app/index.html",
   "screens/index.html",

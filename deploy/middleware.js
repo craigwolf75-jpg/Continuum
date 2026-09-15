@@ -60,12 +60,13 @@ const ALWAYS_PUBLIC_EXACT = new Set([
   // The landing page ("/" and "/index.html") is GATED again, as it was before
   // the Prompt 67 landing page: a visitor without a valid ct_site cookie gets
   // the holding page (with the code box) at the site root. The public
-  // ASSESSMENT stays open (see /assessment in ALWAYS_PUBLIC_BOUNDED_PREFIX),
-  // so its shared script dependencies (config.js, supabase.js, site-links.js)
-  // remain public here. The hub sign in and every portal stay gated; the
-  // holding page keeps the code box, so "Sign In" still leads to the access
-  // code experience with the endpoint untouched. Never open the gated bundles
-  // (store.js, hub/roles.js).
+  // ASSESSMENT and /book (access request) stay open. The live worker app at
+  // /worker stays open too: those pages carry their own Supabase session
+  // guard. The hub sign in and every portal stay gated; the holding page
+  // keeps the code box, so "Sign In" still leads to the access code
+  // experience with the endpoint untouched. Never open the gated bundles
+  // (store.js, hub/roles.js). /worker-dashboard is NOT swallowed by the
+  // /worker prefix (hyphen is not a path boundary).
   "/config.js",
   "/supabase.js",
   "/site-links.js",
@@ -73,6 +74,8 @@ const ALWAYS_PUBLIC_EXACT = new Set([
   "/privacy.html",
   "/terms",
   "/terms.html",
+  "/book",
+  "/book.html",
   "/robots.txt",
   "/sitemap.xml",
   "/api/site-access",
@@ -90,7 +93,7 @@ const ALWAYS_PUBLIC_EXACT = new Set([
 // also matching /continuum-logout, and /og-image from also matching
 // /og-image-x: in both bad cases the character right after the prefix is a
 // letter (or a hyphen introducing a different token), not a boundary.
-const ALWAYS_PUBLIC_BOUNDED_PREFIX = ["/favicon", "/og-image", "/continuum-logo", "/assessment"];
+const ALWAYS_PUBLIC_BOUNDED_PREFIX = ["/favicon", "/og-image", "/continuum-logo", "/assessment", "/worker"];
 
 // Raw prefix match: "/gate/" already ends in "/", so the boundary is baked
 // into the string itself; anything under it is the holding page or its
@@ -112,10 +115,9 @@ const HUB_GROUP1_PREFIXES = ["/employer-dashboard", "/hse-portal", "/worker-dash
 const HUB_GROUP2_PREFIXES = ["/clinical-dashboard", "/wcb-portal", "/sigma-portal"];
 const HUB_ADMIN_PREFIXES = ["/admin-portal", "/admin-hub-users", "/admin-site-codes"];
 
-// Phase B Task 6 addition: pages that require ANY authenticated hub session
-// (any group, including admin), not a specific group, so they are checked
-// separately from the three group prefix sets above rather than being folded
-// into one of them.
+// Pages that require ANY authenticated hub session (any group, including
+// admin), not a specific group. worker-embed remains; continuum_workflow_app
+// was retired and is no longer a live mechanism path.
 const HUB_AUTHED_PREFIXES = ["/worker-embed"];
 
 function matchesAnyBoundedPrefix(pathname, prefixes) {
@@ -159,9 +161,9 @@ function decideHubAccess(pathname, hubSession) {
   if (matchesAnyBoundedPrefix(lowerPathname, HUB_GROUP2_PREFIXES)) {
     return isAdmin || group === "group2" ? "allow" : "blocked";
   }
-  // Phase B Task 6: the mechanism demo pages require any valid hub session,
-  // regardless of group. isSuspiciousPath above already blocks encoded or
-  // traversal variants of these paths before this check runs.
+  // worker-embed requires any valid hub session, regardless of group.
+  // isSuspiciousPath above already blocks encoded or traversal variants
+  // of this path before this check runs.
   if (matchesAnyBoundedPrefix(lowerPathname, HUB_AUTHED_PREFIXES)) {
     return hubSession !== null ? "allow" : "blocked";
   }
