@@ -295,11 +295,11 @@ function renderOverview(){
   '<ul class="legend" style="flex:1">'+Object.keys(c).map(function(k){var col={light_duty:"var(--action-600)",treating:"var(--ink-700)",modified:"var(--ok-700)",awaiting:"var(--ink-300)"}[k];
    return '<li onclick="S.filter=\''+k+'\';S.section=\'workers\';save()"><span class="sw" style="background:'+col+'"></span>'+STATUS_META[k][0]+'<b>'+c[k]+'</b><span class="pct">('+Math.round(c[k]/Math.max(1,tot)*100)+'%)</span></li>';}).join("")+'</ul></div>'+
   '<div style="margin-top:8px"><a href="#" onclick="go(\'workers\');return false" style="font-size:12px">View all active workers &#8594;</a></div></div>';
- h+='<div class="card bars"><div class="cardhead">Days injured distribution</div>'+
+ h+='<div class="card bars"><div class="cardhead">Days on case distribution</div>'+
   Object.keys(bk).map(function(k){var v=bk[k],pct=Math.round(v/Math.max(1,tot)*100);
    return '<div class="brow"><div class="bl"><b>'+k+'</b><span>'+v+' ('+pct+'%)</span></div><div class="bt"><i style="width:'+pct+'%;background:'+(k==="15 to 30 days"?"var(--ink-700)":k==="8 to 14 days"?"var(--action-600)":k==="60+ days"?"var(--warn-500)":"var(--ink-300)")+'"></i></div></div>';}).join("")+'</div>';
  var catT=0;Object.keys(cats).forEach(function(k){catT+=cats[k];});
- h+='<div class="card"><div class="cardhead">Injuries by type <span style="font-weight:400;text-transform:none;letter-spacing:0">'+catT+' total</span></div><div style="display:flex;gap:16px;align-items:center">'+
+ h+='<div class="card"><div class="cardhead">Cases by duty limit area <span style="font-weight:400;text-transform:none;letter-spacing:0">'+catT+' total</span></div><div style="display:flex;gap:16px;align-items:center">'+
   donut(Object.keys(CAT_META).map(function(k){return {v:cats[k]||0,c:CAT_META[k][1]};}),catT,128,16,null)+
   '<ul class="legend" style="flex:1">'+Object.keys(CAT_META).map(function(k){var v=cats[k]||0;
    return '<li onclick="S.catFilter=\''+k+'\';S.filter=null;S.section=\'workers\';save()"><span class="sw" style="background:'+CAT_META[k][1]+'"></span>'+CAT_META[k][0]+'<b>'+v+'</b><span class="pct">('+Math.round(v/Math.max(1,catT)*100)+'%)</span></li>';}).join("")+'</ul></div>'+
@@ -312,7 +312,7 @@ function renderOverview(){
  h+='</div>';
  /* row 3 */
  h+='<div class="grid row3" style="margin-top:12px">';
- h+='<div class="card"><div class="cardhead">Injuries over time <span style="text-transform:none;letter-spacing:0;font-weight:400"><span style="color:var(--action-600)">&#9632;</span> New &nbsp;<span style="color:var(--ink-700)">&#9632;</span> Active &nbsp;<span style="color:var(--ok-700)">&#9632;</span> Returned</span></div>'+
+ h+='<div class="card"><div class="cardhead">Cases over time <span style="text-transform:none;letter-spacing:0;font-weight:400"><span style="color:var(--action-600)">&#9632;</span> New &nbsp;<span style="color:var(--ink-700)">&#9632;</span> Active &nbsp;<span style="color:var(--ok-700)">&#9632;</span> Returned</span></div>'+
   multiline(DEM?[{v:[8,7,7,6,5,5],c:"var(--action-600)"},{v:[33,32,31,30,29,28],c:"var(--ink-700)"},{v:[10,13,16,19,22,25],c:"var(--ok-700)"}]:[{v:FLAT(newThisWeek()),c:"var(--action-600)"},{v:FLAT(tot),c:"var(--ink-700)"},{v:FLAT(returnedList().length),c:"var(--ok-700)"}],420,150,MONTHS)+'</div>';
  h+='<div class="card"><div class="cardhead">Return to work rate over time <b style="font-family:\'Space Grotesk\';font-size:18px;color:var(--ink-900)">'+rtwRate()+'%</b></div>'+
   multiline([{v:DEM?[64,67,70,72,74,rtwRate()]:FLAT(rtwRate()),c:"var(--ok-700)",fill:true}],420,150,MONTHS)+'</div>';
@@ -496,7 +496,7 @@ function renderReports(){
 function renderTrends(){
  var h=pagehead("Analytics","Trends","Six week movement across the period");
  h+='<div class="grid" style="grid-template-columns:1fr 1fr">'+
- '<div class="card"><div class="cardhead">Injuries over time</div>'+multiline([{v:[8,7,7,6,5,5],c:"var(--action-600)"},{v:[33,32,31,30,29,28],c:"var(--ink-700)"},{v:[10,13,16,19,22,25],c:"var(--ok-700)"}],420,190,MONTHS)+'</div>'+
+ '<div class="card"><div class="cardhead">Cases over time</div>'+multiline([{v:[8,7,7,6,5,5],c:"var(--action-600)"},{v:[33,32,31,30,29,28],c:"var(--ink-700)"},{v:[10,13,16,19,22,25],c:"var(--ok-700)"}],420,190,MONTHS)+'</div>'+
  '<div class="card"><div class="cardhead">Return to work rate</div>'+multiline([{v:[64,67,70,72,74,rtwRate()],c:"var(--ok-700)",fill:true}],420,190,MONTHS)+'</div>'+
  '<div class="card"><div class="cardhead">Avg days on case</div>'+multiline([{v:[29,28,27,26,25,avgDays()],c:"var(--ink-700)"}],420,190,MONTHS)+'</div>'+
  '<div class="card"><div class="cardhead">Appointments per week</div>'+multiline([{v:[6,9,7,12,10,14],c:"var(--action-600)"}],420,190,MONTHS)+'</div>'+
@@ -517,7 +517,7 @@ function renderUsers(){
  '<div class="card"><div class="cardhead">Role law</div><p style="font-size:12.5px">Employer roles never carry private scores, case detail, notes, or photos. That rule is enforced below the interface, in what each role can read at all.</p></div>';}
 function renderSettings(){
  return pagehead("Admin","Settings","Workspace configuration")+
- adminCard("Notifications",[["Weekly summary email","Mondays 7:00","true"?true:true],["New injury alert","Immediate",true],["Review reminders","48 hours ahead",true]])+
+ adminCard("Notifications",[["Weekly summary email","Mondays 7:00","true"?true:true],["New case alert","Immediate",true],["Review reminders","48 hours ahead",true]])+
  adminCard("Data",[["Retention schedule","Per custodian direction and statute",true],["Export on request","Right of access supported",true]])+
  '<div class="card"><div class="cardhead">Access log</div><p style="font-size:12.5px;margin-bottom:8px">Reads of the functional worker list are recorded here, in symmetry with other role trails and the admin trail.</p>'+((S.audit&&S.audit.length)?S.audit.map(function(a){return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-top:1px solid var(--line)"><span>'+esc(a.msg)+'</span><span style="color:var(--muted)">'+new Date(a.ts).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+'</span></div>';}).join(""):'<p style="font-size:12px;color:var(--muted)">No reads yet. Open the Active workers view to record one.</p>')+'</div>';}
 function renderIntegrations(){
@@ -642,7 +642,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
  };
 
  /* ---------- the step UI (renders into the module's host) ---------- */
- var STEPS=[["welcome","Welcome"],["commitments","The commitments"],["organization","Your organization"],["sites","Work sites"],["roster","Employee roster"],["injuries","Open injuries"],["duties","Duty mapping"],["program","Program and goals"],["contacts","People and notifications"],["review","Review and finish"]];
+ var STEPS=[["welcome","Welcome"],["commitments","The commitments"],["organization","Your organization"],["sites","Work sites"],["roster","Employee roster"],["injuries","Open cases"],["duties","Duty mapping"],["program","Program and goals"],["contacts","People and notifications"],["review","Review and finish"]];
  function ein(k,label,ph){return '<label style="display:block;font-size:12px;font-weight:700;margin:10px 0 4px">'+label+'</label><input style="width:100%;max-width:420px;padding:9px 10px;border:1px solid var(--ink-200);border-radius:8px;font:inherit" value="'+(ui.f[k]||"")+'" placeholder="'+(ph||"")+'" oninput="C37UI.f.'+k+'=this.value">';}
  function esel(k,label,opts){return '<label style="display:block;font-size:12px;font-weight:700;margin:10px 0 4px">'+label+'</label><select style="padding:9px 10px;border:1px solid var(--ink-200);border-radius:8px;font:inherit" onchange="C37UI.f.'+k+'=this.value"><option value=""></option>'+opts.map(function(o){return '<option'+(ui.f[k]===o?" selected":"")+'>'+o+'</option>';}).join("")+'</select>';}
  function ecsv(k,label,tpl){return '<label style="display:block;font-size:12px;font-weight:700;margin:10px 0 4px">'+label+' <a href="/'+tpl+'" download style="font-weight:400">Download the template</a></label><textarea style="width:100%;min-height:110px;padding:9px 10px;border:1px solid var(--ink-200);border-radius:8px;font:12px/1.5 monospace" placeholder="Paste your CSV here, first line is the header" oninput="C37UI.f.'+k+'=this.value">'+(ui.f[k]||"")+'</textarea>';}
@@ -655,7 +655,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
   if(id==="organization")return ein("legalName","Legal name")+ein("commonName","The name your people actually use")+ein("industry","Closest industry")+ein("provinces","Provinces where you employ people, comma separated codes","AB,BC")+esel("employeeBand","How many employees",Continuum37.BANDS)+esel("collective","Any collective agreement",["yes","no","some sites"])+esel("modifiedDuties","A modified duties program today",["yes","informal","no"])+ein("avgLostTimeDays","Rough average lost time per claim, in days (optional)");
   if(id==="sites")return ecsv("sitesCsv","Work sites","employer_work_sites_template.csv");
   if(id==="roster")return ecsv("rosterCsv","Employee roster","employer_roster_template.csv");
-  if(id==="injuries")return '<p>Optional. If you have no open cases, skip this honestly.</p>'+ecsv("injuriesCsv","Open injuries","employer_open_injuries_template.csv");
+  if(id==="injuries")return '<p>Optional. If you have no open cases, skip this honestly.</p>'+ecsv("injuriesCsv","Open cases","employer_open_injuries_template.csv");
   if(id==="duties"){
    var titles={};(ui.roster||[]).forEach(function(r){titles[r.position_title]=true;});
    ui.duties=ui.duties||Object.keys(titles).map(function(t){return {position_title:t,matched:t};});
