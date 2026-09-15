@@ -37,6 +37,8 @@ ok("ADMIN_EMAILS resolves active admin even over a rejected profile", (() => { c
 ok("gary@farmceuticawellness.com is in ADMIN_EMAILS", ADMIN_EMAILS.includes("gary@farmceuticawellness.com"));
 ok("craig@continuumrtw.com is in ADMIN_EMAILS", ADMIN_EMAILS.includes("craig@continuumrtw.com"));
 ok("craig@continuumrtw.com resolves active admin even with no profile at all", (() => { const a = resolveAccess("craig@continuumrtw.com", null); return a.state === "active" && a.group === "admin"; })());
+ok("craigwolf75@gmail.com is in ADMIN_EMAILS", ADMIN_EMAILS.includes("craigwolf75@gmail.com"));
+ok("craigwolf75@gmail.com resolves active admin even with no profile at all", (() => { const a = resolveAccess("craigwolf75@gmail.com", null); return a.state === "active" && a.group === "admin"; })());
 
 // -- CSRF guard, pure --
 ok("cross site POST is rejected", isCrossSiteRequest({ headers: { "sec-fetch-site": "cross-site", host: "continuumrtw.com" } }) === true);
