@@ -15,10 +15,11 @@ export const CONSENT_PROFILES = {
     employer_disclosure: "requires_consent_b",
     pink_copy: "always",
   },
+  // ZZ pair: synthetic_test.employer_disclosure is none so it matches synthetic_open.employer_channel none (the pack is a fixture, not an employer publish path).
   synthetic_test: {
     id: "synthetic_test",
     board_submission: "requires_consent",
-    employer_disclosure: "open",
+    employer_disclosure: "none",
     pink_copy: "always",
   },
   unspecified: {

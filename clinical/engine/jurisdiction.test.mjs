@@ -58,6 +58,11 @@ ok("resolveDeadline same_day_cutoff skips the weekend and Heritage Day", (() => 
 })());
 ok("resolveDisclosureProfile returns alberta_pink_copy from data", resolveDisclosureProfile("AB", store).id === "alberta_pink_copy");
 ok("resolveConsentProfile returns alberta_statutory_report from data", resolveConsentProfile("AB", store).id === "alberta_statutory_report");
+ok("ARGUS-PRIV-010 (c): ZZ consent and disclosure profiles both refuse employer publish", (() => {
+  const consent = resolveConsentProfile("ZZ", store);
+  const disclosure = resolveDisclosureProfile("ZZ", store);
+  return consent.employer_disclosure === "none" && disclosure.employer_channel === "none";
+})());
 ok("boardNameForCode reads board_name from data", boardNameForCode("AB", store) === "WCB Alberta");
 ok("boardNameForCode on an unknown code is UNKNOWN, never a guessed board", boardNameForCode("??", store) === "UNKNOWN");
 

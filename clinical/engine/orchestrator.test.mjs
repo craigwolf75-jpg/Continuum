@@ -9,6 +9,7 @@ import { createInMemoryRepository } from "./repository.mjs";
 import { signReport, runClinicBatch, ingestReturnFile, resubmitReport, publishEmployerView, producePinkCopy } from "./orchestrator.mjs";
 import { SYNTH_POSITIONS, SYNTHETIC } from "../db/occupational_synth.data.mjs";
 import { BASIC_LIST } from "./measurement.mjs";
+import { DISCLOSURE_PROFILES, createProvincialStore } from "../db/provincial_rules.data.mjs";
 
 let pass = 0, fail = 0;
 const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + n); } };
@@ -124,22 +125,41 @@ function seedRepo(overrides = {}) {
 
 // -- 5. employer view -------------------------------------------------------
 const dataset = { SYNTHETIC, SYNTH_POSITIONS };
+const albertaDisclosure = DISCLOSURE_PROFILES.alberta_pink_copy;
 {
   const repo = seedRepo();
-  const r = await publishEmployerView(repo, dataset, { caseId: "case-1", reportId: "rep-1", jobTitle: "Gatehouse Officer" }, { allowSynthetic: true });
+  const r = await publishEmployerView(repo, dataset, { caseId: "case-1", reportId: "rep-1", jobTitle: "Gatehouse Officer" }, { allowSynthetic: true, disclosureProfile: albertaDisclosure });
   ok("publishEmployerView publishes when consent B is active", r.published === true && Array.isArray(r.lines));
   ok("publishEmployerView carries no raw measurement in the payload (the wall)", JSON.stringify(r).indexOf("measured_weight") === -1);
   ok("publishEmployerView appends a publish audit event", repo._debug.audit.some((e) => e.action === "publish_employer_view"));
 }
 {
   const repo = seedRepo();
-  const r = await publishEmployerView(repo, dataset, { caseId: "case-2", reportId: "rep-1", jobTitle: "Gatehouse Officer" }, { allowSynthetic: true });
+  const r = await publishEmployerView(repo, dataset, { caseId: "case-2", reportId: "rep-1", jobTitle: "Gatehouse Officer" }, { allowSynthetic: true, disclosureProfile: albertaDisclosure });
   ok("publishEmployerView refuses without consent B", r.published === false && r.reason === "consent-b-required");
 }
 {
   const repo = seedRepo();
+  const r = await publishEmployerView(repo, dataset, { caseId: "case-1", reportId: "rep-1", jobTitle: "Gatehouse Officer" }, { allowSynthetic: true, disclosureProfile: DISCLOSURE_PROFILES.synthetic_open });
+  ok("publishEmployerView refuses channel none even when consent B is granted", r.published === false && r.reason === "employer-channel-blocked");
+}
+{
+  const repo = seedRepo();
+  const store = createProvincialStore();
+  const r = await publishEmployerView(repo, dataset, { caseId: "case-1", reportId: "rep-1", jobTitle: "Gatehouse Officer", jurisdiction: "AB" }, { allowSynthetic: true, jurisdictions: store });
+  ok("publishEmployerView resolves Alberta disclosure from the provincial store", r.published === true);
+}
+{
+  const repo = seedRepo();
   let threw = null;
-  try { await publishEmployerView(repo, dataset, { caseId: "case-1", reportId: "rep-1", jobTitle: "Gatehouse Officer" }); }
+  try { await publishEmployerView(repo, dataset, { caseId: "case-1", reportId: "rep-1", jobTitle: "Gatehouse Officer" }, { allowSynthetic: true }); }
+  catch (e) { threw = e.code; }
+  ok("publishEmployerView fails named when the disclosure profile is missing", threw === "DISCLOSURE-PROFILE-MISSING");
+}
+{
+  const repo = seedRepo();
+  let threw = null;
+  try { await publishEmployerView(repo, dataset, { caseId: "case-1", reportId: "rep-1", jobTitle: "Gatehouse Officer" }, { disclosureProfile: albertaDisclosure }); }
   catch (e) { threw = e.code; }
   ok("publishEmployerView refuses a synthetic dataset without the override (canonical guard)", threw === "SYNTHETIC-NOT-AUTHORIZED");
 }

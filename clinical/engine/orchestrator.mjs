@@ -14,7 +14,7 @@
                         by default: assemble and validate, never transmit.
      ingestReturnFile   Prompt 42: parse the board return file, reconcile, record.
      resubmitReport     Prompt 42: a new attempt, original untouched, signature policy honored.
-     publishEmployerView Prompt 43: consent gate, canonical guard, then the wall check.
+     publishEmployerView Prompt 43: disclosure channel plus consent B, canonical guard, then the wall check.
      producePinkCopy    Prompt 43: the worker copy, never delivered to an employer.
 
    Every write that alters data appends an audit event, per accreditation condition 0A.1.
@@ -28,14 +28,14 @@ import { extractReportUnits, getObxSection, buildReportUnit, assembleFromTemplat
 import { populateReportUnit } from "./hl7report.mjs";
 import { parseReturnFile, reconcileReturnFile, buildSubmissionResult } from "./returnfile.mjs";
 import { resubmit } from "./resubmission.mjs";
-import { employerViewAllowed } from "./consent.mjs";
+import { employerPublishAllowed, employerPublishDeniedReason } from "./consent.mjs";
 import { capacityFromBand } from "./dutymatch.mjs";
 import { publishDutyMatch } from "./occupational.mjs";
 import { rawMeasurementInPayload } from "./employer_schema.mjs";
 import { pinkCopy } from "./pinkcopy.mjs";
 import { productionSubmissionEnabled, disabledUploader } from "./submission_gate.mjs";
 import { ignoreModelAdapter } from "./ai_sign_guard.mjs";
-import { assertClinicAccess } from "./jurisdiction.mjs";
+import { assertClinicAccess, resolveDisclosureProfile } from "./jurisdiction.mjs";
 
 const nn = async (v) => (v && typeof v.then === "function" ? await v : v);
 
@@ -196,13 +196,29 @@ export async function resubmitReport(repo, params, opts = {}) {
 }
 
 // -- 5. employer view -------------------------------------------------------
-// Publish the duty match to the employer ONLY when consent B is active, ONLY against the
-// canonical occupational dataset (the synthetic guard throws otherwise), and ONLY after the
-// wall check confirms no raw measurement or clinical term is in the payload (criteria 1, 2).
+// Publish the duty match to the employer ONLY when the disclosure channel plus
+// consent B allow it (ARGUS-PRIV-010), ONLY against the canonical occupational
+// dataset (the synthetic guard throws otherwise), and ONLY after the wall check
+// confirms no raw measurement or clinical term is in the payload (criteria 1, 2).
 // Reads the DERIVED band, never the raw measurement (criterion 9).
+// Disclosure is explicit: opts.disclosureProfile, or resolveDisclosureProfile
+// from params.jurisdiction plus opts.jurisdictions. Never defaults to Alberta.
+function resolveEmployerPublishDisclosure(params, opts) {
+  if (opts.disclosureProfile) return opts.disclosureProfile;
+  const store = opts.jurisdictions;
+  const code = params && (params.jurisdiction || params.jurisdictionCode);
+  if (store && code) return resolveDisclosureProfile(code, store);
+  const e = new Error("publishEmployerView requires an explicit disclosure profile. Never default.");
+  e.code = "DISCLOSURE-PROFILE-MISSING";
+  throw e;
+}
+
 export async function publishEmployerView(repo, dataset, params, opts = {}) {
+  const disclosureProfile = resolveEmployerPublishDisclosure(params, opts);
   const consentB = await nn(repo.getConsentB(params.caseId));
-  if (!employerViewAllowed(consentB)) return { published: false, reason: "consent-b-required" };
+  if (!employerPublishAllowed(consentB, disclosureProfile)) {
+    return { published: false, reason: employerPublishDeniedReason(consentB, disclosureProfile) };
+  }
 
   const derived = await nn(repo.getDerivedRestrictions(params.reportId));
   const restrictionByAxis = {};

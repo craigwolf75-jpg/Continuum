@@ -1,9 +1,11 @@
 /* Continuum Prompt 43: consent B and revocation (Section 6, criteria 6 and 7).
 
-   Consent B gates the employer view and the worker plan ONLY under the Alberta
-   statutory report profile. Board submission is profile data: statutory duty,
-   requires consent, or blocked. It never gates the Pink Copy: the Pink Copy is
-   the worker's own copy, unaffected by consent B (Section 5, Section 6).
+   Consent B gates the employer view and the worker plan ONLY under a disclosure
+   channel that requires it. Employer view publish also honors the disclosure
+   profile employer_channel (ARGUS-PRIV-010). Board submission is profile data:
+   statutory duty, requires consent, or blocked. It never gates the Pink Copy:
+   the Pink Copy is the worker's own copy, unaffected by consent B (Section 5,
+   Section 6).
 
    Revocation withdraws the employer view within 60 seconds and writes withdrawn_at
    (criterion 6). The notice shown to the worker states plainly that information already
@@ -16,8 +18,46 @@ export const REVOCATION_SLA_SECONDS = 60;
 
 const active = (consentB) => Boolean(consentB && consentB.granted === true && !consentB.revoked_at);
 
-// The employer view exists only while consent B is active (Section 5, Section 6).
+const CHANNEL_REFUSED = new Set(["none", "blocked"]);
+const CHANNEL_REQUIRES_CONSENT_B = new Set(["worker_handoff", "requires_consent_b"]);
+const CHANNEL_OPEN = new Set(["open"]);
+
+// Consent B only. The worker plan and AI consent B checks use this. Employer
+// view publish must call employerPublishAllowed so the disclosure channel is
+// enforced. This function is not the publish gate.
 export function employerViewAllowed(consentB) { return active(consentB); }
+
+function requireDisclosureChannel(disclosureProfile) {
+  const channel = disclosureProfile && disclosureProfile.employer_channel;
+  if (!channel) {
+    const e = new Error("employerPublishAllowed requires an explicit disclosure profile. Never default.");
+    e.code = "DISCLOSURE-PROFILE-MISSING";
+    throw e;
+  }
+  return channel;
+}
+
+// Employer view publish: disclosure channel AND consent rules. Never defaults
+// to Alberta. Missing or unknown channel fails named.
+// none or blocked: refuse even when consent B is granted.
+// worker_handoff or requires_consent_b: consent B must be active.
+// open: no consent B required (explicit channel only).
+export function employerPublishAllowed(consentB, disclosureProfile) {
+  const channel = requireDisclosureChannel(disclosureProfile);
+  if (CHANNEL_REFUSED.has(channel)) return false;
+  if (CHANNEL_REQUIRES_CONSENT_B.has(channel)) return active(consentB);
+  if (CHANNEL_OPEN.has(channel)) return true;
+  const e = new Error("Unknown disclosure profile employer_channel: " + channel);
+  e.code = "DISCLOSURE-PROFILE-UNKNOWN";
+  throw e;
+}
+
+export function employerPublishDeniedReason(consentB, disclosureProfile) {
+  const channel = requireDisclosureChannel(disclosureProfile);
+  if (CHANNEL_REFUSED.has(channel)) return "employer-channel-blocked";
+  if (CHANNEL_REQUIRES_CONSENT_B.has(channel) && !active(consentB)) return "consent-b-required";
+  return null;
+}
 
 // The worker plan is gated by consent B as well (Section 6: consent B gates the employer
 // view AND the worker plan).
