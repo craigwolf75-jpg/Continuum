@@ -41,14 +41,17 @@ ok("/api/site-access allows without a cookie", decideSiteAccess("/api/site-acces
 ok("/api/marketing-lead allows without a cookie (lead form posts from the gate)", decideSiteAccess("/api/marketing-lead", false, undefined) === "allow");
 ok("/book allows without a cookie (access-request page)", decideSiteAccess("/book", false, undefined) === "allow");
 ok("/book.html allows without a cookie", decideSiteAccess("/book.html", false, undefined) === "allow");
+ok("/continuum-vars.css allows without a cookie", decideSiteAccess("/continuum-vars.css", false, undefined) === "allow");
+ok("/continuum_tokens.css allows without a cookie", decideSiteAccess("/continuum_tokens.css", false, undefined) === "allow");
+ok("/legal-config.js allows without a cookie", decideSiteAccess("/legal-config.js", false, undefined) === "allow");
 ok("/worker allows without a cookie (live worker sign in and sign up)", decideSiteAccess("/worker", false, undefined) === "allow");
 ok("/worker/login.html allows without a cookie", decideSiteAccess("/worker/login.html", false, undefined) === "allow");
 
 // -- ALWAYS_PUBLIC prefix and exact asset paths allow without a cookie --
 ok("/favicon.ico allows without a cookie", decideSiteAccess("/favicon.ico", false, undefined) === "allow");
-ok("/favicon-32x32.png allows without a cookie", decideSiteAccess("/favicon-32x32.png", false, undefined) === "allow");
-ok("/favicon-16x16.png allows without a cookie", decideSiteAccess("/favicon-16x16.png", false, undefined) === "allow");
-ok("/apple-touch-icon.png allows without a cookie", decideSiteAccess("/apple-touch-icon.png", false, undefined) === "allow");
+ok("/favicon-32x32.png without a cookie holds (missing PNG, hyphen is not a /favicon boundary)", decideSiteAccess("/favicon-32x32.png", false, undefined) === "holding");
+ok("/favicon-16x16.png without a cookie holds (missing PNG, hyphen is not a /favicon boundary)", decideSiteAccess("/favicon-16x16.png", false, undefined) === "holding");
+ok("/apple-touch-icon.png without a cookie holds (missing file, not on exact allowlist)", decideSiteAccess("/apple-touch-icon.png", false, undefined) === "holding");
 ok("/og-image.png allows without a cookie", decideSiteAccess("/og-image.png", false, undefined) === "allow");
 ok("/continuum-logo.svg allows without a cookie", decideSiteAccess("/continuum-logo.svg", false, undefined) === "allow");
 ok("/continuum-logo-dark.svg allows without a cookie", decideSiteAccess("/continuum-logo-dark.svg", false, undefined) === "allow");

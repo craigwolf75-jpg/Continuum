@@ -33,9 +33,9 @@ ok("hub loads Instrument Sans", hub.includes("Instrument+Sans"));
 const order = ["Worker", "HSE", "Employer", "Clinical Partner", "WCB", "Platform Admin", "SIGMA Exchange"];
 const idx = order.map(t => src.indexOf('title: "' + t + '"'));
 ok("all seven cards present in order", idx.every((v, i) => v > 0 && (i === 0 || v > idx[i - 1])));
-const navs = { "/worker-dashboard.html": 1, "/hse-portal.html": 1, "/employer-dashboard.html": 1, "/clinical-dashboard.html": 1, "/wcb-portal.html": 1, "/admin-portal.html": 1, "/sigma-portal.html": 1 };
+const navs = { "/worker": 1, "/hse-portal.html": 1, "/employer-dashboard.html": 1, "/clinical-dashboard.html": 1, "/wcb-portal.html": 1, "/admin-portal.html": 1, "/sigma-portal.html": 1 };
 ok("routing unchanged: each card links to its portal", Object.keys(navs).every(n => src.includes('nav: "' + n + '"')));
-ok("worker copy unchanged", src.includes("Your space for recovery. Do a quick check-in"));
+ok("worker copy is the live companion", src.includes("Your live recovery companion. Sign in with your email to open it."));
 ok("employer copy unchanged", src.includes("Functional status only, never medical detail"));
 
 // design tokens
@@ -78,14 +78,14 @@ ok("SIGMA card is honest (proposed workflow)", src.includes("proposed workflow, 
 // Prompt 12j: a Sign up pill on the right of every hub card
 ok("card body and pill are separate targets (main link is cr-cardmain)", src.includes('className="cr-cardmain"'));
 ok("main link still carries nav and accessible name", src.includes('href={card.nav}') && src.includes('aria-label={card.title}'));
-ok("worker pill routes to the worker sign-up wizard", src.includes('signup: "/worker-dashboard.html?signup=1"'));
+ok("worker pill routes to the worker sign-up wizard", src.includes('signup: "/worker/signup.html"'));
 ok("employer pill routes to the organization setup (Prompt 37)", src.includes('signup: "/employer-dashboard.html?setup=1"'));
 ok("the five other roles have no live sign-up (Phase 2)", (src.match(/signup: null/g) || []).length === 5);
 ok("worker pill is a real link, the rest are the soon button", src.includes('className="cr-pill"') && src.includes('cr-pill cr-pill-soon'));
 ok("every card shows a Sign up pill", src.includes(">Sign up</a>") && src.includes(">Sign up</button>"));
 ok("soon state is honest, not a dead link", src.includes("Accounts for this role arrive in Phase 2"));
 ok("built bundle carries the Sign up pill", bundle.includes("Sign up"));
-ok("built bundle carries the worker sign-up route", bundle.includes("worker-dashboard.html?signup=1"));
+ok("built bundle carries the worker sign-up route", bundle.includes("/worker/signup.html"));
 ok("built bundle carries the employer setup route", bundle.includes("employer-dashboard.html?setup=1"));
 ok("pill did not change routing: nav targets unchanged", Object.keys(navs).every(n => src.includes('nav: "' + n + '"')));
 

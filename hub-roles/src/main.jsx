@@ -1,8 +1,8 @@
 /* Continuum hub role select (Prompt 33). React plus Framer Motion. Built to a
    self-contained IIFE (deploy/hub/roles.js) that the static hub mounts for the
    #roles view. Design tokens and the entrance timeline follow the prompt, which
-   is the source of truth. Routing is unchanged: each card is a link to the same
-   portal it always opened. No em-dashes anywhere. */
+   is the source of truth. Worker card nav is /worker (live companion). Other
+   cards keep their portal targets. No em-dashes anywhere. */
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { animate, useReducedMotion } from "framer-motion";
@@ -13,14 +13,12 @@ const T = {
 };
 
 // Order per the prompt: Worker, HSE, Employer, Clinical Partner, WCB, Platform Admin.
-// Copy is unchanged from the current hub. Nav targets are unchanged.
-// Each card carries a sign-up target. Worker has a live wizard (the worker app
-// opens it on the signup query) and Employer has the Prompt 37 organization
-// setup (the dashboard opens it on the setup query), so those pills route
-// there; the other roles have no account flow yet (SITE-12j, Phase 2), so
-// their pill is an honest "soon" state, never a dead link.
+// Worker card copy is the live companion. Other role copy is unchanged.
+// Worker nav is /worker. Worker signup is /worker/signup.html. Employer
+// setup is unchanged. Other five roles have no account flow yet (SITE-12j,
+// Phase 2), so their pill is an honest "soon" state, never a dead link.
 const CARDS = [
-  { title: "Worker", roleKey: "worker", nav: "/worker-dashboard.html", signup: "/worker-dashboard.html?signup=1", desc: "Your space for recovery. Do a quick check-in, see your duties for today, and follow your plan. Open it to start." },
+  { title: "Worker", roleKey: "worker", nav: "/worker", signup: "/worker/signup.html", desc: "Your live recovery companion. Sign in with your email to open it." },
   { title: "HSE", roleKey: "hse", nav: "/hse-portal.html", signup: null, desc: "Light duties workspace. Assign tasks within restrictions. Recovery scores visible." },
   { title: "Employer", roleKey: "employer", nav: "/employer-dashboard.html", signup: "/employer-dashboard.html?setup=1", desc: "Employer dashboard. Functional status only, never medical detail." },
   { title: "Clinical Partner", roleKey: "clinic", nav: "/clinical-dashboard.html", signup: null, desc: "Clinical control center. Full detail, sign-off, escalation." },
