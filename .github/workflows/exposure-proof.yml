@@ -48,6 +48,9 @@ jobs:
       - name: Apply the Supabase compatibility shim (CI only)
         run: psql -v ON_ERROR_STOP=1 -f supabase/ci/00_supabase_shim.sql
 
+      - name: Apply the clinical identity shim (CI only)
+        run: psql -v ON_ERROR_STOP=1 -f supabase/ci/01_clinical_identity_shim.sql
+
       - name: Apply hub migrations in order (managed extensions neutralized)
         run: |
           # pg_cron and pg_net cannot be installed in a stock container; the shim stubs their
@@ -63,3 +66,6 @@ jobs:
 
       - name: Run the exposure-proof suite
         run: psql -v ON_ERROR_STOP=1 -f supabase/tests/exposure_proof.sql
+
+      - name: Run the worker schema suite
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/worker_schema.sql
