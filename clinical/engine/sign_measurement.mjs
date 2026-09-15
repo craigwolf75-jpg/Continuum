@@ -21,6 +21,8 @@
 
 import { createHash } from "node:crypto";
 import { deriveWeightBand, emitCode } from "./measurement.mjs";
+import { blocksSignature } from "./ai_provenance.mjs";
+import { ignoreModelAdapter } from "./ai_sign_guard.mjs";
 
 const HUMAN_SOURCES = ["measured", "carried_forward", "bulk_marked_able"];
 export const STALE_CARRIED_DAYS = 90;
@@ -66,6 +68,8 @@ export function signatureBlockers(axisValues, practitioner, header = {}) {
   const unassessed = (axisValues || []).filter((v) => !v.answered && !v.skipped).map((v) => v.axis);
   if (unassessed.length)
     b.push({ id: "AXIS-UNASSESSED", axes: unassessed, message: "Axes neither answered nor skipped: " + unassessed.join(", ") });
+  if (blocksSignature(header.reportFields || []))
+    b.push({ id: "AI-DRAFT-UNTOUCHED", message: "One untouched ai_draft field blocks signature. A model authored value must be reviewed and touched by the practitioner before sign (Prompt 44 Section 3)." });
   const workHours = num(header.work_hours_per_day);
   const asOf = header.measured_at || header.as_of || null;
   for (const v of axisValues || []) {
@@ -132,8 +136,9 @@ export function snapshotHash(canonical) {
 // frozen axis rows, the band derivation audit rows, and an append only audit event. Never
 // mutates the input.
 export function signMeasurement(input, opts = {}) {
-  const { report, practitioner, axisValues, measurement } = input || {};
-  const header = measurement || {};
+  ignoreModelAdapter(opts.modelAdapter);
+  const { report, practitioner, axisValues, measurement, reportFields } = input || {};
+  const header = Object.assign({}, measurement || {}, { reportFields: reportFields || (measurement && measurement.reportFields) || [] });
   const blockers = signatureBlockers(axisValues || [], practitioner, header);
   const warnings = signatureWarnings(axisValues || []);
   if (blockers.length) return { signed: false, blocked: true, blockers, warnings };

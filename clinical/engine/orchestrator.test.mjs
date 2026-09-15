@@ -48,6 +48,18 @@ function seedRepo(overrides = {}) {
   ok("signReport appends a sign audit event", repo._debug.audit.some((e) => e.action === "sign_measurement"));
 }
 {
+  const repo = seedRepo();
+  const bomb = { invoke() { throw new Error("model adapter must not be called from signReport"); } };
+  const r = await signReport(repo, { reportId: "rep-1" }, { signedAt: "2026-08-11T09:00:00Z", modelAdapter: bomb });
+  ok("signReport does not invoke a model adapter even if one is passed (Prompt 44 Section 7)", r.signed === true);
+}
+{
+  const repo = seedRepo();
+  repo._debug.store.drafts.get("rep-1").reportFields = [{ provenance: "ai_draft", element_key: "diagnosis_narrative" }];
+  const r = await signReport(repo, { reportId: "rep-1" });
+  ok("signReport blocks on an untouched ai_draft field", r.signed === false && r.blockers.some((b) => b.id === "AI-DRAFT-UNTOUCHED"));
+}
+{
   const repo = seedRepo({ practitionerActive: false });
   const r = await signReport(repo, { reportId: "rep-1" });
   ok("signReport blocks on an inactive practitioner and writes nothing", r.signed === false && r.blockers.some((b) => b.id === "PRACTITIONER-INACTIVE") && repo._debug.store.reports.get("rep-1").status === "draft");

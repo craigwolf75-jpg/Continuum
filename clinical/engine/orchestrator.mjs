@@ -34,6 +34,7 @@ import { publishDutyMatch } from "./occupational.mjs";
 import { rawMeasurementInPayload } from "./employer_schema.mjs";
 import { pinkCopy } from "./pinkcopy.mjs";
 import { productionSubmissionEnabled, disabledUploader } from "./submission_gate.mjs";
+import { ignoreModelAdapter } from "./ai_sign_guard.mjs";
 
 const nn = async (v) => (v && typeof v.then === "function" ? await v : v);
 
@@ -43,6 +44,7 @@ const nn = async (v) => (v && typeof v.then === "function" ? await v : v);
 // transaction. Refuses to persist a capability with no human source (criterion 1), a defense
 // in depth check on top of the signature gate. Returns the signMeasurement result.
 export async function signReport(repo, params, opts = {}) {
+  ignoreModelAdapter(opts.modelAdapter);
   const input = await nn(repo.getSignableInput(params.reportId));
   if (!input) return { signed: false, blocked: true, blockers: [{ id: "REPORT-NOT-FOUND", message: "No signable draft for report " + params.reportId }] };
 

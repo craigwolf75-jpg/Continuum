@@ -104,5 +104,16 @@ ok("a measured weight above 100 kg warns and does not block", (() => {
 })());
 ok("8 kg does not raise the weight warning", signatureWarnings([{ measured_weight_kg: 8, axis: "lifting_general" }]).length === 0);
 
+ok("an untouched ai_draft field blocks signature (Prompt 44 criterion 3, on the sign path)", (() => {
+  const b = signMeasurement({ report, practitioner, axisValues: axes, reportFields: [{ provenance: "ai_draft", element_key: "diagnosis_narrative" }] });
+  return b.signed === false && b.blockers.some((x) => x.id === "AI-DRAFT-UNTOUCHED");
+})());
+ok("passing a throwing model adapter does not run it (zero model calls from review and sign)", (() => {
+  const bomb = { invoke() { throw new Error("model adapter must not be called from sign"); } };
+  const s = signMeasurement({ report, practitioner, axisValues: axes }, { modelAdapter: bomb, signedAt: "2026-08-10T12:00:00Z" });
+  return s.signed === true;
+})());
+
+
 console.log("\nsign measurement suite: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
