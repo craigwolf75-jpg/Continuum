@@ -13,8 +13,8 @@ const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + 
 const holding = read("gate/holding.html");
 
 // -- required content --
-ok("locked line present verbatim", holding.includes("THE NEW STANDARD FOR WORKPLACE INJURY MANAGEMENT"));
-ok("hero line present verbatim", holding.includes("Where care ends, Continuum begins."));
+ok("locked line present verbatim", holding.includes("THE NEW AI-POWERED STANDARD FOR WORKPLACE INJURY MANAGEMENT"));
+ok("hero line present verbatim", holding.includes("<h1>Where care ends, Continuum begins</h1>"));
 ok("Request access CTA present", holding.includes("Request access"));
 ok("Book a demo CTA present", holding.includes("Book a demo"));
 ok("contact email present", holding.includes("info@continuumrtw.com"));
