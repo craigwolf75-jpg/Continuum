@@ -1,8 +1,9 @@
 -- Continuum worker provision invite gate suite.
 -- Run by exposure-proof after worker_schema.sql. Proves:
 --   EXECUTE is granted to authenticated; anon and public still have none
---   owner postgres still has execute
---   authenticated cannot bind an arbitrary case UUID (invite gate holds)
+--   owner postgres still has execute, and proowner is postgres
+--   as role authenticated, uninvited bind fails with not invited to this case
+--   (gate holds; that failure is not a privilege miss)
 --   invited email plus matching case binds when authenticated calls
 --   a consumed invite cannot bind again
 -- Setup as postgres. No em dashes or en dashes.
@@ -109,6 +110,13 @@ begin
     'execute'
   ) then
     raise exception 'worker_provision_gate: owner postgres missing execute on provision_worker';
+  end if;
+  if (
+    select pg_get_userbyid(p.proowner)
+    from pg_proc p
+    where p.oid = 'worker.provision_worker(uuid, text)'::regprocedure
+  ) is distinct from 'postgres' then
+    raise exception 'worker_provision_gate: provision_worker owner is not postgres';
   end if;
 end $$;
 

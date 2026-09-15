@@ -77,11 +77,19 @@ ok("grant migration grants execute on provision_worker to authenticated",
 ok("grant migration does not grant execute to anon or public",
   !/grant execute on function worker\.provision_worker\([^)]*\)\s+to [^;]*\banon\b/i.test(grantMig)
   && !/grant execute on function worker\.provision_worker\([^)]*\)\s+to [^;]*\bpublic\b/i.test(grantMig));
+ok("grant migration does not grant execute to service_role",
+  !/grant execute on function worker\.provision_worker\([^)]*\)\s+to [^;]*\bservice_role\b/i.test(grantMig));
+ok("grant migration records live GRANT Hermes already applied",
+  /records the live GRANT Hermes already applied/i.test(grantMig));
 ok("grant migration is dash clean", !/[–—]/.test(grantMig));
 
 ok("worker_provision_gate.sql denies anon execute", /set role anon/.test(gateTests) && /insufficient_privilege/.test(gateTests));
 ok("worker_provision_gate.sql requires authenticated execute",
   /authenticated missing execute on provision_worker/.test(gateTests));
+ok("worker_provision_gate.sql requires postgres execute",
+  /owner postgres missing execute on provision_worker/.test(gateTests));
+ok("worker_provision_gate.sql requires postgres owner",
+  /provision_worker owner is not postgres/.test(gateTests));
 ok("worker_provision_gate.sql denies uninvited bind",
   /uninvited caller bound an arbitrary case/.test(gateTests)
   && /not invited to this case/.test(gateTests));
