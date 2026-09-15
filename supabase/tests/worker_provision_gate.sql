@@ -1,9 +1,10 @@
 -- Continuum worker provision invite gate suite.
 -- Run by exposure-proof after worker_schema.sql. Proves:
---   EXECUTE stays revoked from anon and authenticated (owner postgres only)
---   authenticated cannot bind an arbitrary case UUID (cannot execute)
---   invited email plus matching case still binds when the owner calls with
---   that caller's jwt (the gated body, not a restored authenticated EXECUTE)
+--   EXECUTE is granted to authenticated; anon and public still have none
+--   owner postgres still has execute
+--   authenticated cannot bind an arbitrary case UUID (invite gate holds)
+--   invited email plus matching case binds when authenticated calls
+--   a consumed invite cannot bind again
 -- Setup as postgres. No em dashes or en dashes.
 
 set role postgres;
@@ -89,11 +90,18 @@ begin
     raise exception 'worker_provision_gate: anon still has execute on provision_worker';
   end if;
   if has_function_privilege(
+    'public',
+    'worker.provision_worker(uuid, text)',
+    'execute'
+  ) then
+    raise exception 'worker_provision_gate: public still has execute on provision_worker';
+  end if;
+  if not has_function_privilege(
     'authenticated',
     'worker.provision_worker(uuid, text)',
     'execute'
   ) then
-    raise exception 'worker_provision_gate: authenticated still has execute on provision_worker';
+    raise exception 'worker_provision_gate: authenticated missing execute on provision_worker';
   end if;
   if not has_function_privilege(
     'postgres',
@@ -133,15 +141,19 @@ begin
       'aa110000-0000-0000-0000-000000000012',
       'attacker.provision@continuum.test'
     );
-    raise exception 'worker_provision_gate: authenticated executed provision_worker';
+    raise exception 'worker_provision_gate: uninvited caller bound an arbitrary case';
   exception
-    when insufficient_privilege then null;
+    when others then
+      if sqlerrm <> 'not invited to this case' then
+        raise;
+      end if;
   end;
 end $$;
 
 reset role;
 
--- Gate body, owner only: jwt is the attacker, EXECUTE is postgres.
+-- Gate body, owner jwt: EXECUTE is postgres. Confirms the invite exceptions
+-- independently of the authenticated GRANT.
 select set_config(
   'request.jwt.claims',
   '{"role":"authenticated","sub":"aa110000-0000-0000-0000-000000000002"}',
@@ -155,7 +167,7 @@ begin
       'aa110000-0000-0000-0000-000000000012',
       'attacker.provision@continuum.test'
     );
-    raise exception 'worker_provision_gate: uninvited caller bound an arbitrary case';
+    raise exception 'worker_provision_gate: owner jwt uninvited caller bound an arbitrary case';
   exception
     when others then
       if sqlerrm <> 'not invited to this case' then
@@ -182,6 +194,7 @@ select set_config(
   '{"role":"authenticated","sub":"aa110000-0000-0000-0000-000000000001"}',
   false
 );
+set role authenticated;
 
 do $$
 declare
@@ -208,6 +221,8 @@ begin
     raise exception 'worker_provision_gate: invited bind returned null';
   end if;
 end $$;
+
+reset role;
 
 do $$
 begin
@@ -243,6 +258,7 @@ select set_config(
   '{"role":"authenticated","sub":"aa110000-0000-0000-0000-000000000001"}',
   false
 );
+set role authenticated;
 
 do $$
 begin
