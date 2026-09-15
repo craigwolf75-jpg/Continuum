@@ -655,7 +655,7 @@ document.addEventListener("visibilitychange",function(){ if(!document.hidden) re
   if(id==="organization")return ein("legalName","Legal name")+ein("commonName","The name your people actually use")+ein("industry","Closest industry")+ein("provinces","Provinces where you employ people, comma separated codes","AB,BC")+esel("employeeBand","How many employees",Continuum37.BANDS)+esel("collective","Any collective agreement",["yes","no","some sites"])+esel("modifiedDuties","A modified duties program today",["yes","informal","no"])+ein("avgLostTimeDays","Rough average lost time per claim, in days (optional)");
   if(id==="sites")return ecsv("sitesCsv","Work sites","employer_work_sites_template.csv");
   if(id==="roster")return ecsv("rosterCsv","Employee roster","employer_roster_template.csv");
-  if(id==="injuries")return '<p>Optional. If you have no open cases, skip this honestly.</p>'+ecsv("injuriesCsv","Open cases","employer_open_injuries_template.csv");
+  if(id==="injuries")return '<p>Optional. If you have no open cases, skip this honestly.</p>'+ecsv("injuriesCsv","Open cases","employer_open_cases_template.csv");
   if(id==="duties"){
    var titles={};(ui.roster||[]).forEach(function(r){titles[r.position_title]=true;});
    ui.duties=ui.duties||Object.keys(titles).map(function(t){return {position_title:t,matched:t};});
