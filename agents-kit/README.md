@@ -77,7 +77,7 @@ not remove the human gates, which still stop the run and surface to Gary.
   site-repo missions, a first full Argus patrol, and a backlog.
 - .claude/agents/athena.md: architecture and code.
 - .claude/agents/apollo.md: design and motion.
-- .claude/agents/calliope.md: content and voice.
+- .claude/agents/calliope.md: voice, senior content strategist.
 - .claude/agents/heracles.md: quality control, senior quality architect.
 - .claude/agents/hermes.md: release.
 - .claude/agents/argus.md: the watcher.
@@ -85,12 +85,18 @@ not remove the human gates, which still stop the run and surface to Gary.
 ## The roster
 
 The group carries prompt-family IDs: 12 Zeus, 12a Athena, 12b Apollo, 24c
-Heracles, 12d Hermes, 12e Argus, 12f Calliope. Heracles is 24c because 12c
-was claimed by the worker-app arc.
+Heracles, 12d Hermes, 12e Argus, 24f Calliope. Heracles is 24c because 12c
+was claimed by the worker-app arc. Calliope is 24f because 12f was claimed
+by the site-hub arc.
 
-Zeus, Athena, Apollo, Calliope, Heracles, Hermes, Argus. These names are
-deliberately distinct from the ViaConnect roster; different platform, different
-crew, no
-cross-contamination. What crosses over is law, not personnel: the dash rule,
-the resilience pattern, the migration and package.json locks, and the paired-
-document delivery standard bind both rosters because they are project law.
+Zeus, the Obsidian Brain, governing through CLAUDE.md, and six senior hands
+at full depth: Athena (architecture and code), Apollo (design and motion),
+Calliope (voice), Heracles (quality control), Hermes (release), Argus (the
+watcher). Seven personas, one doctrine, four gates, a seeded queue. Install
+stays four steps and one sentence.
+
+These names are deliberately distinct from the ViaConnect roster; different
+platform, different crew, no cross-contamination. What crosses over is law,
+not personnel: the dash rule, the resilience pattern, the migration and
+package.json locks, and the paired-document delivery standard bind both
+rosters because they are project law.
