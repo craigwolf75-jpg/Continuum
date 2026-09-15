@@ -49,19 +49,20 @@ body{
 }
 .wrap{
   width:100%;
-  max-width:560px;
+  max-width:740px;
   text-align:center;
 }
-.logo{height:34px;width:auto;margin:0 auto 44px;display:block}
+.logo{width:min(474px,100%);height:auto;margin:0 auto 44px;display:block}
 .logo-dark{display:none}
 .logo-light{display:block}
 h1{
   font-family:"Segoe UI",-apple-system,system-ui,sans-serif;
   font-weight:600;
-  font-size:clamp(28px,5vw,40px);
+  font-size:clamp(16px,5vw,40px);
   letter-spacing:-0.01em;
   line-height:1.2;
   margin-bottom:14px;
+  white-space:nowrap;
 }
 .locked{
   color:var(--gold);
@@ -192,10 +193,10 @@ footer a:hover{color:var(--fg)}
   <img class="logo logo-dark" src="/continuum-logo.svg" alt="Continuum" width="240" height="86">
   <img class="logo logo-light" src="/continuum-logo-dark.svg" alt="Continuum" width="240" height="86">
 
-  <h1>Where care ends, Continuum begins.</h1>
-  <div class="locked">THE NEW STANDARD FOR WORKPLACE INJURY MANAGEMENT</div>
+  <h1>Where care ends, Continuum begins</h1>
+  <div class="locked">THE NEW AI-POWERED STANDARD FOR WORKPLACE INJURY MANAGEMENT</div>
 
-  <p class="desc">Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information.</p>
+  <p class="desc">Continuum coordinates workplace injury recovery so the worker stays supported, the employer knows what work is safe, and the doctor decides with better information</p>
 
   <div class="actions">
     <form class="req-form" id="reqForm" novalidate>
