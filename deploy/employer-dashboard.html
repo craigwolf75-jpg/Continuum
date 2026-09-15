@@ -372,7 +372,7 @@ function openDrawer(idx){
  '<div style="margin:12px 0">'+chipFor(w.status)+'</div>'+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Case</div>'+
  '<table><tbody><tr><td>Duty limit area</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
- '<tr><td>Days injured</td><td><b>'+w.days+'</b></td></tr>'+
+ '<tr><td>Days on case</td><td><b>'+w.days+'</b></td></tr>'+
  '<tr><td>Appointments</td><td><b>'+w.visits+'</b></td></tr>'+
  '<tr><td>Next review</td><td><b>'+esc(w.review)+'</b></td></tr>'+
  '<tr><td>Restrictions</td><td>'+esc(w.restr)+'</td></tr>'+
@@ -406,7 +406,7 @@ function openLiveDrawer(){
  (w.clinicianReviewing?'<p style="font-size:12px;color:var(--muted);margin-bottom:10px">Per program rules, the care team decides next steps. The platform informs. People decide.</p>':'')+
  '<div class="card" style="margin-bottom:10px"><div class="cardhead">Case (functional only)</div>'+
  '<table><tbody><tr><td>Duty limit area</td><td><b>'+esc(w.injury)+'</b></td></tr>'+
- '<tr><td>Days injured</td><td><b>'+w.days+'</b></td></tr>'+
+ '<tr><td>Days on case</td><td><b>'+w.days+'</b></td></tr>'+
  '<tr><td>Restrictions</td><td>'+esc(w.restr||"none")+'</td></tr>'+
  '<tr><td>Return progress</td><td>'+rtwBar(w.rtw)+'</td></tr></tbody></table></div>'+
  '<div class="card" style="margin-bottom:10px;border-color:var(--gold)"><div class="cardhead">The seam</div>'+
