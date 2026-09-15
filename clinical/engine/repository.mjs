@@ -65,7 +65,7 @@ export function createInMemoryRepository(seed = {}) {
       if (!draft) return null;
       const report = store.reports.get(reportId) || null;
       const practitioner = store.practitioners.get(draft.practitioner_id) || null;
-      return { report, practitioner, axisValues: (draft.axisValues || []).slice() };
+      return { report, practitioner, axisValues: (draft.axisValues || []).slice(), reportFields: (draft.reportFields || []).slice() };
     },
     getSignedReports(clinicId) {
       const out = [];
