@@ -65,7 +65,7 @@ export function runNormalisation(input, store, metrics, adapter) {
       organisation_id: input.connection_organisation_id || envelope.organisation_id,
       connection_id: envelope.connection_id || input.connection_id,
       external_system: envelope.source_system || "synthetic",
-      authorship_provenance: intermediate.authorship_provenance || "human",
+      authorship_provenance: intermediate.authorship_provenance,
       required_fields: input.required_fields || [],
       namespace_key: intermediate.namespace_key,
       at: input.at,
@@ -113,6 +113,10 @@ export function runNormalisation(input, store, metrics, adapter) {
       ...envelope,
       mapping_version: converted.mapping_version,
     }, intermediate.authorship_provenance, metrics), duration, metrics, input);
+    if (r.halt_outcome) {
+      if (metrics) metrics.increment("reconciliation_required_total", { adapter: ad.descriptor().name });
+      return finish(r.halt_outcome, null, warnings, r.errors || errors, envelope, duration, correlationId, metrics, null, r.source_provenance || (r.canonical && r.canonical.source_provenance));
+    }
     canonical = r.canonical;
 
     r = timed("IDENTITY_RESOLUTION", () => stageIdentityResolution(canonical, store, metrics), duration, metrics, input);
