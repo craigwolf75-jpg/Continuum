@@ -1,6 +1,6 @@
 # Prompt 54 acceptance: what this review and build proved
 
-Not shipped. Not merged. Not deployed. Athena does not ship.
+Merged tip 282b3f7c149a. Production 6484101032. Athena does not ship.
 No em dashes or en dashes anywhere.
 
 A proof is a file, a suite, or a named STOP. Intended work is not
@@ -86,7 +86,7 @@ completed work.
 - Live-platform work. Montreal, Bedrock, seed, and schema were
   not touched.
 - G1 closed. The 2026-08-13 report is read-only discovery.
-- A merge to main or a deploy.
+- A live-platform product release. Prompt 53 holds stand.
 
 See [SECTION_16.md](SECTION_16.md) for the criterion-by-criterion
 map and [STOPS.md](STOPS.md) for the binding stops.

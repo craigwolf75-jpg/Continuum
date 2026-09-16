@@ -28,8 +28,9 @@ Section 1 Check 1: the Prompt 33 hub authentication path is present
 and covered by Node suites. Nothing in this repository states that
 Craig verified it. **UNVERIFIED. STOP for ship.**
 
-Athena may still author tokens and gates on a draft PR. This draft
-is not ship-ready. Do not push to main as a ship. Do not deploy.
+Athena may still author tokens and gates on a draft PR. This work
+is not ship-ready as a live-platform product release. Do not treat
+the merge or Production deploy as that release.
 
 ---
 
@@ -141,6 +142,6 @@ gate pass.
 
 ## Athena does not ship
 
-Draft PR only. Local/CI surface work. Not a live-platform release.
-No merge as a ship. No deploy. Hermes ships only when Craig names
-ship.
+Merged and deployed. Local/CI surface work. Not a live-platform
+product release. Prompt 53 holds stand. Hermes ships only when
+Craig names ship.
