@@ -1,11 +1,12 @@
 # Prompt 54. The Design System and the Surface Standard.
 
 Sequenced for review and build. Local/CI surface work only.
-Athena does not ship. Draft PR only. Not a live-platform release.
+Athena does not ship. Merged and deployed. Not a live-platform
+product release. Prompt 53 holds stand.
 
 Craig said "review and build". That is the sequence release for
-local/CI surface work. It is not a ship. It is not a merge. It is
-not a deploy.
+local/CI surface work. It is not a live-platform product release.
+It is merged and deployed.
 
 This prompt converts Project ICON design decisions into build
 requirements. It governs the surface of screens that Prompts 40 and
@@ -24,8 +25,8 @@ Section 1 prerequisite checks are answered in
 [SECTION_1.md](SECTION_1.md) on current tip `3c256de` before token or
 other file edits. That inspection is the current one.
 
-This is a draft PR. Athena does not ship. Hermes does not treat this
-file as a ship order.
+This is merged and deployed. Athena does not ship. Hermes does not
+treat this file as a ship order.
 
 ---
 
@@ -141,7 +142,7 @@ Shipping either as a feature is a defect.
 
 ## What this review and build must not do
 
-- Ship, merge, or deploy.
+- Live-platform product release. Prompt 53 holds stand.
 - Live-platform work (Montreal, Bedrock, seed, schema).
 - New module, dashboard, AI component, or screen.
 - Default any html to dark or compact.
@@ -150,7 +151,8 @@ Shipping either as a feature is a defect.
   `docs/prompts/50/`, `docs/prompts/50a/`, credentials, holding.html
   layout/copy, product portal screens, or `G1_AUDIT_REPORT.md`.
 
-Athena does not ship. Draft PR only. Not a live-platform release.
+Athena does not ship. Merged and deployed. Not a live-platform
+product release. Prompt 53 holds stand.
 
 ---
 

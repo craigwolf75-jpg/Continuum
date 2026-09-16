@@ -1,7 +1,7 @@
 # Prompt 54 Section 16: acceptance map
 
-Tip of this draft after the review and build. Tokens and gates only.
-Not shipped. Not deployed. Hub auth remains unverified by Craig.
+Merged tip 282b3f7c149a. Tokens and gates only.
+Deployed Production 6484101032. Hub auth remains unverified by Craig.
 Athena does not ship. No em dashes or en dashes anywhere.
 
 This is the Prompt 54 Design System / Surface Standard acceptance
@@ -214,7 +214,7 @@ proves that restatement.
 
 ---
 
-## What this draft proved
+## What this review and build proved
 
 - Prompt 54 Section 1 was written on current tip `3c256de` before
   other writes, with evidence for checks 1 to 8.
