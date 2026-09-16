@@ -23,9 +23,10 @@ from the absent architecture prompts is copied into code or comments.
 
 ### Prompt 50a ruling (2026-09-16)
 
-Decision 1 is GO against Supabase as-is (the actual stack), with four
-binding guardrails (a)(b)(c)(d). See `docs/prompts/50a/DECISIONS.md` and
-`docs/prompts/50a/GUARDRAILS.md`.
+Historical 50a ruling, 2026-09-16: Decision 1 is GO against Supabase
+as-is (the actual stack), with four binding guardrails (a)(b)(c)(d).
+See `docs/prompts/50a/DECISIONS.md` and `docs/prompts/50a/GUARDRAILS.md`.
+That GO is SUSPENDED by Prompt 53.
 
 Do not infer Master Architecture text beyond Prompt 51 restatements. If
 that document arrives and conflicts, stop and report the delta under
@@ -36,6 +37,12 @@ Interoperability Architecture absence is not resolved by 50a. I1, I2,
 and I3 remain substrate only. No adapter, no gateway, no canonical
 model. That history still holds.
 
+### Prompt 53 suspension (sequencing hold)
+
+Decision 1 is no longer an active GO. It is withdrawn as a decision and
+survives as analysis. The platform decision is reserved to Craig after
+the G1 report. Decision 2 still stands.
+
 ## Azure Canada assumption (Section 1 check 21)
 
 Prompt 50 assumes Azure Canada Central primary and Canada East secondary.
@@ -45,13 +52,21 @@ secondary region. Mechanisms are cloud-agnostic.
 
 ### Prompt 50a ruling (2026-09-16)
 
-Decision 1 is GO against Supabase as-is (the actual stack), with four
-binding guardrails (a)(b)(c)(d). See `docs/prompts/50a/DECISIONS.md` and
-`docs/prompts/50a/GUARDRAILS.md`.
+Historical 50a ruling, 2026-09-16: Decision 1 is GO against Supabase
+as-is (the actual stack), with four binding guardrails (a)(b)(c)(d).
+See `docs/prompts/50a/DECISIONS.md` and `docs/prompts/50a/GUARDRAILS.md`.
+That GO is SUSPENDED by Prompt 53.
 
 Do not invent Azure, ARM, or a secondary region. That part of this stop
-still holds. Decision 1 is a go on the Vercel plus Supabase stack, not a
-claim that Azure arrived.
+still holds. Historical 50a reading: Decision 1 was a go on the Vercel
+plus Supabase stack, not a claim that Azure arrived. Prompt 53 suspends
+that Decision 1 GO. Azure still has not arrived.
+
+### Prompt 53 suspension (sequencing hold)
+
+Decision 1 is no longer an active GO. It is withdrawn as a decision and
+survives as analysis. The platform decision is reserved to Craig after
+the G1 report. Decision 2 still stands.
 
 ## Secret manager (Section 1 check 23)
 

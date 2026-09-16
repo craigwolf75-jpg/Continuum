@@ -13,6 +13,13 @@ No em dashes or en dashes anywhere.
 
 ---
 
+## Prompt 53 banner: Decision 1 as an active GO is SUSPENDED
+
+Decision 1 as an active GO is SUSPENDED by Prompt 53. Guardrail evidence
+below remains as analysis and as an inventory of what the 50a
+recommendation described. It is not permission to proceed. Decision 2
+obligations remain in force.
+
 ## Decision 1(a): RLS is defense in depth; banned-column and no-cross-schema-FK unchanged
 
 Status: **confirmed**

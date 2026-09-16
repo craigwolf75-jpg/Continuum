@@ -448,8 +448,10 @@ Evidence (`G1_AUDIT_REPORT.md` Section 2, `deploy/vercel.json`,
 
 This build does **not** invent Azure resources, ARM templates, or a fake
 Canada East pair. Platform mechanisms stay cloud-agnostic (SQL + Node).
-See `docs/prompts/50/STOPS.md`. Prompt 50a Decision 1 is GO on this stack
-(`docs/prompts/50a/DECISIONS.md`); that is not a claim that Azure arrived.
+See `docs/prompts/50/STOPS.md`. Prompt 50a Decision 1 was GO on this
+stack (`docs/prompts/50a/DECISIONS.md`); that is not a claim that Azure
+arrived. Prompt 53 suspends Decision 1 as an active GO: withdrawn as a
+decision, survives as analysis only. See `docs/prompts/53/`.
 
 ### Check 22. Observability stack and whether data leaves Canada
 
