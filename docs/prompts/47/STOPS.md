@@ -3,6 +3,14 @@
 Real stops only. Part 4.2, 4.3, 8.1, and 9.3 named items from Prompt 47 are
 encoded as data in the engines. No em dashes or en dashes.
 
+## Prompt 47 lineage (Prompt 53 stop)
+
+Prompt 47 lineage is not canonical until a redo from old 45 REV 2
+12:32 PM. Craig confirmed WRONG FILE / REDO REQUIRED: the Prompt 45
+clinic and enterprise file used for shipped Prompt 47 was not REV 2
+from 12:32 PM. Waiting on the REV 2 attachment. Do not start the redo
+here. See `docs/prompts/53/`.
+
 ## Master Architecture D7 extra
 
 Prompt 47 Part 3.1 restates D7 as: anything that varies by customer,
