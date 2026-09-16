@@ -1,5 +1,7 @@
-/* Continuum Prompt 58 banned-string linter (sections 0.2 + 11.10, acceptance
-   criterion 16). Extends the Prompt 41 section 0.3 regulatory list to tone.
+/* Continuum Prompt 51 Design System banned-string linter (Prompt 58 comments
+   remain: sections 0.2 + 11.10, acceptance criterion 16, plus criterion 24).
+   Human copy review (Calliope): docs/prompts/51-design-system/HUMAN_COPY_REVIEW.md
+   Extends the Prompt 41 section 0.3 regulatory list to tone.
    Scans the visible copy of the product surfaces (not the marketing landing,
    not the legal pages) plus the copy-bearing attributes, for:
      - REGULATORY (SaMD): the section 0.3 list. HARD FAIL. False positives are
@@ -9,6 +11,8 @@
        REPORTED for the section 11.7 human copy review, not auto-fixed here,
        because a linter catches literals not voice and live copy is a content
        decision.
+     - WEEKDAY (criterion 24): Monday to Sunday and common abbreviations.
+       HARD FAIL on this file walk, with the same data-board exemption.
    Board-sourced strings are exempt when the element carries data-board (the
    marker section 0.2 requires; build it if absent).
    No network. No dashes anywhere. Run by node; the suites workflow globs it. */
@@ -36,6 +40,11 @@ const TONE = [
   "oops", "whoops", "great job", "nice work", "awesome", "you're all set",
   "hang tight", "just a sec", "i've saved", "let me check",
 ];
+// Full names plus common abbreviations. Word-boundary match so "month" and
+// "satisfaction" are not hits. Plurals (Mondays) are covered by the name.
+const WEEKDAY_SRC = "monday|tuesday|wednesday|thursday|friday|saturday|sunday|mondays|tuesdays|wednesdays|thursdays|fridays|saturdays|sundays|mon|tue|tues|wed|thu|thur|thurs|fri|sat|sun";
+const WEEKDAY_RE = new RegExp("\\b(" + WEEKDAY_SRC + ")\\b");
+const WEEKDAY_RE_G = new RegExp("\\b(" + WEEKDAY_SRC + ")\\b", "g");
 
 // Extract visible text: drop <script> and <style> blocks, then strip tags, and
 // separately pull copy-bearing attribute values (placeholder/title/alt/aria-label).
@@ -59,7 +68,7 @@ function exclamationHits(text) {
   return (text.match(/\S*!(?!important)/g) || []).filter((s) => !/^[!=<>]+$/.test(s));
 }
 
-const reg = [], tone = [], emoji = [], excl = [];
+const reg = [], tone = [], emoji = [], excl = [], weekdays = [];
 for (const f of files) {
   const html = readFileSync(join(here, f), "utf8");
   const { text, attrs } = visibleCopy(html);
@@ -69,6 +78,9 @@ for (const f of files) {
   if (emojiRe.test(readFileSync(join(here, f), "utf8"))) emoji.push(f);
   const ex = exclamationHits(text);
   if (ex.length) excl.push(`${f}: ${ex.length} (${ex.slice(0, 3).join(", ")})`);
+  WEEKDAY_RE_G.lastIndex = 0;
+  const wd = hay.match(WEEKDAY_RE_G);
+  if (wd && wd.length) weekdays.push(`${f}: ${[...new Set(wd)].join(", ")}`);
 }
 
 console.log(`scanned ${files.length} product surfaces`);
@@ -76,6 +88,7 @@ console.log(`REGULATORY hits: ${reg.length}`, reg.slice(0, 20));
 console.log(`TONE hits: ${tone.length}`, tone.slice(0, 20));
 console.log(`EMOJI files: ${emoji.length}`, emoji.slice(0, 20));
 console.log(`EXCLAMATION files: ${excl.length}`, excl.slice(0, 20));
+console.log(`WEEKDAY hits: ${weekdays.length}`, weekdays.slice(0, 20));
 
 // HARD GATE: the SaMD regulatory list must be zero. These are false-positive
 // safe and are the criterion 16 core.
@@ -88,8 +101,16 @@ ok("zero regulatory banned strings on product surfaces", reg.length === 0);
   ok("linter catches a planted regulatory string (gate is live)", caught.length >= 3);
   const exempt = visibleCopy('<p data-board="C050E">Diagnosis: predicted onset!</p>');
   ok("board-marked copy is exempt (data-board blanks it)", !exempt.text.includes("predicted"));
+  const plantedDay = visibleCopy("<p>Clinic hours Monday to Friday</p>");
+  ok("linter catches a planted weekday (criterion 24 is live)", WEEKDAY_RE.test(plantedDay.text));
+  const boardDay = visibleCopy('<p data-board="C050E">Monday clinic</p>');
+  ok("board-marked weekday is exempt (data-board blanks it)", !WEEKDAY_RE.test(boardDay.text));
 }
+
+ok("zero hard-coded weekdays on product surfaces (criterion 24)", weekdays.length === 0);
+if (weekdays.length) weekdays.forEach((w) => console.error("  " + w));
 
 console.log(`\nbanned-string suite: ${pass} passed, ${fail} failed`);
 console.log("(TONE/EMOJI/EXCLAMATION are reported for the section 11.7 human copy review, not build-failing yet)");
+console.log("(Human copy review: docs/prompts/51-design-system/HUMAN_COPY_REVIEW.md)");
 process.exit(fail ? 1 : 0);

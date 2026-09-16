@@ -1,4 +1,5 @@
-/* Continuum Prompt 58 structural a11y gate (section 11 gates 2,4,6,7 + print).
+/* Continuum Prompt 51 Design System structural a11y gate (Prompt 58 comments
+   remain: section 11 gates 2,4,6,7 + print).
    These are the token-level contracts that must hold regardless of any rendered
    page, verified over continuum_tokens.css in node:
      gate 2  focus ring at normal specificity, 2px + 2px offset, never :where()
@@ -6,7 +7,9 @@
              inline-block fix and the any-pointer (not pointer) query
      gate 6  reduced motion zeroes the --motion-* tokens AND resets transitions
      gate 7  draft label is real DOM text (a styled element, never ::before)
-     print   every semantic token reset in @media print (criterion 19)
+     print   every semantic token reset in @media print from the palette layer
+             (criterion 19). Theme and print blocks never assign raw hex to a
+             --text-*, --bg-*, --border-*, --state-*, or --focus-ring semantic.
    The RENDERED gates (axe scan, reflow@320, zoom@200, aria-live, sparkline alt)
    need a headless-browser workflow and are tracked separately. No dashes. */
 
@@ -47,13 +50,59 @@ ok("draft label is a styled block element (real DOM text)", /\.provenance-label\
 ok("draft label uses --state-draft-text", /\.provenance-label[\s\S]*?color:\s*var\(--state-draft-text\)/.test(css));
 ok("REGULATORY: the draft label is NEVER a ::before / generated content", !/provenance[^{]*::before/.test(css) && !/content\s*:/.test(css));
 
-// ---- print: full token reset (criterion 19) --------------------------------
-const printBlock = css.slice(css.indexOf("@media print"), css.indexOf("@media print") + 1600);
+// ---- print: full token reset from the palette layer (criterion 19) ---------
+function extractBlock(src, startIdx) {
+  const brace = src.indexOf("{", startIdx);
+  if (brace < 0) return "";
+  let depth = 0;
+  for (let i = brace; i < src.length; i++) {
+    if (src[i] === "{") depth++;
+    else if (src[i] === "}") {
+      depth--;
+      if (depth === 0) return src.slice(startIdx, i + 1);
+    }
+  }
+  return src.slice(startIdx);
+}
+const printIdx = css.indexOf("@media print");
+const printBlock = printIdx >= 0 ? extractBlock(css, printIdx) : "";
 ok("print block resets both :root and the dark theme", /:root,\s*\n?\s*\[data-theme="dark"\]/.test(printBlock));
-for (const t of ["--text-primary", "--text-secondary", "--text-tertiary", "--state-caution", "--state-draft", "--focus-ring", "--bg-page", "--border-control"]) {
-  ok(`print resets ${t}`, new RegExp(`${t}:\\s*#`).test(printBlock));
+const printSemantics = [
+  "--bg-page", "--bg-surface", "--bg-raised", "--bg-subtle", "--bg-selected",
+  "--text-primary", "--text-body", "--text-secondary", "--text-tertiary",
+  "--text-on-fill", "--text-link", "--text-link-hover",
+  "--border-control", "--border-divider", "--border-card", "--border-strong",
+  "--border-selected", "--focus-ring",
+  "--state-ok", "--state-ok-bg", "--state-ok-text",
+  "--state-caution", "--state-caution-bg", "--state-caution-text",
+  "--state-stop", "--state-stop-bg", "--state-stop-text",
+  "--state-draft", "--state-draft-bg", "--state-draft-text",
+  "--state-none",
+];
+for (const t of printSemantics) {
+  ok(`print resets ${t}`, new RegExp(`${t}:\\s*var\\(--[a-z0-9-]+\\)`).test(printBlock));
 }
 ok("print forces color-scheme light", /@media print[\s\S]*?color-scheme:\s*light/.test(css));
+
+// Theme and print blocks assign semantics from the palette, never raw hex.
+const SEMANTIC_ASSIGN = /(--(?:text|bg|border|state)-[a-z0-9-]+|--focus-ring)\s*:\s*([^;]+);/g;
+function hexOnSemantics(block, label) {
+  const hits = [];
+  SEMANTIC_ASSIGN.lastIndex = 0;
+  let m;
+  while ((m = SEMANTIC_ASSIGN.exec(block))) {
+    if (/#/.test(m[2])) hits.push(`${label} ${m[1]}: ${m[2].trim()}`);
+  }
+  return hits;
+}
+const darkIdx = css.indexOf('[data-theme="dark"]');
+const darkBlock = darkIdx >= 0 ? extractBlock(css, darkIdx) : "";
+const hexHits = [
+  ...hexOnSemantics(darkBlock, "dark"),
+  ...hexOnSemantics(printBlock, "print"),
+];
+ok("theme/print blocks never assign raw hex to a colour semantic", hexHits.length === 0);
+if (hexHits.length) hexHits.forEach((h) => console.error("  " + h));
 
 console.log(`\na11y-tokens suite: ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
