@@ -27,9 +27,19 @@ export function projectFunctionalCapacity(measurement, axisRows) {
   });
 }
 
+export function explicitAnswered(value) {
+  if (value === true || value === "true") return true;
+  return false;
+}
+
+export function explicitAxisSource(value) {
+  if (value === undefined || value === null || value === "") return null;
+  return value;
+}
+
 export function projectAxis(row) {
   const r = row || {};
-  const answered = r.answered === true;
+  const answered = explicitAnswered(r.answered);
   return Object.freeze({
     axis: r.axis,
     answered,
@@ -42,7 +52,7 @@ export function projectAxis(row) {
     derived_capability_code: r.derived_capability_code || null,
     rounded_down: r.rounded_down === true,
     below_lowest_band: r.below_lowest_band === true,
-    axis_source: r.axis_source || r.source || null,
+    axis_source: explicitAxisSource(r.axis_source !== undefined && r.axis_source !== null && r.axis_source !== "" ? r.axis_source : r.source),
     authorship_provenance: r.authorship_provenance || null,
     source_provenance: r.source_provenance || null,
   });
@@ -119,12 +129,13 @@ export function stripRawMeasurements(object, metrics) {
 export function emitUnansweredAxes(axes, metrics) {
   const list = axes || [];
   return list.map((axis) => {
-    if (axis.answered === false) {
+    if (axis.answered !== true) {
       if (axis.omitted === true && metrics) {
         metrics.increment("unanswered_axis_omitted_total", {});
       }
       return {
         ...axis,
+        answered: false,
         capability: null,
         data_absent_reason: DATA_ABSENT_UNANSWERED,
         emitted: true,
@@ -135,7 +146,8 @@ export function emitUnansweredAxes(axes, metrics) {
 }
 
 export function renderUnanswered(surface, axis) {
-  if (!axis || axis.answered !== false) return { surface, explicit: false };
+  if (!axis) return { surface, explicit: false };
+  if (axis.answered === true) return { surface, explicit: false };
   return {
     surface,
     explicit: true,

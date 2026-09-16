@@ -11,8 +11,8 @@ import { normaliseTemporal } from "./dates.mjs";
 import { normaliseUnit, isLegacy25PoundLabel } from "./units.mjs";
 import { mapCode, mapStatus } from "./mapping.mjs";
 import { createIdentifier, validateIdentifier, identifierForResolution } from "./identifier.mjs";
-import { transitionAuthorship, createSourceProvenance } from "./authorship.mjs";
-import { inboundBandOnly, projectFunctionalCapacity, emitUnansweredAxes } from "./functional.mjs";
+import { transitionAuthorship, createSourceProvenance, resolveInboundAuthorship } from "./authorship.mjs";
+import { inboundBandOnly, projectFunctionalCapacity, emitUnansweredAxes, explicitAnswered, explicitAxisSource } from "./functional.mjs";
 import { resolveIdentity } from "./identity_port.mjs";
 import { evaluateConsent, assertNoCachedConsent } from "./consent_port.mjs";
 import { createIssue } from "./result.mjs";
@@ -239,15 +239,15 @@ export function stageCanonicalGeneration(converted) {
   if (converted.axis) {
     axes.push({
       axis: converted.axis,
-      answered: converted.answered !== false && converted.answered !== "false",
+      answered: explicitAnswered(converted.answered),
       skipped: converted.skipped === true,
       capability: converted.capability || null,
       measured_hours: converted.measured_hours === undefined ? null : converted.measured_hours,
       measured_weight_kg: converted.measured_weight_kg === undefined ? null : converted.measured_weight_kg,
       derived_band: converted.derived_band || null,
       derived_capability_code: converted.derived_capability_code || null,
-      axis_source: converted.axis_source || "measured",
-      authorship_provenance: converted.authorship_provenance || "human",
+      axis_source: explicitAxisSource(converted.axis_source),
+      authorship_provenance: resolveInboundAuthorship(converted.authorship_provenance).value,
     });
   }
   const functional = projectFunctionalCapacity({
@@ -274,7 +274,7 @@ export function stageCanonicalGeneration(converted) {
     status: converted.status_object || createStatus({ source_status_raw: converted.status, mapping_status: "unmapped" }),
     consent: consentRef,
     extension_payload: converted.extension_payload || {},
-    authorship_provenance: converted.authorship_provenance || "human",
+    authorship_provenance: resolveInboundAuthorship(converted.authorship_provenance).value,
     organisation_id: converted.organisation_id,
     connection_id: converted.connection_id,
   };
@@ -282,8 +282,27 @@ export function stageCanonicalGeneration(converted) {
 }
 
 export function stageProvenanceCapture(canonical, envelope, authorshipFrom, metrics) {
-  const fromValue = authorshipFrom || canonical.authorship_provenance || "human";
-  const transition = transitionAuthorship(fromValue, canonical.authorship_provenance || fromValue, metrics);
+  const resolvedFrom = resolveInboundAuthorship(authorshipFrom);
+  const resolvedCanonical = resolveInboundAuthorship(canonical && canonical.authorship_provenance);
+  if (resolvedFrom.omitted && resolvedCanonical.omitted) {
+    return {
+      ok: true,
+      halt_outcome: "requires_manual_reconciliation",
+      errors: [createIssue("AUTHORSHIP-OMITTED", "PROVENANCE_CAPTURE", "authorship_provenance", "authorship_provenance was omitted. It was not inferred as human. The message requires review.", "")],
+      canonical: { ...canonical, authorship_provenance: null },
+    };
+  }
+  if (resolvedFrom.unmapped || resolvedCanonical.unmapped) {
+    return {
+      ok: true,
+      halt_outcome: "requires_manual_reconciliation",
+      errors: [createIssue("AUTHORSHIP-UNMAPPED", "PROVENANCE_CAPTURE", "authorship_provenance", "authorship_provenance is unmapped. It was not inferred as human.", String(authorshipFrom || (canonical && canonical.authorship_provenance) || ""))],
+      canonical: { ...canonical, authorship_provenance: null },
+    };
+  }
+  const fromValue = resolvedFrom.value || resolvedCanonical.value;
+  const toValue = resolvedCanonical.value || resolvedFrom.value;
+  const transition = transitionAuthorship(fromValue, toValue, metrics);
   const source_provenance = createSourceProvenance({
     source_system: envelope.source_system,
     connection_id: envelope.connection_id,
