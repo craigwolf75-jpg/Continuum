@@ -1,4 +1,5 @@
-/* Continuum Prompt 58 token-contrast gate (section 11.2, acceptance criterion 2).
+/* Continuum Prompt 51 Design System token-contrast gate (Prompt 58 comments
+   remain: section 11.2, acceptance criterion 2).
    Parses continuum_tokens.css, computes WCAG 2.2 contrast, and asserts every text
    token clears 4.5:1 against every background it can land on and every control
    boundary and focus ring clears 3:1 against the same full set, in both themes.
@@ -82,6 +83,56 @@ for (const [t, bg] of [["--d-ok", "--d-ok-bg"], ["--d-warn", "--d-warn-bg"],
   const c = ratio(P[t], P[bg]);
   ok(`${t} on ${bg} >= 4.5 (got ${r2(c)})`, c >= 4.5);
 }
+
+// Dark --state-*-text must not conflate with --state-* (the icon token) and
+// must still clear 4.5:1 on the matching tint. Mapping is parsed from the
+// [data-theme="dark"] block; no invented hex.
+function extractBlock(src, startIdx) {
+  const brace = src.indexOf("{", startIdx);
+  if (brace < 0) return "";
+  let depth = 0;
+  for (let i = brace; i < src.length; i++) {
+    if (src[i] === "{") depth++;
+    else if (src[i] === "}") {
+      depth--;
+      if (depth === 0) return src.slice(startIdx, i + 1);
+    }
+  }
+  return src.slice(startIdx);
+}
+function mappedVar(block, name) {
+  const m = block.match(new RegExp(`${name}:\\s*var\\((--[a-z0-9-]+)\\)`));
+  return m ? m[1] : null;
+}
+const darkIdx = css.indexOf('[data-theme="dark"]');
+const darkBlock = darkIdx >= 0 ? extractBlock(css, darkIdx) : "";
+for (const [iconTok, textTok, tint] of [
+  ["--state-ok", "--state-ok-text", "--d-ok-bg"],
+  ["--state-caution", "--state-caution-text", "--d-warn-bg"],
+  ["--state-stop", "--state-stop-text", "--d-stop-bg"],
+  ["--state-draft", "--state-draft-text", "--d-draft-bg"],
+]) {
+  const icon = mappedVar(darkBlock, iconTok);
+  const text = mappedVar(darkBlock, textTok);
+  ok(`dark ${textTok} is not conflated with ${iconTok}`, icon && text && icon !== text);
+  if (text && P[text] && P[tint]) {
+    const c = ratio(P[text], P[tint]);
+    ok(`dark ${textTok} (${text}) >= 4.5 on ${tint} (got ${r2(c)})`, c >= 4.5);
+  } else {
+    ok(`dark ${textTok} resolves to a known palette hex on ${tint}`, false);
+  }
+}
+
+// Print paper: --text-secondary and --state-caution must clear 4.5:1 on white
+// (criterion 19). Print assigns those semantics from --ink-700 and --warn-800.
+const printIdx = css.indexOf("@media print");
+const printBlock = printIdx >= 0 ? extractBlock(css, printIdx) : "";
+const printSecondary = mappedVar(printBlock, "--text-secondary");
+const printCaution = mappedVar(printBlock, "--state-caution");
+ok("print --text-secondary maps from the palette", printSecondary === "--ink-700");
+ok("print --state-caution maps from the palette", printCaution === "--warn-800");
+ok(`print --text-secondary on paper >= 4.5 (got ${r2(ratio(P["--ink-700"], W))})`, ratio(P["--ink-700"], W) >= 4.5);
+ok(`print --state-caution on paper >= 4.5 (got ${r2(ratio(P["--warn-800"], W))})`, ratio(P["--warn-800"], W) >= 4.5);
 // dark control border >= 3 on card + page + elevated
 for (const [nm, bg] of [["card", dCard], ["page", dPage], ["elevated", dRaised]]) {
   const c = ratio(P["--d-border"], bg);

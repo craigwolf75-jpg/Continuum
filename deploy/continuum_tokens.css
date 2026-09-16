@@ -1,5 +1,6 @@
 /* ============================================================================
    CONTINUUM DESIGN TOKENS
+   Prompt 51 Design System (unified-stream comments said Prompt 58).
    PROMPT 58 (unified stream; Craig's PROMPT 51). THE DESIGN SYSTEM AND
    THE SURFACE STANDARD. 8 August 2026. Released after Craig lifted the hold.
    Revised after adversarial review; correction log is Part 11 of
@@ -315,18 +316,21 @@
 
   --focus-ring: var(--d-action);
 
+  /* Text tokens use --d-ink-000, not the matching --d-* icon token.
+     --d-ink-000 is an existing dark palette token and clears 4.5:1 on
+     each tint. No new hex. */
   --state-ok:           var(--d-ok);
   --state-ok-bg:        var(--d-ok-bg);
-  --state-ok-text:      var(--d-ok);
+  --state-ok-text:      var(--d-ink-000);
   --state-caution:      var(--d-warn);
   --state-caution-bg:   var(--d-warn-bg);
-  --state-caution-text: var(--d-warn);
+  --state-caution-text: var(--d-ink-000);
   --state-stop:         var(--d-stop);
   --state-stop-bg:      var(--d-stop-bg);
-  --state-stop-text:    var(--d-stop);
+  --state-stop-text:    var(--d-ink-000);
   --state-draft:        var(--d-draft);
   --state-draft-bg:     var(--d-draft-bg);
-  --state-draft-text:   var(--d-draft);
+  --state-draft-text:   var(--d-ink-000);
   --state-none:         var(--d-ink-200);
 
   --shadow-popover: 0 2px 8px rgb(0 0 0 / 45%);
@@ -358,41 +362,41 @@ body {
   [data-theme="dark"] {
     color-scheme: light;
 
-    --bg-page:     #FFFFFF;
-    --bg-surface:  #FFFFFF;
-    --bg-raised:   #FFFFFF;
-    --bg-subtle:   #FFFFFF;
-    --bg-selected: #FFFFFF;
+    --bg-page:     var(--white);
+    --bg-surface:  var(--white);
+    --bg-raised:   var(--white);
+    --bg-subtle:   var(--white);
+    --bg-selected: var(--white);
 
-    --text-primary:    #0E1B2C;
-    --text-body:       #0E1B2C;
-    --text-secondary:  #2C3E52;
-    --text-tertiary:   #41556B;
-    --text-on-fill:    #FFFFFF;
-    --text-link:       #0E4680;
-    --text-link-hover: #0E4680;
+    --text-primary:    var(--ink-900);
+    --text-body:       var(--ink-900);
+    --text-secondary:  var(--ink-700);
+    --text-tertiary:   var(--ink-600);
+    --text-on-fill:    var(--white);
+    --text-link:       var(--action-800);
+    --text-link-hover: var(--action-800);
 
-    --border-control:  #55697E;
-    --border-divider:  #6E7E8E;
-    --border-card:     #6E7E8E;
-    --border-strong:   #2C3E52;
-    --border-selected: #0E4680;
+    --border-control:  var(--ink-500);
+    --border-divider:  var(--ink-400);
+    --border-card:     var(--ink-400);
+    --border-strong:   var(--ink-700);
+    --border-selected: var(--action-800);
 
-    --focus-ring: #0E4680;
+    --focus-ring: var(--action-800);
 
-    --state-ok:           #0B5C40;
-    --state-ok-bg:        #FFFFFF;
-    --state-ok-text:      #0B5C40;
-    --state-caution:      #6B4100;
-    --state-caution-bg:   #FFFFFF;
-    --state-caution-text: #6B4100;
-    --state-stop:         #8C1A15;
-    --state-stop-bg:      #FFFFFF;
-    --state-stop-text:    #8C1A15;
-    --state-draft:        #4E2E78;
-    --state-draft-bg:     #FFFFFF;
-    --state-draft-text:   #4E2E78;
-    --state-none:         #41556B;
+    --state-ok:           var(--ok-800);
+    --state-ok-bg:        var(--white);
+    --state-ok-text:      var(--ok-800);
+    --state-caution:      var(--warn-800);
+    --state-caution-bg:   var(--white);
+    --state-caution-text: var(--warn-800);
+    --state-stop:         var(--stop-800);
+    --state-stop-bg:      var(--white);
+    --state-stop-text:    var(--stop-800);
+    --state-draft:        var(--draft-800);
+    --state-draft-bg:     var(--white);
+    --state-draft-text:   var(--draft-800);
+    --state-none:         var(--ink-600);
 
     --shadow-popover: none;
     --shadow-dialog:  none;
