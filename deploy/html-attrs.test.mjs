@@ -1,4 +1,5 @@
-/* Continuum Prompt 51 Design System html attribute contract (Check 8).
+/* Continuum Prompt 54 (governing surface-standard number) / Prompt 51 Design
+   System html attribute contract (Check 8).
    Product shells that already link continuum-vars.css or continuum_tokens.css
    must set data-theme, data-density, and data-surface on <html>.
    Light is the live default: data-theme is light, never dark.

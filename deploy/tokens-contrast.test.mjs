@@ -1,5 +1,6 @@
-/* Continuum Prompt 51 Design System token-contrast gate (Prompt 58 comments
-   remain: section 11.2, acceptance criterion 2).
+/* Continuum Prompt 54 (governing surface-standard number) / Prompt 51 Design
+   System token-contrast gate (Prompt 58 comments remain: section 11.2,
+   acceptance criterion 2).
    Parses continuum_tokens.css, computes WCAG 2.2 contrast, and asserts every text
    token clears 4.5:1 against every background it can land on and every control
    boundary and focus ring clears 3:1 against the same full set, in both themes.

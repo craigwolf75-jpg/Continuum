@@ -1,5 +1,11 @@
 # Prompt 51 Design System STOPS
 
+**Prompt 54 cross-link.** The design-system / surface-standard prompt
+is now Prompt 54. This folder is the earlier #152/#153 landing. It is
+not Core Platform Foundations. Prompt 54
+[SECTION_1.md](../54/SECTION_1.md) is the current inspection. Prompt 54
+[STOPS.md](../54/STOPS.md) is the current stop list.
+
 Real stops only. Athena authored tokens and gates on this draft. Athena
 does not ship. Do not deploy. Do not claim ship-ready.
 
