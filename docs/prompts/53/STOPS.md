@@ -18,6 +18,18 @@ that finding under Section 5 before the rest finishes.
 
 This folder is not permission to start G1.
 
+Honesty: `G1_AUDIT_REPORT.md` already exists on main from 2026-08-13 as
+a prior read-only inventory. That file is not completion of the Prompt
+53-assigned `PROMPT_G1_DISCOVERY_AUDIT`. The assigned prompt file is
+still not in hand. Do not start G1. Do not overwrite the August report
+as if this mission ran G1.
+
+---
+
+## Do not build Prompt 54
+
+Do not build Prompt 54. Register-only, not released. Separate PR.
+
 ---
 
 ## Prompt 47 lineage is not canonical

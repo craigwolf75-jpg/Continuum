@@ -163,6 +163,9 @@ employer surface.
   arrival).
 - 49 is unassigned.
 - 50 is retired, superseded by 51.
+- Prompt 54: Craig chose register only. Registered not released. Do
+  not build 54 here.
+- Prompt 47 redo still waits on REV 2. Unchanged.
 
 ---
 

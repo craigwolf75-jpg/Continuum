@@ -39,6 +39,9 @@ clinic and enterprise file used for shipped Prompt 47 was not REV 2
 from 12:32 PM. Result: UNVERIFIED failed / WRONG FILE / REDO REQUIRED.
 Do not start the redo.
 
+Prompt 54 is registered not released. Do not build Prompt 54 in this
+pull request. A separate PR will register Prompt 54 as not released.
+
 Old Prompts 44 to 46 are reading, not building. Old Prompts 47 to 49
 halt on their own prerequisite checks by design. That halt is intended
 behaviour, not failure.

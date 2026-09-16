@@ -13,6 +13,9 @@ Verification question in Gary's draft is now answered by Craig: WRONG
 FILE / REDO REQUIRED. Prompt 47 redo is not started. Waiting on the
 REV 2 attachment.
 
+Prompt 54 is register-only and not released; this Prompt 53 PR does
+not build it.
+
 ---
 
 ## Gary to Craig
