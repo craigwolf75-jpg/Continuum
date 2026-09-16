@@ -37,7 +37,8 @@ declare
     'clinical.wcb_fee_schedule', 'clinical.statutory_holiday', 'clinical.form_definition',
     'clinical.form_element', 'clinical.form_rule', 'clinical.wcb_capability_code_set',
     'clinical.wcb_error_catalogue', 'clinical.wcb_obx_skeleton', 'clinical.wcb_hl7_wire_map',
-    'clinical.functional_axis_map', 'clinical.internal_restriction_code'];
+    'clinical.functional_axis_map', 'clinical.internal_restriction_code',
+    'clinical.jurisdiction_deadline'];
   -- Prompt 47 clinic_ops is tenant owned (organisation_id, RLS, FORCE, policy).
   -- Prompt 49 interop is tenant owned. No interop table is on the allow-list.
   -- S8c brought the mutable tenant owned clinical tables under tenant isolation (organisation_id,
@@ -59,7 +60,7 @@ declare
       'audit.record', 'employer.disclosure_release', 'audit.event', 'audit.ai_generation',
       'employer.published_restriction_set', 'employer.duty_match_line']
     || clinical_shared || clinical_tenant || clinical_immutable;
-  shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag'] || clinical_shared;
+  shared_ref text[] := array['consent.text_version', 'config.definition', 'config.feature_flag', 'events.event_schema'] || clinical_shared;
   is_shared  boolean;
   is_root    boolean;
 begin

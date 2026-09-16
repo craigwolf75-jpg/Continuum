@@ -1,8 +1,18 @@
 # Continuum Core Platform Foundations: developer guide
 
-Prompt 51. This guide is Section 13. A new engineer should be able to add a module using only
-this document, without reading the prompt. It describes what is built in `platform/db` (sub-builds
-S1 to S6) and the contracts the later sub-builds and the application service will meet.
+Prompt 50 (repo comments on 0000 to 0018 still say Prompt 51). This guide is Section 13. A new
+engineer should be able to add a module using only this document, without reading the prompt.
+
+Prompt 50 adds, on top of 0000 to 0018: `platform/db/0019_prompt50_foundations.sql` (files only),
+`platform/service/*` (tenant context, authorisation, consent, config, flags, audit, events,
+release path, reconstruction, break glass, health, logging, metrics),
+`deploy/prompt50-foundations.test.mjs`, and `/api/health-live`, `/api/health-ready`,
+`/api/health-dependencies`. Down file: `platform/db/downs/0019.sql`.
+
+The application still does not connect as `app_*` on the live hub. New services assume that
+role. Do not take `organisation_id` from a header, query string or body. Do not add a second
+row to `platform/db/tenant_exception_allowlist.txt`. Do not seed consent wording. Do not
+build a purge job. Do not name break glass holders.
 
 No em dashes or en dashes anywhere.
 
@@ -221,8 +231,10 @@ disables a capability. A flag never gates a security, tenancy, immutability, con
 
 ## 10. Observability contract
 
-No application service runs in this repository yet, so this section is the contract the service will
-meet, not a running implementation. When the service is built:
+`platform/service` now holds the logging allow-list, metrics, tracing and health helpers. They are
+not wired to a live process. `/api/health-live` performs no dependency check. `/api/health-ready`
+returns not ready when migrations are not current and must not restart the process.
+`/api/health-dependencies` is authenticated. When a live service is wired:
 
 - No metric name, label, tag, span attribute, URL or log field carries personal information. Permitted
   dimensions are organisation id, location id, connection id, environment, action, outcome, error class.
@@ -237,7 +249,8 @@ meet, not a running implementation. When the service is built:
 ## 11. Local development
 
 There is no local application to run yet. To run the platform database and prove isolation locally, use
-the same harness CI uses:
+the same harness CI uses. Seed two tenants with `tenancy.provision_tenant` (distinct organisation,
+region and location ids) and repeat the isolation test under each context:
 
 ```
 docker run --rm -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:15
@@ -269,3 +282,6 @@ increase pages a human within the hour:
   never default it in code.
 
 A non zero counter is never normalised away. Each is a specific defect with a specific fix.
+
+Copy paste the table template in Section 2. Architecture scans live in
+`platform/service/architecture.mjs` and `deploy/prompt50-foundations.test.mjs`.

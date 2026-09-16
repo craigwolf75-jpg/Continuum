@@ -96,9 +96,43 @@ jobs:
       - name: Feature flag expiry check
         run: psql -v ON_ERROR_STOP=1 -f platform/ci/check_flag_expiry.sql
 
+      - name: No DELETE against clinical, audit, consent or event tables
+        run: |
+          if grep -RInE 'delete[[:space:]]+from[[:space:]]+(clinical|audit|consent|events)\.' platform/db/0*.sql; then
+            echo "FAIL: a platform migration deletes clinical, audit, consent or event data"
+            exit 1
+          fi
+
+      - name: Platform migrations from 0019 onward have a down file
+        run: |
+          bad=0
+          for f in platform/db/0*.sql; do
+            base=$(basename "$f" .sql)
+            ver=${base%%_*}
+            if [ "$ver" \> "0018" ]; then
+              down="platform/db/downs/${ver}.sql"
+              if [ ! -f "$down" ]; then
+                echo "FAIL: $f has no $down"
+                bad=1
+              fi
+            fi
+          done
+          if [ "$bad" -ne 0 ]; then exit 1; fi
+
       - name: Platform SQL tests
         run: |
           for t in platform/db/tests/*.sql; do
             echo "running $t"
             psql -v ON_ERROR_STOP=1 -f "$t"
           done
+
+      - name: Bad fixture without tenancy fails coverage
+        run: |
+          psql -v ON_ERROR_STOP=1 -f platform/ci/fixtures/bad_no_tenancy.sql
+          if psql -v ON_ERROR_STOP=1 -f platform/ci/check_tenant_coverage.sql; then
+            echo "FAIL: coverage passed with a table that has no tenancy controls"
+            psql -c "drop table if exists tenancy.bad_fixture"
+            exit 1
+          fi
+          echo "expected coverage failure on bad_no_tenancy fixture"
+          psql -c "drop table if exists tenancy.bad_fixture"
