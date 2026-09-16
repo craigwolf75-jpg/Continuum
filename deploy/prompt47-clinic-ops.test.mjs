@@ -81,6 +81,8 @@ function nextStore(extra) {
   run.ima_all_signed = true;
   run.admin_mfa_enrolled = true;
   run.sandbox_test_complete = true;
+  ok("onboarding: configuration_validation_passes blocks go live", readinessGate(run, s).blockers.some((b) => b.key === "configuration_validation_passes"));
+  run.configuration_validation_passes = true;
   ok("onboarding: override plus banner clears privacy block", readinessGate(run, s).ready === true && run.privacy_pack_banner === true);
   const noPair = { ...run, valid_practitioner_pair: false };
   ok("onboarding: blocked without valid practitioner pair", readinessGate(noPair, { ...s, practitioner_pair: null }).blockers.some((b) => b.key === "valid_practitioner_pair"));

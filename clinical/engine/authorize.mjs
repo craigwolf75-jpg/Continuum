@@ -1,21 +1,40 @@
 /* Prompt 47 Part 4: PERMISSION = ROLE intersect SCOPE intersect ENTITLEMENT.
 
    AuthN may assume an existing IdP. This module is authorization domain logic.
-   Enterprise roles (4.2) and Continuum-side roles (4.3) are data, not a UI.
-   Admin may be delegated with expiry. Clinical authorship and signature are
-   NEVER delegable. See docs/prompts/47/STOPS.md for unnamed 4.2 / 4.3 titles.
-   No em dashes or en dashes anywhere. */
+   Enterprise roles (Part 4.2) and Continuum-side roles (Part 4.3) are data, not
+   a UI. Admin may be delegated with expiry. Clinical authorship and signature
+   are NEVER delegable. No em dashes or en dashes anywhere. */
 
 import { namedError, nowFrom } from "./clinic_ops_util.mjs";
 
 const norm = (v) => String(v === null || v === undefined ? "" : v).trim();
 
 export const ENTERPRISE_ROLES = Object.freeze({
+  clinic_owner: {
+    key: "clinic_owner",
+    clinical: false,
+    read_only: false,
+    delegable: false,
+    can_sign: false,
+    sign_if_also_practitioner: true,
+    never_delegate: ["clinical_authorship", "signature"],
+  },
+  regional_manager: {
+    key: "regional_manager",
+    clinical: false,
+    read_only: false,
+    delegable: false,
+    hard: "no_clinical",
+    aggregate_and_operational_only: true,
+  },
   clinic_admin: {
     key: "clinic_admin",
     clinical: false,
     read_only: false,
     delegable: true,
+    can_sign: false,
+    cannot_read_raw_measurement: true,
+    cannot_audit_own_privilege_alone: true,
     never_delegate: ["clinical_authorship", "signature"],
   },
   reception: {
@@ -24,26 +43,69 @@ export const ENTERPRISE_ROLES = Object.freeze({
     read_only: false,
     delegable: false,
     hard: "no_clinical",
+    forbidden_report_sections: Object.freeze(["C", "D", "E"]),
   },
-  billing: {
-    key: "billing",
-    clinical: false,
+  medical_office_assistant: {
+    key: "medical_office_assistant",
+    clinical: true,
     read_only: false,
     delegable: false,
-    hard: "no_clinical",
+    can_sign: false,
+    never_delegate: ["signature"],
   },
   physician: {
     key: "physician",
     clinical: true,
     read_only: false,
     delegable: false,
+    invoice_hidden_by_default: true,
     never_delegate: ["clinical_authorship", "signature"],
+  },
+  nurse_practitioner: {
+    key: "nurse_practitioner",
+    clinical: true,
+    blocked: true,
+    blocked_at: "configuration",
+    membership_role: "NP",
+  },
+  physiotherapist: {
+    key: "physiotherapist",
+    clinical: true,
+    read_only: false,
+    delegable: false,
+    can_sign: false,
+    cannot_author_restriction: true,
+    cannot_change_restriction: true,
+    never_delegate: ["signature"],
+  },
+  occupational_therapist: {
+    key: "occupational_therapist",
+    clinical: true,
+    read_only: false,
+    delegable: false,
+    cannot_author_restriction: true,
+  },
+  billing_administrator: {
+    key: "billing_administrator",
+    clinical: false,
+    read_only: false,
+    delegable: false,
+    hard: "no_clinical",
+  },
+  employer_liaison: {
+    key: "employer_liaison",
+    clinical: false,
+    read_only: false,
+    delegable: false,
+    hard: "no_clinical",
+    duty_verdicts_only: true,
   },
   clinic_auditor: {
     key: "clinic_auditor",
-    clinical: false,
+    clinical: true,
     read_only: true,
     delegable: false,
+    raw_measurements: true,
   },
   locum: {
     key: "locum",
@@ -64,12 +126,45 @@ export const ENTERPRISE_ROLES = Object.freeze({
 });
 
 export const CONTINUUM_ROLES = Object.freeze({
+  continuum_administrator: {
+    key: "continuum_administrator",
+    clinical: false,
+    read_only: false,
+    hard: "no_clinical",
+    tenant_lifecycle: true,
+    entitlements: true,
+    config_publication: true,
+    break_glass: true,
+    default_clinical_access: false,
+  },
+  implementation_specialist: {
+    key: "implementation_specialist",
+    clinical: false,
+    read_only: false,
+    hard: "no_clinical",
+    full_config_on_implementation_tenants: true,
+    access_ends_at_go_live: true,
+    time_bound: true,
+    break_glass: true,
+    default_clinical_access: false,
+  },
   continuum_cs: {
     key: "continuum_cs",
     clinical: false,
     read_only: true,
     hard: "no_clinical",
+    aggregate_only: true,
+    no_elevation: true,
     sandbox_only: false,
+  },
+  support: {
+    key: "support",
+    clinical: false,
+    read_only: true,
+    hard: "no_clinical",
+    diagnostic_only: true,
+    break_glass: true,
+    default_clinical_access: false,
   },
   sales: {
     key: "sales",
@@ -77,6 +172,7 @@ export const CONTINUUM_ROLES = Object.freeze({
     read_only: true,
     hard: "sandbox_only",
     sandbox_only: true,
+    production_access: false,
   },
   continuum_break_glass: {
     key: "continuum_break_glass",
@@ -86,12 +182,26 @@ export const CONTINUUM_ROLES = Object.freeze({
   },
 });
 
+export const ROLE_ALIASES = Object.freeze({
+  billing: "billing_administrator",
+  customer_success: "continuum_cs",
+  np: "nurse_practitioner",
+});
+
 export const ALL_ROLES = Object.freeze({ ...ENTERPRISE_ROLES, ...CONTINUUM_ROLES });
 
-const CLINICAL_ACTIONS = Object.freeze(["clinical_read", "clinical_write", "clinical_authorship", "signature"]);
+const CLINICAL_ACTIONS = Object.freeze([
+  "clinical_read", "clinical_write", "clinical_authorship", "signature", "raw_measurement_read",
+]);
+const WRITE_ACTIONS = Object.freeze(["clinical_write", "clinical_authorship", "signature"]);
+
+function canonicalRoleKey(roleKey) {
+  const key = norm(roleKey);
+  return ROLE_ALIASES[key] || key;
+}
 
 function roleOf(roleKey) {
-  const key = norm(roleKey);
+  const key = canonicalRoleKey(roleKey);
   const row = ALL_ROLES[key];
   if (!row) throw namedError("ROLE-UNKNOWN", "Role " + roleKey + " is not in the Prompt 47 named role catalog.", { role_key: roleKey });
   return row;
@@ -109,6 +219,10 @@ function scopeMatches(grantScopeType, grantScopeId, requestScopeType, requestSco
   return false;
 }
 
+function denied(role, reason) {
+  return { allowed: false, reason, role: role.key };
+}
+
 export function resolvePermission(roleKey, scope, entitlement, opts) {
   const options = opts || {};
   const store = options.store || {};
@@ -119,32 +233,71 @@ export function resolvePermission(roleKey, scope, entitlement, opts) {
   const entitled = options.entitlements || store.entitlements || [];
   const required = entitlement || options.entitlement_required || null;
 
-  if (role.hard === "no_clinical" && CLINICAL_ACTIONS.includes(action)) {
-    return { allowed: false, reason: "hard-restriction-no-clinical", role: role.key };
+  if (role.blocked) {
+    return denied(role, "role-blocked-at-configuration");
   }
-  if (role.read_only && (action === "clinical_write" || action === "clinical_authorship" || action === "signature")) {
-    return { allowed: false, reason: "hard-restriction-read-only", role: role.key };
+  if (role.hard === "no_clinical" && CLINICAL_ACTIONS.includes(action)) {
+    return denied(role, "hard-restriction-no-clinical");
+  }
+  if (role.read_only && WRITE_ACTIONS.includes(action)) {
+    return denied(role, "hard-restriction-read-only");
+  }
+  if (role.can_sign === false && action === "signature" && !(role.sign_if_also_practitioner && options.also_practitioner === true)) {
+    return denied(role, role.sign_if_also_practitioner ? "owner-not-practitioner" : "cannot-sign");
+  }
+  if (role.cannot_read_raw_measurement && action === "raw_measurement_read") {
+    return denied(role, "raw-measurement-forbidden");
+  }
+  if (role.forbidden_report_sections && /^report_section_/i.test(action)) {
+    const section = action.slice("report_section_".length).toUpperCase();
+    if (role.forbidden_report_sections.includes(section)) {
+      return denied(role, "report-section-forbidden");
+    }
+  }
+  if (role.cannot_author_restriction && action === "restriction_author") {
+    return denied(role, "restriction-author-forbidden");
+  }
+  if (role.cannot_change_restriction && action === "restriction_change") {
+    return denied(role, "restriction-change-forbidden");
+  }
+  if (role.invoice_hidden_by_default && action === "invoice_read" && options.invoice_revealed !== true) {
+    return denied(role, "invoice-hidden-by-default");
+  }
+  if (role.cannot_audit_own_privilege_alone && action === "privilege_audit_own" && options.second_auditor !== true) {
+    return denied(role, "second-auditor-required");
   }
   if (role.sandbox_only && options.environment && options.environment !== "sandbox") {
-    return { allowed: false, reason: "hard-restriction-sandbox-only", role: role.key };
+    return denied(role, "hard-restriction-sandbox-only");
+  }
+  if (role.production_access === false && options.environment === "production") {
+    return denied(role, "hard-restriction-sandbox-only");
+  }
+  if (role.access_ends_at_go_live && (options.tenant_status === "live" || options.go_live === true)) {
+    return denied(role, "implementation-access-ended");
+  }
+  if (role.no_elevation && (action === "elevation" || action === "break_glass")) {
+    return denied(role, "elevation-forbidden");
   }
   if (role.key === "continuum_cs" && CLINICAL_ACTIONS.includes(action)) {
-    return { allowed: false, reason: "hard-restriction-no-clinical", role: role.key };
+    return denied(role, "hard-restriction-no-clinical");
   }
   if (role.default_clinical_access === false && CLINICAL_ACTIONS.includes(action) && !options.break_glass_active) {
-    return { allowed: false, reason: "default-no-continuum-clinical-access", role: role.key };
+    return denied(role, "default-no-continuum-clinical-access");
   }
 
   const grant = options.grant;
-  if (!grant) return { allowed: false, reason: "grant-missing", role: role.key };
-  if (norm(grant.role_key) !== role.key) return { allowed: false, reason: "role-mismatch", role: role.key };
+  if (!grant) return denied(role, "grant-missing");
+  if (canonicalRoleKey(grant.role_key) !== role.key) return denied(role, "role-mismatch");
   if (!scopeMatches(grant.scope_type, grant.scope_id, requestScopeType, requestScopeId)) {
-    return { allowed: false, reason: "scope-mismatch", role: role.key };
+    return denied(role, "scope-mismatch");
   }
 
   const when = nowFrom(store, options.at);
   if (grant.expires_at && new Date(grant.expires_at) <= when) {
-    return { allowed: false, reason: "grant-expired", role: role.key };
+    return denied(role, "grant-expired");
+  }
+  if (role.time_bound && !grant.expires_at) {
+    return denied(role, "time-bound-expiry-required");
   }
 
   if (required) {
@@ -192,4 +345,12 @@ export function emergencyElevationAllowed(kind, opts) {
     };
   }
   throw namedError("ELEVATION-UNKNOWN", "Emergency elevation is clinic-side or Continuum break glass.");
+}
+
+export function namedEnterpriseRoleKeys() {
+  return Object.keys(ENTERPRISE_ROLES);
+}
+
+export function namedContinuumRoleKeys() {
+  return Object.keys(CONTINUUM_ROLES);
 }
