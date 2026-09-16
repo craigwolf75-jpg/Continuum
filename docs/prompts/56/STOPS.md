@@ -14,8 +14,8 @@ screens, or live provisioning.
 
 Prompt 56 is registered. It is not released.
 
-Section 00.1 binds. A later draft PR may release it. These files
-do not.
+Section 00.1 binds. A later sequenced mission may release it.
+These files do not.
 
 ---
 
@@ -150,5 +150,6 @@ not edit one.
 
 ## Athena does not ship
 
-Draft PR only. Registration docs only. No merge as a ship. No
-deploy. Hermes ships only when Craig names ship.
+Merged and deployed. Registration docs only. Still not a product
+release. G1 is not closed. Hermes is not a ship of worker
+experience. Hermes ships only when Craig names ship.

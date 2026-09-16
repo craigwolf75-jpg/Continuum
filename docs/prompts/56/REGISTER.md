@@ -21,15 +21,17 @@ No em dashes or en dashes anywhere.
 Prompt 56 is REGISTERED, NOT RELEASED.
 
 Section 00.1 is binding. This prompt sits behind G1 and Prompt 53.
-Nothing in this prompt executes. A later draft PR may release it.
-This file set does not.
+Nothing in this prompt executes. A later sequenced mission may
+release it. This file set does not.
 
 Section 1 prerequisite checks are answered in
 [SECTION_1.md](SECTION_1.md) on current tip `282b3f7`. That
 inspection is evidence only. It does not release a build.
 
-This is a draft PR. Athena does not ship. Hermes does not treat this
-file as a ship order.
+This is merged and deployed. Merged tip `953c16a05ff4` then main
+`acf795ce`. Production `6484616708` (161 deploy `6484609638`).
+Athena does not ship. Hermes does not treat this file as a ship
+order. Product stays REGISTERED, NOT RELEASED.
 
 ---
 
@@ -140,7 +142,8 @@ The wait remains G1 plus Craig sequence.
 - Overwrite `docs/prompts/54/`.
 - Add new legal, consent, or pricing language.
 
-Athena does not ship. Draft PR only. Not a live-platform release.
+Athena does not ship. Merged and deployed. Still REGISTERED, NOT
+RELEASED. Not a live-platform product release.
 
 ---
 
