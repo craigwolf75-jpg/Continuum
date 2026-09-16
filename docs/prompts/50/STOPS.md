@@ -55,9 +55,11 @@ conflict is decided. Acceptance criterion 50 is not marked passed.
 
 Attaching `platform.guard_signed_immutable` to `clinical.wcb_report`
 would block signed to submitted. 0014 already deferred the contract
-phase. This build does not attach that trigger to the live table. A
-probe table plus the service reconstruction helper prove the intended
-rule without changing Prompts 39 to 46 tests.
+phase. This build does not attach that trigger to the live table. That
+hold is the STOP. This PR's probe (`prompt50_expand_contract.sql`) is
+expand and contract dual-write only. It does not prove
+`guard_signed_immutable`. The reconstruction helper proves stored-artifact
+byte identity, not the signed-row trigger.
 
 ## Prompt 48 / mpi.person
 

@@ -169,7 +169,7 @@ No public clinic screen. No HTTP API beyond health.
 | Existing `audit_chain.sql` | 27 |
 | Existing `wcb_report_amendment.sql` | 19 |
 | Existing `config_framework.sql` | 34-37 |
-| Existing `immutability_substrate.sql` | 16, 17 (probe) |
+| Existing `immutability_substrate.sql` | 16 (append-only grant and trigger). Not used as proof of `guard_signed_immutable` on the live report |
 | `deploy/prompt50-foundations.test.mjs` | 2, 6, 7, 8-11, 13, 15, 20-28, 31-39, 42, 45-48, 52, 54 |
 | `platform.yml` bad fixture | 41 |
 | Unchanged clinical/engine `*.test.mjs` | 50 (all passed locally) |
@@ -233,8 +233,8 @@ build did not try that proof, usually because of a STOP.
 14. Null `consent_ledger_entry_id` fails at the database: **passed**
 15. Permission check at the service boundary; denial audited: **passed**
 16. UPDATE/DELETE on append-only tables rejected by grant and trigger: **passed**
-17. Signed report cannot be modified as app, migrator or direct SQL: **failed** on live `clinical.wcb_report` (trigger not attached; Prompt 42 STOP). Guard proven on a probe table.
-18. Only permitted signed change is status to superseded with `superseded_by_id`: **not attempted** on the live table. Probe covers the guard.
+17. Signed report cannot be modified as app, migrator or direct SQL: **failed** on live `clinical.wcb_report`. The live trigger is held because attaching `guard_signed_immutable` would break Prompt 42. This PR's probe (`prompt50_expand_contract.sql`) is expand and contract dual-write only. It does not prove `guard_signed_immutable`.
+18. Only permitted signed change is status to superseded with `superseded_by_id`: **not attempted** on the live table. The live trigger is held for Prompt 42. This PR's probe does not prove `guard_signed_immutable`.
 19. Superseding report without `amendment_reason` rejected: **passed**
 20. Signed report reconstructs byte identically after reference versions change: **passed** (service helper; not a live HL7 byte compare)
 21. `consent_state` grant, revoke, re-grant at three datetimes: **passed**
