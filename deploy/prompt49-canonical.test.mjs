@@ -7,12 +7,12 @@ import { dirname, join } from "node:path";
 import { createMetrics } from "../clinical/engine/interop/observability.mjs";
 import { resolveIdentity, lookupExternal, assertNoPersonConstruction, PROMPT_48_REASON } from "../clinical/engine/interop/identity_port.mjs";
 import { validateIdentifier, createIdentifier } from "../clinical/engine/interop/identifier.mjs";
-import { AUTHORSHIP_VALUES, transitionAuthorship, isImprovingTransition, outboundDeliverable } from "../clinical/engine/interop/authorship.mjs";
+import { AUTHORSHIP_VALUES, transitionAuthorship, isImprovingTransition, outboundDeliverable, resolveInboundAuthorship } from "../clinical/engine/interop/authorship.mjs";
 import { normaliseTemporal } from "../clinical/engine/interop/dates.mjs";
 import { normaliseUnit, isLegacy25PoundLabel } from "../clinical/engine/interop/units.mjs";
 import { mapCode, mapStatus, assertTenantOverrideAllowed, resolveMapping } from "../clinical/engine/interop/mapping.mjs";
 import { CANONICAL_TYPES, TYPE_MAPPINGS, createPerson, projectWorkerRole, createPatientEntity, createEmployer, createConsentReference, constructCanonical } from "../clinical/engine/interop/types.mjs";
-import { inboundBandOnly, emitUnansweredAxes, renderUnanswered, stripRawMeasurements, projectFunctionalCapacity, assertNoBandDerivationImport } from "../clinical/engine/interop/functional.mjs";
+import { inboundBandOnly, emitUnansweredAxes, renderUnanswered, stripRawMeasurements, projectFunctionalCapacity, explicitAnswered, explicitAxisSource } from "../clinical/engine/interop/functional.mjs";
 import { evaluateConsent, assertNoCachedConsent } from "../clinical/engine/interop/consent_port.mjs";
 import { OUTCOMES } from "../clinical/engine/interop/result.mjs";
 import { createReferenceAdapter } from "../clinical/engine/interop/reference_adapter.mjs";
@@ -24,7 +24,7 @@ import { runOutbound, buildCanonicalFromDomain } from "../clinical/engine/intero
 import { exportFunctionalCapacity, importFunctionalCapacityFromFhir } from "../clinical/engine/interop/fhir_export.mjs";
 import { translate, assertMajorFieldStable, threeVendorRule, VERSIONS, V1_FIELDS } from "../clinical/engine/interop/versioning.mjs";
 import { FIXTURES, FIXTURE_LIBRARY_VERSION } from "../clinical/engine/interop/fixtures.mjs";
-import { STAGE_NAMES, stagePayloadValidation, digestOf } from "../clinical/engine/interop/stages.mjs";
+import { STAGE_NAMES, stagePayloadValidation, stageCanonicalGeneration, stageProvenanceCapture } from "../clinical/engine/interop/stages.mjs";
 import { canonicalPayload, snapshotHash } from "../clinical/engine/sign_measurement.mjs";
 
 let pass = 0, fail = 0;
@@ -105,6 +105,8 @@ const metrics = createMetrics();
   ok("AC5: no interop table on allow-list", !/interop\./.test(allow));
   ok("dash hygiene on new interop files", !/[\u2013\u2014]/.test(src + mig));
   ok("no HIPAA/PHIPA Alberta claim", !/HIPAA|PHIPA/.test(src + mig));
+  ok("no invented || human authorship default", !/\|\|\s*["']human["']/.test(src));
+  ok("no invented || measured axis_source default", !/\|\|\s*["']measured["']/.test(src));
 }
 
 // -- Canonical types -------------------------------------------------------
@@ -173,6 +175,33 @@ const metrics = createMetrics();
   ok("AC11: cross-product covered", improving + legal === 25);
   ok("ai_draft not outbound deliverable", outboundDeliverable("ai_draft").deliverable === false);
   ok("ai_draft_edited outbound deliverable", outboundDeliverable("ai_draft_edited").deliverable === true);
+}
+
+// -- Fail closed: omitted authorship, answered, axis_source ----------------
+{
+  const omittedAuth = resolveInboundAuthorship(undefined);
+  ok("resolveInboundAuthorship undefined omitted", omittedAuth.omitted === true && omittedAuth.value === null);
+  ok("omit empty authorship never human", resolveInboundAuthorship("").value !== "human" && resolveInboundAuthorship("").omitted === true);
+  ok("omit null authorship never human", resolveInboundAuthorship(null).value !== "human" && resolveInboundAuthorship(null).omitted === true);
+  const omitCanon = stageCanonicalGeneration({ axis: "sitting" });
+  ok("canonical omit authorship is null not human", omitCanon.canonical.authorship_provenance === null);
+  ok("axis omit authorship is not human", omitCanon.canonical.functional.axes[0].authorship_provenance !== "human");
+  const omitProv = stageProvenanceCapture({ type: "FunctionalCapacity" }, {}, undefined);
+  ok("omit authorship halt review", omitProv.halt_outcome === "requires_manual_reconciliation");
+  ok("omit authorship halt not human", omitProv.canonical.authorship_provenance !== "human");
+  const omitBody = { schema_version: "ref-1", person_external_id: "ext-omit", status: "Final", axis: "sitting", answered: true, capability: "able" };
+  const omitIn = runInbound(JSON.stringify(omitBody), { schema_version: "ref-1", external_message_id: "omit-auth", source_system: "synthetic" }, { connection_id: "conn-omit", organisation_id: "org-omit" }, landedStore("person-omit"), metrics);
+  ok("omit authorship inbound wrote false", omitIn.wrote === false);
+  ok("omit authorship inbound review", omitIn.outcome === "requires_manual_reconciliation");
+  ok("omit authorship inbound never human", !omitIn.canonical_object || omitIn.canonical_object.authorship_provenance !== "human");
+  ok("explicitAnswered omit false", explicitAnswered(undefined) === false && explicitAnswered(null) === false && explicitAnswered("") === false);
+  ok("explicitAnswered true", explicitAnswered(true) === true && explicitAnswered("true") === true);
+  ok("omit answered is false", omitCanon.canonical.functional.axes[0].answered === false);
+  ok("renderUnanswered omit answered explicit", renderUnanswered("interface", { axis: "sitting" }).explicit === true);
+  ok("explicitAxisSource omit null", explicitAxisSource(undefined) === null && explicitAxisSource("") === null);
+  ok("omit axis_source never measured", omitCanon.canonical.functional.axes[0].axis_source !== "measured");
+  const carried = stageCanonicalGeneration({ axis: "sitting", axis_source: "carried_forward" });
+  ok("supplied axis_source carried_forward preserved", carried.canonical.functional.axes[0].axis_source === "carried_forward");
 }
 
 // -- Dates and units -------------------------------------------------------
@@ -256,7 +285,7 @@ const metrics = createMetrics();
   const ctx = { connection_id: "conn-a", organisation_id: "org-a" };
   const store = landedStore("person-1");
   store.statusMaps = [{ source_status: "Final", canonical_state: "signed", mapping_status: "approved" }];
-  const body = { schema_version: "ref-1", person_external_id: "ext-1", status: "Final", axis: "sitting", answered: true, capability: "able" };
+  const body = { schema_version: "ref-1", person_external_id: "ext-1", status: "Final", axis: "sitting", answered: true, capability: "able", authorship_provenance: "human" };
   const first = runInbound(JSON.stringify(body), { schema_version: "ref-1", external_message_id: "m1", correlation_id: "c1", source_system: "synthetic" }, ctx, store, metrics);
   ok("inbound normalised when identity deterministic", first.outcome === "normalised" || first.outcome === "normalised_with_warnings");
   const replay = runInbound(JSON.stringify(body), { schema_version: "ref-1", external_message_id: "m1", correlation_id: "c1", source_system: "synthetic" }, ctx, store, metrics);
@@ -286,7 +315,7 @@ const metrics = createMetrics();
   const ctx = { connection_id: "conn-c", organisation_id: "org-c" };
   const store = landedStore("person-1");
   store.statusMaps = [{ source_status: "Final", canonical_state: "signed", mapping_status: "approved" }];
-  const raw = JSON.stringify({ schema_version: "ref-1", person_external_id: "ext-9", status: "Final", axis: "sitting", answered: true, capability: "able" });
+  const raw = JSON.stringify({ schema_version: "ref-1", person_external_id: "ext-9", status: "Final", axis: "sitting", answered: true, capability: "able", authorship_provenance: "human" });
   const meta = { schema_version: "ref-1", external_message_id: "conc-1", source_system: "synthetic" };
   const results = [
     runInboundConcurrent(raw, meta, ctx, store, metrics),
@@ -409,7 +438,7 @@ const metrics = createMetrics();
   const ctx = { connection_id: "conn-r", organisation_id: "org-r" };
   const store = landedStore("p-replay");
   store.statusMaps = [{ source_status: "Final", canonical_state: "signed", mapping_status: "approved" }];
-  const body = { schema_version: "ref-1", person_external_id: "ext-r", status: "Final", axis: "sitting", answered: true, capability: "able" };
+  const body = { schema_version: "ref-1", person_external_id: "ext-r", status: "Final", axis: "sitting", answered: true, capability: "able", authorship_provenance: "human" };
   const a = runInbound(JSON.stringify(body), { schema_version: "ref-1", external_message_id: "r1", source_system: "synthetic" }, ctx, store, metrics);
   const rebuilt = runNormalisation({
     raw: JSON.stringify(body),

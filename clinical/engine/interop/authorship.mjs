@@ -32,6 +32,17 @@ export function isImprovingTransition(fromValue, toValue) {
   return RANK[toValue] > RANK[fromValue];
 }
 
+// Omitted authorship is never inferred as human. Fail closed.
+export function resolveInboundAuthorship(value) {
+  if (value === undefined || value === null || value === "") {
+    return { omitted: true, value: null, unmapped: false };
+  }
+  if (!AUTHORSHIP_VALUES.includes(value)) {
+    return { omitted: false, value: null, unmapped: true };
+  }
+  return { omitted: false, value, unmapped: false };
+}
+
 // Pure function. Exhaustive callers iterate AUTHORSHIP_VALUES x AUTHORSHIP_VALUES.
 export function transitionAuthorship(fromValue, toValue, metrics) {
   if (!AUTHORSHIP_VALUES.includes(fromValue)) {
