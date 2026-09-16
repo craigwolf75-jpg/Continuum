@@ -21,12 +21,37 @@ truth documents. This build implements only what Prompt 50 restates:
 Anything load-bearing beyond those restatements is not inferred. No text
 from the absent architecture prompts is copied into code or comments.
 
+### Prompt 50a ruling (2026-09-16)
+
+Decision 1 is GO against Supabase as-is (the actual stack), with four
+binding guardrails (a)(b)(c)(d). See `docs/prompts/50a/DECISIONS.md` and
+`docs/prompts/50a/GUARDRAILS.md`.
+
+Do not infer Master Architecture text beyond Prompt 51 restatements. If
+that document arrives and conflicts, stop and report the delta under
+Prompt 51 Section 0.1 (approved Prompt 39 to 46 behaviour outranks).
+That is guardrail (d). Do not silently rework.
+
+Interoperability Architecture absence is not resolved by 50a. I1, I2,
+and I3 remain substrate only. No adapter, no gateway, no canonical
+model. That history still holds.
+
 ## Azure Canada assumption (Section 1 check 21)
 
 Prompt 50 assumes Azure Canada Central primary and Canada East secondary.
 The repo stack is Vercel plus Supabase, with an unverified `ca-central-1`
 memory and no Azure resources. **Stop:** do not invent Azure, ARM, or a
 secondary region. Mechanisms are cloud-agnostic.
+
+### Prompt 50a ruling (2026-09-16)
+
+Decision 1 is GO against Supabase as-is (the actual stack), with four
+binding guardrails (a)(b)(c)(d). See `docs/prompts/50a/DECISIONS.md` and
+`docs/prompts/50a/GUARDRAILS.md`.
+
+Do not invent Azure, ARM, or a secondary region. That part of this stop
+still holds. Decision 1 is a go on the Vercel plus Supabase stack, not a
+claim that Azure arrived.
 
 ## Secret manager (Section 1 check 23)
 

@@ -5,8 +5,9 @@
 --
 -- Enforced schemas grow one sub-build at a time. S1 enforced tenancy; S3 adds consent. The
 -- clinical, employer and audit schemas are in scope (Decision 2) but enforced in the S8 live
--- retrofit; the hub, site, demo and worker schemas are excluded permanently by schema boundary;
--- the platform metadata schema holds no identifiable data and is not enforced.
+-- retrofit; the hub, site, demo and worker schemas are excluded by schema boundary until a
+-- promotion migration takes a table through full platform rules (Prompt 50a Decision 2
+-- obligation 3); the platform metadata schema holds no identifiable data and is not enforced.
 --
 -- Three recognised table shapes, none of which is an allow-list entry (the mpi.person allow-list
 -- stays at exactly one and is checked separately by the workflow):

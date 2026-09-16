@@ -217,10 +217,10 @@ A criterion is passed only when a test proves it. Failed means the
 written rule is not fully true in this repo. Not attempted means the
 build did not try that proof, usually because of a STOP.
 
-1. Every table in every schema has tenant column, RLS, FORCE, policy: **failed**. Proven only for enforced schemas. Hub, `clinical.practitioner`, and Prompt 44 singletons remain outside.
+1. Every in-scope table (Prompt 50a Decision 2: schemas Prompt 51 owns and creates, plus any table that will ever hold identifiable worker, patient, or tenant data) has tenant column, RLS, FORCE, policy: **failed**. Hub, site, demo, and worker tables are a decided schema-boundary exclusion (see `docs/prompts/50a/NON_PLATFORM_INVENTORY.md`), not a failed every-table claim. Remaining in-scope gaps still fail: `clinical.practitioner` (E2 / Prompt 48), Prompt 44 `clinical.ai_runtime` and `clinical.ai_audio_retention` singletons.
 2. Allow-list exactly one entry (`mpi.person`); a second fails: **passed**
 3. Application role is not table owner / RLS not bypassed: **passed** in the platform harness (`set role app_clinical`). Live hub `service_role` is unchanged (deferred).
-4. Org A cannot read/write/delete org B across every table: **passed** for enforced tenant tables that already have isolation tests. Not proven on hub `public.*`.
+4. Org A cannot read/write/delete org B across every in-scope table: **passed** for enforced tenant tables that already have isolation tests. Hub `public.*` is excluded by Prompt 50a Decision 2, not an unscoped every-table miss. Isolation is proven on enforced tenant tables only.
 5. WITH CHECK rejects another tenant's identifier: **passed**
 6. Header, query and body organisation_id ignored: **passed**
 7. No tenant context fails; `tenant_context_missing_total` increments: **passed**
