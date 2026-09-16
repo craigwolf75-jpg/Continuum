@@ -35,12 +35,14 @@ Did not invent Prompt 38 screens. Did not build a coordinator daily
 dashboard. Did not apply schema. Did not touch `package.json`. Did not
 overwrite `docs/prompts/51-design-system/SECTION_1.md`.
 
-Heracles: full deploy Node suite 80 files, 0 failed. Banned-string
-suite 20 passed. Feel honesty suite 44 passed. Verdict GREEN for the
-suites, not a claim that product behaviour is complete.
+Heracles: full deploy Node suite 83 files, 0 failed. Counted as
+`deploy/*.test.mjs` on this tip (same glob as `.github/workflows/suites.yml`).
+Banned-string suite 25 passed (live `node deploy/banned-strings.test.mjs`).
+Feel honesty suite 44 passed. Verdict GREEN for the suites, not a claim
+that product behaviour is complete.
 
-Argus: CLEAN on the Prompt 52 change set (dash, privacy, register,
-canon, links, storage keys, hygiene).
+Argus: not yet / pending. Do not read this file as Argus CLEAN. Patrol
+on the Prompt 52 change set has not reported CLEAN.
 
 ---
 
@@ -125,8 +127,8 @@ Counts: 3 passed (2, 3, 9). 0 failed. 19 not attempted.
 
 | Gate | Status |
 |---|---|
-| Heracles green | GREEN. 80 deploy Node suites, 0 failed. |
-| Argus clean | CLEAN on the Prompt 52 change set. |
+| Heracles green | GREEN. 83 deploy Node suites, 0 failed. |
+| Argus clean | not yet / pending. Argus has not reported CLEAN. |
 | Canon consistency | No canon numbers moved. Duty-count examples are Prompt 52 examples, not Worker 15 / Worker 08 canon. |
 | Human gate | Consent, legal, and pricing language in the feel docs is recorded [SPEC], not rewritten. Check 1 and Check 8 wait for Craig. Hub-card publication is not in scope. |
 
