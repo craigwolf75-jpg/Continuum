@@ -192,8 +192,13 @@ export const ALL_ROLES = Object.freeze({ ...ENTERPRISE_ROLES, ...CONTINUUM_ROLES
 
 const CLINICAL_ACTIONS = Object.freeze([
   "clinical_read", "clinical_write", "clinical_authorship", "signature", "raw_measurement_read",
+  "restriction_author", "restriction_change",
+  "report_section_C", "report_section_D", "report_section_E",
 ]);
-const WRITE_ACTIONS = Object.freeze(["clinical_write", "clinical_authorship", "signature"]);
+const WRITE_ACTIONS = Object.freeze([
+  "clinical_write", "clinical_authorship", "signature",
+  "restriction_author", "restriction_change",
+]);
 
 function canonicalRoleKey(roleKey) {
   const key = norm(roleKey);
@@ -236,6 +241,9 @@ export function resolvePermission(roleKey, scope, entitlement, opts) {
   if (role.blocked) {
     return denied(role, "role-blocked-at-configuration");
   }
+  if (role.key === "sales" && CLINICAL_ACTIONS.includes(action)) {
+    return denied(role, "hard-restriction-no-clinical");
+  }
   if (role.hard === "no_clinical" && CLINICAL_ACTIONS.includes(action)) {
     return denied(role, "hard-restriction-no-clinical");
   }
@@ -266,10 +274,7 @@ export function resolvePermission(roleKey, scope, entitlement, opts) {
   if (role.cannot_audit_own_privilege_alone && action === "privilege_audit_own" && options.second_auditor !== true) {
     return denied(role, "second-auditor-required");
   }
-  if (role.sandbox_only && options.environment && options.environment !== "sandbox") {
-    return denied(role, "hard-restriction-sandbox-only");
-  }
-  if (role.production_access === false && options.environment === "production") {
+  if ((role.sandbox_only || role.production_access === false) && options.environment !== "sandbox") {
     return denied(role, "hard-restriction-sandbox-only");
   }
   if (role.access_ends_at_go_live && (options.tenant_status === "live" || options.go_live === true)) {

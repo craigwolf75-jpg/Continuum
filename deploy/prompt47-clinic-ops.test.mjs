@@ -9,6 +9,7 @@ import { ensureSingleSiteHierarchy, assertE1Complete } from "../clinical/engine/
 import { upsertGlobalPractitioner, addMembership, validateContractRole } from "../clinical/engine/membership.mjs";
 import { startOnboardingRun, advanceStage, readinessGate, recordPrivacyOverride, goLive } from "../clinical/engine/onboarding.mjs";
 import { resolveAccessMode, checkCapacity, resolveEntitlements, flagsAreNotEntitlements } from "../clinical/engine/entitlement.mjs";
+import { resolvePermission } from "../clinical/engine/authorize.mjs";
 import { openBreakGlass, diagnosticPayload, defaultContinuumClinicalAccess } from "../clinical/engine/support_access.mjs";
 import { feesForgone, aggregateOnlyRtw, benchmarkOrHide } from "../clinical/engine/clinic_analytics.mjs";
 
@@ -66,6 +67,18 @@ function nextStore(extra) {
   ok("E8: payment failure never clinical_disabled", resolveAccessMode({ payment_failed: true }).clinical_disabled === false);
   const after = resolveAccessMode({ payment_grace_elapsed: true });
   ok("E8: after grace read_only and export available", after.mode === "read_only" && after.export_available === true && after.clinical_disabled === false);
+  ok("E8: clinical_disabled true throws E8-CLINICAL-DISABLE-FORBIDDEN", throws(() => resolveAccessMode({ clinical_disabled: true }), "E8-CLINICAL-DISABLE-FORBIDDEN"));
+}
+
+{
+  const cs = resolvePermission("continuum_cs", { type: "organisation", id: "org-1" }, null, {
+    action: "restriction_author", grant: { role_key: "continuum_cs", scope_type: "organisation", scope_id: "org-1" },
+  });
+  ok("continuum_cs restriction_author denied", cs.allowed === false);
+  const salesOmit = resolvePermission("sales", { type: "organisation", id: "org-1" }, null, {
+    action: "clinical_read", grant: { role_key: "sales", scope_type: "organisation", scope_id: "org-1" },
+  });
+  ok("sales omit environment denied", salesOmit.allowed === false);
 }
 
 // -- Onboarding ------------------------------------------------------------

@@ -48,9 +48,29 @@ ok("continuum CS has no clinical access", resolvePermission("continuum_cs", { ty
   action: "clinical_read", grant: { role_key: "continuum_cs", scope_type: "organisation", scope_id: "org-1" },
 }).reason === "hard-restriction-no-clinical");
 
-ok("sales is sandbox only", resolvePermission("sales", { type: "organisation", id: "org-1" }, null, {
-  action: "clinical_read", grant: { role_key: "sales", scope_type: "organisation", scope_id: "org-1" }, environment: "production",
-}).reason === "hard-restriction-sandbox-only");
+function orgGrant(roleKey) {
+  return { role_key: roleKey, scope_type: "organisation", scope_id: "org-1" };
+}
+function ask(roleKey, action, extra) {
+  return resolvePermission(roleKey, { type: "organisation", id: "org-1" }, null, Object.assign({
+    action, grant: orgGrant(roleKey),
+  }, extra || {}));
+}
+
+ok("P47-PRIV-001: continuum_cs restriction_author denied", ask("continuum_cs", "restriction_author").allowed === false);
+ok("P47-PRIV-001: continuum_cs report_section_C denied", ask("continuum_cs", "report_section_C").allowed === false);
+ok("P47-PRIV-001: continuum_administrator restriction_author denied", ask("continuum_administrator", "restriction_author").allowed === false);
+ok("P47-PRIV-001: support restriction_author denied", ask("support", "restriction_author").allowed === false);
+ok("P47-PRIV-001: employer_liaison restriction_author denied", ask("employer_liaison", "restriction_author").allowed === false);
+ok("P47-PRIV-001: reception restriction_author denied", ask("reception", "restriction_author").allowed === false);
+ok("P47-PRIV-001: reception report_section_C denied", ask("reception", "report_section_C").allowed === false);
+ok("P47-PRIV-001: clinic_auditor restriction_author denied", ask("clinic_auditor", "restriction_author").allowed === false);
+ok("P47-PRIV-001: clinic_auditor clinical_read still allowed", ask("clinic_auditor", "clinical_read").allowed === true);
+
+ok("P47-PRIV-002: sales clinical_read with no environment denied", ask("sales", "clinical_read").allowed === false);
+ok("P47-PRIV-002: sales clinical_read in production denied", ask("sales", "clinical_read", { environment: "production" }).allowed === false);
+ok("P47-PRIV-002: sales clinical_read in sandbox denied", ask("sales", "clinical_read", { environment: "sandbox" }).allowed === false);
+ok("P47-PRIV-002: sales omit environment is fail closed", ask("sales", "invite_user").allowed === false && ask("sales", "invite_user").reason === "hard-restriction-sandbox-only");
 
 ok("physician cannot delegate signature", throws(() => assertDelegation("physician", "signature", { delegated: true, expires_at: "2099-01-01" }), "DELEGATION-FORBIDDEN"));
 ok("admin delegation requires expiry", throws(() => assertDelegation("clinic_admin", "invite_user", { delegated: true }), "DELEGATION-EXPIRY-REQUIRED"));
