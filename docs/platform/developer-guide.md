@@ -48,6 +48,11 @@ Every tenant owned table carries `organisation_id`. Location specific tables als
 `location_id`. The one and only exception in the whole platform is `mpi.person` (built later); the
 allow-list stays at exactly one entry forever.
 
+Prompt 50a Decision 2 scopes this rule to the schemas Prompt 51 owns and creates, plus any table
+that will ever hold identifiable worker, patient, or tenant data. Hub, site, demo, and worker
+existing tables are excluded by schema boundary (see `docs/prompts/50a/NON_PLATFORM_INVENTORY.md`).
+The allow-list stays at exactly one entry.
+
 Context is set from the authenticated session, server side, inside the transaction:
 
 ```sql
