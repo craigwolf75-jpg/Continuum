@@ -27,7 +27,7 @@ declare
   v_force    boolean;
   v_policies int;
   v_problems text := '';
-  enforced   text[] := array['tenancy', 'consent', 'events', 'config', 'clinic_ops'];
+  enforced   text[] := array['tenancy', 'consent', 'events', 'config', 'clinic_ops', 'interop'];
   -- S8b brought the clinical board reference tables under the shared reference pattern (row level
   -- security plus a read all policy, no organisation_id, no FORCE). The rest of the clinical schema
   -- (tenant owned and immutable tables) is enforced as those increments land.
@@ -39,6 +39,7 @@ declare
     'clinical.wcb_error_catalogue', 'clinical.wcb_obx_skeleton', 'clinical.wcb_hl7_wire_map',
     'clinical.functional_axis_map', 'clinical.internal_restriction_code'];
   -- Prompt 47 clinic_ops is tenant owned (organisation_id, RLS, FORCE, policy).
+  -- Prompt 49 interop is tenant owned. No interop table is on the allow-list.
   -- S8c brought the mutable tenant owned clinical tables under tenant isolation (organisation_id,
   -- RLS, FORCE, policy). practitioner is not here: E2 needs the absent mpi.person and is blocked.
   -- The immutable clinical tables and the live audit tables are later increments.
