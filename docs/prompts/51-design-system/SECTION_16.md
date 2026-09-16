@@ -1,5 +1,15 @@
 # Prompt 51 Design System Section 16: acceptance map
 
+**Prompt 54 cross-link.** The design-system / surface-standard prompt
+is now Prompt 54. This folder is the earlier #152/#153 landing. It is
+not Core Platform Foundations. Prompt 54
+[SECTION_1.md](../54/SECTION_1.md) is the current inspection. Prompt 54
+[SECTION_16.md](../54/SECTION_16.md) is the current acceptance map.
+Current-tip evidence on `3c256de` did not change the pass/fail/
+not-attempted rows below (print from palette, dark text, html attrs,
+and leftover colour list remain as recorded after #153). Open items
+1 to 7 stay open.
+
 Tip of this draft after the substrate build. Tokens and gates only. Not
 shipped. Not deployed. Hub auth remains unverified by Craig. Athena does
 not ship. No em dashes or en dashes anywhere.

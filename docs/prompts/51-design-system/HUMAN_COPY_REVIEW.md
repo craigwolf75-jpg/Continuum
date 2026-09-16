@@ -1,5 +1,12 @@
 # Prompt 51 Design System, human copy review gate.
 
+**Prompt 54 cross-link.** The design-system / surface-standard prompt
+is now Prompt 54. This folder is the earlier #152/#153 landing. It is
+not Core Platform Foundations. Prompt 54
+[SECTION_1.md](../54/SECTION_1.md) is the current inspection. The
+Prompt 54 review and build adds no new visitor-facing string. Do not
+invent visitor copy here.
+
 This is process documentation for humans. It is not visitor-facing product
 copy. It does not invent labels, empty states, errors, or announcements.
 It names the review that ships with the existing banned-string linter.
