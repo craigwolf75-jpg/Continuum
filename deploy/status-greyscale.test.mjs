@@ -1,4 +1,6 @@
-/* Continuum Prompt 58 greyscale gate (section 11.3, acceptance criterion 4).
+/* Continuum Prompt 58 (governing surface-standard number) / Prompt 54 and
+   Prompt 51 Design System lineage. Greyscale gate (section 11.3,
+   acceptance criterion 4).
    Colour removed, the five status states must still be distinguishable, which
    means by SHAPE. Browser free: each silhouette is modelled as a 16x16 fill
    grid from the same geometry as status-icons.mjs, and every pair is asserted

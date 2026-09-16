@@ -1,5 +1,8 @@
 # Prompt 54 stop notes
 
+**Supersession.** Unified Prompt 58 now governs. This file remains
+the Prompt 54 stop list. See [../58/STOPS.md](../58/STOPS.md).
+
 Real stops only. Prompt 54 is sequenced for local/CI review and
 build. This prompt adds no module, no dashboard, no AI component,
 and no screen. Athena does not ship. No em dashes or en dashes

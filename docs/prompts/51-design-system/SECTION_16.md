@@ -1,11 +1,16 @@
 # Prompt 51 Design System Section 16: acceptance map
 
-**Prompt 54 cross-link.** The design-system / surface-standard prompt
-is now Prompt 54. This folder is the earlier #152/#153 landing. It is
-not Core Platform Foundations. Prompt 54
-[SECTION_1.md](../54/SECTION_1.md) is the current inspection. Prompt 54
-[SECTION_16.md](../54/SECTION_16.md) is the current acceptance map.
-Current-tip evidence on `3c256de` did not change the pass/fail/
+**Prompt 54 / Prompt 58 cross-link.** The design-system /
+surface-standard prompt is now unified Prompt 58. Prompt 54
+remains the earlier sequenced review-and-build record. This
+folder is the earlier #152/#153 landing. It is not Core Platform Foundations.
+Prompt 58 [REGISTER.md](../58/REGISTER.md) is the
+governing register. Prompt 58
+[SECTION_16.md](../58/SECTION_16.md) is the current acceptance
+map. Prompt 54 [SECTION_1.md](../54/SECTION_1.md) is the earlier
+inspection. Prompt 54 [SECTION_16.md](../54/SECTION_16.md)
+remains the earlier acceptance map. Current-tip evidence on `3c256de`
+did not change the pass/fail/
 not-attempted rows below (print from palette, dark text, html attrs,
 and leftover colour list remain as recorded after #153). Open items
 1 to 7 stay open.

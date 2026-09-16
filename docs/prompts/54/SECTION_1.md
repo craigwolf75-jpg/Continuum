@@ -1,5 +1,9 @@
 # Prompt 54 Section 1: prerequisite inspection
 
+**Supersession.** Unified Prompt 58 now governs the
+design-system / surface-standard brief. This file remains the
+Prompt 54 inspection. See [../58/SECTION_1.md](../58/SECTION_1.md).
+
 Inspected on 2026-09-16 from tip `3c256dea4a4162bf0191d2cd7b130d0cbeb85084`
 (`Prompt 53 sequencing order and the hold (do not ship) (#156)`).
 Re-verified on this tip. Do not reuse line numbers from

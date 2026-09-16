@@ -1,6 +1,6 @@
-/* Continuum Prompt 54 (governing surface-standard number) / Prompt 51 Design
-   System --draft-700 reservation gate (acceptance criterion 5). --draft-700
-   is a regulatory control. It appears
+/* Continuum Prompt 58 (governing surface-standard number) / Prompt 54 and
+   Prompt 51 Design System lineage. --draft-700 reservation gate (acceptance
+   criterion 5). --draft-700 is a regulatory control. It appears
    as a palette definition and as --state-draft in the token files, and it
    is consumed only by the draft field treatment and the draft status icon.
    This suite does not require the treatment to be mounted on a product page.

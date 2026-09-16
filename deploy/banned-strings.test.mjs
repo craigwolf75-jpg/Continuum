@@ -1,4 +1,5 @@
-/* Continuum Prompt 51 Design System + Prompt 52 catalogue extension.
+/* Continuum Prompt 58 (governing surface-standard number) / Prompt 54,
+   Prompt 51 Design System, and Prompt 52 catalogue lineage.
    Still one linter. Prompt 58 comments remain: sections 0.2 + 11.10,
    acceptance criterion 16, plus criterion 24.
    Human copy review (Calliope): docs/prompts/51-design-system/HUMAN_COPY_REVIEW.md

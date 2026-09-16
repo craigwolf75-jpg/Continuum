@@ -1,9 +1,10 @@
-/* Prompt 54 design-system / surface-standard honesty gate.
+/* Prompt 58 design-system / surface-standard honesty gate.
    File-text and token-file scans only. No live apply. No new pipeline.
-   Prompt 58 is now the governing surface-standard number. Prompt 54 is
-   superseded lineage (earlier review and build). The 51-design-system
-   folder stays as the earlier #152/#153 landing. It is not Core Platform
-   Foundations. Dark and Compact stay tokens only. No dashes.
+   Prompt 58 is the governing surface-standard number (local/CI substrate).
+   Prompt 54 is superseded lineage. The 51-design-system folder stays as
+   the earlier #152/#153 landing. It is not Core Platform Foundations.
+   Dark and Compact stay tokens only. Not a live-platform product release.
+   Prompt 53 holds stand. No dashes.
    Run by node; suites.yml globs it. */
 
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
@@ -50,17 +51,15 @@ function cssRule(src, selector) {
   return m ? m[1] : "";
 }
 
-const docs54 = join(root, "docs/prompts/54");
-const required54 = [
+const docs58 = join(root, "docs/prompts/58");
+const required58 = [
   "SECTION_1.md",
   "REGISTER.md",
   "STOPS.md",
-  "SECTION_16.md",
-  "ACCEPTANCE.md",
 ];
-for (const name of required54) {
-  const p = join(docs54, name);
-  ok("docs/prompts/54/" + name + " exists", existsSync(p));
+for (const name of required58) {
+  const p = join(docs58, name);
+  ok("docs/prompts/58/" + name + " exists", existsSync(p));
   if (existsSync(p)) {
     const text = read(p);
     ok(name + " is non-empty", text.trim().length > 0);
@@ -68,20 +67,39 @@ for (const name of required54) {
   }
 }
 
-const register = existsSync(join(docs54, "REGISTER.md")) ? read(join(docs54, "REGISTER.md")) : "";
-ok("REGISTER records Craig confirmed governing version",
-  /Craig confirmed/i.test(register) && /governing version/i.test(register));
-ok("REGISTER records sequenced review and build",
-  /sequenced for review and build/i.test(register) || /review and build/i.test(register));
+const docs58a = join(root, "docs/prompts/58a/REGISTER.md");
+ok("docs/prompts/58a/REGISTER.md exists", existsSync(docs58a));
+if (existsSync(docs58a)) {
+  const text58a = read(docs58a);
+  ok("58a/REGISTER.md is non-empty", text58a.trim().length > 0);
+  ok("58a/REGISTER.md has no em or en dashes", !DASH_RE.test(text58a));
+}
 
-const stops = existsSync(join(docs54, "STOPS.md")) ? read(join(docs54, "STOPS.md")) : "";
-ok("STOPS names Product Behaviour absence", /Product Behaviour/i.test(stops) && /absent/i.test(stops));
-ok("STOPS names Prompt 53 live-platform holds",
-  /Prompt 53/i.test(stops)
-  && /Montreal/i.test(stops)
-  && /Bedrock/i.test(stops)
-  && /SYNTH/i.test(stops)
-  && /Section 3/i.test(stops));
+for (const p of walk(docs58, (f) => f.endsWith(".md"))) {
+  ok("58 doc " + relative(root, p) + " has no em or en dashes", !DASH_RE.test(read(p)));
+}
+
+const register = existsSync(join(docs58, "REGISTER.md")) ? read(join(docs58, "REGISTER.md")) : "";
+ok("REGISTER records Craig sequenced local/CI",
+  /Craig sequenced/i.test(register) && /local\/CI/i.test(register));
+ok("REGISTER records Prompt 53 holds",
+  /Prompt 53 holds/i.test(register));
+ok("REGISTER records not a live-platform product release",
+  /not a live-platform product release/i.test(register));
+
+const stops = existsSync(join(docs58, "STOPS.md")) ? read(join(docs58, "STOPS.md")) : "";
+ok("STOPS names Product Behaviour / Prompt 59 reserved or unseen",
+  /Product Behaviour/i.test(stops)
+  && /Prompt 59/i.test(stops)
+  && (/reserved/i.test(stops) || /unseen/i.test(stops)));
+ok("STOPS names Obsession absent",
+  /Obsession/i.test(stops) && /absent/i.test(stops));
+ok("STOPS names third-party library stop",
+  /third-party/i.test(stops) && /library/i.test(stops) && /stop/i.test(stops));
+ok("STOPS names dark/compact tokens only",
+  /tokens only/i.test(stops) && /dark/i.test(stops) && /compact/i.test(stops));
+ok("STOPS names hub auth UNVERIFIED STOP for ship",
+  /UNVERIFIED/i.test(stops) && /STOP for ship/i.test(stops) && /hub auth/i.test(stops));
 
 const dsDir = join(root, "docs/prompts/51-design-system");
 ok("docs/prompts/51-design-system folder still exists", existsSync(dsDir));
@@ -94,20 +112,32 @@ for (const name of dsFiles) {
 }
 ok("51-design-system is not Core Platform Foundations",
   /not Core Platform Foundations/i.test(dsText));
+ok("51-design-system HUMAN_COPY_REVIEW names Prompt 58 as governing",
+  /unified Prompt 58/i.test(read(join(dsDir, "HUMAN_COPY_REVIEW.md"))));
 ok("51-design-system does not claim to own docs/prompts/50",
   !/owns docs\/prompts\/50\b/.test(dsText));
 ok("51-design-system does not claim to own docs/prompts/50a",
   !/owns docs\/prompts\/50a\b/.test(dsText));
 
+const docs54 = join(root, "docs/prompts/54");
+const register54Path = join(docs54, "REGISTER.md");
+ok("docs/prompts/54/REGISTER.md still exists (history)", existsSync(register54Path));
+if (existsSync(register54Path)) {
+  const register54 = read(register54Path);
+  ok("54 REGISTER is non-empty", register54.trim().length > 0);
+  ok("54 REGISTER mentions 58 supersession",
+    /Prompt 58/i.test(register54) && /supersed/i.test(register54));
+  ok("54 REGISTER no longer says the surface-standard prompt is now Prompt 54",
+    !/surface-standard prompt is now Prompt 54/.test(register54));
+}
+
 const tokens = read(join(here, "continuum_tokens.css"));
 ok("continuum_tokens.css names Prompt 58 as the governing surface-standard number",
   /Prompt 58 is the governing surface-standard number/.test(tokens));
-ok("continuum_tokens.css records Prompt 54 as superseded lineage",
-  /Prompt 54 is superseded lineage/.test(tokens));
 ok("continuum_tokens.css keeps Prompt 51 Design System lineage",
   /Prompt 51 Design System/.test(tokens));
-ok("continuum_tokens.css keeps Prompt 58 lineage",
-  /PROMPT 58/.test(tokens));
+ok("continuum_tokens.css keeps Prompt 54 lineage",
+  /Prompt 54/.test(tokens));
 ok("continuum_tokens.css still has dark [data-theme=\"dark\"] token block",
   /\[data-theme="dark"\]\s*\{/.test(tokens));
 ok("continuum_tokens.css still has compact [data-density=\"compact\"] token block",
@@ -192,7 +222,7 @@ ok("hub-roles/package.json still locked at framer-motion ^11.3.0",
 ok("worker-app/package.json still locked at next 14.2.5",
   pkgWorker.includes("\"next\": \"14.2.5\""));
 ok("this suite uses only node builtins (package.json not required to change)",
-  /^import .+ from "node:/m.test(read(join(here, "prompt54-design-system.test.mjs"))));
+  /^import .+ from "node:/m.test(read(join(here, "prompt58-design-system.test.mjs"))));
 
 const KNOWN_HTML = [
   "404.html",
@@ -243,8 +273,8 @@ if (extraHtml.length) extraHtml.forEach((h) => console.error("  extra html: " + 
 ok("known product html set is still present (not deleted to fake a pass)", missingHtml.length === 0);
 if (missingHtml.length) missingHtml.forEach((h) => console.error("  missing html: " + h));
 
-const self = read(join(here, "prompt54-design-system.test.mjs"));
+const self = read(join(here, "prompt58-design-system.test.mjs"));
 ok("this suite has no em or en dashes", !DASH_RE.test(self));
 
-console.log(`\nprompt54-design-system suite: ${pass} passed, ${fail} failed`);
+console.log(`\nprompt58-design-system suite: ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

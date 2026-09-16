@@ -1,4 +1,6 @@
-/* Continuum Prompt 58 status icon contract (section 6.6). The five states each
+/* Continuum Prompt 58 (governing surface-standard number) / Prompt 54 and
+   Prompt 51 Design System lineage. Status icon contract (section 6.6).
+   The five states each
    render shape + text + colour; the shape is one of these named silhouettes,
    drawn at 16px, distinguishable with saturation removed. The icon is always
    aria-hidden; the text is always present and never visually hidden. Fill and

@@ -1,15 +1,13 @@
-# Prompt 54 Section 16: acceptance map
+# Prompt 58 Section 16: acceptance map
 
-**Supersession.** Unified Prompt 58 now governs. This file remains
-the Prompt 54 acceptance map. See
-[../58/SECTION_16.md](../58/SECTION_16.md).
+Tip 314951803a03521a70fca67576dccab184811b69. Local/CI substrate
+only. Hub auth remains unverified by Craig. Athena does not ship.
+No em dashes or en dashes anywhere.
 
-Merged tip 282b3f7c149a. Tokens and gates only.
-Deployed Production 6484101032. Hub auth remains unverified by Craig.
-Athena does not ship. No em dashes or en dashes anywhere.
-
-This is the Prompt 54 Design System / Surface Standard acceptance
-map. It is not Core Platform Foundations. The earlier map at
+This is the Prompt 58 Design System / Surface Standard acceptance
+map. It is not Core Platform Foundations. Prompt 54
+[SECTION_16.md](../54/SECTION_16.md) remains the earlier review-and-
+build record. The earlier map at
 `docs/prompts/51-design-system/SECTION_16.md` remains the #152/#153
 landing record. Current-tip inspection is
 [SECTION_1.md](SECTION_1.md).
@@ -25,10 +23,14 @@ the end. They are not resolved here.
 
 `book.html` sets `data-surface="hub"` (request-access, hub-adjacent).
 
-Criteria that need Product Behaviour exact text (cited 0.2, 4.2,
-6.1, 6.2, 6.5, 7.2, 7.4, 9, 9.2, 12, 14) stay **STOP / not
-attempted** unless Prompt 54 already restates the rule and a suite
-proves that restatement.
+Criteria that need Product Behaviour exact text (Prompt 59 reserved
+or unseen; 58 brief cites section 0.2 ten rules; earlier 54 cites
+0.2, 4.2, 6.1, 6.2, 6.5, 7.2, 7.4, 9, 9.2, 12, 14) stay **STOP /
+not attempted** unless Prompt 58 already restates the rule and a
+suite proves that restatement. Conflict rule: 59 wins on behaviour,
+58 wins on presentation. Do not invent Prompt 59.
+
+Do not claim Argus CLEAN. Athena does not ship.
 
 ---
 
@@ -36,10 +38,10 @@ proves that restatement.
 
 1. Zero hard-coded colour outside `continuum_tokens.css`, and no
    theme block assigns raw hex to a semantic token: **failed** for
-   the leftover colour list (Section 1 check 4, not migrated).
-   **passed** for the theme and print hex-on-semantic gate
-   (`deploy/a11y-tokens.test.mjs`). Print assigns from the palette
-   layer (`var(--ink-900)` and the rest) in
+   the leftover colour list (Section 1 check 4, not migrated; 54
+   leftover baseline still applies). **passed** for the theme and
+   print hex-on-semantic gate (`deploy/a11y-tokens.test.mjs`). Print
+   assigns from the palette layer (`var(--ink-900)` and the rest) in
    `deploy/continuum_tokens.css`. Already true on tip `3c256de`
    (#153). Not rewritten here.
 
@@ -72,12 +74,12 @@ proves that restatement.
    DOM label; `Draft, not yet reviewed` in the accessibility tree
    with `aria-describedby`: token CSS **passed**
    (`deploy/a11y-tokens.test.mjs` gate 7;
-   `deploy/prompt54-design-system.test.mjs` asserts
+   `deploy/prompt58-design-system.test.mjs` asserts
    `.provenance-label`, never `::before` / `content:`). Rendered
    accessibility-tree snapshot **not attempted** (not mounted; no
    headless workflow). Product Behaviour 6.x exact wording: **STOP
-   / not attempted** beyond the Prompt 54 restatement that the
-   label is real DOM text.
+   / not attempted** beyond the restatement that the label is real
+   DOM text.
 
 7. Worklist first contentful paint under 800 ms at 500 open cases:
    **not attempted**. No measurement exists (lab). No measurement
@@ -126,7 +128,7 @@ proves that restatement.
     **passed** (`deploy/a11y-tokens.test.mjs` gate 4). Rendered
     hit-testing **not attempted**. holding.html 44px targets
     **passed** as asserted current values
-    (`deploy/prompt54-design-system.test.mjs`). Do not change
+    (`deploy/prompt58-design-system.test.mjs`). Do not change
     holding.html.
 
 16. Banned-string linter over every user-facing string;
@@ -208,26 +210,32 @@ proves that restatement.
 2. Prompt 38 open item 1: who completes the return-to-work
    section.
 3. Retrofit versus replace a component library is a Craig
-   decision. Nothing to replace today.
+   decision. Nothing to replace today. No third-party component
+   library exists.
 4. Whether the brand may appear on the working interface is a
-   Craig decision. Green stays reserved.
+   Craig decision. Green stays reserved. Report, do not decide.
 5. Worker-surface reading level has not been tested with a real
    user.
 6. Whether a worklist prefetch is an auditable access event.
 7. Three cited figures could not be verified to primary source.
+   Never quoted externally.
 
 ---
 
-## What this review and build proved
+## What this local/CI substrate proved
 
-- Prompt 54 Section 1 was written on current tip `3c256de` before
-  other writes, with evidence for checks 1 to 8.
-- REGISTER records Craig confirmed the governing version and
-  sequenced review and build.
-- STOPS names Product Behaviour absence and the Prompt 53
-  live-platform holds.
+- Prompt 58 Section 1 was written on current tip `3149518` before
+  token or gate comment edits, with evidence or UNVERIFIED for
+  checks 1 to 8.
+- REGISTER records Craig sequenced local/CI and Prompt 53 holds
+  and not a live-platform product release.
+- STOPS names Product Behaviour / Prompt 59 reserved or unseen,
+  Obsession absent, third-party library stop, dark/compact tokens
+  only, and hub auth UNVERIFIED STOP for ship.
 - `docs/prompts/51-design-system/` still exists and is not Core
   Platform Foundations.
+- `docs/prompts/54/REGISTER.md` still exists (history) and
+  mentions 58 supersession.
 - Dark and compact token blocks remain. No product html defaults
   to dark or compact.
 - Brand green `#1E8A6E` is absent from working UI.
@@ -235,6 +243,7 @@ proves that restatement.
 - holding.html keeps the 44px targets (asserted, not restyled).
 - `package.json` was not edited.
 - No new product screen file was added.
+- Hub auth UNVERIFIED remains STOP for ship.
 
 Existing Node suites remain globbed by `.github/workflows/suites.yml`.
-`package.json` was not edited.
+`package.json` was not edited. Athena does not ship.
