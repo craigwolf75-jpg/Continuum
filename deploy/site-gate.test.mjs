@@ -44,6 +44,13 @@ ok("no bare stat token 63", !/\b63\b/.test(holding));
 ok("no bare stat token 2,091", !holding.includes("2,091"));
 ok("no bare stat token 2091", !/\b2091\b/.test(holding));
 
+// -- 44px targets on all pointers (holding page law) --
+ok("gate-toggle min-height 44px", /\.gate-toggle\{[^}]*min-height:\s*44px/.test(holding));
+ok("gate-submit min-height 44px", /\.gate-submit\{[^}]*min-height:\s*44px/.test(holding));
+ok("btn min-height 44px", /\.btn\{[^}]*min-height:\s*44px/.test(holding));
+ok("footer a min-height 44px", /footer a\{[^}]*min-height:\s*44px/.test(holding));
+ok("holding 44px floors are not coarse-pointer gated", !/@media\s*\(\s*any-pointer:\s*coarse\s*\)/.test(holding));
+
 // -- dash rule --
 ok("holding page dash clean", !/[–—]/.test(holding));
 
