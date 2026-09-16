@@ -1,6 +1,6 @@
-/* Continuum Prompt 54 (governing surface-standard number) / Prompt 51 Design
-   System lab-budget reporter (acceptance criterion 8, field half of
-   section 10). Records that no measurement
+/* Continuum Prompt 58 (governing surface-standard number) / Prompt 54 and
+   Prompt 51 Design System lineage. Lab-budget reporter (acceptance
+   criterion 8, field half of section 10). Records that no measurement
    exists for FCP, INP, and CLS. Absence does not fail the build.
    Does not invent an 800ms FCP gate. No RUM is wired. No dashes.
    Run by node; suites.yml globs it. */

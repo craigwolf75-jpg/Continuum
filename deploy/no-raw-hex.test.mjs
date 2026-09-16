@@ -1,4 +1,6 @@
-/* Continuum Prompt 58 no-raw-hex gate (section 13 / acceptance criterion 1).
+/* Continuum Prompt 58 (governing surface-standard number) / Prompt 54 and
+   Prompt 51 Design System lineage. No-raw-hex gate (section 13 /
+   acceptance criterion 1).
    Every colour on a product surface must be a design token, so no page carries
    a raw #RRGGBB/#RGB colour literal. Hex lives only in the token files
    (continuum_tokens.css, continuum-vars.css). Out of scope by design: the

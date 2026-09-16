@@ -1,5 +1,10 @@
 # Prompt 54. The Design System and the Surface Standard.
 
+**Supersession.** Unified Prompt 58 now governs the
+design-system / surface-standard brief. This folder remains
+the earlier sequenced review-and-build record. History below
+stays. See [../58/REGISTER.md](../58/REGISTER.md).
+
 Sequenced for review and build. Local/CI surface work only.
 Athena does not ship. Merged and deployed. Not a live-platform
 product release. Prompt 53 holds stand.
@@ -19,11 +24,17 @@ No em dashes or en dashes anywhere.
 
 ## Status
 
+**Superseded as the governing brief.** Unified Prompt 58 now
+governs. This file set remains the landed review-and-build
+record.
+
 Prompt 54 is sequenced for review and build (local/CI surface work).
 
 Section 1 prerequisite checks are answered in
-[SECTION_1.md](SECTION_1.md) on current tip `3c256de` before token or
-other file edits. That inspection is the current one.
+[SECTION_1.md](SECTION_1.md) on tip `3c256de` before token or
+other file edits. That inspection remains the Prompt 54 record.
+Prompt 58 [SECTION_1.md](../58/SECTION_1.md) is the current
+inspection.
 
 This is merged and deployed. Athena does not ship. Hermes does not
 treat this file as a ship order.

@@ -1,11 +1,16 @@
 # Prompt 51 Design System Section 1: prerequisite inspection
 
-**Prompt 54 cross-link.** The design-system / surface-standard prompt
-is now Prompt 54. This folder is the earlier #152/#153 landing. It is
-not Core Platform Foundations. Prompt 54
-[SECTION_1.md](../54/SECTION_1.md) is the current inspection (tip
-`3c256de`). This file stays as the pre-token inspection of tip
-`fca8548`. Do not treat these line numbers as current.
+**Prompt 54 / Prompt 58 cross-link.** The design-system /
+surface-standard prompt is now unified Prompt 58. Prompt 54
+remains the earlier sequenced review-and-build record. This
+folder is the earlier #152/#153 landing. It is not Core Platform
+Foundations. Prompt 58 [REGISTER.md](../58/REGISTER.md) is the
+governing register. Prompt 58
+[SECTION_1.md](../58/SECTION_1.md) is the current inspection.
+Prompt 54 [SECTION_1.md](../54/SECTION_1.md) is the earlier
+inspection (tip `3c256de`). This file stays as the pre-token
+inspection of tip `fca8548`. Do not treat these line numbers as
+current.
 
 Inspected on 2026-09-16 from tip `fca85484916c5f95cbd707a1b1b7ccccd272435e`
 (`Prompt 50a architecture decisions (do not ship) (#151)`).

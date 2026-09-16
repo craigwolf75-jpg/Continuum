@@ -1,5 +1,5 @@
-/* Continuum Prompt 54 (governing surface-standard number) / Prompt 51 Design
-   System structural a11y gate (Prompt 58 comments remain: section 11 gates
+/* Continuum Prompt 58 (governing surface-standard number) / Prompt 54 and
+   Prompt 51 Design System lineage. Structural a11y gate (section 11 gates
    2,4,6,7 + print).
    These are the token-level contracts that must hold regardless of any rendered
    page, verified over continuum_tokens.css in node:

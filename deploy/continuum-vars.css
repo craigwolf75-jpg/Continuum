@@ -1,10 +1,12 @@
-/* Continuum Prompt 54 (governing surface-standard number) / Prompt 58 tokens,
-   VARIABLES ONLY (light). Prompt 51 Design System / Prompt 58 comments stay
-   as lineage. Single source for the existing-page colour migration: no base
-   rules, so linking it changes nothing until a value references a var. The
-   full continuum_tokens.css (with the four never-overridable rules) is for
+/* Continuum Prompt 58 (governing surface-standard number, local/CI substrate).
+   Prompt 54 is superseded lineage (earlier review and build). VARIABLES ONLY
+   (light). Prompt 51 Design System / Prompt 54 comments stay as lineage.
+   Single source for the existing-page colour migration: no base rules, so
+   linking it changes nothing until a value references a var. The full
+   continuum_tokens.css (with the four never-overridable rules) is for
    design-system screens. Hex lives here and in continuum_tokens.css only.
-   Do not expand this file into a second full token file. No dashes. */
+   Not a live-platform product release. Prompt 53 holds stand. Do not expand
+   this file into a second full token file. No dashes. */
 :root {
   /* Light only at the root. The dark block below opts in. Declaring
      "light dark" here would give a user whose OS prefers dark a set of
