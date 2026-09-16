@@ -1,5 +1,9 @@
 # Prompt 54 Section 16: acceptance map
 
+**Supersession.** Unified Prompt 58 now governs. This file remains
+the Prompt 54 acceptance map. See
+[../58/SECTION_16.md](../58/SECTION_16.md).
+
 Merged tip 282b3f7c149a. Tokens and gates only.
 Deployed Production 6484101032. Hub auth remains unverified by Craig.
 Athena does not ship. No em dashes or en dashes anywhere.

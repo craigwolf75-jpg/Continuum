@@ -43,10 +43,14 @@ treat this file as a ship order.
 
 ## Governing version CONFIRMED by Craig
 
-Craig confirmed the attached Prompt 54 file is the governing version.
+Craig confirmed the attached Prompt 54 file as the governing
+version for that review and build. Unified Prompt 58 now governs
+the surface-standard brief. See
+[../58/REGISTER.md](../58/REGISTER.md).
 
-This Prompt 54 file is the governing version. Version canonicality is
-no longer UNCONFIRMED for the surface-standard brief.
+This Prompt 54 file remains the landed review-and-build record.
+Version canonicality for that 54 file is no longer UNCONFIRMED.
+It is not the current governing brief.
 
 That confirmation does not invent Product Behaviour. It does not
 release a live-platform build. It does not close G1.
@@ -93,15 +97,18 @@ System work already on main. Section 1 prerequisite inspection plus
 tokens and gates. It landed as #152 (Section 1) and #153 (tokens,
 html attrs, CI gates).
 
-The design-system / surface-standard prompt is now Prompt 54. This
-mission amends that folder and the existing token/gate files
+The design-system / surface-standard prompt was Prompt 54.
+Unified Prompt 58 now governs. This folder stays as the earlier
+sequenced review-and-build record. This mission amended the
+51-design-system folder and the existing token/gate files
 idempotently. It does not overwrite Core Platform Foundations
 (`docs/prompts/50/`, `docs/prompts/50a/`, `platform/db`).
 
 The `51-design-system` folder stays as the earlier inspection and
 token/gate landing. It is not deleted. It is not Core Platform
-Foundations. Prompt 54 [SECTION_1.md](SECTION_1.md) is the current
-inspection.
+Foundations. Prompt 54 [SECTION_1.md](SECTION_1.md) remains the
+Prompt 54 inspection. Prompt 58
+[SECTION_1.md](../58/SECTION_1.md) is the current inspection.
 
 Cross-links:
 

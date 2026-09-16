@@ -112,6 +112,8 @@ for (const name of dsFiles) {
 }
 ok("51-design-system is not Core Platform Foundations",
   /not Core Platform Foundations/i.test(dsText));
+ok("51-design-system HUMAN_COPY_REVIEW names Prompt 58 as governing",
+  /unified Prompt 58/i.test(read(join(dsDir, "HUMAN_COPY_REVIEW.md"))));
 ok("51-design-system does not claim to own docs/prompts/50",
   !/owns docs\/prompts\/50\b/.test(dsText));
 ok("51-design-system does not claim to own docs/prompts/50a",
@@ -125,6 +127,8 @@ if (existsSync(register54Path)) {
   ok("54 REGISTER is non-empty", register54.trim().length > 0);
   ok("54 REGISTER mentions 58 supersession",
     /Prompt 58/i.test(register54) && /supersed/i.test(register54));
+  ok("54 REGISTER no longer says the surface-standard prompt is now Prompt 54",
+    !/surface-standard prompt is now Prompt 54/.test(register54));
 }
 
 const tokens = read(join(here, "continuum_tokens.css"));

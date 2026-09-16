@@ -1,5 +1,9 @@
 # Prompt 54 acceptance: what this review and build proved
 
+**Supersession.** Unified Prompt 58 now governs. This file remains
+the Prompt 54 acceptance record. See
+[../58/ACCEPTANCE.md](../58/ACCEPTANCE.md).
+
 Merged tip 282b3f7c149a. Production 6484101032. Athena does not ship.
 No em dashes or en dashes anywhere.
 

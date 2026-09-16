@@ -3,8 +3,8 @@
 **Prompt 54 / Prompt 58 cross-link.** The design-system /
 surface-standard prompt is now unified Prompt 58. Prompt 54
 remains the earlier sequenced review-and-build record. This
-folder is the earlier #152/#153 landing. It is not Core Platform
-Foundations. Prompt 58 [REGISTER.md](../58/REGISTER.md) is the
+folder is the earlier #152/#153 landing. It is not Core Platform Foundations.
+Prompt 58 [REGISTER.md](../58/REGISTER.md) is the
 governing register. Prompt 58
 [SECTION_16.md](../58/SECTION_16.md) is the current acceptance
 map. Prompt 54 [SECTION_1.md](../54/SECTION_1.md) is the earlier
