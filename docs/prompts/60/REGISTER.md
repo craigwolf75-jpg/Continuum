@@ -1,7 +1,7 @@
 # Prompt 60. Concussion and mTBI.
 
-Sequenced 2026-09-16 for Section 1 then allowed-scope
-local/CI draft.
+Docs-only PR 164 landed. This draft is the allowed
+product build.
 Still not a live-platform product release.
 Athena does not ship. Prompt 53 holds stand.
 
@@ -17,10 +17,10 @@ work decision.
 
 This file and [STOPS.md](STOPS.md) and
 [CHECK_IN_COPY.md](CHECK_IN_COPY.md) are the Calliope docs
-for this registration. Athena writes
-[SECTION_1.md](SECTION_1.md). Athena writes ACCEPTANCE or
-SECTION_16 later. Athena does not ship. Hermes does not
-treat this file as a ship order.
+for this registration. Athena wrote
+[SECTION_1.md](SECTION_1.md) in docs-only PR 164. Athena
+writes ACCEPTANCE or SECTION_16 later. Athena does not
+ship. Hermes does not treat this file as a ship order.
 
 No em dashes or en dashes anywhere.
 
@@ -28,13 +28,24 @@ No em dashes or en dashes anywhere.
 
 ## Status
 
-Prompt 60 is sequenced 2026-09-16 for Section 1 then
-allowed-scope local/CI draft. Still not a live-platform
-product release. Prompt 53 holds stand.
+Prompt 60 product-build DRAFT follows docs-only PR 164
+(tip 24adb5ff2ec35a8c039eda075fbfe29f0612ee0e).
+Docs-only 164 landed. This draft is the allowed
+product build. Still not a live-platform product
+release. Prompt 53 holds stand.
 
-Craig sequenced Section 1 first, then build of allowed
-scope. That sequence is not a live-platform product
-release. It does not lift the Prompt 53 hold. It does not
+Allowed scope this draft: Sections 2 to 5 against
+SYNTH only, plus the worker check-in path. Do not
+touch deploy/clinical-dashboard.html (separate PR).
+
+Replace the legacy scored worker check-in voice
+(pain_score / mobility_score dual AM/PM) with
+[CHECK_IN_COPY.md](CHECK_IN_COPY.md) task-linked
+provocation copy. Do not ship scored check-in as
+Prompt 60.
+
+This draft is not a live-platform product release.
+It does not lift the Prompt 53 hold. It does not
 close G1. It does not authorise a Montreal project, a
 Bedrock go, a live schema apply, or a seed beyond
 SYNTH-prefixed fixtures.
@@ -158,13 +169,21 @@ not invent G1. Do not start G1.
 
 ## What this draft may do
 
-- Write Prompt 60 REGISTER, STOPS, and CHECK_IN_COPY.
-  Calliope writes those three files. No product code in
-  this Calliope pass.
-- Athena writes Section 1 first, then allowed-scope
-  local/CI draft work that this register permits.
+- Docs-only PR 164 has landed. REGISTER, STOPS, and
+  CHECK_IN_COPY stand from that pass. This Calliope
+  pass updates register status only. No product code
+  in this Calliope pass.
+- Athena builds the allowed product-build DRAFT:
+  Sections 2 to 5 against SYNTH only, plus the
+  worker check-in path.
 - Athena writes Section 2 in this folder. Section 2 is
   not skipped because Prompt 61 is absent.
+- Worker check-in uses [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
+  task-linked provocation copy. Do not ship the
+  legacy scored check-in (pain_score / mobility_score
+  dual AM/PM) as Prompt 60.
+- Athena does not edit
+  deploy/clinical-dashboard.html. Separate PR.
 - Athena writes ACCEPTANCE or SECTION_16 later.
 
 ## What this draft must not do
@@ -178,6 +197,9 @@ not invent G1. Do not start G1.
 - Use "patient" for a worker on the employer side.
 - Auto-advance an hours step.
 - Symptom-score a check-in.
+- Ship scored check-in (pain_score / mobility_score
+  dual AM/PM) as Prompt 60.
+- Touch deploy/clinical-dashboard.html. Separate PR.
 - Show check-in, symptom, or provocation content on the
   employer view.
 - Claim board alignment for the intensity scale.
@@ -211,6 +233,10 @@ Unchanged. Not this mission.
 Recorded here. Worded in [CHECK_IN_COPY.md](CHECK_IN_COPY.md).
 
 - Check-in is task linked, not symptom scored.
+- Do not ship the legacy scored worker check-in
+  (pain_score / mobility_score dual AM/PM) as
+  Prompt 60. Use CHECK_IN_COPY task-linked
+  provocation copy.
 - Twenty-four hour settle boundary only.
 - The platform never auto-advances hours steps.
 - Employer view gets no check-in, symptom, or
@@ -262,9 +288,9 @@ The Prompt 33 hub authentication path is UNVERIFIED by
 Craig. **STOP for ship.**
 
 This is not a stop for this draft. Athena may still
-author Section 1 and allowed-scope local/CI draft work.
-Do not treat that work as a live-platform product
-release.
+author Sections 2 to 5 against SYNTH only, plus the
+worker check-in path. Do not treat that work as a
+live-platform product release.
 
 ---
 
@@ -319,14 +345,15 @@ closes findings. Do not claim Argus CLEAN.
 
 ## Base tip
 
-This registration is from tip
-`cd841f98dc94b991ede869114d942b87df225ad9`
-(`Prompt 58 design system local/CI build (do not ship) (#163)`).
+This product-build DRAFT follows docs-only PR 164 tip
+`24adb5ff2ec35a8c039eda075fbfe29f0612ee0e`
+(`Prompt 60 concussion and mTBI (do not ship) (#164)`).
 
 ---
 
 ## Athena does not ship
 
-Allowed-scope local/CI draft after Section 1. Not a
+Allowed product-build DRAFT: Sections 2 to 5 against
+SYNTH only, plus the worker check-in path. Not a
 live-platform product release. Prompt 53 holds stand.
 Hermes ships only when Craig names ship.

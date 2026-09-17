@@ -1,7 +1,9 @@
 # Prompt 60 stop notes
 
-Real stops only. Prompt 60 is sequenced 2026-09-16 for
-Section 1 then allowed-scope local/CI draft. Still not a
+Real stops only. Prompt 60 product-build DRAFT follows
+docs-only PR 164 (tip
+24adb5ff2ec35a8c039eda075fbfe29f0612ee0e). This draft
+is the allowed product build. Still not a
 live-platform product release. Athena does not ship. No em
 dashes or en dashes anywhere.
 
@@ -38,9 +40,9 @@ Craig verified it. Deployment status is not located.
 **UNVERIFIED. STOP for ship.**
 
 This is not a stop for this draft. Athena may still
-author Section 1 and allowed-scope local/CI draft work.
-Do not treat that work as a live-platform product
-release.
+author Sections 2 to 5 against SYNTH only, plus the
+worker check-in path. Do not treat that work as a
+live-platform product release.
 
 ---
 
@@ -129,6 +131,26 @@ check-in copy or check-in fields:
 
 Check-in is task linked, not symptom scored. Twenty-four
 hour settle boundary only.
+
+---
+
+## Do not ship scored check-in as Prompt 60
+
+The legacy worker check-in voice is pain_score /
+mobility_score dual AM/PM. Prompt 60 replaces that
+voice with [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
+task-linked provocation copy.
+
+**STOP.** Do not ship scored check-in as Prompt 60.
+Do not reuse pain_score or mobility_score as the
+concussion check-in.
+
+---
+
+## deploy/clinical-dashboard.html is a separate PR
+
+**STOP.** Do not touch deploy/clinical-dashboard.html
+in this draft. That file is a separate PR.
 
 ---
 
@@ -242,6 +264,7 @@ Argus CLEAN.
 
 ## Athena does not ship
 
-Allowed-scope local/CI draft after Section 1. Not a
+Allowed product-build DRAFT: Sections 2 to 5 against
+SYNTH only, plus the worker check-in path. Not a
 live-platform product release. Prompt 53 holds stand.
 Hermes ships only when Craig names ship.
