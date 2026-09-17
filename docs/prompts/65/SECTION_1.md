@@ -1,6 +1,6 @@
 # Prompt 65 Section 1: public site lane wiring verification
 
-Recount note: Zeus re-verified wrong-code 401 after this pass (`POST /api/site-access`, path `/SYNTH-p65-verify`); that added one SYNTH `access_log` row; inventory N moved from 14 to 15. Lead store SELECT remains 1. Zeus did not send a second marketing lead.
+Recount note: commissioned inventory N is 0 (count(*) snapshot: leads 0, assessment 0, access_log 110, access_codes 2). Later Section 1 probe writes (leads count(*)=1, access_log count(*)=125) are a FLAG for Gary, not part of N. Safe SYNTH on access_log is code_label only; path/UA is not a deletion rule.
 
 Inspected on 2026-09-17 from branch
 `cursor/prompt-65-site-lane-fbe0` at

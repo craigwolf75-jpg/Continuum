@@ -26,6 +26,10 @@ Prompt 65 is IN PROGRESS: Sections 1
 and 2 complete, pending Gary purge
 gate.
 
+Inventory row total is 0: 0 rows
+proposed for deletion. Exact reply
+required: purge approved 0.
+
 Section 3 is the human purge gate.
 Section 4 purge is blocked and must
 not run on this draft.

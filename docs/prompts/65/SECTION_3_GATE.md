@@ -6,9 +6,9 @@ This draft STOPS before Section 4.
 Zero deletions. Confirmation text
 is not present.
 
-The inventory row total is 15
-(1 `marketing_leads` SYNTH + 14
-`access_log` SYNTH). See
+The inventory row total is 0.
+Exact inventory line: "0 rows
+proposed for deletion." See
 [STAGED_DATA_INVENTORY.md](STAGED_DATA_INVENTORY.md).
 Do not overwrite that file.
 
@@ -22,10 +22,10 @@ anywhere.
 Purge is blocked until Gary
 replies exactly:
 
-purge approved 15
+purge approved 0
 
 That is the words purge approved
-plus the inventory row total 15.
+plus the inventory row total 0.
 
 Quote from unified Prompt 65
 Section 3:
@@ -51,7 +51,7 @@ explicit means stop.
 - Confirmation text is not
   present.
 - Exact reply required: purge
-  approved 15.
+  approved 0.
 
 Companions:
 [REGISTER.md](REGISTER.md),

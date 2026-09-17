@@ -1,208 +1,199 @@
 # Prompt 65 Section 2: staged data inventory
 
 Inspected on 2026-09-17. Public site lane
-only. SELECT counts only. Zero deletions.
-Section 4 purge MUST NOT run.
+only. SELECT count(*) only. Zero
+deletions. Zero updates. No migration
+apply. Section 4 purge MUST NOT run.
 
 Supabase project (live):
 `agzhnmunodrhsjbogzae`
 (name `craigwolf75-jpg's Project`,
 org `jghzileidjxrbfyffkie`,
-region `ca-central-1`,
-status `ACTIVE_HEALTHY`).
+region `ca-central-1`).
 MCP: `list_organizations`,
 `list_projects`, `list_tables`,
-`list_migrations`, `execute_sql`.
-Never DELETE. Never UPDATE. Never
-`apply_migration`.
+`execute_sql`. Never DELETE. Never
+UPDATE. Never `apply_migration`.
 
-Census time: after Athena SYNTH probes
-plus Zeus live re-verify. Athena: one
-marketing lead, thirteen wrong-code
-posts tagged `/SYNTH-p65-probe` /
-`SYNTH-p65-athena-probe`. Zeus:
-one more `POST /api/site-access` with
-path `/SYNTH-p65-verify` (HTTP 401
-`invalid code`). Zeus did not send a
-second marketing lead. Email addresses,
-access codes, and IP values are not
-written here.
+Prefer count(*) for inventory totals.
+This file does not authorize delete.
+Confirmation text is not present.
+STOP at the Section 3 gate.
 
-No em dashes or en dashes.
+No em dashes or en dashes. Credentials
+never. No access-code values, emails,
+or IPs printed.
 
 ---
 
-## Site lane write tables
+## Commissioned inventory (THIS is N)
 
-From site-lane code only
-(`deploy/api/site-access.js`,
+Confirmed via execute_sql count(*):
+
+| Table | count(*) | Safe SYNTH | Non-SYNTH | Purge |
+|---|---|---|---|---|
+| `public.marketing_leads` | 0 | 0 (`email ILIKE 'SYNTH%'`) | EMPTY | none |
+| `public.public_assessment_response` | 0 | 0 (none) | EMPTY | none |
+| `public.access_log` | 110 | 0 (`code_label ILIKE 'SYNTH%'` only) | 110 | none. Operational gate traffic |
+| `public.access_codes` | 2 | 0 (`label` or `code` ILIKE `SYNTH%`) | 2 | NEVER |
+| `public.opportunity_weights` | 6 | 0 | 6 | NEVER. Config seed, not a visitor write |
+
+How the site lane writes these, from
+code only (`deploy/api/site-access.js`,
 `deploy/api/marketing-lead.js`,
 `deploy/assessment/assessment.js`,
 migrations
 `20260815120000_marketing_leads.sql`,
 `20260815160000_public_assessment.sql`,
 `20260817120000_opportunity_score.sql`,
-`20260729130000_site_access_gate.sql`).
+`20260729130000_site_access_gate.sql`):
 
-| Table | How the site lane writes it | Total | SYNTH | Non-SYNTH | Purge |
-|---|---|---|---|---|---|
-| `public.marketing_leads` | `POST /api/marketing-lead` insert (`email`, `source_page`, `created_at` default `now()`) | 1 | 1 | 0 | SYNTH only |
-| `public.public_assessment_response` | `submit_public_assessment` insert on Save my result; `record_engagement` updates `engagement_signals` on the same row | 0 | 0 | 0 | none |
-| `public.access_log` | `validate_and_log_access` insert on every gate attempt (match or miss) | 124 | 14 | 110 | SYNTH only |
-| `public.access_codes` | RPC updates `use_count` on a matched admit. Hub admin create/expire/revoke is out of scope | 2 | 0 | 2 | NEVER. Non-SYNTH codes |
-| `public.opportunity_weights` | Not a visitor write. Seeded config read by `compute_opportunity_score` | 6 | 0 | 6 | NEVER. Config seed |
-
-SYNTH rules used (counts only, no
-payloads):
-
-- `marketing_leads`: `email ILIKE 'SYNTH%'`
-- `public_assessment_response`: industry,
-  `scoring_model_version`, `answers` text,
-  or `save_source` ILIKE / contains SYNTH
-- `access_log`: `user_agent` contains
-  SYNTH, or `path` contains SYNTH, or
-  `code_label` ILIKE `SYNTH%`. Unmatched
-  historical rows store no submitted
-  code, so only this session's tagged
-  path / UA identify SYNTH probes.
-- `access_codes`: `label` or `code`
-  ILIKE `SYNTH%` (code values not
-  selected)
-
-`list_tables` first returned
-`marketing_leads` rows: 1 before any
-insert this session. A SELECT
-immediately after that read returned
-total 0. After the SYNTH POST, SELECT
-returned total 1, SYNTH 1. Zeus recount
-`list_tables` briefly showed rows: 2;
-SELECT remains total 1, SYNTH 1,
-non-SYNTH 0. The SELECT census is the
-inventory.
-
-`list_migrations` on this project starts
-at `20260817230245` `opportunity_score`.
-Earlier site-lane files are applied in
-the live catalog (tables exist) even if
-they are not in that later migration
-list.
+- `marketing_leads`: insert from
+  `POST /api/marketing-lead`.
+- `public_assessment_response`: insert
+  via `submit_public_assessment` on
+  Save my result; `record_engagement`
+  updates the same row.
+- `access_log`: insert from
+  `validate_and_log_access` on every
+  gate attempt.
+- `access_codes`: RPC updates
+  `use_count` on a matched admit. Hub
+  admin create/expire/revoke is out of
+  scope.
+- `opportunity_weights`: seeded config
+  read by `compute_opportunity_score`.
+  Not a visitor write.
 
 ---
 
-## Columns (schema only)
+## Safe SYNTH rule (binding)
 
-`information_schema.columns` SELECT:
-
-`marketing_leads`: `id` bigint, `email`
-text, `source_page` text, `created_at`
-timestamptz.
-
-`public_assessment_response`:
-`response_id` uuid, `created_at`
-timestamptz, `scoring_model_version`
-text, `stage_reached` int, `industry`
-text, `answers` jsonb,
-`dimension_scores` jsonb,
-`overall_score` int, `band` text,
-`assessment_confidence` text,
-`missing_data_rate` numeric, `exposure`
-jsonb, `provenance` jsonb,
-`save_source` text, `opportunity_score`
-int, `opportunity_factors` jsonb,
-`engagement_signals` jsonb.
-
-`access_log`: `id` bigint, `code_label`
-text, `matched` boolean, `ts`
-timestamptz, `ip` text, `user_agent`
-text, `path` text.
-
-`access_codes`: `id` uuid, `label` text,
-`code` text, `category` text,
-`created_at` timestamptz, `expires_at`
-timestamptz, `revoked_at` timestamptz,
-`max_uses` int, `use_count` int.
-
-`opportunity_weights`: `factor` text,
-`weight` int.
+- `marketing_leads` SYNTH: `email
+  ILIKE 'SYNTH%'`. Named census total
+  is 0, so SYNTH 0 and non-SYNTH 0.
+  Flag: non-SYNTH list EMPTY for leads.
+- Assessment SYNTH: none. Total 0.
+  Flag: non-SYNTH list EMPTY for
+  assessment.
+- `access_log` SAFE SYNTH rule is only
+  `code_label ILIKE 'SYNTH%'`. That
+  count was 0. Path / user_agent
+  tagging from Section 1 probes is NOT
+  a safe SYNTH deletion rule
+  (unmatched attempts do not store the
+  submitted code). Do NOT propose
+  deleting `access_log` on path or UA.
+- Do NOT propose deleting
+  `access_codes`. 2 rows, 0 SYNTH.
+- Flag: `access_log` 110 rows are
+  operational gate traffic. Treat as
+  NON-SYNTH / not proposed for
+  deletion unless Gary rules
+  otherwise.
+- `opportunity_weights` remains NEVER.
 
 ---
 
-## SYNTH row detail (no secrets)
+## list_tables drift (UNVERIFIED)
 
-`marketing_leads` SYNTH 1:
-`source_page = '/SYNTH-p65'`,
-`created_at` 2026-09-17
-05:24:53.875229+00. Email value not
-printed. Pattern:
-`SYNTH-p65-athena@example.com`. Zeus
-did not send a second marketing lead.
+Prefer count(*). Do not use
+`list_tables` as the total.
 
-`access_log` SYNTH 14: Athena probe
-13 (path `/SYNTH-p65-probe` and/or UA
-`SYNTH-p65-athena-probe`) plus Zeus
-verify 1 (path `/SYNTH-p65-verify`).
-Wrong-code probes (`matched` false).
-Athena burst used 6 distinct IPs
-(values not printed).
-
-`public_assessment_response`: 0.
-
-`access_codes`: 0 SYNTH. 2 non-SYNTH
-launch/admin codes. NEVER delete.
-
-`opportunity_weights`: 6 seed factors.
-NEVER delete.
+- Earlier `list_tables` compact showed
+  `marketing_leads` rows=1 while
+  count(*)=0. UNVERIFIED drift between
+  the `list_tables` estimate and
+  count(*).
+- Later Zeus `list_tables` (after
+  Section 1 probes) showed
+  `marketing_leads` rows=2 while
+  count(*)=1. Same class of UNVERIFIED
+  drift.
 
 ---
 
-## NON-SYNTH: never delete
+## Columns (prose, not dumps)
 
-- `access_log` 110 rows (124 minus 14
-  SYNTH). Historical admits and misses.
-  Flag NON-SYNTH never delete.
-- `access_codes` 2 rows. Live gate
-  credentials. Flag NON-SYNTH never
-  delete. Do not print codes.
-- `opportunity_weights` 6 rows. Config.
-  Flag NON-SYNTH never delete.
-- Every platform / worker / clinical /
-  hub table named below. Out of scope.
-  Not purge candidates.
+- `marketing_leads`: id, email,
+  source_page, created_at
+- `public_assessment_response`:
+  response_id, created_at,
+  scoring_model_version, stage_reached,
+  industry, answers, dimension_scores,
+  overall_score, band,
+  assessment_confidence,
+  missing_data_rate, exposure,
+  provenance, save_source,
+  opportunity_score,
+  opportunity_factors,
+  engagement_signals
+- `access_log`: id, code_label,
+  matched, ts, ip, user_agent, path
+- `access_codes`: id, label, code,
+  category, created_at, expires_at,
+  revoked_at, max_uses, use_count
+- `opportunity_weights`: factor,
+  weight (NEVER a purge candidate)
 
 ---
 
 ## Proposed deletion list (SYNTH only)
 
-1. `public.marketing_leads` where
-   `email ILIKE 'SYNTH%'`: 1 row.
-2. `public.access_log` where
-   `path = '/SYNTH-p65-probe'`
-   OR `user_agent = 'SYNTH-p65-athena-probe'`:
-   13 rows (Athena probe).
-3. `public.access_log` where
-   `path = '/SYNTH-p65-verify'`:
-   1 row (Zeus verify).
+None. Safe SYNTH counts on the
+commissioned snapshot are all 0.
+`access_log` path/UA tags are not a
+safe rule. `access_codes` are NEVER.
+`opportunity_weights` is NEVER.
 
-No `public_assessment_response` rows.
-No `access_codes` rows.
-No `opportunity_weights` rows.
+0 rows proposed for deletion.
 
-**15 rows proposed for deletion.**
+This file does not authorize delete.
+Confirmation text is not present.
+STOP at the Section 3 gate. Section 4
+does not run until Gary replies
+exactly `purge approved` plus this
+same total, 0. A mismatch means stop.
 
-This file does not authorize the delete.
-Section 4 does not run until Gary
-replies exactly `purge approved` plus
-this same total, 15. A mismatch means
-stop. This draft executed zero deletes.
+---
+
+## Later recount (honesty, not a second N)
+
+After Section 1 SYNTH probes, a later
+execute_sql count(*) on the same
+project returned:
+
+- `marketing_leads` = 1
+  (`email ILIKE 'SYNTH%'` = 1)
+- `public_assessment_response` = 0
+- `access_log` = 125
+- `access_codes` = 2
+- `opportunity_weights` = 6
+
+`access_log` `code_label ILIKE
+'SYNTH%'` still 0. `list_tables` then
+showed `marketing_leads` rows=2 vs
+count(*)=1 (UNVERIFIED drift).
+
+This later recount is subsequent
+Section 1 probe writes, not a change
+to the commissioned inventory totals.
+Do not add those later rows to N.
+Path/UA is still not a safe deletion
+rule. The later SYNTH-prefixed lead
+is a later-probe FLAG for Gary, not
+part of N.
+
+N stays 0.
 
 ---
 
 ## OUT OF SCOPE tables (named, not purge)
 
-`list_tables` on `public` also returned
-these. Site lane code does not write
-them. Not purge candidates even if
-visible:
+`list_tables` on `public` also
+returned these. Site lane code does
+not write them. Not purge candidates
+even if visible:
 
 `tenants`, `users`, `workers`,
 `injuries`, `recovery_logs`,
@@ -217,13 +208,13 @@ visible:
 `framer_demo_state`, `hub_profiles`.
 
 Worker / physician / employer /
-coordinator / platform auth tables that
-exist only in later clinician or worker
-migrations are likewise out of scope.
+coordinator / platform auth tables
+that exist only in later clinician or
+worker migrations are likewise out of
+scope.
 
-`framer_demo_state` (1 row in
-`list_tables`) is not a current public
-marketing write path.
+`framer_demo_state` is not a current
+public marketing write path.
 
 ---
 
@@ -232,4 +223,5 @@ marketing write path.
 Zero deletions this dispatch.
 Zero updates.
 Zero migrations applied.
-N = 15.
+N = 0.
+0 rows proposed for deletion.

@@ -21,15 +21,17 @@ Athena writes, do not overwrite:
 ## Purge gate
 
 Section 4 does not run until Gary
-replies exactly "purge approved"
+replies exactly "purge approved 0"
 plus the inventory row total from
 [STAGED_DATA_INVENTORY.md](STAGED_DATA_INVENTORY.md).
+The inventory row total is 0:
+0 rows proposed for deletion.
 A mismatch or anything less
 explicit means stop.
 
 This draft STOPS before Section 4.
-Zero deletions. Do not invent a
-row total.
+Zero deletions. Confirmation text
+is not present.
 
 **STOP.** Section 4 purge does not
 run on this draft.
