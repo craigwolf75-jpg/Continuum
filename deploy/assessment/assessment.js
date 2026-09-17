@@ -420,7 +420,7 @@
   // failure retry state so the same honest sentence and button reappear.
   function saveOfferInner(stageReached) {
     return '' +
-      '<p class="crs-note">Saving records an anonymous summary of your result to help improve the assessment.</p>' +
+      '<p class="crs-note">Saving records an anonymous summary of the result you already see.</p>' +
       '<button type="button" class="crs-btn crs-btn-secondary" data-action="save-result" data-stage-reached="' + esc(stageReached) + '">Save my result</button>';
   }
 
