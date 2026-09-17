@@ -17,13 +17,13 @@ folds in.
 ## Active queue
 
 ### P64: Prompt 64 agent testing system registered
-- Status: IN PROGRESS
+- Status: DONE. Draft PR 175. Tip `8e4ed5d4791182e3ae9ed7a37ee1d09762954a87`.
 - Lead: calliope (register, section 00, stops), athena (structure and Origin pointer), argus (patrol)
-- Gate: draft PR. Registration only. No product or runtime change. Hermes ships Continuum only when Craig names ship.
+- Gate: draft PR. Registration only. No product or runtime change. Hermes ships Continuum only when Craig names ship. Argus patrol on the register files: CLEAN.
 - Base tip: `3e3dbf1b545906e215f20a36d71a29df2195d61a` (PR 174 merged; newer than named `16d61ff4b82ace52069b7cc2c900a1b152b4eb48`)
 - Branch: `cursor/prompt-64-register-492e`
 - Human gate: no Continuum env attach without Craig named credentials via secret store; Firecrawl needs Craig approval; HIL-11 CIPS and STAT-Q1 / HIL-9 stay human. Commissioning brief not supplied, on the ask list. Origin testing repo URL UNVERIFIED.
-- Result so far: `docs/prompts/64/` holds REGISTER.md, SECTION_00.md, STOPS.md. Honest state: EXECUTED against the conformance reference; nothing VERIFIED AGAINST CONTINUUM. README is stale.
+- Result: `docs/prompts/64/` holds REGISTER.md, SECTION_00.md, STOPS.md. Honest state: EXECUTED against the conformance reference; nothing VERIFIED AGAINST CONTINUUM. README is stale. No product or runtime change.
 
 ### P63c: Prompt 63c assessment opt-in save (do not ship)
 - Status: DONE. Merged on tip `bcf16e4d58706c7a5b767f113708cb34d841b737` (PR 172). Hygiene and register close on this follow-up tip (do not ship).
