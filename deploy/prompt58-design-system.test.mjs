@@ -260,6 +260,7 @@ const KNOWN_HTML = [
   "worker/login.html",
   "worker/movement-check.html",
   "worker/privacy.html",
+  "worker/psych-day.html", // Prompt 61 psych pathway retained-day surface
   "worker/progress.html",
   "worker/signup.html",
   "worker/support-offer.html",
