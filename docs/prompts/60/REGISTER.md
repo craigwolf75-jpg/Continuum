@@ -3,7 +3,8 @@
 Docs-only PR 164 landed. This draft is the allowed
 product build.
 Still not a live-platform product release.
-Athena does not ship. Prompt 53 holds stand.
+Athena does not ship. Prompt 53 holds were released
+2026-09-16 by Craig.
 
 Craig original: BUILD PROMPT 27, edition 29 July 2026.
 Registers as unified Prompt 60. Peer of unified Prompt 61
@@ -33,7 +34,9 @@ Prompt 60 product-build DRAFT follows docs-only PR 164
 (tip 24adb5ff2ec35a8c039eda075fbfe29f0612ee0e).
 Docs-only 164 landed. This draft is the allowed
 product build. Still not a live-platform product
-release. Prompt 53 holds stand.
+release. Prompt 53 holds were released 2026-09-16 by
+Craig. Former Prompt 53 holds are no longer binding
+under Prompt 53. Hold lift is not an auto-execute.
 
 Allowed scope this draft: Sections 2 to 5 against
 SYNTH only, plus the worker check-in path. Do not
@@ -46,17 +49,18 @@ provocation copy. Do not ship scored check-in as
 Prompt 60.
 
 This draft is not a live-platform product release.
-It does not lift the Prompt 53 hold. It does not
-close G1. It does not authorise a Montreal project, a
-Bedrock go, a live schema apply, or a seed beyond
+This file did not lift the Prompt 53 hold. Craig
+released the holds on 2026-09-16. Hold lift is not
+an auto-execute. It does not close G1. Named human
+dispatch still required before a Montreal project,
+a Bedrock go, a live schema apply, or a seed beyond
 SYNTH-prefixed fixtures.
 
-While the live-platform hold stands: no Montreal, no
-Bedrock go, no occupational seed beyond SYNTH, no live
-schema apply. Scoring the existing 209 GardaWorld duties
-is STOPPED under Prompt 53. Those 209 duties are not in
-this repository. Only the SYNTH fixture (6 positions)
-is here. Do not imply this draft scored a live library.
+Do not invent 209. Do not seed beyond SYNTH. Scoring
+the existing 209 GardaWorld duties is STOPPED. Those
+209 duties are not in this repository. Only the SYNTH
+fixture (6 positions) is here. Do not imply this draft
+scored a live library.
 
 ---
 
@@ -145,20 +149,22 @@ The platform informs. People decide.
 
 ---
 
-## Prompt 53 live-platform HOLDS still apply
+## Prompt 53 holds were released 2026-09-16 by Craig
 
-From [../53/HOLDS.md](../53/HOLDS.md). Unchanged. Not
-relaxed by this local/CI sequence.
+From [../53/HOLDS.md](../53/HOLDS.md). Former Prompt 53
+holds are no longer binding under Prompt 53. Hold lift
+is not an auto-execute. Not a live-platform product
+release.
 
-- No Montreal. Do not create or modify a hosted Montreal
-  project.
-- No Bedrock go. Do not send a Bedrock go. Do not enable
-  inference.
-- No occupational or reference seed beyond SYNTH-prefixed
-  fixtures.
-- No live schema apply.
-- 50a Decision 1 is SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+Named human dispatch still required before Montreal
+project create, Bedrock go, non-SYNTH seed, or live
+schema apply.
+
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 - Do not invent G1.
 
 `G1_AUDIT_REPORT.md` exists at repo root (2026-08-13,
@@ -194,7 +200,8 @@ not invent G1. Do not start G1.
 
 ## What this draft must not do
 
-- Live-platform product release. Prompt 53 holds stand.
+- Live-platform product release. Hold lift is not an
+  auto-execute.
 - Montreal, Bedrock, seed beyond SYNTH, or live schema.
 - Score, import, or imply a score of the 209 GardaWorld
   duties. They are not in this repository.
@@ -216,20 +223,23 @@ not invent G1. Do not start G1.
 - Claim Argus CLEAN.
 
 Athena does not ship. Still not a live-platform product
-release. Prompt 53 holds stand.
+release. Prompt 53 holds were released 2026-09-16 by
+Craig. Hold lift is not an auto-execute.
 
 ---
 
-## Standing holds
+## Standing independent STOPs
 
-Unchanged. Not this mission.
+Not Prompt 53 holds. Hold lift is not an auto-execute.
+Not this mission.
 
-- No Montreal.
-- No Bedrock.
-- No occupational seed beyond SYNTH.
-- No live schema apply.
-- 50a Decision 1 remains SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+- Named human dispatch still required before Montreal,
+  Bedrock, non-SYNTH seed, or live schema apply.
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 - `package.json` locked.
 
 ---
@@ -306,7 +316,8 @@ Existing 209 GardaWorld duties are not in this
 repository. The live fixture is SYNTH only: 6 positions
 in `clinical/db/occupational_synth.data.mjs`
 (SYNTH-POS-01 through SYNTH-POS-06). Scoring 209 is
-STOPPED under Prompt 53. Do not imply this draft scored
+STOPPED. Do not invent 209. Do not seed beyond SYNTH.
+Named dispatch required. Do not imply this draft scored
 a live library.
 
 ---
@@ -324,17 +335,18 @@ Athena wrote these:
 - [C1447_VERIFICATION.md](C1447_VERIFICATION.md)
 - [ACCEPTANCE.md](ACCEPTANCE.md)
 
-Prompt 53 holds:
+Prompt 53 RELEASE record:
 
 - [../53/HOLDS.md](../53/HOLDS.md)
+- [../53/RELEASE.md](../53/RELEASE.md)
 - [../53/STOPS.md](../53/STOPS.md)
 
 ---
 
 ## Prompt 47 redo is a separate wait
 
-Still waiting on Prompt 45 REV 2 for the Prompt 47 redo.
-Do not start that redo. That wait is separate. Not this
+Do not invent REV 2. Do not start a Prompt 47 redo from
+invented contents. That wait is separate. Not this
 mission.
 
 ---
@@ -358,5 +370,6 @@ This product-build DRAFT follows docs-only PR 164 tip
 
 Allowed product-build DRAFT: Sections 2 to 5 against
 SYNTH only, plus the worker check-in path. Not a
-live-platform product release. Prompt 53 holds stand.
-Hermes ships only when Craig names ship.
+live-platform product release. Prompt 53 holds were
+released 2026-09-16 by Craig. Hold lift is not an
+auto-execute. Hermes ships only when Craig names ship.

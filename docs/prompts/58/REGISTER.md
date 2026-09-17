@@ -2,7 +2,8 @@
 
 Sequenced for local/CI design-system substrate.
 Still not a live-platform product release.
-Athena does not ship. Prompt 53 holds stand.
+Athena does not ship. Prompt 53 holds were released
+2026-09-16 by Craig.
 
 Craig original: PROMPT 51, edition of 8 August 2026.
 Registers as unified Prompt 58. Supersedes unified Prompt 54
@@ -40,11 +41,14 @@ Section 00.1 was originally REGISTERED, NOT RELEASED, behind
 G1 and Prompt 53. Craig sequenced a local/CI build on
 2026-09-16. Status is now: sequenced for local/CI
 design-system substrate. Still not a live-platform product
-release. Prompt 53 holds stand.
+release. Prompt 53 holds were released 2026-09-16 by
+Craig. Former Prompt 53 holds are no longer binding
+under Prompt 53. Hold lift is not an auto-execute.
 
-While the live-platform hold stands: no Montreal, no seed
-beyond SYNTH, no theme, token, or component work that touches
-any live surface as a product release. The css token file
+Named human dispatch still required before Montreal,
+Bedrock, non-SYNTH seed, or live schema apply. No
+theme, token, or component work that touches any live
+surface as a product release. The css token file
 must not style anything new on live surfaces in this
 mission. Local/CI token and gate amendments on existing
 files are what Craig sequenced.
@@ -70,7 +74,8 @@ review-and-build. Record both honestly: 58 is now governing.
 
 That confirmation does not invent Product Behaviour. It does
 not release a live-platform build. It does not close G1. It
-does not lift the Prompt 53 hold.
+did not lift the Prompt 53 hold. Craig released the holds
+on 2026-09-16. Hold lift is not an auto-execute.
 
 ---
 
@@ -150,9 +155,11 @@ Cross-links:
 
 ## Section 00.4. Craig covering message of 14 August 2026
 
-Summary only. Do not treat this as a lift of the Prompt 53
-hold. His covering message gives strategic direction. It
-does not release a live-platform build.
+Summary only. That covering message did not lift the
+Prompt 53 hold. Craig released the holds on 2026-09-16.
+Hold lift is not an auto-execute. His covering message
+gives strategic direction. It does not release a
+live-platform build.
 
 In substance, Craig wrote:
 
@@ -220,22 +227,24 @@ Log. Do not resolve.
 
 ---
 
-## Prompt 53 live-platform HOLDS still apply
+## Prompt 53 holds were released 2026-09-16 by Craig
 
-From [../53/HOLDS.md](../53/HOLDS.md). Unchanged. Not
-relaxed by this local/CI sequence.
+From [../53/HOLDS.md](../53/HOLDS.md). Former Prompt 53
+holds are no longer binding under Prompt 53. Hold lift
+is not an auto-execute. Not a live-platform product
+release.
 
-- No Montreal. Do not create or modify a hosted Montreal
-  project.
-- No Bedrock go. Do not send a Bedrock go. Do not enable
-  inference.
-- No occupational or reference seed beyond SYNTH-prefixed
-  fixtures.
-- No Section 3 and onward live-platform work under Prompt 51
-  foundations (the foundations lineage, not the
-  design-system folder).
-- 50a Decision 1 is SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+Named human dispatch still required before Montreal
+project create, Bedrock go, non-SYNTH seed, or live
+schema apply. Do not start Section 3 and onward
+live-platform work under Prompt 51 foundations without
+that named dispatch.
+
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 - Do not invent G1.
 
 `G1_AUDIT_REPORT.md` exists at repo root (2026-08-13,
@@ -286,7 +295,8 @@ Shipping either as a feature is a defect.
 
 ## What this local/CI sequence must not do
 
-- Live-platform product release. Prompt 53 holds stand.
+- Live-platform product release. Hold lift is not an
+  auto-execute.
 - Montreal, Bedrock, seed, or live schema.
 - New module, dashboard, AI component, or screen.
 - Default any html to dark or compact.
@@ -300,28 +310,32 @@ Shipping either as a feature is a defect.
 - Claim Argus CLEAN.
 
 Athena does not ship. Still not a live-platform product
-release. Prompt 53 holds stand.
+release. Prompt 53 holds were released 2026-09-16 by
+Craig. Hold lift is not an auto-execute.
 
 ---
 
-## Standing holds
+## Standing independent STOPs
 
-Unchanged. Not this mission.
+Not Prompt 53 holds. Hold lift is not an auto-execute.
+Not this mission.
 
-- No Montreal.
-- No Bedrock.
-- No occupational seed beyond SYNTH.
-- No live schema apply. `0018` and `0019` unapplied.
-- 50a Decision 1 remains SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+- Named human dispatch still required before Montreal,
+  Bedrock, non-SYNTH seed, or live schema apply.
+  `0018` and `0019` unapplied.
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 - `package.json` locked.
 
 ---
 
 ## Prompt 47 redo is a separate wait
 
-Still waiting on Prompt 45 REV 2 for the Prompt 47 redo.
-Do not start that redo. That wait is separate. Not this
+Do not invent REV 2. Do not start a Prompt 47 redo from
+invented contents. That wait is separate. Not this
 mission.
 
 ---

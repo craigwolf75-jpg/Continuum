@@ -227,8 +227,9 @@ Do not claim Argus CLEAN. Athena does not ship.
 - Prompt 58 Section 1 was written on current tip `3149518` before
   token or gate comment edits, with evidence or UNVERIFIED for
   checks 1 to 8.
-- REGISTER records Craig sequenced local/CI and Prompt 53 holds
-  and not a live-platform product release.
+- REGISTER records Craig sequenced local/CI. Prompt 53 holds
+  were released 2026-09-16 by Craig. Still not a live-platform
+  product release.
 - STOPS names Product Behaviour / Prompt 59 reserved or unseen,
   Obsession absent, third-party library stop, dark/compact tokens
   only, and hub auth UNVERIFIED STOP for ship.

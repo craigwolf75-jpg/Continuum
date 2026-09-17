@@ -51,9 +51,12 @@ completed work. Do not claim Argus CLEAN. Do not claim ship-ready.
    Conflict rule: 59 wins on behaviour, 58 wins on presentation.
    Do not invent Prompt 59. Obsession.md is absent.
 
-10. Prompt 53 live-platform holds still apply. 50a Decision 1 is
-    SUSPENDED. Decision 2 stands. Prompt 47 redo waits REV 2. G1
-    is not invented.
+10. Prompt 53 holds were released 2026-09-16 by Craig. Former
+    Prompt 53 holds are no longer binding under Prompt 53.
+    Hold lift is not an auto-execute. 50a Decision 1 is
+    RELEASED-from-53-hold. Platform GO still requires a Craig
+    or Hermes named path. Do not invent live apply. Decision 2
+    stands. Do not invent REV 2. G1 is not invented.
 
 11. `docs/prompts/51-design-system/` remains the earlier #152/#153
     landing. It is not Core Platform Foundations. `docs/prompts/54/`
@@ -95,7 +98,9 @@ completed work. Do not claim Argus CLEAN. Do not claim ship-ready.
 - Live-platform work. Montreal, Bedrock, seed, and schema were
   not touched.
 - G1 closed. The 2026-08-13 report is read-only discovery.
-- A live-platform product release. Prompt 53 holds stand.
+- A live-platform product release. Prompt 53 holds were
+  released 2026-09-16 by Craig. Hold lift is not an
+  auto-execute.
 - Argus CLEAN. Not claimed.
 
 See [SECTION_16.md](SECTION_16.md) for the criterion-by-criterion

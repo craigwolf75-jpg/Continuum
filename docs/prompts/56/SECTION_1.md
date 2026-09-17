@@ -22,9 +22,9 @@ does not invent Amendment 1 text. It does not invent G1.
 No em dashes or en dashes anywhere.
 
 **Headline.** Prompt 56 is registered, not released. It sits behind
-G1 and Prompt 53. The first unmet intended check is that release
-gate. Product execution stops there. Remaining checks are recorded
-as inspection only.
+G1. Prompt 53 holds were released 2026-09-16 by Craig. The first
+unmet intended check is that release gate. Product execution
+stops there. Remaining checks are recorded as inspection only.
 
 ---
 
@@ -32,8 +32,10 @@ as inspection only.
 
 **UNMET. Intended halt. STOP product execution.**
 
-Section 00.1: REGISTERED, NOT RELEASED. This prompt sits behind G1
-and Prompt 53.
+Section 00.1: REGISTERED, NOT RELEASED. This prompt sits behind
+G1. Prompt 53 holds were released 2026-09-16 by Craig. Former
+Prompt 53 holds are no longer binding under Prompt 53. Hold
+lift is not an auto-execute.
 
 G1:
 
@@ -46,12 +48,16 @@ G1:
 
 Prompt 53:
 
-- `docs/prompts/53/HOLDS.md` is present and binding on this tip.
-- Four live-platform holds stand: Montreal, Bedrock go,
-  occupational or reference seed beyond SYNTH, Section 3 and onward
-  live-platform work under Prompt 51 foundations.
-- 50a Decision 1 is SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+- `docs/prompts/53/HOLDS.md` is a RELEASE record on this
+  tip. Status: RELEASED by Craig on 2026-09-16.
+- Former Prompt 53 holds are no longer binding under
+  Prompt 53. Named human dispatch still required before
+  Montreal, Bedrock, non-SYNTH seed, or live schema apply.
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo from
+  invented contents.
 - Craig has not sequenced a Prompt 56 worker-experience build.
 
 **STOP.** Do not execute worker product, persistence, identity
@@ -240,7 +246,8 @@ Do not invent Phase 7b. Do not restore a deleted phase.
 Grep of application source for a configured Canadian STT
 endpoint, a no-train contract record, or a live speech provider
 returns none. Prompt 44 Canada / no-train still holds. Bedrock go
-is held by Prompt 53.
+still requires named human dispatch. Hold lift is not an
+auto-execute.
 
 Do not invent a speech service to satisfy this check.
 
@@ -327,19 +334,22 @@ Roots unchanged: `deploy/package.json`, `hub-roles/package.json`,
 
 ---
 
-## Prompt 53 holds (still apply)
+## Prompt 53 holds were released 2026-09-16 by Craig
 
-Recorded from `docs/prompts/53/HOLDS.md` on this tip. Not relaxed
-by this registration.
+Recorded from `docs/prompts/53/HOLDS.md` on this tip. Former
+Prompt 53 holds are no longer binding under Prompt 53. Hold
+lift is not an auto-execute. Not a ship of this registration.
 
-- No Montreal project create.
-- No Bedrock inference go.
-- No occupational or reference seed beyond SYNTH.
-- No Section 3+ live-platform work under Prompt 51 foundations
-  (foundations lineage, not the design-system folder).
-- 50a Decision 1 SUSPENDED. Decision 2 stands. Do not create
+- Named human dispatch still required before Montreal,
+  Bedrock, non-SYNTH seed, or live schema apply. Do not
+  start Section 3+ live-platform work under Prompt 51
+  foundations without that named dispatch.
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands. Do not create
   `mpi.person`.
-- Prompt 47 redo waits REV 2.
+- Do not invent REV 2. Do not start a Prompt 47 redo from
+  invented contents.
 - Do not invent G1. `G1_AUDIT_REPORT.md` (2026-08-13) is
   read-only discovery, not G1 closed.
 - Athena does not ship.
@@ -349,7 +359,9 @@ by this registration.
 ## Conflicts and defects this inspection must record
 
 1. **Check 1 STOP.** Section 00.1 registered not released. G1
-   not closed. Prompt 53 holds. Product execution stops.
+   not closed. Prompt 53 holds were released 2026-09-16 by
+   Craig. Hold lift is not an auto-execute. Product
+   execution stops.
 2. **Amendment 1 file absent.** Applied-in-place UNVERIFIED.
 3. **Version UNCONFIRMED** against Craig 44 to 49 list.
 4. **Document 13 unbuilt.**
