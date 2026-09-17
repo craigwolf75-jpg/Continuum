@@ -468,7 +468,7 @@
         savedResponseId = (res && res.responseId) ? res.responseId : null;
         slot.innerHTML = '<p class="crs-note">Your result is saved.</p>';
       } else {
-        slot.innerHTML = '<p class="crs-note">Could not save right now.</p>' + saveOfferInner(stageReached);
+        slot.innerHTML = '<p class="crs-note">Could not save right now. Try again in a few minutes.</p>' + saveOfferInner(stageReached);
       }
     });
   }

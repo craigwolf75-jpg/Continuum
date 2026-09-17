@@ -17,13 +17,14 @@ folds in.
 ## Active queue
 
 ### P63c: Prompt 63c assessment opt-in save (do not ship)
-- Status: IN PROGRESS
+- Status: DONE. Merged on tip `bcf16e4d58706c7a5b767f113708cb34d841b737` (PR 172). Hygiene and register close on this follow-up tip (do not ship).
 - Lead: athena (architecture), calliope (register and save explainer), heracles (suite), argus (patrol)
 - Gate: draft PR only. Athena does not ship. Hermes does not treat this as a ship.
 - Base tip: `18d416e91635ca952cc0df1f74b97fce1b259a2b`
+- Merge tip: `bcf16e4d58706c7a5b767f113708cb34d841b737`
 - Companions: 63a (consent copy gate, now resolved), 63b (seven rulings), 63c (Gary ruled (b) 2026-08-16)
 - Human gate: consent language beyond Gary named strings. Do not invent privacy or terms. Section 00 item 4 binds: own result only until counsel discloses aggregate use.
-- Result so far: product opt-in save is already on the tip. Remaining: register 63a/63b/63c, replace the save explainer that invents aggregate use, inventory every write path, prove persist, draft PR.
+- Result: product opt-in save merged on PR 172. Save explainer is the honest sentence only (anonymous summary of the result already shown). Persist test asserts that sentence. Fail path names a retry in a few minutes. No aggregate "improve the assessment" claim. No invented privacy or terms.
 
 ### P61: Prompt 61 psychological injury (do not ship)
 - Status: IN PROGRESS
