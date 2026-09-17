@@ -137,7 +137,7 @@ input[type=range]{width:100%;accent-color:var(--action-600)}
   <div class="foot">
     <a href="/hub#roles" style="color:var(--action-600);font-weight:600;text-decoration:none;display:block;margin-bottom:6px">&#8592; All portals</a>
     <button class="newcase" onclick="toast('New cases arrive from worker reports or first-aid conversion. Intake is not a clinical action in the pilot.')">New Case</button>
-    <a href="#" onclick="toast('The doctor decides; we show the information. The treating physician makes every medical and return-to-work decision.');return false"><span class="msym">help</span> Help</a>
+    <a href="#" onclick="toast('The doctor decides. Continuum shows the information. The treating physician makes every medical and return-to-work decision.');return false"><span class="msym">help</span> Help</a>
     <a href="#" onclick="resetAll();return false"><span class="msym">logout</span> Reset demo</a>
   </div>
 </aside>
@@ -223,7 +223,7 @@ function census(list){
 /* ---------- dashboard ---------- */
 function insightCard(ins){if(!ins)return "";var row=function(l,v){return '<div class="ipart"><span class="il">'+l+'</span><span class="iv">'+esc(v)+'</span></div>';};return '<div class="insight"><div class="ihdr"><span class="prov intel">Flagged for the doctor to review</span></div>'+row("What changed",ins.changed)+row("Contributing signals",ins.contributors)+row("Period",ins.period)+row("Why it may matter",ins.matters)+row("What remains uncertain",ins.uncertain)+'<div class="ipart authority"><span class="il">Who holds authority</span><span class="iv">'+esc(ins.authority)+'</span></div></div>';}
 function renderDashboard(){
- var h='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px"><div><h1>Clinical Performance Overview</h1><p class="sub">Cases that need your review. You decide treatment and restrictions.</p></div>'+
+ var h='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px"><div><h1>Clinical overview</h1><p class="sub">Cases that need your review. You decide treatment and restrictions.</p></div>'+
  '<div style="display:flex;gap:8px"><button class="btn ghost" onclick="go(\'workers\')"><span class="msym" style="font-size:18px">filter_list</span> Filters</button><button class="btn ghost" onclick="window.print()"><span class="msym" style="font-size:18px">file_download</span> Export</button></div></div>';
  h+='<div class="kpis">'+
  '<div class="kpi"><div class="lbl">Active patients</div><div class="n">'+activeP().length+'<span class="tag">across 3 tenants</span></div></div>'+
@@ -255,7 +255,7 @@ function renderDashboard(){
  '<div style="height:10px"></div><label class="fl">Physician estimate of typical course</label><div style="display:flex;gap:10px;align-items:center"><input type="range" min="0" max="100" value="'+f.prog+'" oninput="S.form.prog=+this.value;this.nextElementSibling.textContent=this.value+\'%\'" style="flex:1"><b style="width:44px">'+f.prog+'%</b></div><p class="sub" style="font-size:11px;margin:4px 0 0">A prognosis the physician enters, not computed from scores.</p>'+
  '<div style="height:10px"></div><label class="fl">Work restrictions</label><textarea placeholder="Weight limits, overhead reach, hours..." oninput="S.form.restr=this.value">'+esc(f.restr)+'</textarea>'+
  '<button class="btn" style="width:100%;margin-top:12px" onclick="submitAssessment()"><span class="msym" style="font-size:18px">save</span> Submit Findings</button>'+
- '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="toast(\'The doctor decides; we show the information. Open the patient to record a physician sign-off or reassess.\')">Request Recovery Scan</button>'+
+ '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="toast(\'The doctor decides. Continuum shows the information. Open the patient to record a physician sign-off or reassess.\')">Request movement review</button>'+
  '</div></div>';
  h+='<div class="guideline"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;color:var(--teal)"><span class="msym">menu_book</span><b style="font-size:12px;letter-spacing:.06em">CLINICAL GUIDELINE</b></div><p>"For soft tissue lumbar cases stalled at week 6, Clinical protocol suggests a psychological barrier screen alongside graded loading."</p></div>';
  h+='</div></div>';
