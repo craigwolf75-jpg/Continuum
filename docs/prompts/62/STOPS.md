@@ -206,5 +206,4 @@ Hub admin allowlists that use `craig@continuumrtw.com`
 as an admin identity are not the public marketing site.
 Do not rewrite them.
 
-**STOP.** The swap may sit on this draft. Athena does
-not ship.
+**STOP.** The swap may sit on this draft.
