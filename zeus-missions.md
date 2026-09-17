@@ -16,6 +16,16 @@ folds in.
 
 ## Active queue
 
+### P65: Prompt 65 site lane production readiness and staged data purge
+- Status: IN PROGRESS. Sections 1 and 2 complete. Pending Gary purge gate. Draft PR. Section 4 purge MUST NOT run.
+- Lead: athena (wiring verify and inventory, SELECT only), calliope (register, stops, section 3 gate), argus (patrol)
+- Gate: draft PR only. Athena does not ship. Continuum ships only when Craig names ship. Do not treat this as a ship order. Do not dispatch a ship.
+- Scope: public site lane at continuumrtw.com only (access gate, lead capture, public Injury Recovery Assessment). Worker, physician, employer, coordinator, platform auth, and former Prompt 53 platform items are out of scope.
+- Base tip: `bf69f17c462a64a3176ff1da7749dc6184a992da` (Prompt 64 registered #175)
+- Branch: `cursor/prompt-65-site-lane-fbe0`
+- Human gate: Section 3. Gary must reply exactly `purge approved` plus the inventory row total 15. A mismatch or anything less explicit means stop. Data deletion is not a migration. Zero deletions this mission.
+- Result so far: `docs/prompts/65/` holds REGISTER.md, STOPS.md, SECTION_1.md, STAGED_DATA_INVENTORY.md, SECTION_3_GATE.md. N = 15 SYNTH rows proposed for deletion (1 marketing_leads + 14 access_log). Non-SYNTH never delete. Hosting env NAMES UNVERIFIED. Correct admit UNVERIFIED (no ACCESS_GATE_CODE / launch-code secret). Rate-limit 11th rapid 429 FAIL live (per-IP window not reached). Book a demo is `/book` (finding, not a fix). Argus patrol on these docs and the P65 queue block: CLEAN. Not a product-surface CLEAN claim.
+
 ### P64: Prompt 64 agent testing system registered
 - Status: DONE. Draft PR 175. Tip `8e4ed5d4791182e3ae9ed7a37ee1d09762954a87`.
 - Lead: calliope (register, section 00, stops), athena (structure and Origin pointer), argus (patrol)

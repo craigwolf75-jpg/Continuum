@@ -6,11 +6,11 @@ This draft STOPS before Section 4.
 Zero deletions. Confirmation text
 is not present.
 
-Do not invent a row total. The
-inventory row total is N in
+The inventory row total is 15
+(1 `marketing_leads` SYNTH + 14
+`access_log` SYNTH). See
 [STAGED_DATA_INVENTORY.md](STAGED_DATA_INVENTORY.md).
-Athena writes that file. Do not
-overwrite it.
+Do not overwrite that file.
 
 No em dashes or en dashes
 anywhere.
@@ -20,8 +20,12 @@ anywhere.
 ## The gate
 
 Purge is blocked until Gary
-replies exactly "purge approved"
-plus the inventory row total.
+replies exactly:
+
+purge approved 15
+
+That is the words purge approved
+plus the inventory row total 15.
 
 Quote from unified Prompt 65
 Section 3:
@@ -46,7 +50,8 @@ explicit means stop.
 - Zero deletions.
 - Confirmation text is not
   present.
-- Do not invent N.
+- Exact reply required: purge
+  approved 15.
 
 Companions:
 [REGISTER.md](REGISTER.md),

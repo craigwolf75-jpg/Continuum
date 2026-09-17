@@ -22,12 +22,13 @@ No em dashes or en dashes anywhere.
 
 ## Status
 
-Prompt 65 is IN PROGRESS.
+Prompt 65 is IN PROGRESS: Sections 1
+and 2 complete, pending Gary purge
+gate.
 
-Sections 1 and 2 are the read-only
-verify. Section 3 is the human purge
-gate. Section 4 purge is blocked and
-must not run on this draft.
+Section 3 is the human purge gate.
+Section 4 purge is blocked and must
+not run on this draft.
 
 This prompt verifies the public site
 lane. It does not rebuild it.
