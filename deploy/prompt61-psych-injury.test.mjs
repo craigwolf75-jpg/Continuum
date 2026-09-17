@@ -45,6 +45,7 @@ const PATHWAY = [
   "worker-app/src/components/PsychDay.tsx",
   "worker-app/src/components/SupportLink.tsx",
   "deploy/worker/psych-day.html",
+  "deploy/worker/get-help.html",
   "deploy/prompt61-psych-injury.test.mjs",
 ];
 
@@ -83,6 +84,32 @@ ok("psych-day html keeps duty ack and support link", (() => {
   const html = read("deploy/worker/psych-day.html");
   return html.includes("I understand today's duties and hours") && html.includes("get-help.html#resources") && !/pain|fatigue|confidence/.test(html);
 })());
+
+function collectHtmlIds(html) {
+  return new Set([...html.matchAll(/\sid=["']([^"']+)["']/g)].map((m) => m[1]));
+}
+
+function collectUsedHelpFragments(helpPage, inboundTexts) {
+  const found = new Set();
+  for (const text of inboundTexts) {
+    for (const m of text.matchAll(/get-help\.html#([A-Za-z][\w-]*)/g)) found.add(m[1]);
+  }
+  for (const m of helpPage.matchAll(/href=["']#([A-Za-z][\w-]*)["']/g)) found.add(m[1]);
+  return found;
+}
+
+/* Residual Prompt 61: every get-help fragment in use must have an id on the page. */
+const helpHtml = read("deploy/worker/get-help.html");
+const helpIds = collectHtmlIds(helpHtml);
+const helpFrags = collectUsedHelpFragments(helpHtml, [
+  read("worker-app/src/components/SupportLink.tsx"),
+  read("deploy/worker/psych-day.html"),
+  read("clinical/engine/prompt61_crisis.mjs"),
+]);
+ok("get-help fragments in use include coordinator helpnow resources", helpFrags.has("coordinator") && helpFrags.has("helpnow") && helpFrags.has("resources"));
+for (const frag of helpFrags) {
+  ok("get-help hash target exists: #" + frag, helpIds.has(frag));
+}
 
 const BANNED = new RegExp("\\b(" + [
   ["p","h","q"].join(""),
