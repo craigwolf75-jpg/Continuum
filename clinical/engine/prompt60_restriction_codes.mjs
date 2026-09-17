@@ -37,6 +37,12 @@ export const PROMPT60_RESTRICTION_CODES = Object.freeze([
   { code: "scheduled_rest_breaks", display_label: "Scheduled rest breaks", value_shape: { frequency: "string", duration: "string" } },
   { code: "single_task_only_no_concurrent_demand", display_label: "Single task only, no concurrent demand", value_shape: null },
   { code: "supervised_or_partnered_only", display_label: "Supervised or partnered only", value_shape: null },
+  { code: "no_contact_with_specified_individual", display_label: "No contact with specified individual", value_shape: { person_ref: "string", person_free_text: "string" } },
+  { code: "no_assignment_to_specified_site", display_label: "No assignment to specified site", value_shape: { site_ref: "string" } },
+  { code: "no_public_facing_duty", display_label: "No public facing duty", value_shape: null },
+  { code: "no_conflict_or_crisis_response_duty", display_label: "No conflict or crisis response duty", value_shape: null },
+  { code: "reduced_caseload_or_task_volume", display_label: "Reduced caseload or task volume", value_shape: { percent: "number", count: "number" } },
+  { code: "predictable_schedule_required_no_on_call", display_label: "Predictable schedule required, no on call", value_shape: null },
 ]);
 
 export function restrictionCodeById(code) {

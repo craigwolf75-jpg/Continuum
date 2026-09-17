@@ -1,12 +1,16 @@
 'use client';
 import { useSession } from '@/state/SessionProvider';
 import { dayOfPrognosis, statusLabel } from '@/lib/format';
+import { isPsychologicalInjury } from '@/lib/prompt61_psych';
 import CheckIn from './CheckIn';
+import PsychDay from './PsychDay';
+import SupportLink from './SupportLink';
 
 export default function Home() {
   const { injury } = useSession();
   if (!injury) return <p className="text-muted">No active injury on file.</p>;
   const day = dayOfPrognosis(injury.date_of_injury);
+  const psych = isPsychologicalInjury(injury);
   return (
     <div className="space-y-4">
       <section className="bg-panel border border-line rounded-2xl p-5">
@@ -19,7 +23,8 @@ export default function Home() {
         </div>
         {injury.current_restrictions && <p className="text-muted text-sm mt-3">Work limit right now: {injury.current_restrictions}</p>}
       </section>
-      {injury.status !== 'signed_off' && <CheckIn />}
+      {psych ? <PsychDay /> : (injury.status !== 'signed_off' && <CheckIn />)}
+      {!psych && <SupportLink />}
     </div>
   );
 }

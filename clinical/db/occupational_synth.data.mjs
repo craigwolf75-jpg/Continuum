@@ -142,6 +142,7 @@ export const SYNTH_POSITIONS = [
           2: { intensity: "low", frequency_percent: 5.5, source: "tenant_authored" },
           3: { intensity: "low", frequency_percent: 8, source: "tenant_authored" },
           6: { intensity: "low", frequency_percent: 5, source: "tenant_authored" },
+          12: { intensity: "low", frequency_percent: 0, source: "tenant_authored" },
         }),
         custom_demand_slots: customSlots(null, null),
       }
