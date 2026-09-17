@@ -96,7 +96,6 @@ textarea{width:100%;min-height:96px;margin-top:14px;padding:12px;font:inherit;fo
         <button type="button" id="followYes">Yes, it has settled</button>
         <button type="button" id="followNo">No, it has not settled</button>
       </div>
-      <p class="privacy clinical"><span class="dot" aria-hidden="true"></span><span>Your care team sees this. Your employer does not.</span></p>
     </div>
     <div class="next"><button class="btn" id="followSave" disabled>Save check-in</button></div>
     <p class="saved" id="followOpen">This follow up is still open. Save an answer when you can.</p>
@@ -144,13 +143,12 @@ textarea{width:100%;min-height:96px;margin-top:14px;padding:12px;font:inherit;fo
       <p class="q" style="font-size:1rem;margin-top:16px">Anything else you want to say?</p>
       <p class="helper">Optional. In your own words. This is recorded as worker reported.</p>
       <textarea id="freeText" placeholder="" aria-label="Anything else you want to say?"></textarea>
-      <p class="privacy clinical"><span class="dot" aria-hidden="true"></span><span>Your care team sees this. Your employer does not.</span></p>
     </div>
     <div class="secondary">
       <button type="button" id="keepLater">Keep for later</button>
     </div>
     <div class="next"><button class="btn" id="save">Save check-in</button></div>
-    <p class="saved" id="saved">Saved on your phone as you go.</p>
+    <p class="saved" id="saved"></p>
   </div>
 
   <div id="closing" class="hidden">
@@ -280,7 +278,7 @@ textarea{width:100%;min-height:96px;margin-top:14px;padding:12px;font:inherit;fo
   });
   el("keepLater").addEventListener("click", function(){
     try { localStorage.setItem(DRAFT, JSON.stringify({ performed: state.performed, worse: state.worse, worseDuties: state.worseDuties, settled: state.settled, hours: el("hoursWorked").value, free: el("freeText").value })); } catch (e) {}
-    el("saved").textContent = "Kept on this device.";
+    el("saved").textContent = "";
   });
 
   el("followYes").addEventListener("click", function(){ state.followAnswer = "yes"; el("followYes").setAttribute("aria-pressed","true"); el("followNo").setAttribute("aria-pressed","false"); el("followSave").disabled = false; });

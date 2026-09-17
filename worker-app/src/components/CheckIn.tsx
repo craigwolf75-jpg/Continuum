@@ -51,7 +51,7 @@ function buildProvocation(date: string, draft: Draft): ProvocationRecord[] {
 
 export default function CheckIn() {
   const { injury } = useSession();
-  const { enqueue, online } = useSync();
+  const { enqueue } = useSync();
   const [ready, setReady] = useState(false);
   const [savedToday, setSavedToday] = useState(false);
   const [followUps, setFollowUps] = useState<Prompt60FollowUp[]>([]);
@@ -283,7 +283,6 @@ export default function CheckIn() {
       <button className={'w-full min-h-12 bg-gold text-navy font-semibold rounded-xl mt-3 p-3 ' + FOCUS} disabled={busy} onClick={persistToday}>Save check-in</button>
       <button type="button" className={'w-full min-h-12 border border-line rounded-xl mt-2 p-3 ' + FOCUS} onClick={keepLater}>Keep for later</button>
       {status === 'failed' && <p className="text-muted text-sm mt-2">Your check-in is not saved yet. What you typed is still here. Try again in a few minutes.</p>}
-      {status === 'kept' && <p className="text-muted text-sm mt-2">{online ? 'Kept on this device.' : 'Kept on this device. You are offline.'}</p>}
     </section>
   );
 }

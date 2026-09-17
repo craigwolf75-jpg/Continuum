@@ -11,10 +11,13 @@ remains UNVERIFIED: STOP for ship, not for this draft.
 `deploy/clinical-dashboard.html` was not touched. Clinical dashboard
 redesign is a separate PR.
 
-Worker check-in (worker-app CheckIn and History, and
-`deploy/worker/check-in.html`) replaced scored AM/PM pain and mobility
-questions with [CHECK_IN_COPY.md](CHECK_IN_COPY.md) task-linked
-provocation copy, character for character on the worker screens.
+Worker CheckIn.tsx and `deploy/worker/check-in.html` replaced scored
+AM/PM pain and mobility questions with [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
+task-linked provocation copy on the worker check-in screens.
+
+History.tsx is a chronological list without scores, totals, bands, or
+colour. Calliope has not yet authored History lines in CHECK_IN_COPY.
+History is not claimed as CHECK_IN_COPY character for character.
 
 Calliope owns [REGISTER.md](REGISTER.md). REGISTER already records that
 this product-build DRAFT follows docs-only PR 164. This file does not

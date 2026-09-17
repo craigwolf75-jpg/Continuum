@@ -146,6 +146,16 @@ ok("check-in.html uses CHECK_IN_COPY title", html.includes("Today's duties"));
 ok("check-in.html does not ask How is your pain today", !/How is your pain today/.test(html));
 ok("check-in.html does not write pain_score or mobility_score", !/pain_score/.test(html) && !/mobility_score/.test(html));
 
+const COMPANION_LEFTOVERS = [
+  "Saved on your phone as you go.",
+  "Your care team sees this. Your employer does not.",
+  "Kept on this device.",
+];
+for (const line of COMPANION_LEFTOVERS) {
+  ok("CheckIn.tsx has no leftover companion line: " + line, !checkIn.includes(line));
+  ok("check-in.html has no leftover companion line: " + line, !html.includes(line));
+}
+
 const queue = read("worker-app/src/lib/queue.ts");
 ok("queue.ts does not insert pain_score or mobility_score", !/pain_score/.test(queue) && !/mobility_score/.test(queue));
 
