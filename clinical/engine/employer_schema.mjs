@@ -27,6 +27,13 @@ export const RAW_MEASUREMENT_TERMS = [
 
 const ALL_BANNED = [...BANNED_TERMS, ...RAW_MEASUREMENT_TERMS];
 
+// Prompt 60 employer wall additions. Check-in, provocation, and worsening
+// must never appear on an employer payload. symptom is already in BANNED_TERMS.
+// Separate list so the Prompt 43 eight-term count stays eight.
+export const PROMPT60_EMPLOYER_BANNED = [
+  "check_in", "checkin", "provocation", "worsening",
+];
+
 // Extract the column names declared in the employer schema from a migration's SQL text.
 // Reads only create table employer.* blocks; skips constraint and index lines.
 export function employerColumnNames(sqlText) {
@@ -80,4 +87,25 @@ export function employerCopyLint(text) {
   const t = norm(text);
   if (!t) return [];
   return BANNED_TERMS.filter((term) => new RegExp("\\b" + term + "\\b", "i").test(t));
+}
+
+// Prompt 60 leak helper. Walks an employer payload for check-in / provocation /
+// worsening keys and the existing clinical and raw-measurement bans.
+export function employerPrompt60Leak(payload) {
+  const hits = rawMeasurementInPayload(payload);
+  const walk = (node, path) => {
+    if (node === null || node === undefined) return;
+    if (Array.isArray(node)) { node.forEach((v, i) => walk(v, path + "[" + i + "]")); return; }
+    if (typeof node === "object") {
+      for (const [k, v] of Object.entries(node)) {
+        const key = norm(k);
+        for (const term of PROMPT60_EMPLOYER_BANNED) {
+          if (key === term || key.includes(term)) hits.push({ path: path + "." + k, banned_term: term });
+        }
+        walk(v, path + "." + k);
+      }
+    }
+  };
+  walk(payload, "$");
+  return hits;
 }

@@ -31,6 +31,7 @@ export function workerPlanPayload(input) {
     measurement_version: (input && input.measurement_version) || null,
     work_status: (input && input.work_status) || null,
     hours_per_day: (input && input.hours_per_day) != null ? input.hours_per_day : null,
+    days_per_week: (input && input.days_per_week) != null ? input.days_per_week : null,
     axes: axes.map((a) => ({
       axis: a.axis,
       skipped: Boolean(a.skipped),
@@ -41,3 +42,13 @@ export function workerPlanPayload(input) {
     })),
   };
 }
+
+export {
+  hoursLadderFromRestriction,
+  evaluateHoursStepDate,
+  authoriseHoursStep,
+  shiftConflictsCurrentStep,
+  recordActualHours,
+  approvedHoursFace,
+  HOURS_HOLD_COORDINATOR,
+} from "./prompt60_hours_ladder.mjs";

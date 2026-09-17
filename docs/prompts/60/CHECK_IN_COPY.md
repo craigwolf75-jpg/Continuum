@@ -51,7 +51,7 @@ not the 209 GardaWorld duties.
 
 | Surface | What they see | What they never see |
 |---|---|---|
-| Worker | The check-in, the next-day follow up, a save confirmation | A score, a band, a medical decision |
+| Worker | The check-in, the next-day follow up, a save confirmation, your saved check-ins | A score, a band, a medical decision |
 | Clinician | A routed record for review, including what the worker reported | A recommendation, a score, a clearance |
 | Coordinator | Contact prompts, hours hold, match faces, unmapped loud fail | A symptom, a body part, a diagnosis |
 | Employer / supervisor | Functional status and the safe duty list | Check-in, symptom, provocation, hours the worker typed |
@@ -166,7 +166,8 @@ Primary: `Save check-in`
 
 If they leave: `Keep for later`
 
-Do not use a second name for save.
+Do not use a second name for save. Keep for later is
+the action only. No confirmation line.
 
 ### Confirmation
 
@@ -210,6 +211,53 @@ Unanswered state (worker): `This follow up is still open. Save an answer when yo
 
 Do not add a new symptom question. Do not auto-advance
 hours because the answer is Yes.
+
+---
+
+## Worker History
+
+Worker surface. Grade 7. Second person. Not a score.
+Not a band. Not a colour ranking. Not the clinician
+table. Employer does not see this list.
+
+Title: `Your check-ins`
+
+Opening: `This list is what you reported. It is not a score.`
+
+Empty (no saved check-ins at all): `You have not saved a check-in yet. You can save one from Today's duties.`
+
+Do not use the clinician empty line on this surface.
+`No check-in is on file for this date.` is clinician
+only.
+
+Date: show the stored date. No extra label.
+
+Duty, no worsening:
+
+`[duty]. You said this duty did not make your symptoms worse.`
+
+Example: `Yard foot patrol. You said this duty did not make your symptoms worse.`
+
+Duty, worsening that has settled:
+
+`[duty]. You said this duty made your symptoms worse. That has settled.`
+
+Duty, worsening that has not settled:
+
+`[duty]. You said this duty made your symptoms worse. That has not settled.`
+
+Duty, follow up still open:
+
+`[duty]. You said this duty made your symptoms worse. This follow up is still open. Save an answer when you can.`
+
+Free text, if any: `You also said: [text]`
+
+Do not write `worker reported` as a worker History
+label. That label is clinician only.
+
+Do not write field-name voice (`worsened yes`,
+`settled within 24h`). Do not total the rows. Do not
+band them. Do not colour them.
 
 ---
 
@@ -444,3 +492,23 @@ wording is named after it.
 12. Named concussion instruments and score-field
     identifiers stay in [STOPS.md](STOPS.md) only.
     They are not product copy and are not used here.
+
+13. Lawful worker History heading: `Your check-ins`
+    Could not write `Check-in record` or reuse
+    `Routed record for review` as worker voice.
+
+14. Lawful worker History empty: `You have not saved a check-in yet. You can save one from Today's duties.`
+    Could not use clinician empty `No check-in is on
+    file for this date.` as a worker all-dates empty.
+
+15. Could not write field-name voice `worsened yes`
+    or `settled within 24h` on worker History. Worker
+    duty lines are the four shapes above.
+
+16. Could not keep companion `Saved on your phone as
+    you go.` or `Your care team sees this. Your
+    employer does not.` Confirmation already names
+    the doctor and the employer wall.
+
+17. Could not write `Kept on this device.` Keep for
+    later is the action only. No confirmation line.
