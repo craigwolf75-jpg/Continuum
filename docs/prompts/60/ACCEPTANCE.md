@@ -15,9 +15,7 @@ Worker CheckIn.tsx and `deploy/worker/check-in.html` replaced scored
 AM/PM pain and mobility questions with [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
 task-linked provocation copy on the worker check-in screens.
 
-History.tsx is a chronological list without scores, totals, bands, or
-colour. Calliope has not yet authored History lines in CHECK_IN_COPY.
-History is not claimed as CHECK_IN_COPY character for character.
+Worker History uses the CHECK_IN_COPY worker History lines.
 
 Calliope owns [REGISTER.md](REGISTER.md). REGISTER already records that
 this product-build DRAFT follows docs-only PR 164. This file does not

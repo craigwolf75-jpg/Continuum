@@ -1,7 +1,20 @@
 'use client';
 import { useEffect, useState } from 'react';
-import type { Prompt60CheckInRecord } from '@/lib/types';
+import type { Prompt60CheckInRecord, ProvocationRecord } from '@/lib/types';
 import { listPrompt60Checkins } from '@/lib/prompt60_checkin_store';
+
+function workerDutyLine(p: ProvocationRecord): string {
+  if (p.worsened !== 'yes') {
+    return p.duty + '. You said this duty did not make your symptoms worse.';
+  }
+  if (p.settled_within_24h === 'yes') {
+    return p.duty + '. You said this duty made your symptoms worse. That has settled.';
+  }
+  if (p.settled_within_24h === 'no') {
+    return p.duty + '. You said this duty made your symptoms worse. That has not settled.';
+  }
+  return p.duty + '. You said this duty made your symptoms worse. This follow up is still open. Save an answer when you can.';
+}
 
 export default function History() {
   const [rows, setRows] = useState<Prompt60CheckInRecord[]>([]);
@@ -14,10 +27,10 @@ export default function History() {
   return (
     <div className="space-y-4">
       <section className="bg-panel border border-line rounded-2xl p-5">
-        <h3 className="font-head font-semibold">Check-in record</h3>
-        <p className="text-muted text-sm mt-1">A chronological list of what you reported. This is not a score.</p>
+        <h3 className="font-head font-semibold">Your check-ins</h3>
+        <p className="text-muted text-sm mt-1">This list is what you reported. It is not a score.</p>
         {chronological.length === 0 ? (
-          <p className="text-muted text-sm mt-3">No check-in is on file for this date.</p>
+          <p className="text-muted text-sm mt-3">You have not saved a check-in yet. You can save one from Today&apos;s duties.</p>
         ) : (
           <ul className="mt-3 space-y-3">
             {chronological.map((r) => (
@@ -25,10 +38,10 @@ export default function History() {
                 <div className="text-muted text-sm">{r.date}</div>
                 {(r.provocation || []).map((p) => (
                   <div key={p.duty} className="text-sm mt-1">
-                    {p.duty}: worsened {p.worsened}, settled within 24h {p.settled_within_24h}
+                    {workerDutyLine(p)}
                   </div>
                 ))}
-                {r.free_text ? <div className="text-sm mt-1">worker reported: {r.free_text}</div> : null}
+                {r.free_text ? <div className="text-sm mt-1">You also said: {r.free_text}</div> : null}
               </li>
             ))}
           </ul>

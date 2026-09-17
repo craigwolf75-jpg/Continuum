@@ -58,7 +58,7 @@ export default function CheckIn() {
   const [followIndex, setFollowIndex] = useState(0);
   const [followAnswer, setFollowAnswer] = useState<'' | 'yes' | 'no'>('');
   const [draft, setDraft] = useState<Draft>(EMPTY);
-  const [status, setStatus] = useState<'idle' | 'saved' | 'failed' | 'kept'>('idle');
+  const [status, setStatus] = useState<'idle' | 'saved' | 'failed'>('idle');
   const [busy, setBusy] = useState(false);
   const date = todayIso();
   const duties = SYNTH_CHECKIN_FIXTURE;
@@ -117,7 +117,6 @@ export default function CheckIn() {
 
   async function keepLater() {
     await saveDraft(draft);
-    setStatus('kept');
   }
 
   async function persistFollowUp() {

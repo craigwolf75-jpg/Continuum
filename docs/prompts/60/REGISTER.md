@@ -73,8 +73,10 @@ Prompt 61 is the peer, not a dependency that lets Section 2
 be skipped. A GitHub search found no Prompt 61
 concussion / C1447 pull request or branch. Section 2 must
 be built in this Prompt 60 tree. Calliope does not author
-Section 2. Athena authors it after Section 1. Do not invent
-Prompt 61 text to fill the gap.
+Section 2. Athena built it in the engine after Section 1
+(`clinical/engine/c1447_factors.mjs`). Do not invent
+Prompt 61 text to fill the gap. Do not invent
+docs/prompts/60/SECTION_2.md.
 
 Prompt 33 is Craig's original live platform build
 numbering, the hub authentication fix. It is unmapped in
@@ -177,8 +179,10 @@ not invent G1. Do not start G1.
 - Athena builds the allowed product-build DRAFT:
   Sections 2 to 5 against SYNTH only, plus the
   worker check-in path.
-- Athena writes Section 2 in this folder. Section 2 is
-  not skipped because Prompt 61 is absent.
+- Athena built Section 2 in the engine
+  (`clinical/engine/c1447_factors.mjs`). Section 2 is
+  not skipped because Prompt 61 is absent. Do not
+  invent docs/prompts/60/SECTION_2.md.
 - Worker check-in uses [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
   task-linked provocation copy. Do not ship the
   legacy scored check-in (pain_score / mobility_score
