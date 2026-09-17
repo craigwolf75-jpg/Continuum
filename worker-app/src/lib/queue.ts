@@ -1,12 +1,13 @@
 import { Preferences } from '@capacitor/preferences';
 import { supabase } from './supabase';
+import { savePrompt60Checkin } from './prompt60_checkin_store';
+import type { Prompt60CheckInRecord } from './types';
 
-// Offline-first queue. Check-ins and duty check-offs are written here first,
-// then flushed to Supabase when online. Idempotency: a check-in carries a
-// client_generated_id, and recovery_logs has a UNIQUE constraint on it, so a
-// retried flush that already landed comes back as a duplicate (Postgres 23505)
-// and is treated as success. Storage is Capacitor Preferences, which uses
-// localStorage on web and native storage on device.
+// Offline-first queue. Prompt 60 check-ins persist locally (Preferences).
+// There is no live provocation table on this draft, so flush keeps the
+// task-linked payload local and does not insert scored recovery rows.
+// Duty check-offs still flush to light_duties. Storage is Capacitor
+// Preferences. No dashes anywhere.
 
 const KEY = 'continuum_pending_v1';
 
@@ -16,8 +17,7 @@ export type Pending =
       client_generated_id: string;
       tenant_id: string;
       injury_id: string;
-      pain_score: number;
-      mobility_score: number;
+      provocation: Prompt60CheckInRecord;
       notes: string | null;
     }
   | { kind: 'duty'; id: string; completed: boolean };
@@ -45,9 +45,9 @@ export async function pendingCount(): Promise<number> {
   return (await read()).length;
 }
 
-// Try to push every queued item. Items that fail (offline, transient error)
-// stay queued; items that succeed or come back as idempotent duplicates are
-// removed. Returns how many synced and how many remain.
+// Try to push every queued item. Check-ins stay local: persist the
+// provocation payload and do not write scores. Duty items still hit
+// light_duties. Items that fail stay queued.
 export async function flush(): Promise<{ synced: number; remaining: number }> {
   const items = await read();
   if (items.length === 0) return { synced: 0, remaining: 0 };
@@ -56,19 +56,7 @@ export async function flush(): Promise<{ synced: number; remaining: number }> {
   for (const it of items) {
     try {
       if (it.kind === 'checkin') {
-        const { error } = await supabase.from('recovery_logs').insert({
-          tenant_id: it.tenant_id,
-          injury_id: it.injury_id,
-          client_generated_id: it.client_generated_id,
-          pain_score: it.pain_score,
-          mobility_score: it.mobility_score,
-          notes: it.notes,
-          source: 'check_in',
-        });
-        if (error && error.code !== '23505') {
-          keep.push(it);
-          continue;
-        }
+        await savePrompt60Checkin(it.provocation);
         synced++;
       } else {
         const { error } = await supabase
