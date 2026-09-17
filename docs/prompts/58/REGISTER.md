@@ -2,7 +2,7 @@
 
 Sequenced for local/CI design-system substrate.
 Still not a live-platform product release.
-Athena does not ship. Prompt 53 holds were released
+Prompt 53 holds were released
 2026-09-16 by Craig.
 
 Craig original: PROMPT 51, edition of 8 August 2026.
@@ -55,7 +55,7 @@ files are what Craig sequenced.
 
 Athena writes [SECTION_1.md](SECTION_1.md) and the
 acceptance map. This file and [STOPS.md](STOPS.md) are the
-Calliope docs for this registration. Athena does not ship.
+Calliope docs for this registration.
 Hermes does not treat this file as a ship order.
 
 ---
@@ -189,9 +189,9 @@ Do not invent further covering-message words.
 
 Recorded here and in [STOPS.md](STOPS.md). Not resolved here.
 
-- Dark theme (3.5) and Compact density (5.2): tokens only.
-  Do not ship as features until section 16 open item 1
-  closes.
+- Dark theme (3.5) and Compact density (5.2): tokens only
+  until section 16 open item 1 closes. Do not treat tokens
+  as features.
 - Four never-overridable token rules: focus ring, target
   floors, draft treatment, reduced motion.
 - Brand green reserved and unshipped pending section 16
@@ -269,8 +269,8 @@ brief, STOP and report. See [STOPS.md](STOPS.md).
 
 ## Dark theme and Compact density
 
-Tokens only. Do not ship as features until section 16 open
-item 1 closes.
+Tokens only until section 16 open item 1 closes. Do not
+treat tokens as features.
 
 Dark theme (3.5) and Compact density (5.2) stay token
 blocks. There is no theme or density user-menu control. No
@@ -309,7 +309,7 @@ Shipping either as a feature is a defect.
   Behaviour.
 - Claim Argus CLEAN.
 
-Athena does not ship. Still not a live-platform product
+Still not a live-platform product
 release. Prompt 53 holds were released 2026-09-16 by
 Craig. Hold lift is not an auto-execute.
 

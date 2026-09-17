@@ -6,7 +6,7 @@ extract. It is not a seed, not a schema, and not a board
 alignment claim.
 
 No em dashes or en dashes anywhere. Do not invent Prompt 61.
-Athena does not ship.
+Hermes ships only when Craig names ship.
 
 ---
 

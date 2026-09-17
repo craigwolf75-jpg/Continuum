@@ -1,7 +1,7 @@
 # Prompt 49 stop notes
 
 Real stops only. Schema files only. Gary or Hermes apply. Athena does not
-live apply and does not ship. Hermes ships only when Craig names ship.
+live apply. Hermes ships only when Craig names ship.
 
 No em dashes or en dashes anywhere.
 

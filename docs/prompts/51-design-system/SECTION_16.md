@@ -16,8 +16,8 @@ and leftover colour list remain as recorded after #153). Open items
 1 to 7 stay open.
 
 Tip of this draft after the substrate build. Tokens and gates only. Not
-shipped. Not deployed. Hub auth remains unverified by Craig. Athena does
-not ship. No em dashes or en dashes anywhere.
+shipped. Not deployed. Hub auth remains unverified by Craig.
+No em dashes or en dashes anywhere.
 
 A criterion is passed only when a test or named file proves it. Failed
 means the written rule is not fully true in this repo. Not attempted

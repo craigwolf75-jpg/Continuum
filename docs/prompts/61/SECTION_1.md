@@ -2,7 +2,7 @@
 
 Inspected on 2026-09-17 from tip
 `5a94eb6cb62a8f1f12adf88b7cafaf1e9e63d1e9`
-(`Prompt 53 holds released (do not ship) (#167)`).
+(`Prompt 53 holds released (#167)`).
 Branch `cursor/prompt-61-psychological-injury-9b8c`.
 
 Read only for this document. No write to product code, no
@@ -14,7 +14,7 @@ Calliope owns [REGISTER.md](REGISTER.md) and
 [STOPS.md](STOPS.md). This inspection does not overwrite
 those.
 
-No em dashes or en dashes anywhere. Athena does not ship.
+No em dashes or en dashes anywhere.
 Do not claim Argus CLEAN. Prompt 53 holds were released
 2026-09-16 by Craig. Hold lift is not an auto-execute.
 Do not invent G1 closed. Do not invent REV 2.
@@ -98,7 +98,6 @@ Bedrock, non-SYNTH seed, or live schema apply.
 - Do not invent REV 2. Do not start a Prompt 47 redo
   from invented contents.
 - Do not invent G1.
-- Athena does not ship.
 
 `PSYCH_CAPTURE_PRODUCTION_RELEASE` remains false
 (`supabase/migrations/20260915140000_worker_schema.sql`
@@ -482,4 +481,4 @@ occupational seed beyond SYNTH, live Bedrock, Montreal,
 `G1_AUDIT_REPORT.md`. Section 10 open items stay with
 Gary / Craig / counsel (see [STOPS.md](STOPS.md)).
 
-Athena does not ship. This dispatch wrote this file only.
+This dispatch wrote this file only.

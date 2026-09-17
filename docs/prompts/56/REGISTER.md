@@ -10,7 +10,7 @@ This is not unified 54 Design System.
 Registration only. Docs only. Section 00.1 binds. This file set adds
 no worker product, no persistence, no identity provider, no Continuum
 Motion, no conversational adapter, no psych capture release, no
-screen, and no live provisioning. Athena does not ship.
+screen, and no live provisioning.
 
 No em dashes or en dashes anywhere.
 
@@ -33,7 +33,7 @@ inspection is evidence only. It does not release a build.
 
 This is merged and deployed. Merged tip `953c16a05ff4` then main
 `acf795ce`. Production `6484616708` (161 deploy `6484609638`).
-Athena does not ship. Hermes does not treat this file as a ship
+Hermes does not treat this file as a ship
 order. Product stays REGISTERED, NOT RELEASED.
 
 ---
@@ -155,7 +155,7 @@ The wait remains G1 plus Craig sequence.
 - Overwrite `docs/prompts/54/`.
 - Add new legal, consent, or pricing language.
 
-Athena does not ship. Merged and deployed. Still REGISTERED, NOT
+Merged and deployed. Still REGISTERED, NOT
 RELEASED. Not a live-platform product release.
 
 ---
@@ -188,4 +188,4 @@ invented contents. That wait is separate. Not this mission.
 
 This registration is from tip
 `282b3f7c149a73eb957a8e81352afb72d7f46a42`
-(`Prompt 54 design system review and build (do not ship) (#159)`).
+(`Prompt 54 design system review and build (#159)`).

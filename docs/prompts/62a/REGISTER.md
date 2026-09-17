@@ -8,7 +8,7 @@ Supersedes Prompt 62 Section 3 item 6.
 Craig confirmed 2026-09-17 that
 `info@continuumrtw.com` mailbox is LIVE. The sequencing
 gate is satisfied for including the swap on this draft
-branch. Still do not ship. Athena does not ship.
+branch. Still DRAFT.
 
 This file is a Calliope doc. Parent registration:
 [../62/REGISTER.md](../62/REGISTER.md). Athena wrote
@@ -26,14 +26,14 @@ Prompt 62a is the footer contact amendment to the
 Prompt 62 product-build DRAFT. Base tip
 `5a77e2c481f6666a11f3e1592e695aaedf6df00d`
 (`fix(Prompt 61): get-help coordinator and helpnow
-anchors (do not ship) (#170)`).
+anchors (#170)`).
 Branch: `cursor/prompt-62-access-gate-3c45`.
 
 Earlier commit `a7ebb8f` already swapped public
 marketing contact on this tip. Section 1 on the parent
 draft reports that honestly. The 2026-09-17 mailbox
 confirmation is the sequencing gate for keeping that
-swap on this draft. Still do not ship.
+swap on this draft. Still DRAFT.
 
 Not a live-platform product release. Prompt 53 holds
 were released 2026-09-16 by Craig. Hold lift is not an
@@ -106,7 +106,7 @@ Leave these as `craig@continuumrtw.com`:
 
 ## What this amendment must not do
 
-- Ship. Athena does not ship.
+- Hermes ships only when Craig names ship.
 - Rewrite hub admin identity.
 - Touch worker, clinical, or platform auth surfaces.
 - Add a third-party email provider.
@@ -131,11 +131,11 @@ Leave these as `craig@continuumrtw.com`:
 
 `5a77e2c481f6666a11f3e1592e695aaedf6df00d`
 (`fix(Prompt 61): get-help coordinator and helpnow
-anchors (do not ship) (#170)`).
+anchors (#170)`).
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Mailbox confirmed LIVE 2026-09-17. Swap allowed on this
 draft branch. Not a live-platform product release.

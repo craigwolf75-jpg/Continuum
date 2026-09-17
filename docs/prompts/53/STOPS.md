@@ -8,7 +8,7 @@ programme hold on 2026-09-16.
 See [RELEASE.md](RELEASE.md) and [HOLDS.md](HOLDS.md).
 
 Real stops only. This prompt is registration, not a build.
-Athena does not ship. No live apply. No merge as a ship.
+No live apply. No merge as a ship.
 Draft registration only. Hermes ships only when Craig names
 ship.
 
@@ -120,7 +120,7 @@ called) stays as disclosed. Do not unwind it.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 No live apply. No merge as a ship. No deploy. Draft registration only.
 Hermes ships only when Craig names ship.

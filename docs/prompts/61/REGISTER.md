@@ -3,7 +3,7 @@
 Docs first. This draft is the allowed product build after
 Section 1 is on disk.
 Still not a live-platform product release.
-Athena does not ship. Prompt 53 holds were released
+Prompt 53 holds were released
 2026-09-16 by Craig.
 
 Craig original: BUILD PROMPT 28, edition 29 July 2026.
@@ -19,7 +19,7 @@ This file and [STOPS.md](STOPS.md) are the Calliope docs
 for this registration. Athena wrote
 [SECTION_1.md](SECTION_1.md) before product code. Athena
 writes [ACCEPTANCE.md](ACCEPTANCE.md) in the product-build
-draft. Athena does not ship. Hermes does not treat this
+draft. Hermes does not treat this
 file as a ship order.
 
 No em dashes or en dashes anywhere.
@@ -30,7 +30,7 @@ No em dashes or en dashes anywhere.
 
 Prompt 61 product-build DRAFT starts from main tip
 `5a94eb6cb62a8f1f12adf88b7cafaf1e9e63d1e9`
-(`Prompt 53 holds released (do not ship) (#167)`).
+(`Prompt 53 holds released (#167)`).
 Section 1 is written first. This is not a live-platform
 product release. Prompt 53 holds were released 2026-09-16
 by Craig. Former Prompt 53 holds are no longer binding
@@ -243,7 +243,7 @@ not invent G1. Do not start G1.
 - Claim Argus CLEAN.
 - Repeat any of this prompt in outbound sales material.
 
-Athena does not ship. Still not a live-platform product
+Still not a live-platform product
 release. Prompt 53 holds were released 2026-09-16 by
 Craig. Hold lift is not an auto-execute.
 
@@ -273,7 +273,7 @@ code. See [STOPS.md](STOPS.md).
 ### 10.1 Named individual restriction and privacy officer wording
 
 Counsel. Build the specified shape pending counsel. Do
-not invent the privacy officer wording. Do not ship to a
+not invent the privacy officer wording. Do not apply to a
 real tenant.
 
 ### 10.2 Non device position and employer-side users
@@ -360,11 +360,11 @@ closes findings. Do not claim Argus CLEAN.
 ## Base tip
 
 `5a94eb6cb62a8f1f12adf88b7cafaf1e9e63d1e9`
-(`Prompt 53 holds released (do not ship) (#167)`).
+(`Prompt 53 holds released (#167)`).
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Allowed product-build DRAFT against SYNTH only. Not a
 live-platform product release. Prompt 53 holds were

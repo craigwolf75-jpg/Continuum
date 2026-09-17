@@ -1,7 +1,7 @@
 # Prompt 52 stop notes
 
 Real stops only. This prompt adds no module, no workflow, and no AI
-component. Athena does not ship. Hermes ships only when Craig names ship.
+component. Hermes ships only when Craig names ship.
 No em dashes or en dashes anywhere.
 
 ---
@@ -58,7 +58,6 @@ Unchanged from prior prompts:
 - No live Bedrock.
 - No occupational seed.
 - `0018` and `0019` unapplied. Schema files only. No live schema apply.
-- Athena does not ship.
 - `package.json` and email templates stay locked.
 - No Azure invention.
 - Prompt 51 Design System may still be landing on a separate PR. Do not

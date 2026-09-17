@@ -8,8 +8,8 @@ programme hold on 2026-09-16.
 See [RELEASE.md](RELEASE.md) and [HOLDS.md](HOLDS.md).
 
 Registration of Craig's sequencing email, then of the hold
-lift. Not a build. Not a feature. Not the G1 audit. Athena
-does not ship. No live apply. No merge as a ship. Draft
+lift. Not a build. Not a feature. Not the G1 audit.
+No live apply. No merge as a ship. Draft
 registration only.
 
 Hold lift is not an auto-execute. Named human dispatch is
@@ -38,8 +38,6 @@ This prompt records the sequencing order and, as of
 It does not implement a surface, a schema, a seed, or a
 hosted project. It does not start Prompt 47 redo. It does
 not start G1.
-
-Athena does not ship.
 
 ---
 
@@ -209,7 +207,7 @@ employer surface.
 ## Closing
 
 This folder is draft registration of the sequencing order
-and of the 2026-09-16 RELEASE. Athena does not ship. Hold
+and of the 2026-09-16 RELEASE. Hold
 lift is not an auto-execute. No live apply. No merge as a
 ship. Named human dispatch still required before Montreal,
 Bedrock, non-SYNTH seed, or live schema apply. Do not

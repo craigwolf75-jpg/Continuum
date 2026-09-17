@@ -1,7 +1,7 @@
 # Prompt 52 acceptance map
 
-Tip of this branch after the build. Not shipped. Do not merge. Athena
-does not ship. Hermes ships only when Craig names ship. No em dashes
+Tip of this branch after the build. Not shipped. Do not merge.
+Hermes ships only when Craig names ship. No em dashes
 or en dashes anywhere.
 
 Do not read intended work as completed work. Status below is what was

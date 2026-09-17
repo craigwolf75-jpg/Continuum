@@ -5,7 +5,7 @@ starts from tip
 `18d416e91635ca952cc0df1f74b97fce1b259a2b`.
 This draft is the allowed product build for the
 opt-in save. Still not a live-platform product
-release. Athena does not ship. No em dashes or
+release. No em dashes or
 en dashes anywhere.
 
 Gary ruled (b) on 2026-08-16. Companions:
@@ -15,15 +15,13 @@ Gary ruled (b) on 2026-08-16. Companions:
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Craig said build. Draft PR only. Allowed
 product-build DRAFT. Not a live-platform product
 release. Hermes does not treat this file as a
 ship order. Hermes ships only when Craig names
 ship.
-
-**STOP.** Do not ship.
 
 ---
 

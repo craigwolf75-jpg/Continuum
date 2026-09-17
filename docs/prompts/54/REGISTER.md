@@ -6,7 +6,7 @@ the earlier sequenced review-and-build record. History below
 stays. See [../58/REGISTER.md](../58/REGISTER.md).
 
 Sequenced for review and build. Local/CI surface work only.
-Athena does not ship. Merged and deployed. Not a live-platform
+Merged and deployed. Not a live-platform
 product release. Prompt 53 holds stand.
 
 Craig said "review and build". That is the sequence release for
@@ -36,7 +36,7 @@ other file edits. That inspection remains the Prompt 54 record.
 Prompt 58 [SECTION_1.md](../58/SECTION_1.md) is the current
 inspection.
 
-This is merged and deployed. Athena does not ship. Hermes does not
+This is merged and deployed. Hermes does not
 treat this file as a ship order.
 
 ---
@@ -137,7 +137,7 @@ The folder in (2) is not (1) and is not (3). This file is (3).
 
 ## Dark theme and Compact density
 
-Tokens only. Do not ship as features.
+Tokens only. Do not treat tokens as features.
 
 Dark theme (3.5) and Compact density (5.2) stay token blocks in
 `deploy/continuum_tokens.css`. There is no theme or density
@@ -169,7 +169,7 @@ Shipping either as a feature is a defect.
   `docs/prompts/50/`, `docs/prompts/50a/`, credentials, holding.html
   layout/copy, product portal screens, or `G1_AUDIT_REPORT.md`.
 
-Athena does not ship. Merged and deployed. Not a live-platform
+Merged and deployed. Not a live-platform
 product release. Prompt 53 holds stand.
 
 ---
@@ -197,4 +197,4 @@ start that redo. That wait is separate. Not this mission.
 
 This review and build is from tip
 `3c256dea4a4162bf0191d2cd7b130d0cbeb85084`
-(`Prompt 53 sequencing order and the hold (do not ship) (#156)`).
+(`Prompt 53 sequencing order and the hold (#156)`).

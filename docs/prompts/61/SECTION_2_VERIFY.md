@@ -7,7 +7,7 @@ Companion to [SECTION_1.md](SECTION_1.md).
 Prompt 61 Section 2 is shared with Prompt 60 (Craig's 27).
 If Prompt 60 already ran, verify and skip. Never rebuild.
 
-No em dashes or en dashes anywhere. Athena does not ship.
+No em dashes or en dashes anywhere. Hermes ships only when Craig names ship.
 Do not claim customer-facing board alignment. Section 10.3
 stays with Craig.
 

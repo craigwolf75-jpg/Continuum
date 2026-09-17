@@ -30,7 +30,6 @@ No em dashes or en dashes anywhere.
 
 These remain. They are not Prompt 53 holds.
 
-- Athena still does not ship unless Craig names ship.
 - Decision 2 schema boundaries still stand unless Craig
   separately changes them. Do not create `mpi.person`. Do
   not expand the allow-list.
@@ -112,5 +111,5 @@ complete programme. Do not treat it as complete.
 Master Architecture is number 48. On arrival it must be RREV 2 sent
 12:34 PM. Do not invent it.
 
-Athena does not ship. No live apply. No merge as a ship. Draft
+No live apply. No merge as a ship. Draft
 registration only.

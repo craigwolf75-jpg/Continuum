@@ -1,8 +1,7 @@
 # Prompt 50a decisions
 
 Companion decisions that resolve Prompt 50 Section 00 and Section 1
-stops. Architecture and docs only. Schema files only. Athena does not
-ship.
+stops. Architecture and docs only. Schema files only.
 
 50a attaches to Core Platform Foundations. The governing copy is Prompt
 51 (Prompt 50 is retired by supersession). Repo comments on 0000 to 0018
@@ -109,7 +108,7 @@ tenant-column and immutability enforcement now, with the three
 obligations. The allow-list stays one entry.
 
 0018 and 0019 remain files only. Live apply is Gary or Hermes when
-named. Athena does not ship.
+named.
 
 ---
 

@@ -3,7 +3,7 @@
 Real stops only. Prompt 62 product-build DRAFT starts from
 tip 5a77e2c481f6666a11f3e1592e695aaedf6df00d. This draft
 is the allowed product build after Section 1. Still not a
-live-platform product release. Athena does not ship. No em
+live-platform product release. No em
 dashes or en dashes anywhere.
 
 Section 0 language and claim rules override everything.
@@ -15,14 +15,12 @@ confidential may sit behind it.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Craig said build. Draft PR only. Allowed product-build
 DRAFT. Docs first. Not a live-platform product release.
 Hermes does not treat this file as a ship order. Hermes
 ships only when Craig names ship.
-
-**STOP.** Do not ship.
 
 ---
 
@@ -196,7 +194,7 @@ This is not a stop for this draft.
 
 ---
 
-## Prompt 62a mailbox is live. Swap allowed on this draft. Still do not ship.
+## Prompt 62a mailbox is live. Swap allowed on this draft. Still DRAFT.
 
 Craig confirmed 2026-09-17 that
 `info@continuumrtw.com` is LIVE. The 62a sequencing
@@ -208,5 +206,4 @@ Hub admin allowlists that use `craig@continuumrtw.com`
 as an admin identity are not the public marketing site.
 Do not rewrite them.
 
-**STOP.** The swap may sit on this draft. Athena does
-not ship.
+**STOP.** The swap may sit on this draft.

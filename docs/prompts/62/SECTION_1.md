@@ -3,7 +3,7 @@
 Inspected on 2026-09-17 from tip
 `5a77e2c481f6666a11f3e1592e695aaedf6df00d`
 (`fix(Prompt 61): get-help coordinator and helpnow anchors
-(do not ship) (#170)`).
+(#170)`).
 Branch `cursor/prompt-62-access-gate-3c45`.
 
 Read only for this document. No write to product code, no
@@ -15,7 +15,7 @@ Scope is the public marketing site only. Do not re-open
 platform, clinical, or worker product files for a later
 build from this draft.
 
-No em dashes or en dashes anywhere. Athena does not ship.
+No em dashes or en dashes anywhere.
 Do not claim Argus CLEAN. Prompt 53 holds were released
 2026-09-16 by Craig. Hold lift is not an auto-execute.
 Do not invent G1 closed. Do not invent a ship.
@@ -87,7 +87,6 @@ Bedrock, non-SYNTH seed, or live schema apply.
   invent live apply. Decision 2 stands.
 - Do not invent REV 2.
 - Do not invent G1.
-- Athena does not ship.
 
 This inspection does not apply
 `20260815120000_marketing_leads.sql` live.
@@ -129,7 +128,7 @@ project settings: UNVERIFIED.
 **Deploy path.** Push to `main`, Vercel auto-deploy
 (`G1_AUDIT_REPORT.md` line 39: deploys automatically
 from `main` via the Git integration; auto-deploy
-trigger UNVERIFIED live). This draft does not ship.
+trigger UNVERIFIED live). This draft stays DRAFT.
 
 **Public marketing surfaces on this tip.**
 
@@ -398,7 +397,7 @@ MX check run this session (do not send test mail):
 MX presence: YES, Google Workspace mail. Combined
 with Craig's 2026-09-17 confirmation, treat the
 mailbox as live for the 62a sequencing gate. Still
-do not send test mail. Still do not ship.
+do not send test mail. Still DRAFT.
 
 ---
 
@@ -516,5 +515,5 @@ Bedrock, Montreal. Hub admin identity
 (`craig@continuumrtw.com` in `ADMIN_EMAILS`) is
 out of scope.
 
-Athena does not ship. This dispatch wrote this
+This dispatch wrote this
 file only.

@@ -5,7 +5,7 @@ design-system / surface-standard brief. This file remains the
 Prompt 54 inspection. See [../58/SECTION_1.md](../58/SECTION_1.md).
 
 Inspected on 2026-09-16 from tip `3c256dea4a4162bf0191d2cd7b130d0cbeb85084`
-(`Prompt 53 sequencing order and the hold (do not ship) (#156)`).
+(`Prompt 53 sequencing order and the hold (#156)`).
 Re-verified on this tip. Do not reuse line numbers from
 `docs/prompts/51-design-system/SECTION_1.md` (that inspection was tip
 `fca8548`, before #153 tokens, html attrs, and CI gates).
@@ -63,7 +63,7 @@ discovery, no live access. That file is not G1 closed. Do not invent
 G1.
 
 Standing holds unchanged: no live schema apply, `0018` and `0019`
-unapplied, Athena does not ship, `package.json` locked. No em dashes
+unapplied, `package.json` locked. No em dashes
 or en dashes anywhere.
 
 ---
@@ -1110,7 +1110,7 @@ Prompt 54 review and build.
 - Prompt 47 redo waits REV 2.
 - Do not invent G1. `G1_AUDIT_REPORT.md` (2026-08-13) is read-only
   discovery, not G1 closed.
-- Athena does not ship.
+- Hermes ships only when Craig names ship.
 
 ---
 
@@ -1160,4 +1160,4 @@ open defects.
 templates, credentials, live schema apply, occupational seed, live
 Bedrock, Montreal, `platform/db`, `docs/prompts/50/`,
 `docs/prompts/50a/`, `G1_AUDIT_REPORT.md`.
-Athena does not ship. This phase wrote this file only.
+This phase wrote this file only.

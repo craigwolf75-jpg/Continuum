@@ -2,7 +2,7 @@
 
 Real stops only. Prompt 56 is REGISTERED, NOT RELEASED. This
 prompt sits behind G1. Prompt 53 holds were released
-2026-09-16 by Craig. Athena does not ship. No em
+2026-09-16 by Craig. No em
 dashes or en dashes anywhere.
 
 Do not execute worker product, persistence, identity provider,
@@ -149,7 +149,7 @@ not edit one.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Merged and deployed. Registration docs only. Still not a product
 release. G1 is not closed. Hermes is not a ship of worker

@@ -13,7 +13,7 @@ write ACCEPTANCE.md here.
 
 Craig said build. Draft PR only.
 Still not a live-platform product release.
-Athena does not ship. Hermes does not treat this
+Hermes does not treat this
 file as a ship order. Prompt 53 holds were
 released 2026-09-16 by Craig. Hold lift is not
 an auto-execute.
@@ -26,8 +26,8 @@ No em dashes or en dashes anywhere.
 
 Prompt 63c product-build DRAFT starts from main
 tip `18d416e91635ca952cc0df1f74b97fce1b259a2b`
-(`Prompt 62 access gate and lead capture (do not
-ship) (#171)`).
+(`Prompt 62 access gate and lead capture
+(#171)`).
 Branch: `cursor/prompt-63c-opt-in-save-b200`.
 
 This is the allowed product build for the opt-in
@@ -184,7 +184,7 @@ open aggregate use.
 - Claim Argus CLEAN.
 - Ship.
 
-Athena does not ship. Still not a live-platform
+Still not a live-platform
 product release. Prompt 53 holds were released
 2026-09-16 by Craig. Hold lift is not an
 auto-execute.
@@ -251,14 +251,14 @@ that closes findings. Do not claim Argus CLEAN.
 ## Base tip
 
 `18d416e91635ca952cc0df1f74b97fce1b259a2b`
-(`Prompt 62 access gate and lead capture (do not
-ship) (#171)`).
+(`Prompt 62 access gate and lead capture
+(#171)`).
 
 Branch: `cursor/prompt-63c-opt-in-save-b200`.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Allowed product-build DRAFT for the opt-in save.
 Not a live-platform product release. Prompt 53

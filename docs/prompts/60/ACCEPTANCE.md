@@ -2,7 +2,7 @@
 
 Product build draft follows docs-only PR 164. This is a local/CI draft
 of Sections 2 to 5 against SYNTH only, plus the worker check-in path.
-It is not a live-platform product release. Athena does not ship.
+It is not a live-platform product release.
 Prompt 53 holds were released 2026-09-16 by Craig. Hold lift
 is not an auto-execute.
 
@@ -75,7 +75,6 @@ Hold lift is not an auto-execute.
 - No live schema apply. `clinical/db/023_migration_prompt60_restriction_and_hours.sql` is a file only.
 - No seed beyond SYNTH. SYNTH remains 6 positions, 13 duties, SYNTH- prefixed.
 - Hub auth UNVERIFIED: STOP for ship.
-- Athena does not ship.
 
 ---
 

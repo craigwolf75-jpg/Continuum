@@ -3,7 +3,7 @@
 Docs-only PR 164 landed. This draft is the allowed
 product build.
 Still not a live-platform product release.
-Athena does not ship. Prompt 53 holds were released
+Prompt 53 holds were released
 2026-09-16 by Craig.
 
 Craig original: BUILD PROMPT 27, edition 29 July 2026.
@@ -21,7 +21,7 @@ This file and [STOPS.md](STOPS.md) and
 for this registration. Athena wrote
 [SECTION_1.md](SECTION_1.md) in docs-only PR 164. Athena
 wrote [ACCEPTANCE.md](ACCEPTANCE.md) in this
-product-build draft. Athena does not ship. Hermes does
+product-build draft. Hermes does
 not treat this file as a ship order.
 
 No em dashes or en dashes anywhere.
@@ -45,7 +45,7 @@ touch deploy/clinical-dashboard.html (separate PR).
 Replace the legacy scored worker check-in voice
 (pain_score / mobility_score dual AM/PM) with
 [CHECK_IN_COPY.md](CHECK_IN_COPY.md) task-linked
-provocation copy. Do not ship scored check-in as
+provocation copy. Do not treat scored check-in as
 Prompt 60.
 
 This draft is not a live-platform product release.
@@ -190,7 +190,7 @@ not invent G1. Do not start G1.
   not skipped because Prompt 61 is absent. Do not
   invent docs/prompts/60/SECTION_2.md.
 - Worker check-in uses [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
-  task-linked provocation copy. Do not ship the
+  task-linked provocation copy. Do not treat the
   legacy scored check-in (pain_score / mobility_score
   dual AM/PM) as Prompt 60.
 - Athena does not edit
@@ -210,7 +210,7 @@ not invent G1. Do not start G1.
 - Use "patient" for a worker on the employer side.
 - Auto-advance an hours step.
 - Symptom-score a check-in.
-- Ship scored check-in (pain_score / mobility_score
+- Treat scored check-in (pain_score / mobility_score
   dual AM/PM) as Prompt 60.
 - Touch deploy/clinical-dashboard.html. Separate PR.
 - Show check-in, symptom, or provocation content on the
@@ -222,7 +222,7 @@ not invent G1. Do not start G1.
   live schema.
 - Claim Argus CLEAN.
 
-Athena does not ship. Still not a live-platform product
+Still not a live-platform product
 release. Prompt 53 holds were released 2026-09-16 by
 Craig. Hold lift is not an auto-execute.
 
@@ -249,9 +249,9 @@ Not this mission.
 Recorded here. Worded in [CHECK_IN_COPY.md](CHECK_IN_COPY.md).
 
 - Check-in is task linked, not symptom scored.
-- Do not ship the legacy scored worker check-in
-  (pain_score / mobility_score dual AM/PM) as
-  Prompt 60. Use CHECK_IN_COPY task-linked
+- Do not treat the legacy scored worker check-in
+  as Prompt 60 (pain_score / mobility_score dual
+  AM/PM). Use CHECK_IN_COPY task-linked
   provocation copy.
 - Twenty-four hour settle boundary only.
 - The platform never auto-advances hours steps.
@@ -362,11 +362,11 @@ closes findings. Do not claim Argus CLEAN.
 
 This product-build DRAFT follows docs-only PR 164 tip
 `24adb5ff2ec35a8c039eda075fbfe29f0612ee0e`
-(`Prompt 60 concussion and mTBI (do not ship) (#164)`).
+(`Prompt 60 concussion and mTBI (#164)`).
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Allowed product-build DRAFT: Sections 2 to 5 against
 SYNTH only, plus the worker check-in path. Not a

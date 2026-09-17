@@ -6,7 +6,7 @@ rule. Unverified means the mechanism exists but the live path is not
 proven. Not connected means there is no automated check, or the
 dependent document or apply step is absent.
 
-Governing copy is Prompt 51. Schema files only. Athena does not ship.
+Governing copy is Prompt 51. Schema files only.
 0018 and 0019 remain files only. No live apply.
 
 No em dashes or en dashes anywhere.

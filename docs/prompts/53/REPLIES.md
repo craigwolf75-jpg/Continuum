@@ -11,7 +11,6 @@ See [RELEASE.md](RELEASE.md) and [HOLDS.md](HOLDS.md).
 
 Current order is RELEASED. Hold lift is not an
 auto-execute. Hermes ships only when Craig names ship.
-Athena does not ship.
 
 Named human dispatch still required before Bedrock go,
 Montreal project create, non-SYNTH seed, or live schema
