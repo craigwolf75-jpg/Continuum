@@ -170,7 +170,6 @@ function Pt(id){return S.patients.find(function(p){return p.id===id;});}
 function activeP(){return S.patients.filter(function(p){return p.status!=="signed_off";});}
 function escP(){return S.patients.filter(function(p){return p.esc;});}
 function fdpP(){return activeP().filter(function(p){return p.status==="full_duty_pending";});}
-function score(){var a=activeP();return a.length?Math.round(a.reduce(function(s,p){return s+p.prog;},0)/a.length):0;}
 function videosPending(){return S.patients.filter(function(p){return p.video;});}
 function audit(line){S.audit.unshift(new Date().toLocaleTimeString()+" "+line);S.audit=S.audit.slice(0,40);}
 /* ---------- the state machine: physician-only in product, legality enforced here ---------- */
@@ -323,7 +322,7 @@ function renderDetail(p){
   h+='<div class="card" style="padding:18px;margin-top:14px"><h2 style="margin-bottom:6px">Movement video, awaiting review</h2><p class="sub" style="font-size:12px;margin-bottom:10px">Consented check-in video. Visible to this seat and the worker only; never the employer, never the board. Every view is audited.</p>'+
   '<button class="btn line" onclick="reviewVideo(\''+p.id+'\')"><span class="msym" style="font-size:18px">play_circle</span> Review and mark reviewed</button></div>';}
  return h;}
-function explainProg(){toast("Recovery progress estimate is the clinician's general estimate based on typical recovery patterns. It is entered here by the physician, not computed from the worker's scores.");}
+function explainProg(){toast("Physician estimate is the clinician's general estimate based on typical recovery patterns. It is entered here by the physician, not computed from the worker's scores.");}
 function reviewEsc(pid){
  var p=Pt(pid);if(!p||!p.esc)return;
  p.esc=null;
