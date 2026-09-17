@@ -19,8 +19,9 @@ This file and [STOPS.md](STOPS.md) and
 [CHECK_IN_COPY.md](CHECK_IN_COPY.md) are the Calliope docs
 for this registration. Athena wrote
 [SECTION_1.md](SECTION_1.md) in docs-only PR 164. Athena
-writes ACCEPTANCE or SECTION_16 later. Athena does not
-ship. Hermes does not treat this file as a ship order.
+wrote [ACCEPTANCE.md](ACCEPTANCE.md) in this
+product-build draft. Athena does not ship. Hermes does
+not treat this file as a ship order.
 
 No em dashes or en dashes anywhere.
 
@@ -184,7 +185,8 @@ not invent G1. Do not start G1.
   dual AM/PM) as Prompt 60.
 - Athena does not edit
   deploy/clinical-dashboard.html. Separate PR.
-- Athena writes ACCEPTANCE or SECTION_16 later.
+- Athena wrote [ACCEPTANCE.md](ACCEPTANCE.md) in this
+  product-build draft.
 
 ## What this draft must not do
 
@@ -316,10 +318,7 @@ Athena wrote these:
 
 - [SECTION_1.md](SECTION_1.md)
 - [C1447_VERIFICATION.md](C1447_VERIFICATION.md)
-
-Athena writes these later. Do not invent them here:
-
-- ACCEPTANCE or [SECTION_16.md](SECTION_16.md)
+- [ACCEPTANCE.md](ACCEPTANCE.md)
 
 Prompt 53 holds:
 
