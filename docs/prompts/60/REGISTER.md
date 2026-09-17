@@ -286,9 +286,13 @@ Calliope docs in this folder:
 - [STOPS.md](STOPS.md)
 - [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
 
-Athena writes these later. Do not invent them here:
+Athena wrote these:
 
 - [SECTION_1.md](SECTION_1.md)
+- [C1447_VERIFICATION.md](C1447_VERIFICATION.md)
+
+Athena writes these later. Do not invent them here:
+
 - ACCEPTANCE or [SECTION_16.md](SECTION_16.md)
 
 Prompt 53 holds:
