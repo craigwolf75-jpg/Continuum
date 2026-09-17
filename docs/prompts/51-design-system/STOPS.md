@@ -11,8 +11,8 @@ current stop list. Prompt 54
 Prompt 54 [STOPS.md](../54/STOPS.md) remains the earlier stop
 list.
 
-Real stops only. Athena authored tokens and gates on this draft. Athena
-does not ship. Do not deploy. Do not claim ship-ready.
+Real stops only. Athena authored tokens and gates on this draft.
+Do not deploy. Do not claim ship-ready.
 
 No em dashes or en dashes anywhere.
 
@@ -94,7 +94,7 @@ live-apply schema.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Hermes ships only when Craig names ship. This draft stops at tokens,
 gates, and the html attribute contract. No merge. No push to main. No

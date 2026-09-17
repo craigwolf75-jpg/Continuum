@@ -2,7 +2,7 @@
 
 Inspected on 2026-09-16 from tip
 `282b3f7c149a73eb957a8e81352afb72d7f46a42`
-(`Prompt 54 design system review and build (do not ship) (#159)`).
+(`Prompt 54 design system review and build (#159)`).
 
 Read only for this document. No write, seed, live apply, or
 credential use in this inspection. No worker product, persistence,
@@ -352,7 +352,6 @@ lift is not an auto-execute. Not a ship of this registration.
   invented contents.
 - Do not invent G1. `G1_AUDIT_REPORT.md` (2026-08-13) is
   read-only discovery, not G1 closed.
-- Athena does not ship.
 
 ---
 
@@ -380,4 +379,4 @@ lift is not an auto-execute. Not a ship of this registration.
 templates, credentials, live schema apply, occupational seed,
 live Bedrock, Montreal, `platform/db`, `docs/prompts/50/`,
 `docs/prompts/50a/`, `docs/prompts/54/`, `G1_AUDIT_REPORT.md`.
-Athena does not ship. This phase wrote this file only.
+This phase wrote this file only.

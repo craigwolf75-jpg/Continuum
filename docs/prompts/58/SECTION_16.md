@@ -1,7 +1,7 @@
 # Prompt 58 Section 16: acceptance map
 
 Tip 314951803a03521a70fca67576dccab184811b69. Local/CI substrate
-only. Hub auth remains unverified by Craig. Athena does not ship.
+only. Hub auth remains unverified by Craig.
 No em dashes or en dashes anywhere.
 
 This is the Prompt 58 Design System / Surface Standard acceptance
@@ -30,7 +30,7 @@ not attempted** unless Prompt 58 already restates the rule and a
 suite proves that restatement. Conflict rule: 59 wins on behaviour,
 58 wins on presentation. Do not invent Prompt 59.
 
-Do not claim Argus CLEAN. Athena does not ship.
+Do not claim Argus CLEAN.
 
 ---
 
@@ -247,4 +247,4 @@ Do not claim Argus CLEAN. Athena does not ship.
 - Hub auth UNVERIFIED remains STOP for ship.
 
 Existing Node suites remain globbed by `.github/workflows/suites.yml`.
-`package.json` was not edited. Athena does not ship.
+`package.json` was not edited.

@@ -4,7 +4,7 @@ In-house wording for the concussion check-in and the
 visibility lines. Draft for the catalogue. Not shipped
 product copy. Sequenced 2026-09-16 for Section 1 then
 allowed-scope local/CI draft. Still not a live-platform
-product release. Athena does not ship.
+product release.
 
 Section 0 overrides this file. Continuum does not
 diagnose, treat, or determine fitness. The treating

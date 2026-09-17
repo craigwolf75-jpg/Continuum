@@ -3,12 +3,12 @@
 Product build draft on branch
 `cursor/prompt-63c-opt-in-save-b200`, from base tip
 `18d416e91635ca952cc0df1f74b97fce1b259a2b`
-(`Prompt 62 access gate and lead capture (do not
-ship) (#171)`). This is a local/CI draft of the
+(`Prompt 62 access gate and lead capture
+(#171)`). This is a local/CI draft of the
 opt-in save against SYNTH only. It is not a
-live-platform product release. Athena does not
-ship. Prompt 53 holds were released 2026-09-16
-by Craig. Hold lift is not an auto-execute.
+live-platform product release. Prompt 53 holds
+were released 2026-09-16 by Craig. Hold lift is
+not an auto-execute.
 
 Do not claim Argus CLEAN. Do not claim
 ship-ready. Hub authentication remains
@@ -187,7 +187,6 @@ under Prompt 53. Hold lift is not an auto-execute.
   privacy and terms disclose aggregate use with
   counsel review. This draft does not invent that
   disclosure.
-- Athena does not ship.
 
 ---
 

@@ -5,7 +5,7 @@ non-platform under Prompt 50a Decision 2. Enumerated from
 `create table` / `create view` in `supabase/migrations`. They sit
 outside the schemas Prompt 51 owns and creates.
 
-Governing copy is Prompt 51. Schema files only. Athena does not ship.
+Governing copy is Prompt 51. Schema files only.
 `mpi.person` is not in this inventory and is not created. The
 allow-list remains one reserved entry.
 

@@ -22,7 +22,7 @@ in strings it has not seen. That gap is why this review exists.
 Calliope (24f) owns every word a visitor reads and holds this review.
 Athena (12a) does not rewrite voice. Apollo (12b) does not substitute
 imagery for a failed string. Heracles (24c) does not treat a green suite
-as a copy pass. Hermes (12d) does not ship a string this review has not
+as a copy pass. Hermes (12d) does not release a string this review has not
 cleared.
 
 ---
@@ -103,7 +103,7 @@ The linter matches these case-insensitively (`ai decided` in
 `deploy/banned-strings.test.mjs`). The words are the ban, not the
 capitalization.
 
-If the linter reports one of these, stop. Do not ship. Do not soften
+If the linter reports one of these, stop. Hard fail. Do not soften
 the string in place and call it reviewed. Replace the claim with a
 lawful sentence in a later copy pass, then re-run the linter and this
 review. This file does not draft that replacement.
@@ -267,7 +267,7 @@ a pass here as clearance to push.
 
 1. Run `deploy/banned-strings.test.mjs` (or the full `deploy/*.test.mjs`
    glob via `suites.yml`).
-2. Regulatory hits: hard fail. Do not ship. Do not treat a
+2. Regulatory hits: hard fail. Do not treat a
    regulatory hit as a tone question.
 3. Tone, emoji, and exclamation reports: open this review on each hit
    and on every new string the linter did not see.

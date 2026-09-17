@@ -1,6 +1,6 @@
 # Prompt 58 acceptance: what this local/CI substrate proved
 
-Tip 314951803a03521a70fca67576dccab184811b69. Athena does not ship.
+Tip 314951803a03521a70fca67576dccab184811b69. Hermes ships only when Craig names ship.
 No em dashes or en dashes anywhere.
 
 A proof is a file, a suite, or a named STOP. Intended work is not

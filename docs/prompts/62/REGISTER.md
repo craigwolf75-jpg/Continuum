@@ -3,7 +3,7 @@
 Docs first. This draft is the allowed product build after
 Section 1 is on disk.
 Still not a live-platform product release.
-Athena does not ship. Prompt 53 holds were released
+Prompt 53 holds were released
 2026-09-16 by Craig.
 
 Gary stream, 15 August 2026. Registers as unified
@@ -24,7 +24,7 @@ This file and [STOPS.md](STOPS.md) are the Calliope docs
 for this registration. Athena wrote
 [SECTION_1.md](SECTION_1.md) before product code. Athena
 writes [ACCEPTANCE.md](ACCEPTANCE.md) in the product-build
-draft. Athena does not ship. Hermes does not treat this
+draft. Hermes does not treat this
 file as a ship order.
 
 Craig said build. Draft PR only.
@@ -38,7 +38,7 @@ No em dashes or en dashes anywhere.
 Prompt 62 product-build DRAFT starts from main tip
 `5a77e2c481f6666a11f3e1592e695aaedf6df00d`
 (`fix(Prompt 61): get-help coordinator and helpnow
-anchors (do not ship) (#170)`).
+anchors (#170)`).
 Branch: `cursor/prompt-62-access-gate-3c45`.
 Section 1 is on disk. This is not a live-platform
 product release. Prompt 53 holds were released 2026-09-16
@@ -59,8 +59,7 @@ limit. Do not claim the product is already complete.
 
 Mailbox `info@continuumrtw.com` confirmed LIVE by Craig
 on 2026-09-17. That is the 62a sequencing gate. The
-footer swap may be included in this draft. Still do not
-ship.
+footer swap may be included in this draft. Still DRAFT.
 
 Do not invent G1 closed. Do not invent REV 2. Do not
 seed beyond SYNTH. Do not claim Argus CLEAN. Do not
@@ -221,7 +220,7 @@ not invent G1. Do not start G1.
 - Decide a Section 5 open item in code.
 - Ship.
 
-Athena does not ship. Still not a live-platform product
+Still not a live-platform product
 release. Prompt 53 holds were released 2026-09-16 by
 Craig. Hold lift is not an auto-execute.
 
@@ -298,7 +297,7 @@ Supersedes Section 3 item 6.
 
 Craig confirmed 2026-09-17 that
 `info@continuumrtw.com` is LIVE. The swap may be
-included on this draft branch. Still do not ship.
+included on this draft branch. Still DRAFT.
 
 Every `craig@continuumrtw.com` on the public marketing
 site becomes `info@continuumrtw.com`. Hub admin
@@ -343,13 +342,13 @@ closes findings. Do not claim Argus CLEAN.
 
 `5a77e2c481f6666a11f3e1592e695aaedf6df00d`
 (`fix(Prompt 61): get-help coordinator and helpnow
-anchors (do not ship) (#170)`).
+anchors (#170)`).
 
 Branch: `cursor/prompt-62-access-gate-3c45`.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Allowed product-build DRAFT. Docs first. Public
 marketing site only. Not a live-platform product

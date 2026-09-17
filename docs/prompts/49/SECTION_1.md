@@ -336,4 +336,4 @@ reach domain writes without stages 1 to 13.
 ## Human gates (untouched)
 
 `package.json`, consent/legal/pricing copy, email templates, credentials, and
-live schema apply. Schema files only. Athena does not ship.
+live schema apply. Schema files only.

@@ -3,7 +3,7 @@
 Real stops only. Prompt 58 is sequenced for local/CI
 design-system substrate. Still not a live-platform product
 release. This prompt adds no module, no dashboard, no AI
-component, and no screen. Athena does not ship. No em dashes
+component, and no screen. No em dashes
 or en dashes anywhere.
 
 ---
@@ -184,7 +184,7 @@ write Prompt 59. Do not claim Argus CLEAN.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Local/CI design-system substrate. Not a live-platform
 product release. Prompt 53 holds were released 2026-09-16

@@ -16,8 +16,7 @@ Requested. Do not invent it.
 
 This file adds no module, no dashboard, no AI component,
 and no screen. Behind G1. Prompt 53 holds were released
-2026-09-16 by Craig. Athena does not
-ship.
+2026-09-16 by Craig.
 
 No em dashes or en dashes anywhere.
 
@@ -32,7 +31,7 @@ sequence does not release ICON as product work. These
 files do not execute a design philosophy. They register
 the companion.
 
-Athena does not ship. Hermes does not treat this file as
+Hermes does not treat this file as
 a ship order. Product stays REGISTERED, NOT RELEASED.
 
 ---
@@ -134,7 +133,7 @@ read-only discovery). That file is not G1 closed.
 - Live-platform product release.
 - Claim Argus CLEAN.
 
-Athena does not ship. REGISTERED, NOT RELEASED. Not a
+REGISTERED, NOT RELEASED. Not a
 live-platform product release. Prompt 53 holds were
 released 2026-09-16 by Craig. Hold lift is not an
 auto-execute.

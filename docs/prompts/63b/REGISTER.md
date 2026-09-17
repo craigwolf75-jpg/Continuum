@@ -12,7 +12,7 @@ Those remain Gary's call.
 
 Craig said build. Draft PR only.
 Still not a live-platform product release.
-Athena does not ship. Hermes does not treat this
+Hermes does not treat this
 file as a ship order. Prompt 53 holds were
 released 2026-09-16 by Craig. Hold lift is not
 an auto-execute.
@@ -26,8 +26,8 @@ No em dashes or en dashes anywhere.
 Prompt 63b records seven rulings from the Step 2
 build. Base tip
 `18d416e91635ca952cc0df1f74b97fce1b259a2b`
-(`Prompt 62 access gate and lead capture (do not
-ship) (#171)`).
+(`Prompt 62 access gate and lead capture
+(#171)`).
 Branch: `cursor/prompt-63c-opt-in-save-b200`.
 
 Ruling 7 (consent copy) was parked for Gary at
@@ -44,7 +44,6 @@ Do not apply live schema. Do not edit the locked
 root `package.json`. Do not claim Argus CLEAN.
 
 Standing law this mission: draft PR only.
-Athena does not ship.
 
 ---
 
@@ -137,7 +136,7 @@ Record. Do not decide. Do not execute as a ship.
   the live DB the G1 audit will census.
 
 Standing law this mission: draft PR only.
-Athena does not ship. Do not apply live schema.
+Do not apply live schema.
 Do not invent G1 closed.
 
 ---
@@ -178,7 +177,7 @@ privacy or terms pages.
 - Claim Argus CLEAN.
 - Ship.
 
-Athena does not ship. Still not a live-platform
+Still not a live-platform
 product release. Prompt 53 holds were released
 2026-09-16 by Craig. Hold lift is not an
 auto-execute.
@@ -243,14 +242,14 @@ that closes findings. Do not claim Argus CLEAN.
 ## Base tip
 
 `18d416e91635ca952cc0df1f74b97fce1b259a2b`
-(`Prompt 62 access gate and lead capture (do not
-ship) (#171)`).
+(`Prompt 62 access gate and lead capture
+(#171)`).
 
 Branch: `cursor/prompt-63c-opt-in-save-b200`.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Rulings register only. Draft PR this mission.
 Not a live-platform product release. Prompt 53

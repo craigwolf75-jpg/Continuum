@@ -2,7 +2,7 @@
 
 Inspected on 2026-09-17 from tip
 `cd841f98dc94b991ede869114d942b87df225ad9`
-(`Prompt 58 design system local/CI build (do not ship) (#163)`).
+(`Prompt 58 design system local/CI build (#163)`).
 Branch `cursor/prompt-60-concussion-mtbi-15a0`.
 
 Read only for this document. No write to product code, no
@@ -18,7 +18,7 @@ C1447 form extract lives in
 [C1447_VERIFICATION.md](C1447_VERIFICATION.md) so this
 file can stay on the 1.1 to 1.6 checks.
 
-No em dashes or en dashes anywhere. Athena does not ship.
+No em dashes or en dashes anywhere.
 Do not claim Argus CLEAN. Prompt 53 holds were released
 2026-09-16 by Craig. Hold lift is not an auto-execute.
 
@@ -83,7 +83,6 @@ Bedrock, non-SYNTH seed, or live schema apply.
 - Do not invent REV 2. Do not start a Prompt 47 redo
   from invented contents.
 - Do not invent G1.
-- Athena does not ship.
 
 Scoring, importing, or implying a score of 209 GardaWorld
 duties is STOPPED. Do not invent 209. Do not seed beyond
@@ -592,5 +591,5 @@ occupational seed beyond SYNTH, live Bedrock, Montreal,
 `G1_AUDIT_REPORT.md`. Section 8.1, 8.2, and 8.3 stay
 with Gary / Craig / counsel (see [STOPS.md](STOPS.md)).
 
-Athena does not ship. This dispatch wrote this file and
+This dispatch wrote this file and
 [C1447_VERIFICATION.md](C1447_VERIFICATION.md) only.

@@ -318,4 +318,4 @@ Genuine conflicts found in this build:
 
 Local proof: Postgres 16 (CI remains Postgres 15), all platform SQL tests
 green, all `clinical/engine` tests green, prompt47/49/50 Node suites green.
-Athena does not ship.
+Hermes ships only when Craig names ship.

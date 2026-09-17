@@ -105,4 +105,4 @@ better.
 - No occupational seed.
 - No schema apply.
 - `package.json` locked.
-- Athena does not ship. Hermes ships only when Craig names ship.
+- Hermes ships only when Craig names ship.

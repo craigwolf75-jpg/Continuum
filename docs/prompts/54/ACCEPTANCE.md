@@ -4,7 +4,7 @@
 the Prompt 54 acceptance record. See
 [../58/ACCEPTANCE.md](../58/ACCEPTANCE.md).
 
-Merged tip 282b3f7c149a. Production 6484101032. Athena does not ship.
+Merged tip 282b3f7c149a. Production 6484101032.
 No em dashes or en dashes anywhere.
 
 A proof is a file, a suite, or a named STOP. Intended work is not

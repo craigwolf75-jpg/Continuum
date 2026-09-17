@@ -14,7 +14,7 @@ Craig verifies Check 1, and this build does not create a screen ID for the
 Prompt 45 section 9.2 coordinator daily dashboard.
 
 Standing holds unchanged: no live Bedrock, Prompt 44 Canada/no-train STOP,
-no occupational seed, 0018/0019 unapplied, Athena does not ship, no live
+no occupational seed, 0018/0019 unapplied, no live
 schema apply, `package.json` locked. Prompt 51 Design System tokens and CI
 may still be landing on a separate PR. This file does not touch
 `docs/prompts/51-design-system/SECTION_1.md`. No em dashes or en dashes

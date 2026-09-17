@@ -3,7 +3,7 @@
 Real stops only. Prompt 61 product-build DRAFT starts from
 tip 5a94eb6cb62a8f1f12adf88b7cafaf1e9e63d1e9. This draft
 is the allowed product build after Section 1. Still not a
-live-platform product release. Athena does not ship. No em
+live-platform product release. No em
 dashes or en dashes anywhere.
 
 Section 0 language and claim rules override everything.
@@ -299,7 +299,7 @@ Argus CLEAN.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Allowed product-build DRAFT against SYNTH only. Not a
 live-platform product release. Prompt 53 holds were

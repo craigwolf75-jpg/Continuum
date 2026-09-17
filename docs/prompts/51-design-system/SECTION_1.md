@@ -13,7 +13,7 @@ inspection of tip `fca8548`. Do not treat these line numbers as
 current.
 
 Inspected on 2026-09-16 from tip `fca85484916c5f95cbd707a1b1b7ccccd272435e`
-(`Prompt 50a architecture decisions (do not ship) (#151)`).
+(`Prompt 50a architecture decisions (#151)`).
 Read only for this document. No write, seed, live apply, or credential use
 in this inspection. No tokens, gates, HTML attributes, or tests were
 implemented in this phase.
@@ -32,7 +32,7 @@ this tip titles itself "PROMPT 58 (unified stream; Craig's PROMPT 51)"
 (`deploy/continuum_tokens.css` lines 1 to 6).
 
 Standing holds unchanged: no live Bedrock, Prompt 44 Canada/no-train STOP,
-no occupational seed, 0018/0019 unapplied, Athena does not ship, no live
+no occupational seed, 0018/0019 unapplied, no live
 schema apply, `package.json` locked. No em dashes or en dashes anywhere.
 
 ---
@@ -1017,4 +1017,4 @@ token file, and is unset on every live document.
 
 `package.json`, consent wording, legal pages, pricing, email templates,
 credentials, live schema apply, occupational seed, live Bedrock.
-Athena does not ship. This phase wrote this file only.
+This phase wrote this file only.

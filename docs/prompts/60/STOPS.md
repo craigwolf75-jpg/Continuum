@@ -4,7 +4,7 @@ Real stops only. Prompt 60 product-build DRAFT follows
 docs-only PR 164 (tip
 24adb5ff2ec35a8c039eda075fbfe29f0612ee0e). This draft
 is the allowed product build. Still not a
-live-platform product release. Athena does not ship. No em
+live-platform product release. No em
 dashes or en dashes anywhere.
 
 Section 0 language and claim rules override everything.
@@ -135,14 +135,14 @@ hour settle boundary only.
 
 ---
 
-## Do not ship scored check-in as Prompt 60
+## Scored check-in is not Prompt 60
 
 The legacy worker check-in voice is pain_score /
 mobility_score dual AM/PM. Prompt 60 replaces that
 voice with [CHECK_IN_COPY.md](CHECK_IN_COPY.md)
 task-linked provocation copy.
 
-**STOP.** Do not ship scored check-in as Prompt 60.
+**STOP.** Do not treat scored check-in as Prompt 60.
 Do not reuse pain_score or mobility_score as the
 concussion check-in.
 
@@ -264,7 +264,7 @@ Argus CLEAN.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Allowed product-build DRAFT: Sections 2 to 5 against
 SYNTH only, plus the worker check-in path. Not a

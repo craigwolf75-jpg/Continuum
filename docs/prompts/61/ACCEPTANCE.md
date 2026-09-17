@@ -3,7 +3,7 @@
 Product build draft follows the docs-first commit on this
 branch. This is a local/CI draft of the psychological
 injury pathway against SYNTH only. It is not a
-live-platform product release. Athena does not ship.
+live-platform product release.
 Prompt 53 holds were released 2026-09-16 by Craig. Hold
 lift is not an auto-execute.
 
@@ -105,7 +105,6 @@ Hold lift is not an auto-execute.
   was amended to 0 so the conflict rule can show a
   not_required line.
 - Hub auth UNVERIFIED: STOP for ship.
-- Athena does not ship.
 
 ---
 

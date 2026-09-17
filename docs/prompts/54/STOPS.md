@@ -5,7 +5,7 @@ the Prompt 54 stop list. See [../58/STOPS.md](../58/STOPS.md).
 
 Real stops only. Prompt 54 is sequenced for local/CI review and
 build. This prompt adds no module, no dashboard, no AI component,
-and no screen. Athena does not ship. No em dashes or en dashes
+and no screen. No em dashes or en dashes
 anywhere.
 
 ---
@@ -143,7 +143,7 @@ gate pass.
 
 ---
 
-## Athena does not ship
+## Deploy gate
 
 Merged and deployed. Local/CI surface work. Not a live-platform
 product release. Prompt 53 holds stand. Hermes ships only when

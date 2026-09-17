@@ -530,4 +530,4 @@ to Craig and privacy counsel (open item 7). Not a builder value.
 
 `package.json`, consent wording, legal pages, pricing, email templates,
 credentials, live schema apply, occupational seed, live Bedrock.
-Schema files only. Athena does not ship.
+Schema files only.

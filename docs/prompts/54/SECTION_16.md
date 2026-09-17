@@ -6,7 +6,7 @@ the Prompt 54 acceptance map. See
 
 Merged tip 282b3f7c149a. Tokens and gates only.
 Deployed Production 6484101032. Hub auth remains unverified by Craig.
-Athena does not ship. No em dashes or en dashes anywhere.
+No em dashes or en dashes anywhere.
 
 This is the Prompt 54 Design System / Surface Standard acceptance
 map. It is not Core Platform Foundations. The earlier map at

@@ -85,7 +85,7 @@ discovery, no live access. That file is not G1 closed. Do not invent
 G1.
 
 Standing holds unchanged: no live schema apply, `0018` and `0019`
-unapplied, Athena does not ship, `package.json` locked. No em dashes
+unapplied, `package.json` locked. No em dashes
 or en dashes anywhere.
 
 ---
@@ -753,7 +753,6 @@ lift is not an auto-execute. Not relaxed here as a ship.
   invented contents.
 - Do not invent G1. `G1_AUDIT_REPORT.md` (2026-08-13) is
   read-only discovery, not G1 closed.
-- Athena does not ship.
 
 ---
 
@@ -816,4 +815,4 @@ open defects.
 templates, credentials, live schema apply, occupational seed, live
 Bedrock, Montreal, `platform/db`, `docs/prompts/50/`,
 `docs/prompts/50a/`, `G1_AUDIT_REPORT.md`.
-Athena does not ship. This phase wrote this file only.
+This phase wrote this file only.
