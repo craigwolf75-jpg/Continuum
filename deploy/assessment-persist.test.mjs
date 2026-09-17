@@ -101,7 +101,7 @@ fireClick('to-snapshot'); // stage1 -> snapshot
 ok('snapshot render does not call client.rpc', renderRpcCalls === 0);
 ok('snapshot renders exactly one save slot', (root.innerHTML.match(/data-save-slot/g) || []).length === 1);
 ok('snapshot save control states what saving does in one sentence',
-  root.innerHTML.indexOf('Saving records an anonymous summary of your result to help improve the assessment.') !== -1);
+  root.innerHTML.indexOf('Saving records an anonymous summary of the result you already see.') !== -1);
 ok('snapshot save control is a plain, non pre checked button',
   /<button type="button" class="crs-btn crs-btn-secondary" data-action="save-result" data-stage-reached="1">Save my result<\/button>/.test(root.innerHTML));
 
@@ -165,6 +165,8 @@ ok('click driven save with a rejecting client does not show the saved confirmati
   root._slot.innerHTML.indexOf('Your result is saved.') === -1);
 ok('click driven save with a rejecting client shows the neutral retry message',
   root._slot.innerHTML.indexOf('Could not save right now.') !== -1);
+ok('click driven save with a rejecting client names the retry window',
+  root._slot.innerHTML.indexOf('Try again in a few minutes.') !== -1);
 ok('click driven save with a rejecting client leaves the button in place to retry',
   root._slot.innerHTML.indexOf('Save my result') !== -1);
 
