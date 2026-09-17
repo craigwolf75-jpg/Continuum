@@ -21,8 +21,9 @@ folds in.
 - Lead: athena (architecture), calliope (register and stops), heracles (suite)
 - Gate: draft PR only. Athena does not ship. Hermes does not treat this as a ship.
 - Result so far: Section 1 written before product code. Section 2 C1447
-  verified and skipped (Prompt 60 already built it). Section 10 open items
-  reported, not decided.
+  verified and skipped (Prompt 60 already built it). Allowed psych
+  pathway built against SYNTH. Section 10 open items reported, not
+  decided. Draft PR only.
 - Human gate: Section 10.1 counsel, 10.2 counsel, 10.3 Craig, 10.4 Craig.
   Do not decide in code.
 

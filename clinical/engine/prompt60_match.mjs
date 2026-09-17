@@ -172,6 +172,82 @@ function evaluateTest(test, duty, restriction, assignment) {
     return null;
   }
 
+  if (kind === "factor_present") {
+    const score = scoreFor(duty, test.factor_id);
+    if (score && score.frequency_band === "not_required") return null;
+    if (!score || score.source === "unscored" || score.intensity == null) {
+      return { hit: "conditional", reason: CONDITIONAL_UNSCORED, draft: false, factor_rating: score };
+    }
+    if (score.source === "ai_drafted") {
+      return {
+        hit: "conditional",
+        reason: "Conditional: " + labelOf(restriction) + " (draft)",
+        draft: true,
+        factor_rating: score,
+      };
+    }
+    return { hit: "exclude", reason: excludedBy(restriction), draft: false, factor_rating: score };
+  }
+
+  if (kind === "volume_conditional") {
+    const ids = Array.isArray(test.factor_ids) ? test.factor_ids : [];
+    for (const fid of ids) {
+      const score = scoreFor(duty, fid);
+      if (score && score.frequency_band === "not_required") continue;
+      if (!score || score.source === "unscored" || score.intensity == null) {
+        return { hit: "conditional", reason: CONDITIONAL_UNSCORED, draft: false, factor_rating: score };
+      }
+      if (score.source === "ai_drafted") {
+        return {
+          hit: "conditional",
+          reason: "Conditional: " + labelOf(restriction) + " (draft)",
+          draft: true,
+          factor_rating: score,
+        };
+      }
+      if (score.intensity === "moderate" || score.intensity === "high") {
+        const val = restriction && restriction.value ? restriction.value : null;
+        let shown = "";
+        if (val && val.percent != null) shown = " (" + String(val.percent) + " percent)";
+        else if (val && val.count != null) shown = " (count " + String(val.count) + ")";
+        return {
+          hit: "conditional",
+          reason: "Conditional: " + labelOf(restriction) + shown,
+          draft: false,
+          factor_rating: score,
+        };
+      }
+    }
+    return null;
+  }
+
+  if (kind === "assignment_site") {
+    if (!assignment || assignment.site_id == null || assignment.site_id === "") return null;
+    const banned = restriction && restriction.value
+      ? (restriction.value.site_ref || restriction.value.site_id)
+      : null;
+    if (banned != null && String(assignment.site_id) === String(banned)) {
+      return { hit: "exclude", reason: excludedBy(restriction), draft: false, factor_rating: null, assignment_only: true };
+    }
+    return null;
+  }
+
+  if (kind === "roster_individual") {
+    const val = restriction && restriction.value ? restriction.value : null;
+    const named = val && (val.person_ref || val.person_free_text);
+    const roster = (assignment && assignment.roster) || [];
+    if (!named || !Array.isArray(roster) || roster.length === 0) return null;
+    const hit = roster.some((p) => {
+      if (p == null) return false;
+      if (typeof p === "string") return p === named;
+      return p.ref === named || p.name === named || p.person_ref === named;
+    });
+    if (hit) {
+      return { hit: "exclude", reason: excludedBy(restriction), draft: false, factor_rating: null, assignment_only: true };
+    }
+    return null;
+  }
+
   return null;
 }
 
@@ -232,15 +308,19 @@ export function matchPrompt60Duty(duty, restrictions, context) {
     const tests = Array.isArray(mapping.tests) ? mapping.tests : [];
 
     if (mapping.assignment_only && !mapping.duty_exclude) {
-      if (restriction.code === "no_night_or_rotating_shift" && assignment) {
+      if (assignment) {
         for (const test of tests) {
           const hit = evaluateTest(test, duty, restriction, assignment);
           if (hit && hit.hit === "exclude") {
-            excluded = { ...hit, restriction, assignment_only: true };
+            if (!excluded) {
+              excluded = { ...hit, restriction, assignment_only: true };
+            }
+          } else if (hit && hit.hit === "conditional" && !excluded && !conditional) {
+            conditional = { ...hit, restriction };
           }
         }
       }
-      if (past && tests.length === 0) {
+      if (past && !excluded) {
         pastReviewConditional = { restriction, reason: CONDITIONAL_PAST_REVIEW };
       }
       continue;
@@ -260,7 +340,9 @@ export function matchPrompt60Duty(duty, restrictions, context) {
     }
 
     if (thisHit && thisHit.hit === "exclude") {
-      excluded = { ...thisHit, restriction };
+      if (!excluded || excluded.assignment_only) {
+        excluded = { ...thisHit, restriction };
+      }
       continue;
     }
     if (thisHit && thisHit.hit === "conditional") {

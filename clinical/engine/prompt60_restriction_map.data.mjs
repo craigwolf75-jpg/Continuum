@@ -120,6 +120,49 @@ export const PROMPT60_RESTRICTION_MAP = Object.freeze({
     assignment_only: true,
     tests: [],
   },
+  no_public_facing_duty: {
+    duty_exclude: true,
+    assignment_only: false,
+    tests: [
+      { kind: "factor_intensity", factor_id: 10, exclude_when: ["moderate", "high"] },
+      { kind: "factor_intensity", factor_id: 11, exclude_when: ["moderate", "high"] },
+    ],
+  },
+  no_conflict_or_crisis_response_duty: {
+    duty_exclude: true,
+    assignment_only: false,
+    tests: [
+      { kind: "factor_present", factor_id: 12 },
+    ],
+  },
+  reduced_caseload_or_task_volume: {
+    duty_exclude: false,
+    assignment_only: false,
+    tests: [
+      { kind: "volume_conditional", factor_ids: [3, 8] },
+    ],
+  },
+  no_assignment_to_specified_site: {
+    duty_exclude: false,
+    assignment_only: true,
+    tests: [
+      { kind: "assignment_site" },
+    ],
+  },
+  no_contact_with_specified_individual: {
+    duty_exclude: false,
+    assignment_only: true,
+    tests: [
+      { kind: "roster_individual" },
+    ],
+  },
+  predictable_schedule_required_no_on_call: {
+    duty_exclude: false,
+    assignment_only: true,
+    tests: [
+      { kind: "assignment_shift", exclude_when: ["on_call", "unpredictable"] },
+    ],
+  },
 });
 
 export function mappingFor(code) {
