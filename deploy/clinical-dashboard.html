@@ -9,15 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
 <style>
-:root{--navy:var(--ink-900);--gold:var(--action-600);--goldbg:var(--warn-050);--ink:var(--ink-900);--muted:var(--ink-700);--soft:var(--ink-400);--line:var(--ink-100);--bg:var(--ink-050);
---card:var(--white);--bright:var(--ink-050);--low:var(--action-050);--cont:var(--action-050);--red:var(--stop-700);--alert:var(--stop-600);--redbg:var(--stop-050);--teal:var(--ink-400);--tealbg:var(--action-050)}
+:root{--navy:var(--ink-900);--goldbg:var(--state-caution-bg);--ink:var(--text-primary);--muted:var(--text-secondary);--soft:var(--ink-400);--line:var(--border-divider);--bg:var(--bg-page);
+--card:var(--bg-surface);--bright:var(--ink-050);--low:var(--action-050);--cont:var(--action-050);--red:var(--stop-700);--alert:var(--stop-600);--redbg:var(--stop-050);--teal:var(--ink-400);--tealbg:var(--action-050)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font:14px/1.5 "Public Sans",system-ui,sans-serif}
+body{background:var(--bg);color:var(--text-primary);font:14px/1.5 "Public Sans",system-ui,sans-serif;font-weight:400}
 .msym{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;display:inline-block;vertical-align:middle}
 header.top{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:0 24px}
 .searchbox{position:relative;width:340px;max-width:44vw}
 .searchbox input{width:100%;border:none;border-radius:10px;padding:10px 12px 10px 38px;font:inherit;font-size:13px;background:var(--low);outline:none}
-.searchbox input:focus{box-shadow:0 0 0 2px var(--gold)}
+.searchbox input:focus{box-shadow:0 0 0 2px var(--focus-ring)}
 .searchbox .msym{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:19px;color:var(--soft)}
 .who{display:flex;align-items:center;gap:10px;cursor:default}
 .who .wt{text-align:right}
@@ -30,82 +30,81 @@ aside.side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:240px;backgroun
 .side .brand b{color:var(--white);font-size:18px;display:block}
 .side .brand span{color:var(--ink-400);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase}
 .side nav{flex:1;margin-top:14px}
-.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:var(--ink-300);font:inherit;font-size:12.5px;font-weight:700;padding:12px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left}
+.side nav button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;color:var(--ink-300);font:inherit;font-size:12.5px;font-weight:700;padding:12px 24px;cursor:pointer;border-left:4px solid transparent;text-align:left;min-height:44px}
 .side nav button:hover{color:var(--white);background:var(--ink-700)}
-.side nav button.on{color:var(--white);background:var(--ink-700);border-left-color:var(--gold)}
+.side nav button.on{color:var(--white);background:var(--ink-700);border-left-color:var(--action-600)}
 .side .foot{padding:18px 24px}
-.newcase{width:100%;background:var(--gold);color:var(--ink-900);border:none;border-radius:10px;padding:12px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:14px;transition:transform .15s}
+.newcase{width:100%;background:var(--action-600);color:var(--white);border:none;border-radius:10px;padding:12px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:14px;min-height:44px;transition:transform .25s}
 .newcase:hover{transform:scale(1.02)}
 .side .foot a{display:flex;gap:12px;align-items:center;color:var(--ink-300);font-size:12px;font-weight:700;text-decoration:none;padding:6px 0}
 .side .foot a:hover{color:var(--white)}
 main{margin-left:240px;padding:88px 24px 60px;min-height:100vh}
 .wrap{max-width:1180px;margin:0 auto}
-h1{font-size:29px;color:var(--navy)}
-h2{font-size:22px;color:var(--navy)}
+h1{font-size:29px;font-weight:600;color:var(--text-primary)}
+h2{font-size:22px;font-weight:600;color:var(--text-primary)}
 .sub{color:var(--muted);font-size:13.5px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(14,27,44,.08)}
-.btn{background:var(--navy);color:var(--white);border:none;border-radius:10px;padding:12px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
-.btn:hover{background:var(--ink-700)}
-.btn.gold{background:var(--gold);color:var(--ink-900)}
-.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--border-card);border-radius:12px;box-shadow:0 4px 14px rgba(14,27,44,.08)}
+.btn{background:var(--navy);color:var(--white);border:none;border-radius:10px;padding:12px 16px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;transition:opacity .25s,transform .25s}
+.btn:hover{opacity:.92}
+.btn.gold{background:var(--action-600);color:var(--white)}
+.btn.ghost{background:var(--card);border:1px solid var(--border-card);color:var(--ink)}
 .btn.line{background:var(--card);border:1px solid var(--navy);color:var(--navy)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:disabled:hover{opacity:.45;transform:none}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
-.kpi{background:var(--card);border-radius:12px;padding:16px;border-left:4px solid var(--navy);box-shadow:0 2px 8px rgba(14,27,44,.06)}
-.kpi.red{border-left-color:var(--alert)}.kpi.gold{border-left-color:var(--gold)}.kpi.teal{border-left-color:var(--teal)}
-.kpi .lbl{font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--muted);text-transform:uppercase}
-.kpi .n{font-size:29px;font-weight:700;margin-top:4px}
+.kpi{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border-card);border-left:4px solid var(--navy);box-shadow:0 2px 8px rgba(14,27,44,.06)}
+.kpi .lbl{font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--text-secondary);text-transform:uppercase}
+.kpi .n{font-size:29px;font-weight:700;margin-top:4px;color:var(--text-primary)}
 .kpi .tag{font-size:11px;color:var(--muted);margin-left:6px}
-.esccard{border-radius:12px;padding:16px;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow .2s}
-.esccard:hover{box-shadow:0 8px 22px rgba(14,27,44,.14)}
-.esccard.urgent{background:rgba(255,218,214,.35);border:1px solid var(--redbg)}
-.esccard.stagnant{background:var(--card);border:1px solid var(--line)}
-.esccard .deco{position:absolute;top:0;right:8px;opacity:.09;font-size:64px}
+.esccard{background:var(--bg-surface);border:1px solid var(--border-card);border-left:4px solid var(--border-strong);border-radius:12px;padding:18px;cursor:pointer;position:relative;overflow:hidden;transition:opacity .25s,transform .25s}
+.esccard:hover{transform:translateY(-1px)}
+.esccard.review{border-left-color:var(--state-caution)}
+.esccard.stagnant{border-left-color:var(--border-strong)}
 .badge{font-size:10px;font-weight:700;text-transform:uppercase;border-radius:999px;padding:2px 9px}
-.badge.urgent{background:var(--alert);color:var(--white)}
-.badge.stagnant{background:var(--action-600);color:var(--warn-800)}
+.badge.review{background:var(--state-draft-bg);color:var(--state-draft-text)}
+.badge.plateau{background:var(--ink-100);color:var(--ink-700)}
 .mini{background:rgba(255,255,255,.65);border-radius:8px;padding:8px 10px}
 .mini .l{font-size:10.5px;color:var(--muted)}
-.mini b{font-size:19px}
+.mini b{font-size:19px;color:var(--text-primary);font-weight:700}
 table{width:100%;border-collapse:collapse}
-th{background:var(--low);font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:left;padding:13px 16px}
-td{padding:13px 16px;border-top:1px solid var(--line);font-size:13px;vertical-align:middle}
+th{background:var(--low);font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--text-secondary);text-transform:uppercase;text-align:left;padding:13px 16px}
+td{padding:13px 16px;border-top:1px solid var(--line);font-size:13.5px;font-weight:400;vertical-align:middle}
 tr.rl{cursor:pointer}tr.rl:hover td{background:var(--bright)}
 .avatar{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:var(--white);background:var(--navy);margin-right:10px;flex-shrink:0}
-.mobbar{width:80px;height:8px;background:var(--cont);border-radius:4px;overflow:hidden;margin:0 auto}
-.mobbar i{display:block;height:8px;border-radius:4px;background:var(--teal)}
+.mobbar{width:80px;height:8px;background:var(--border-divider);border-radius:4px;overflow:hidden;margin:0 auto}
+.mobbar i{display:block;height:8px;border-radius:4px;background:var(--ink-700)}
 .stchip{display:inline-block;border-radius:5px;padding:3px 8px;font-size:11px;font-weight:700}
 .s-off_work{background:var(--redbg);color:var(--stop-800)}.s-light_duty{background:var(--tealbg);color:var(--ink-700)}
 .s-full_duty_pending{background:var(--goldbg);color:var(--warn-800)}.s-signed_off{background:var(--ok-050);color:var(--ok-700)}
-.s-esc{background:var(--redbg);color:var(--red)}
-label.fl{font-size:11px;letter-spacing:.08em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+.s-esc{background:var(--state-draft-bg);color:var(--state-draft-text)}
+label.fl{font-size:11px;letter-spacing:.08em;font-weight:700;color:var(--text-secondary);text-transform:uppercase;display:block;margin-bottom:6px}
 select,input[type=text]{width:100%;height:44px;border:1px solid var(--line);border-radius:10px;padding:0 12px;font:inherit;font-size:13.5px;background:var(--card);outline:none}
 textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:13.5px;min-height:72px;resize:vertical;outline:none}
-select:focus,input:focus,textarea:focus{box-shadow:0 0 0 2px var(--gold)}
-input[type=range]{width:100%;accent-color:var(--gold)}
+select:focus,input:focus,textarea:focus{box-shadow:0 0 0 2px var(--focus-ring)}
+input[type=range]{width:100%;accent-color:var(--action-600)}
 .guideline{background:var(--tealbg);border:1px solid var(--ink-200);border-radius:12px;padding:16px;margin-top:16px}
 .guideline p{font-size:13px;font-style:italic;color:var(--muted)}
 .adminrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .adminrow:last-child{border-bottom:none}
 .pillst{border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700}
 .pillst.ok{background:var(--ok-050);color:var(--ok-700)}.pillst.gold{background:var(--goldbg);color:var(--warn-800)}.pillst.off{background:var(--cont);color:var(--ink-700)}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:var(--white);border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:all .3s;z-index:80;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:var(--white);border-radius:12px;padding:11px 18px;font-size:12.5px;opacity:0;transition:opacity .3s,transform .3s;z-index:80;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast b{color:var(--gold)}
+.toast b{color:var(--white);font-weight:700}
 .bars .brow{margin:10px 0}
 .bars .bl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--muted)}
-.bars .bt{height:8px;border-radius:4px;background:var(--cont);overflow:hidden}
-.bars .bt i{display:block;height:8px;border-radius:4px}
+.bars .bt{height:8px;border-radius:4px;background:var(--border-divider);overflow:hidden}
+.bars .bt i{display:block;height:8px;border-radius:4px;background:var(--ink-700)}
 .statebar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0}
 .statebar .st{font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 10px;background:var(--cont);color:var(--muted)}
-.statebar .st.here{background:var(--gold);color:var(--ink-900)}
+.statebar .st.here{background:var(--action-600);color:var(--white)}
 .statebar .st.past{background:var(--ok-050);color:var(--ok-700)}
 .statebar .arrow{color:var(--ink-300);font-size:12px}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
 .bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--card);border-top:1px solid var(--line);justify-content:space-around;padding:8px 10px}
-.bottomnav button{background:none;border:none;font:inherit;font-size:10px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 8px}
-.bottomnav button.on{color:var(--warn-800)}
-.bottomnav button.on .msym{color:var(--gold)}
+.bottomnav button{background:none;border:none;font:inherit;font-size:10px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 8px;min-height:44px}
+.bottomnav button.on{color:var(--action-600)}
+.bottomnav button.on .msym{color:var(--action-600)}
 @media(max-width:1080px){.kpis{grid-template-columns:1fr 1fr}.two,.grid2{grid-template-columns:1fr !important}}
 @media(max-width:760px){aside.side{display:none}main{margin-left:0;padding:84px 12px 96px}.kpis{grid-template-columns:1fr}.searchbox{width:52vw}.bottomnav{display:flex}}
 @media print{aside.side,header.top,.toast{display:none !important}main{margin:0;padding:0}}
@@ -136,9 +135,9 @@ input[type=range]{width:100%;accent-color:var(--gold)}
   <div class="brand"><img src="/continuum-logo.svg" alt="Continuum Return to Work" style="width:150px;display:block"><span style="display:block;margin-top:7px">Clinical Recovery</span><div style="color:var(--ink-400);font-size:11px;line-height:1.4;margin-top:7px;text-transform:none;letter-spacing:0">Should treatment or restrictions change</div></div>
   <nav id="sidenav"></nav>
   <div class="foot">
-    <a href="/hub#roles" style="color:var(--gold);font-weight:600;text-decoration:none;display:block;margin-bottom:6px">&#8592; All portals</a>
+    <a href="/hub#roles" style="color:var(--action-600);font-weight:600;text-decoration:none;display:block;margin-bottom:6px">&#8592; All portals</a>
     <button class="newcase" onclick="toast('New cases arrive from worker reports or first-aid conversion. Intake is not a clinical action in the pilot.')">New Case</button>
-    <a href="#" onclick="toast('The doctor decides; we show the information. The treating physician makes every medical and return-to-work decision.');return false"><span class="msym">help</span> Help</a>
+    <a href="#" onclick="toast('The doctor decides. Continuum shows the information. The treating physician makes every medical and return-to-work decision.');return false"><span class="msym">help</span> Help</a>
     <a href="#" onclick="resetAll();return false"><span class="msym">logout</span> Reset demo</a>
   </div>
 </aside>
@@ -171,7 +170,6 @@ function Pt(id){return S.patients.find(function(p){return p.id===id;});}
 function activeP(){return S.patients.filter(function(p){return p.status!=="signed_off";});}
 function escP(){return S.patients.filter(function(p){return p.esc;});}
 function fdpP(){return activeP().filter(function(p){return p.status==="full_duty_pending";});}
-function score(){var a=activeP();return a.length?Math.round(a.reduce(function(s,p){return s+p.prog;},0)/a.length):0;}
 function videosPending(){return S.patients.filter(function(p){return p.video;});}
 function audit(line){S.audit.unshift(new Date().toLocaleTimeString()+" "+line);S.audit=S.audit.slice(0,40);}
 /* ---------- the state machine: physician-only in product, legality enforced here ---------- */
@@ -207,41 +205,41 @@ function renderNav(){
  document.getElementById("bottomnav").innerHTML=NAV.filter(function(n){return n[0]!=="settings";}).map(function(n){
   return '<button class="'+(S.section===n[0]?"on":"")+'" onclick="go(\''+n[0]+'\')"><span class="msym">'+n[1]+'</span>'+n[2]+'</button>';}).join("");}
 function stchip(p){
- if(p.esc)return '<span class="stchip s-esc">Escalated</span>';
+ if(p.esc)return '<span class="stchip s-esc">Needs review</span>';
  return '<span class="stchip s-'+p.status+'">'+ST[p.status]+'</span>';}
-function painCell(p){var c=p.pain>=8?"var(--alert)":p.pain>=5?"var(--warn-800)":"var(--teal)";return '<b style="color:'+c+'">'+p.pain+'/10</b>';}
+function painCell(p){return '<b style="color:var(--text-primary)">'+p.pain+' / 10</b>';}
 function census(list){
  var ws=S.wsort||{key:null,dir:1};var sorted=list.slice();
  if(ws.key){sorted.sort(function(a,b){var va,vb;if(ws.key==="name"){va=a.name;vb=b.name;}else if(ws.key==="pain"){va=a.pain;vb=b.pain;}else{va=a.tenant;vb=b.tenant;}if(va<vb)return -1*ws.dir;if(va>vb)return 1*ws.dir;return 0;});}
  var ind=function(k){return ws.key===k?(ws.dir>0?' &#9650;':' &#9660;'):'';};
  return '<table><thead><tr><th onclick="sortW(\'name\')" style="cursor:pointer">Worker / Diagnosis'+ind("name")+'</th><th onclick="sortW(\'pain\')" style="cursor:pointer;text-align:center">Pain'+ind("pain")+'</th><th style="text-align:center">Mobility</th><th>Duty status</th><th onclick="sortW(\'tenant\')" style="cursor:pointer">Tenant'+ind("tenant")+'</th></tr></thead><tbody>'+
  sorted.map(function(p){
-  return '<tr class="rl" onclick="openP(\''+p.id+'\')"><td'+(p.esc&&p.esc.level==="urgent"?' style="border-left:4px solid var(--alert)"':"")+'>'+
-  '<span class="avatar" style="background:'+(p.esc?"var(--red)":"var(--navy)")+'">'+initials(p.name)+'</span><b>'+esc(p.name)+'</b>'+(p.id==="m"&&LIVE?' <span style="color:var(--warn-800);font-size:10px;font-weight:700">LIVE</span>':'')+'<div class="sub" style="font-size:11px;margin-left:42px">'+esc(p.dx)+'</div></td>'+
+  return '<tr class="rl" onclick="openP(\''+p.id+'\')"><td>'+
+  '<span class="avatar">'+initials(p.name)+'</span><b>'+esc(p.name)+'</b>'+(p.id==="m"&&LIVE?' <span style="color:var(--warn-800);font-size:10px;font-weight:700">LIVE</span>':'')+'<div class="sub" style="font-size:11px;margin-left:42px">'+esc(p.dx)+'</div></td>'+
   '<td style="text-align:center">'+painCell(p)+'</td>'+
-  '<td><div class="mobbar"><i style="width:'+(p.mob*10)+'%;background:'+(p.pain>=8?"var(--alert)":"var(--teal)")+'"></i></div></td>'+
+  '<td style="text-align:center"><div class="mobbar"><i style="width:'+(p.mob*10)+'%"></i></div><div class="sub" style="font-size:11px;margin-top:4px">'+p.mob+' / 10</div></td>'+
   '<td>'+stchip(p)+'</td><td class="sub" style="font-size:11.5px">'+esc(p.tenant)+'</td></tr>';}).join("")+'</tbody></table>';}
 /* ---------- dashboard ---------- */
 function insightCard(ins){if(!ins)return "";var row=function(l,v){return '<div class="ipart"><span class="il">'+l+'</span><span class="iv">'+esc(v)+'</span></div>';};return '<div class="insight"><div class="ihdr"><span class="prov intel">Flagged for the doctor to review</span></div>'+row("What changed",ins.changed)+row("Contributing signals",ins.contributors)+row("Period",ins.period)+row("Why it may matter",ins.matters)+row("What remains uncertain",ins.uncertain)+'<div class="ipart authority"><span class="il">Who holds authority</span><span class="iv">'+esc(ins.authority)+'</span></div></div>';}
 function renderDashboard(){
- var h='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px"><div><h1>Clinical Performance Overview</h1><p class="sub">Should treatment or restrictions change. Real-time recovery monitoring and patient triage across granted tenants.</p></div>'+
+ var h='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px"><div><h1>Clinical overview</h1><p class="sub">Cases that need your review. You decide treatment and restrictions.</p></div>'+
  '<div style="display:flex;gap:8px"><button class="btn ghost" onclick="go(\'workers\')"><span class="msym" style="font-size:18px">filter_list</span> Filters</button><button class="btn ghost" onclick="window.print()"><span class="msym" style="font-size:18px">file_download</span> Export</button></div></div>';
  h+='<div class="kpis">'+
- '<div class="kpi"><div class="lbl">Active patients</div><div class="n">'+activeP().length+'<span class="tag" style="color:var(--teal)">across 3 tenants</span></div></div>'+
- '<div class="kpi red"><div class="lbl">Open escalations</div><div class="n" style="color:var(--alert)">'+escP().length+'<span class="tag" style="color:var(--alert)">'+(escP().length?"urgent action":"clear")+'</span></div></div>'+
- '<div class="kpi gold"><div class="lbl">Recovery progress estimate</div><div class="n">'+score()+'%<span class="tag">general estimate</span></div></div>'+
- '<div class="kpi teal"><div class="lbl">Awaiting physician decision</div><div class="n">'+fdpP().length+'<span class="tag">the doctor decides</span></div></div>'+
+ '<div class="kpi"><div class="lbl">Active patients</div><div class="n">'+activeP().length+'<span class="tag">across 3 tenants</span></div></div>'+
+ '<div class="kpi"><div class="lbl">Open reviews</div><div class="n">'+escP().length+'<span class="tag">'+(escP().length?escP().length+" open":"clear")+'</span></div></div>'+
+ '<div class="kpi"><div class="lbl">Awaiting physician decision</div><div class="n">'+fdpP().length+'<span class="tag">the doctor decides</span></div></div>'+
+ '<div class="kpi"><div class="lbl">Videos awaiting review</div><div class="n">'+videosPending().length+'<span class="tag">awaiting review</span></div></div>'+
  '</div>';
  h+='<div class="grid2" style="display:grid;grid-template-columns:2fr 1fr;gap:14px"><div>';
- h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><span class="msym" style="color:var(--alert)">report</span><h2>Priority Escalations</h2></div>';
+ h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><h2>Cases for review</h2></div>';
  var e=escP();
- if(!e.length)h+='<div class="card" style="padding:16px" class="sub">No open escalations.</div>';
+ if(!e.length)h+='<div class="card" style="padding:16px" class="sub">No open reviews.</div>';
  else h+='<div class="two" style="display:grid;grid-template-columns:1fr;gap:10px">'+e.map(function(p){
   var u=p.esc.level==="urgent";
-  return '<div class="esccard '+p.esc.level+'" onclick="openP(\''+p.id+'\')"><span class="msym deco">warning</span>'+
-  '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><b style="color:var(--navy)">'+esc(p.name).toUpperCase()+'</b><div class="sub" style="font-size:11px">'+esc(p.dx)+'</div></div><span class="badge '+p.esc.level+'">'+p.esc.level+'</span></div>'+
-  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="mini"><div class="l">Pain score</div><b style="color:'+(u?"var(--alert)":"var(--navy)")+'">'+p.pain+'/10</b></div><div class="mini"><div class="l">Status</div><b style="font-size:13px">'+(u?"Stalled":"Plateaued")+'</b></div></div>'+
-  insightCard(p.esc.insight)+'<button class="btn'+(u?"":" line")+'" style="width:100%;margin-top:10px" onclick="event.stopPropagation();openP(\''+p.id+'\')">'+(u?"Initiate Review":"Adjust Program")+'</button>'+
+  return '<div class="esccard '+(u?"review":"stagnant")+'" onclick="openP(\''+p.id+'\')">'+
+  '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><b style="color:var(--text-primary)">'+esc(p.name).toUpperCase()+'</b><div class="sub" style="font-size:11px">'+esc(p.dx)+'</div></div><span class="badge '+(u?"review":"plateau")+'">'+(u?"Needs review":"Plateau signal")+'</span></div>'+
+  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div class="mini"><div class="l">Pain</div><b>'+p.pain+' / 10</b></div><div class="mini"><div class="l">Status</div><b style="font-size:13px">'+(u?"Needs review":"Plateau signal")+'</b></div></div>'+
+  insightCard(p.esc.insight)+'<button class="btn line" style="width:100%;margin-top:10px" onclick="event.stopPropagation();openP(\''+p.id+'\')">Open patient</button>'+
   '<p class="sub" style="font-size:11.5px;margin-top:6px">The treating physician makes every medical and return-to-work decision.</p></div>';}).join("")+'</div>';
  h+='<div class="card" style="overflow:hidden;margin-top:14px"><div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center"><h2>Current Patient Census</h2><span class="sub" style="font-size:11px">Pain and mobility scores <span class="prov worker">Worker reported</span></span></div>'+
  census(activeP().slice(0,8))+
@@ -253,10 +251,10 @@ function renderDashboard(){
  '<label class="fl">Worker name</label><select onchange="S.form.pid=this.value;save()"><option value="">Select patient...</option>'+
  activeP().map(function(p){return '<option value="'+p.id+'"'+(f.pid===p.id?" selected":"")+'>'+esc(p.name)+'</option>';}).join("")+'</select>'+
  '<div style="height:10px"></div><label class="fl">Injury type</label><input type="text" placeholder="e.g. Tendinitis, fracture" value="'+esc(f.injury)+'" oninput="S.form.injury=this.value">'+
- '<div style="height:10px"></div><label class="fl">Recovery prognosis</label><div style="display:flex;gap:10px;align-items:center"><input type="range" min="0" max="100" value="'+f.prog+'" oninput="S.form.prog=+this.value;this.nextElementSibling.textContent=this.value+\'%\'" style="flex:1"><b style="width:44px">'+f.prog+'%</b></div>'+
+ '<div style="height:10px"></div><label class="fl">Physician estimate of typical course</label><div style="display:flex;gap:10px;align-items:center"><input type="range" min="0" max="100" value="'+f.prog+'" oninput="S.form.prog=+this.value;this.nextElementSibling.textContent=this.value+\'%\'" style="flex:1"><b style="width:44px">'+f.prog+'%</b></div><p class="sub" style="font-size:11px;margin:4px 0 0">A prognosis the physician enters, not computed from scores.</p>'+
  '<div style="height:10px"></div><label class="fl">Work restrictions</label><textarea placeholder="Weight limits, overhead reach, hours..." oninput="S.form.restr=this.value">'+esc(f.restr)+'</textarea>'+
  '<button class="btn" style="width:100%;margin-top:12px" onclick="submitAssessment()"><span class="msym" style="font-size:18px">save</span> Submit Findings</button>'+
- '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="toast(\'The doctor decides; we show the information. Open the patient to record a physician sign-off or reassess.\')">Request Recovery Scan</button>'+
+ '<button class="btn ghost" style="width:100%;margin-top:8px" onclick="toast(\'The doctor decides. Continuum shows the information. Open the patient to record a physician sign-off or reassess.\')">Request movement review</button>'+
  '</div></div>';
  h+='<div class="guideline"><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;color:var(--teal)"><span class="msym">menu_book</span><b style="font-size:12px;letter-spacing:.06em">CLINICAL GUIDELINE</b></div><p>"For soft tissue lumbar cases stalled at week 6, Clinical protocol suggests a psychological barrier screen alongside graded loading."</p></div>';
  h+='</div></div>';
@@ -280,9 +278,9 @@ function renderWorkers(){
  var list=S.patients.slice();
  if(S.search)list=list.filter(function(p){return (p.name+" "+p.dx+" "+p.tenant).toLowerCase().indexOf(S.search.toLowerCase())>=0;});
  if(S.wfilter)list=list.filter(function(p){return bucketOf(p)===S.wfilter;});
- var BLABEL={ahead:"Ahead",ontrack:"On track",behind:"Behind",stalled:"Stalled"};
+ var BLABEL={ahead:"Physician estimate 80 and above",ontrack:"Physician estimate 60 to 79",behind:"Physician estimate 40 to 59",stalled:"Physician estimate under 40"};
  var h='<h1 style="margin-bottom:4px">Workers</h1><p class="sub" style="margin-bottom:14px">The full caseload, cross tenant via access grants. '+list.length+' shown.</p>';
- if(S.wfilter)h+='<div style="margin-bottom:12px"><span class="stchip s-esc">Filtered: '+BLABEL[S.wfilter]+' recovery progress estimate</span> <a href="#" onclick="S.wfilter=null;save();return false" style="color:var(--teal);font-size:12.5px;margin-left:8px">Clear</a></div>';
+ if(S.wfilter)h+='<div style="margin-bottom:12px"><span class="stchip s-esc">Filtered: '+BLABEL[S.wfilter]+'</span> <a href="#" onclick="S.wfilter=null;save();return false" style="color:var(--action-600);font-size:12.5px;margin-left:8px">Clear</a></div>';
  h+='<div class="card" style="overflow:hidden">'+census(list)+'</div>';
  return h;}
 function statebar(p){
@@ -292,19 +290,19 @@ function statebar(p){
 function renderDetail(p){
  if(!p)return renderWorkers();
  var legal=TRANSITIONS[p.status]||[];
- var h='<div style="margin-bottom:10px"><a href="#" onclick="S.detail=null;save();return false" style="color:var(--teal);font-size:12.5px;font-weight:700">&#8592; All workers</a></div>';
+ var h='<div style="margin-bottom:10px"><a href="#" onclick="S.detail=null;save();return false" style="color:var(--action-600);font-size:12.5px;font-weight:700">&#8592; All workers</a></div>';
  h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap"><div><h1>'+esc(p.name)+(p.id==="m"&&LIVE?' <span style="color:var(--warn-800);font-size:12px">LIVE</span>':'')+'</h1><p class="sub">'+esc(p.dx)+' &middot; '+esc(p.tenant)+' &middot; Day '+p.day+' of '+p.progn+'</p></div>'+stchip(p)+'</div>';
  h+=statebar(p);
  if(p.esc){
-  h+='<div class="card" style="padding:16px;margin:12px 0;border-left:5px solid var(--alert)"><b style="color:var(--alert);font-size:13px">'+(p.esc.level==="urgent"?"URGENT ESCALATION":"STAGNANT RECOVERY")+'</b>'+
+  h+='<div class="card" style="padding:16px;margin:12px 0;border-left:4px solid var(--border-strong)"><b style="color:var(--text-primary);font-size:13px">'+(p.esc.level==="urgent"?"Needs review":"Plateau signal")+'</b>'+
   '<p class="sub" style="margin:6px 0 10px">'+esc(p.esc.reason)+'</p>'+
   '<button class="btn" onclick="reviewEsc(\''+p.id+'\')">Mark reviewed and resolve</button>'+
   '<p class="sub" style="font-size:11.5px;margin-top:6px">The treating physician makes every medical and return-to-work decision.</p></div>';}
  h+='<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">';
  h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:8px">Recovery signal</h2>'+
  '<div class="adminrow"><span>Pain today</span>'+painCell(p)+'</div>'+
- '<div class="adminrow"><span>Mobility</span><b>'+p.mob+' / 10</b></div>'+
- '<div class="adminrow"><span>Recovery progress estimate</span><b>'+p.prog+'% <span class="msym" style="font-size:15px;color:var(--muted);cursor:pointer;vertical-align:middle" onclick="explainProg()" title="What this means">info</span></b></div>'+
+ '<div class="adminrow"><span>Mobility</span><b style="color:var(--text-primary)">'+p.mob+' / 10</b></div>'+
+ '<div class="adminrow"><span>Physician estimate</span><b style="color:var(--text-primary)">'+p.prog+'% <span class="msym" style="font-size:15px;color:var(--muted);cursor:pointer;vertical-align:middle" onclick="explainProg()" title="What this means">info</span></b></div>'+
  '<div class="adminrow"><span>Current restrictions</span><b style="max-width:56%;text-align:right;font-size:12px">'+esc(p.restr||"None set")+'</b></div>'+
  (p.note?'<p class="sub" style="font-size:12px;margin-top:10px;font-style:italic">"'+esc(p.note)+'"</p>':"")+'</div>';
  h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:8px">Clinical decision</h2>'+
@@ -318,13 +316,13 @@ function renderDetail(p){
  h+='<div class="card" style="padding:18px;margin-top:14px"><h2 style="margin-bottom:8px">Since last visit</h2>'+
   (p.since
    ? '<div class="adminrow"><span>Pain</span><b>'+esc(p.since.pain)+'</b></div><div class="adminrow"><span>Mobility</span><b>'+esc(p.since.mob)+'</b></div><div class="adminrow"><span>Elapsed</span><b>'+p.since.days+' days</b></div><p class="sub" style="font-size:12px;margin-top:8px">'+esc(p.since.summary)+'</p>'
-   : '<div class="adminrow"><span>Pain now</span><b>'+p.pain+' / 10</b></div><div class="adminrow"><span>Mobility now</span><b>'+p.mob+' / 10</b></div><div class="adminrow"><span>Trajectory</span><b style="color:'+(p.prog>=50?"var(--ok-700)":"var(--alert)")+'">'+(p.prog>=50?"On or ahead of prognosis":"Behind prognosis")+'</b></div>')+
+   : '<div class="adminrow"><span>Pain now</span><b style="color:var(--text-primary)">'+p.pain+' / 10</b></div><div class="adminrow"><span>Mobility now</span><b style="color:var(--text-primary)">'+p.mob+' / 10</b></div>')+
   '<div style="margin-top:12px"><div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px">Unresolved questions for this visit</div><textarea placeholder="Open questions to carry to the next appointment..." style="width:100%;min-height:52px" oninput="S.q=this.value">'+esc(S.q||"")+'</textarea></div></div>';
  if(p.video){
   h+='<div class="card" style="padding:18px;margin-top:14px"><h2 style="margin-bottom:6px">Movement video, awaiting review</h2><p class="sub" style="font-size:12px;margin-bottom:10px">Consented check-in video. Visible to this seat and the worker only; never the employer, never the board. Every view is audited.</p>'+
   '<button class="btn line" onclick="reviewVideo(\''+p.id+'\')"><span class="msym" style="font-size:18px">play_circle</span> Review and mark reviewed</button></div>';}
  return h;}
-function explainProg(){toast("Recovery progress estimate is the clinician's general estimate based on typical recovery patterns. It is entered here by the physician, not computed from the worker's scores.");}
+function explainProg(){toast("Physician estimate is the clinician's general estimate based on typical recovery patterns. It is entered here by the physician, not computed from the worker's scores.");}
 function reviewEsc(pid){
  var p=Pt(pid);if(!p||!p.esc)return;
  p.esc=null;
@@ -353,19 +351,18 @@ function renderClaims(){
 /* ---------- analytics ---------- */
 function renderAnalytics(){
  var a=activeP();
- var buckets={"Ahead (80%+)":0,"On track (60-79%)":0,"Behind (40-59%)":0,"Stalled (under 40%)":0};
- a.forEach(function(p){if(p.prog>=80)buckets["Ahead (80%+)"]++;else if(p.prog>=60)buckets["On track (60-79%)"]++;else if(p.prog>=40)buckets["Behind (40-59%)"]++;else buckets["Stalled (under 40%)"]++;});
- var h='<h1 style="margin-bottom:4px">Analytics</h1><p class="sub" style="margin-bottom:14px">The recovery signal across the caseload.</p>';
+ var denom=a.length||1;
+ var counts=[["Active patients",a.length],["Open reviews",escP().length],["Awaiting physician decision",fdpP().length],["Videos awaiting review",videosPending().length]];
+ var h='<h1 style="margin-bottom:4px">Analytics</h1><p class="sub" style="margin-bottom:14px">Caseload counts. Everything is tracking with independent clinician review.</p>';
  h+='<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">';
- h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Recovery progress estimate</h2>'+
- Object.keys(buckets).map(function(k){var v=buckets[k],pcnt=Math.round(v/a.length*100);
-  var bkey=k.indexOf("Ahead")===0?"ahead":k.indexOf("On track")===0?"ontrack":k.indexOf("Behind")===0?"behind":"stalled";
-  return '<div class="brow" style="cursor:pointer" title="Open these patients" onclick="S.wfilter=\''+bkey+'\';S.section=\'workers\';save()"><div class="bl"><span>'+k+'</span><span>'+v+' ('+pcnt+'%)</span></div><div class="bt"><i style="width:'+pcnt+'%;background:'+(k.indexOf("Stalled")===0?"var(--alert)":k.indexOf("Behind")===0?"var(--gold)":"var(--teal)")+'"></i></div></div>';}).join("")+'</div>';
- h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:6px">Caseload</h2>'+
- '<div class="adminrow"><span>Average recovery progress estimate</span><b>'+score()+'%</b></div>'+
- '<div class="adminrow"><span>Open escalations</span><b>'+escP().length+'</b></div>'+
- '<div class="adminrow"><span>Awaiting physician decision</span><b>'+fdpP().length+'</b></div>'+
- '<div class="adminrow"><span>Videos awaiting review</span><b>'+videosPending().length+'</b></div>'+
+ h+='<div class="card bars" style="padding:18px"><h2 style="margin-bottom:6px">Caseload counts</h2>'+
+ counts.map(function(row){var v=row[1],pcnt=Math.round(v/denom*100);
+  return '<div class="brow"><div class="bl"><span>'+row[0]+'</span><span>'+v+'</span></div><div class="bt"><i style="width:'+pcnt+'%"></i></div></div>';}).join("")+
+ '<p class="sub" style="font-size:11.5px;margin-top:10px">Bars are share of the active caseload. Color does not diagnose.</p></div>';
+ h+='<div class="card" style="padding:18px"><h2 style="margin-bottom:6px">Physician estimate on file</h2>'+
+ '<p class="sub" style="font-size:12px;margin-bottom:10px">Open the workers list by the estimate the physician entered. Counts only, not a verdict.</p>'+
+ [["ahead","Physician estimate 80 and above"],["ontrack","Physician estimate 60 to 79"],["behind","Physician estimate 40 to 59"],["stalled","Physician estimate under 40"]].map(function(row){var bkey=row[0],v=a.filter(function(p){return bucketOf(p)===bkey;}).length;
+  return '<div class="adminrow" style="cursor:pointer" onclick="S.wfilter=\''+bkey+'\';S.section=\'workers\';save()"><span>'+row[1]+'</span><b>'+v+'</b></div>';}).join("")+
  '<p class="sub" style="font-size:11.5px;margin-top:10px">Everything here is tracking and visualization with independent clinician review: no scoring, no forecasting, no treatment-altering alerts. That line is what keeps this outside device regulation.</p></div>';
  h+='</div>';
  return h;}
