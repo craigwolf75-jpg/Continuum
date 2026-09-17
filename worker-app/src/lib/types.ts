@@ -19,6 +19,7 @@ export type Prompt60CheckInRecord = {
   hours_worked: number | null;
   free_text: string | null;
   provocation: ProvocationRecord[];
+  follow_up_answers?: Record<string, 'yes' | 'no'>;
   fixture: true;
 };
 export type LightDuty = { id: string; injury_id: string; task_description: string | null; medical_restrictions: string | null; completed_date: string | null; worker_feedback: string | null };

@@ -25,13 +25,25 @@ type Draft = {
 
 const EMPTY: Draft = { performed: [], worse: '', worseDuties: [], settled: '', hoursWorked: '', freeText: '' };
 
+const FOCUS = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold';
+const MOTION = 'motion-safe:duration-200 motion-safe:transition-colors';
+
+function choiceClass(pressed: boolean) {
+  return (
+    'min-h-12 w-full rounded-xl border p-3 text-left ' + MOTION + ' ' + FOCUS + ' ' +
+    (pressed ? 'border-gold bg-chipbg font-semibold' : 'border-line')
+  );
+}
+
 function buildProvocation(date: string, draft: Draft): ProvocationRecord[] {
   const worseSet = new Set(draft.worse === 'yes' ? draft.worseDuties : []);
   return draft.performed.map((duty) => {
     const worsened = worseSet.has(duty) ? 'yes' : 'no';
     let settled_within_24h: ProvocationRecord['settled_within_24h'] = 'yes';
     if (worsened === 'yes') {
-      settled_within_24h = draft.settled === 'yes' ? 'yes' : 'unanswered';
+      if (draft.settled === 'yes') settled_within_24h = 'yes';
+      else if (draft.settled === 'no') settled_within_24h = 'no';
+      else settled_within_24h = 'unanswered';
     }
     return { duty, date, worsened, settled_within_24h };
   });
@@ -117,6 +129,7 @@ export default function CheckIn() {
       if (existing) {
         const next: Prompt60CheckInRecord = {
           ...existing,
+          follow_up_answers: { ...(existing.follow_up_answers || {}), [item.duty]: followAnswer },
           provocation: (existing.provocation || []).map((p) =>
             p.duty === item.duty ? { ...p, settled_within_24h: followAnswer } : p
           ),
@@ -154,10 +167,10 @@ export default function CheckIn() {
         <p className="font-semibold mt-3">{question}</p>
         <p className="text-muted text-sm mt-2">Settled means you feel the same as before that duty.</p>
         <div className="flex flex-col gap-2 mt-3">
-          <button type="button" className="w-full border border-line rounded-xl p-3 text-left" aria-pressed={followAnswer === 'yes'} onClick={() => setFollowAnswer('yes')}>Yes, it has settled</button>
-          <button type="button" className="w-full border border-line rounded-xl p-3 text-left" aria-pressed={followAnswer === 'no'} onClick={() => setFollowAnswer('no')}>No, it has not settled</button>
+          <button type="button" className={choiceClass(followAnswer === 'yes')} aria-pressed={followAnswer === 'yes'} onClick={() => setFollowAnswer('yes')}>Yes, it has settled</button>
+          <button type="button" className={choiceClass(followAnswer === 'no')} aria-pressed={followAnswer === 'no'} onClick={() => setFollowAnswer('no')}>No, it has not settled</button>
         </div>
-        <button className="w-full bg-gold text-navy font-semibold rounded-xl mt-3" disabled={busy || !followAnswer} onClick={persistFollowUp}>Save check-in</button>
+        <button className={'w-full min-h-12 bg-gold text-navy font-semibold rounded-xl mt-3 p-3 ' + FOCUS} disabled={busy || !followAnswer} onClick={persistFollowUp}>Save check-in</button>
         {status === 'saved' && <p className="text-muted text-sm mt-2">Your answer is saved. The doctor can see it. Your employer does not see this follow up.</p>}
         {status === 'failed' && <p className="text-muted text-sm mt-2">Your check-in is not saved yet. What you typed is still here. Try again in a few minutes.</p>}
         {status === 'idle' && <p className="text-muted text-sm mt-2">This follow up is still open. Save an answer when you can.</p>}
@@ -192,9 +205,10 @@ export default function CheckIn() {
         <ul className="mt-2 space-y-2">
           {duties.map((d) => (
             <li key={d.duty_id}>
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-3 min-h-12 w-full">
                 <input
                   type="checkbox"
+                  className={'h-5 w-5 shrink-0 accent-gold ' + FOCUS}
                   checked={draft.performed.includes(d.duty_name)}
                   onChange={() => {
                     const on = draft.performed.includes(d.duty_name);
@@ -213,9 +227,9 @@ export default function CheckIn() {
         <>
           <p className="font-semibold mt-4">Did any of those duties make your symptoms worse?</p>
           <p className="text-muted text-xs mt-1">This is about the duties you did today, not a score.</p>
-          <div className="flex gap-2 mt-2">
-            <button type="button" className="flex-1 border border-line rounded-xl p-3" aria-pressed={draft.worse === 'no'} onClick={() => setDraft({ ...draft, worse: 'no', worseDuties: [], settled: '' })}>No</button>
-            <button type="button" className="flex-1 border border-line rounded-xl p-3" aria-pressed={draft.worse === 'yes'} onClick={() => setDraft({ ...draft, worse: 'yes' })}>Yes</button>
+          <div className="flex flex-col gap-2 mt-2">
+            <button type="button" className={choiceClass(draft.worse === 'no')} aria-pressed={draft.worse === 'no'} onClick={() => setDraft({ ...draft, worse: 'no', worseDuties: [], settled: '' })}>No</button>
+            <button type="button" className={choiceClass(draft.worse === 'yes')} aria-pressed={draft.worse === 'yes'} onClick={() => setDraft({ ...draft, worse: 'yes' })}>Yes</button>
           </div>
         </>
       )}
@@ -227,9 +241,10 @@ export default function CheckIn() {
           <ul className="mt-2 space-y-2">
             {draft.performed.map((name) => (
               <li key={name}>
-                <label className="flex items-center gap-2">
+                <label className="flex items-center gap-3 min-h-12 w-full">
                   <input
                     type="checkbox"
+                    className={'h-5 w-5 shrink-0 accent-gold ' + FOCUS}
                     checked={draft.worseDuties.includes(name)}
                     onChange={() => {
                       const on = draft.worseDuties.includes(name);
@@ -249,8 +264,8 @@ export default function CheckIn() {
           <p className="font-semibold mt-4">Had that worsening settled by the end of your shift?</p>
           <p className="text-muted text-xs mt-1">Settled means you felt the same as before that duty, by the time your shift ended.</p>
           <div className="flex flex-col gap-2 mt-2">
-            <button type="button" className="w-full border border-line rounded-xl p-3 text-left" aria-pressed={draft.settled === 'yes'} onClick={() => setDraft({ ...draft, settled: 'yes' })}>Yes, it had settled</button>
-            <button type="button" className="w-full border border-line rounded-xl p-3 text-left" aria-pressed={draft.settled === 'no'} onClick={() => setDraft({ ...draft, settled: 'no' })}>No, it had not settled</button>
+            <button type="button" className={choiceClass(draft.settled === 'yes')} aria-pressed={draft.settled === 'yes'} onClick={() => setDraft({ ...draft, settled: 'yes' })}>Yes, it had settled</button>
+            <button type="button" className={choiceClass(draft.settled === 'no')} aria-pressed={draft.settled === 'no'} onClick={() => setDraft({ ...draft, settled: 'no' })}>No, it had not settled</button>
           </div>
         </>
       )}
@@ -259,14 +274,14 @@ export default function CheckIn() {
       <p className="text-sm mt-1">Approved hours today: {approvedHours === 'UNKNOWN' ? 'UNKNOWN' : approvedHours}</p>
       <label className="block font-semibold mt-3" htmlFor="hours-worked">Hours you worked today</label>
       <p className="text-muted text-xs mt-1">Type the hours you actually worked. This is not a score.</p>
-      <input id="hours-worked" type="number" min={0} step="0.25" className="w-full bg-chipbg border border-line rounded-xl p-3 mt-2 text-ink" value={draft.hoursWorked} onChange={(e) => setDraft({ ...draft, hoursWorked: e.target.value })} />
+      <input id="hours-worked" type="number" min={0} step="0.25" className={'w-full min-h-12 bg-chipbg border border-line rounded-xl p-3 mt-2 text-ink ' + FOCUS} value={draft.hoursWorked} onChange={(e) => setDraft({ ...draft, hoursWorked: e.target.value })} />
 
       <label className="block font-semibold mt-4" htmlFor="free-text">Anything else you want to say?</label>
       <p className="text-muted text-xs mt-1">Optional. In your own words. This is recorded as worker reported.</p>
-      <textarea id="free-text" className="w-full bg-chipbg border border-line rounded-xl p-3 mt-2 text-ink" placeholder="" value={draft.freeText} onChange={(e) => setDraft({ ...draft, freeText: e.target.value })} />
+      <textarea id="free-text" className={'w-full min-h-24 bg-chipbg border border-line rounded-xl p-3 mt-2 text-ink ' + FOCUS} placeholder="" value={draft.freeText} onChange={(e) => setDraft({ ...draft, freeText: e.target.value })} />
 
-      <button className="w-full bg-gold text-navy font-semibold rounded-xl mt-3" disabled={busy} onClick={persistToday}>Save check-in</button>
-      <button type="button" className="w-full border border-line rounded-xl mt-2 p-3" onClick={keepLater}>Keep for later</button>
+      <button className={'w-full min-h-12 bg-gold text-navy font-semibold rounded-xl mt-3 p-3 ' + FOCUS} disabled={busy} onClick={persistToday}>Save check-in</button>
+      <button type="button" className={'w-full min-h-12 border border-line rounded-xl mt-2 p-3 ' + FOCUS} onClick={keepLater}>Keep for later</button>
       {status === 'failed' && <p className="text-muted text-sm mt-2">Your check-in is not saved yet. What you typed is still here. Try again in a few minutes.</p>}
       {status === 'kept' && <p className="text-muted text-sm mt-2">{online ? 'Kept on this device.' : 'Kept on this device. You are offline.'}</p>}
     </section>

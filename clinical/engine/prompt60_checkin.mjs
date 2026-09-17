@@ -100,7 +100,8 @@ export function provocationRecords(checkin) {
 
 export function followUpNeeded(checkin) {
   const recs = provocationRecords(checkin);
-  return recs.filter((r) => r.worsened === "yes" && r.settled_within_24h === "no");
+  const follow = (checkin && checkin.follow_ups) || {};
+  return recs.filter((r) => r.worsened === "yes" && r.settled_within_24h === "no" && !follow[r.duty]);
 }
 
 export function followUpQuestion(dutyName) {
@@ -117,6 +118,7 @@ export function applyFollowUp(checkin, answer, asOfDate) {
     if (a === "yes" || a === "no") {
       next.follow_ups[rec.duty] = { settled: a, date: asOfDate || null };
     } else {
+      next.follow_ups[rec.duty] = { settled: "unanswered", date: asOfDate || null };
       unanswered.push({
         duty: rec.duty,
         date: rec.date,
@@ -132,13 +134,11 @@ export function orderedProvocationWithFollowUp(checkin) {
   const recs = provocationRecords(checkin);
   const follow = (checkin && checkin.follow_ups) || {};
   return recs.map((r) => {
-    if (r.worsened === "yes" && r.settled_within_24h === "no") {
-      const f = follow[r.duty];
-      if (f && (f.settled === "yes" || f.settled === "no")) {
-        return { ...r, settled_within_24h: f.settled };
-      }
-      return { ...r, settled_within_24h: "unanswered" };
-    }
+    if (r.worsened !== "yes") return r;
+    const f = follow[r.duty];
+    if (f && f.settled === "yes") return { ...r, settled_within_24h: "yes" };
+    if (f && f.settled === "no") return { ...r, settled_within_24h: "no" };
+    if (f && f.settled === "unanswered") return { ...r, settled_within_24h: "unanswered" };
     return r;
   });
 }
@@ -190,7 +190,8 @@ export function coordinatorProjection(checkins, hoursHold) {
   const prompts = [];
   for (const c of checkins || []) {
     const recs = orderedProvocationWithFollowUp(c);
-    const unsettled = recs.some((r) => r.worsened === "yes" && r.settled_within_24h === "no");
+    const follow = (c && c.follow_ups) || {};
+    const unsettled = recs.some((r) => r.worsened === "yes" && follow[r.duty] && follow[r.duty].settled === "no");
     const unanswered = recs.some((r) => r.worsened === "yes" && r.settled_within_24h === "unanswered");
     if (unsettled) {
       prompts.push({ kind: "unsettled_24h", date: c.date, text: COORDINATOR_UNSETTLED_24H, action: COORDINATOR_MAKE_CONTACT });
@@ -222,8 +223,21 @@ export function assertEmployerCheckinWall(payload) {
   return employerPrompt60Leak(payload);
 }
 
+function uneventful(date) {
+  return captureCheckIn({
+    date,
+    duties_performed: ["Gatehouse monitoring"],
+    worsened_duties: [],
+    settled_end_of_shift: null,
+    approved_hours: 4,
+    hours_worked: 4,
+    hours_source: "worker_checkin",
+    plan_duties: SYNTH_CHECKIN_DUTIES,
+  });
+}
+
 export function sevenDayFixture() {
-  const settled = captureCheckIn({
+  const day10 = captureCheckIn({
     date: "2026-09-10",
     duties_performed: ["Yard foot patrol"],
     worsened_duties: ["Yard foot patrol"],
@@ -233,7 +247,8 @@ export function sevenDayFixture() {
     hours_source: "worker_checkin",
     plan_duties: SYNTH_CHECKIN_DUTIES,
   });
-  const unsettled = captureCheckIn({
+  const day11 = uneventful("2026-09-11");
+  const day12raw = captureCheckIn({
     date: "2026-09-12",
     duties_performed: ["Gatehouse monitoring"],
     worsened_duties: ["Gatehouse monitoring"],
@@ -243,7 +258,9 @@ export function sevenDayFixture() {
     hours_source: "worker_checkin",
     plan_duties: SYNTH_CHECKIN_DUTIES,
   });
-  const missed = captureCheckIn({
+  const day12 = applyFollowUp(day12raw, { "Gatehouse monitoring": "no" }, "2026-09-13");
+  const day13 = uneventful("2026-09-13");
+  const day14raw = captureCheckIn({
     date: "2026-09-14",
     duties_performed: ["Light bin sorting"],
     worsened_duties: ["Light bin sorting"],
@@ -253,14 +270,13 @@ export function sevenDayFixture() {
     hours_source: "worker_checkin",
     plan_duties: SYNTH_CHECKIN_DUTIES,
   });
-  const settledFollow = applyFollowUp(unsettled, { "Gatehouse monitoring": "no" }, "2026-09-13");
-  const missedFollow = applyFollowUp(missed, {}, "2026-09-15");
+  const day14 = applyFollowUp(day14raw, {}, "2026-09-15");
+  const day16 = uneventful("2026-09-16");
+  const checkins = [day10, day11, day12.checkin, day13, day14.checkin, day16];
   return {
-    checkins: [settled, settledFollow.checkin, missedFollow.checkin],
-    records: [
-      ...orderedProvocationWithFollowUp(settled),
-      ...settledFollow.records,
-      ...missedFollow.records,
-    ],
+    span: ["2026-09-10", "2026-09-11", "2026-09-12", "2026-09-13", "2026-09-14", "2026-09-15", "2026-09-16"],
+    missed_date: "2026-09-15",
+    checkins,
+    records: checkins.flatMap((c) => orderedProvocationWithFollowUp(c)),
   };
 }

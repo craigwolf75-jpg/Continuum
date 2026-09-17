@@ -47,7 +47,10 @@ export async function openFollowUps(): Promise<Prompt60FollowUp[]> {
   const out: Prompt60FollowUp[] = [];
   for (const r of items) {
     for (const p of r.provocation || []) {
-      if (p.worsened === 'yes' && p.settled_within_24h === 'unanswered') {
+      if (p.worsened !== 'yes') continue;
+      const answered = r.follow_up_answers && r.follow_up_answers[p.duty];
+      if (answered) continue;
+      if (p.settled_within_24h === 'no' || p.settled_within_24h === 'unanswered' || r.settled_end_of_shift === 'no') {
         out.push({ duty: p.duty, from_date: r.date });
       }
     }

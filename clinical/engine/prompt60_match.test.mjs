@@ -48,8 +48,10 @@ const hours = makeRestriction("graduated_hours", { authored_by: "Dr SYNTH", valu
 const breaks = makeRestriction("scheduled_rest_breaks", { authored_by: "Dr SYNTH", value: { frequency: "hourly", duration: "10 min" } });
 const night = makeRestriction("no_night_or_rotating_shift", { authored_by: "Dr SYNTH" });
 
-const set = [lone, screen, hours, breaks];
+const set = [lone, screen, night];
 const split = matchPrompt60Duties([visitor, bins, yard, gate], set, { asOfDate: "2026-09-17" });
+ok("7.4 restriction set includes no_lone_work, max_continuous_screen_minutes, no_night_or_rotating_shift", set.map((r) => r.code).join(",") === "no_lone_work,max_continuous_screen_minutes,no_night_or_rotating_shift");
+ok("7.4 every excluded and conditional duty names the specific restriction", split.lines.filter((l) => l.verdict !== "safe").every((l) => typeof l.restriction_label === "string" && l.restriction_label.length > 0));
 
 ok("three-way split: visitor log is safe", split.lines.find((l) => l.duty_name === "Visitor log entry").verdict === "safe");
 ok("three-way split: light bin sorting is conditional (unrecorded screen minutes)", split.lines.find((l) => l.duty_name === "Light bin sorting").verdict === "conditional");

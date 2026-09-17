@@ -14,7 +14,7 @@ import {
   matchPrompt60Duty, matchPrompt60Duties, bindingConstraintFact,
   UNMAPPED_COORDINATOR,
 } from "../clinical/engine/prompt60_match.mjs";
-import { evaluateHoursStepDate, hoursLadderFromRestriction, approvedHoursFace, HOURS_HOLD_COORDINATOR } from "../clinical/engine/prompt60_hours_ladder.mjs";
+import { evaluateHoursStepDate, hoursLadderFromRestriction, approvedHoursFace, HOURS_HOLD_COORDINATOR, SYNTH_HOURS_LADDER_STEPS } from "../clinical/engine/prompt60_hours_ladder.mjs";
 import { sevenDayFixture, coordinatorProjection, employerProjection, assertEmployerCheckinWall, CLINICIAN_REQUIRED_LINE } from "../clinical/engine/prompt60_checkin.mjs";
 import { clinicianProjection } from "../clinical/engine/prompt60_checkin.mjs";
 import { employerPrompt60Leak, bannedColumnsInSchema } from "../clinical/engine/employer_schema.mjs";
@@ -71,7 +71,9 @@ const gate = duties.find((d) => d.duty_name === "Gatehouse monitoring");
 const bins = duties.find((d) => d.duty_name === "Light bin sorting");
 const lone = makeRestriction("no_lone_work", { authored_by: "Dr SYNTH" });
 const screen = makeRestriction("max_continuous_screen_minutes", { authored_by: "Dr SYNTH", value: { minutes: 90 } });
-const split = matchPrompt60Duties([visitor, bins, yard, gate], [lone, screen], { asOfDate: "2026-09-17" });
+const night = makeRestriction("no_night_or_rotating_shift", { authored_by: "Dr SYNTH" });
+const split = matchPrompt60Duties([visitor, bins, yard, gate], [lone, screen, night], { asOfDate: "2026-09-17" });
+ok("7.4 every excluded and conditional line names a restriction", split.lines.filter((l) => l.verdict !== "safe").every((l) => l.restriction_label));
 ok("three-way split still holds on SYNTH", split.summary.safe >= 1 && split.summary.conditional >= 1 && split.summary.excluded >= 1);
 ok("yard excluded by No lone work", matchPrompt60Duty(yard, [lone], { asOfDate: "2026-09-17" }).excluded_because === "Excluded by: No lone work");
 ok("unmapped is never safe", matchPrompt60Duty(visitor, [makeRestriction("no_such_code", { authored_by: "Dr SYNTH" })], { asOfDate: "2026-09-17" }).verdict !== "safe");
@@ -82,16 +84,18 @@ ok("binding fact shape", bindingConstraintFact([
   { verdict: "safe", restriction_label: null },
 ]).text === "No lone work accounts for 2 of 2 exclusions");
 
+ok("7.11 SYNTH hours ladder is four steps", SYNTH_HOURS_LADDER_STEPS.length === 4);
 const plan = hoursLadderFromRestriction(makeRestriction("graduated_hours", {
   authored_by: "Dr SYNTH",
-  value: { weekly_steps: [{ week: 1, hours_per_day: 4, days_per_week: 3, planned_date: "2026-09-07" }] },
+  value: { weekly_steps: SYNTH_HOURS_LADDER_STEPS },
 }));
-ok("hours hold never auto-advances", evaluateHoursStepDate(plan, "2026-09-17").held === true && evaluateHoursStepDate(plan, "2026-09-17").advanced === false);
+ok("hours hold never auto-advances", evaluateHoursStepDate(plan, "2026-09-17").held === true && evaluateHoursStepDate(plan, "2026-09-17").advanced === false && evaluateHoursStepDate(plan, "2026-09-17").step.week === 1);
 ok("hours hold copy is exact", evaluateHoursStepDate(plan, "2026-09-17").outstanding_action === HOURS_HOLD_COORDINATOR);
 ok("missing approved hours is UNKNOWN", approvedHoursFace(null) === "UNKNOWN");
 
 const fixture = sevenDayFixture();
 const coord = coordinatorProjection(fixture.checkins, false);
+ok("seven-day fixture spans seven dates", fixture.span.length === 7);
 ok("seven-day coordinator prompts on second and third only", coord.prompts.length === 2);
 ok("clinician required line exact", clinicianProjection(fixture.checkins).required_line === CLINICIAN_REQUIRED_LINE);
 const emp = employerProjection([{ duty_id: "SYNTH-DUTY-0103", duty_name: "Visitor log entry" }], "Duties on track", 4, false);

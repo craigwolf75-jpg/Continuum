@@ -9,7 +9,7 @@ import { makeRestriction } from "./prompt60_restriction_codes.mjs";
 import {
   hoursLadderFromRestriction, evaluateHoursStepDate, authoriseHoursStep,
   shiftConflictsCurrentStep, recordActualHours, approvedHoursFace,
-  HOURS_HOLD_COORDINATOR, currentLadderStep,
+  HOURS_HOLD_COORDINATOR, currentLadderStep, SYNTH_HOURS_LADDER_STEPS,
 } from "./prompt60_hours_ladder.mjs";
 import { workerPlanPayload } from "./worker_plan.mjs";
 import { rawMeasurementInPayload } from "./employer_schema.mjs";
@@ -20,16 +20,13 @@ const ok = (n, c) => { if (c) pass++; else { fail++; console.error("  FAIL: " + 
 const restriction = makeRestriction("graduated_hours", {
   authored_by: "Dr SYNTH",
   value: {
-    weekly_steps: [
-      { week: 1, hours_per_day: 4, days_per_week: 3, planned_date: "2026-09-07" },
-      { week: 2, hours_per_day: 6, days_per_week: 4, planned_date: "2026-09-14" },
-      { week: 3, hours_per_day: 8, days_per_week: 5, planned_date: "2026-09-21" },
-    ],
+    weekly_steps: SYNTH_HOURS_LADDER_STEPS,
   },
 });
 
 const plan = hoursLadderFromRestriction(restriction);
-ok("graduated_hours populates a week-step ladder", plan.populated === true && plan.steps.length === 3);
+ok("7.11: SYNTH hours ladder has four steps", SYNTH_HOURS_LADDER_STEPS.length === 4 && plan.steps.length === 4);
+ok("graduated_hours populates a week-step ladder", plan.populated === true && plan.steps.length === 4);
 ok("step 1 is 4 hours and 3 days", plan.steps[0].hours_per_day === 4 && plan.steps[0].days_per_week === 3);
 ok("current step starts at week 1", currentLadderStep(plan).week === 1);
 

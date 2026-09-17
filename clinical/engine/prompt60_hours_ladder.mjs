@@ -19,6 +19,13 @@ export const HOURS_HOLD_CLINICIAN =
 export const HOURS_HOLD_EMPLOYER =
   "Hours stay as they are. The plan holds. Outstanding action.";
 
+export const SYNTH_HOURS_LADDER_STEPS = Object.freeze([
+  { week: 1, hours_per_day: 4, days_per_week: 3, planned_date: "2026-09-07" },
+  { week: 2, hours_per_day: 5, days_per_week: 3, planned_date: "2026-09-14" },
+  { week: 3, hours_per_day: 6, days_per_week: 4, planned_date: "2026-09-21" },
+  { week: 4, hours_per_day: 8, days_per_week: 5, planned_date: "2026-09-28" },
+]);
+
 export function approvedHoursFace(hours) {
   if (hours === null || hours === undefined || hours === "") return "UNKNOWN";
   return String(hours);
