@@ -2,23 +2,44 @@
 
 ## Status
 
-These are the two paste-ready texts from the Prompt 53 brief.
+Status: RELEASED by Craig on 2026-09-16.
 
-G1 has not started: the G1 file is not in hand. The sentence in Gary's
-draft that says "Starting G1 now" is held until Gary has
-PROMPT_G1_DISCOVERY_AUDIT to paste. Do not treat this file as
-permission to start G1.
+Craig decision: Lift all Prompt 53 holds; Craig released the
+programme hold on 2026-09-16.
 
-Verification question in Gary's draft is now answered by Craig: WRONG
-FILE / REDO REQUIRED. Prompt 47 redo is not started. Waiting on the
-REV 2 attachment.
+See [RELEASE.md](RELEASE.md) and [HOLDS.md](HOLDS.md).
 
-Prompt 54 is register-only and not released; this Prompt 53 PR does
-not build it.
+Current order is RELEASED. Hold lift is not an
+auto-execute. Hermes ships only when Craig names ship.
+Athena does not ship.
+
+Named human dispatch still required before Bedrock go,
+Montreal project create, non-SYNTH seed, or live schema
+apply.
+
+Do not invent G1 closed. Do not invent REV 2.
+
+The two paste-ready texts below are historical drafts from
+the hold era. They are not the current Claude Code order.
+
+G1 has not started: the G1 file is not in hand. The sentence
+in Gary's draft that says "Starting G1 now" remains held
+until Gary has PROMPT_G1_DISCOVERY_AUDIT to paste. Do not
+treat this file as permission to start G1. Do not invent G1
+closed.
+
+Verification question in Gary's draft is now answered by
+Craig: WRONG FILE / REDO REQUIRED. Do not invent REV 2. Do
+not start a Prompt 47 redo from invented contents.
+
+Prompt 54 is register-only and not released; this Prompt 53
+folder does not build it.
 
 ---
 
-## Gary to Craig
+## HISTORY: Gary to Craig (hold-era draft)
+
+Historical draft from the hold era. Not the current order.
 
 Subject: Confirmed, attachment opens, audit starting
 
@@ -30,7 +51,11 @@ Gary
 
 ---
 
-## Claude Code hold order
+## HISTORY: Claude Code hold order (hold-era draft)
+
+Historical draft from the hold era. Not the current Claude
+Code order. Current order is RELEASED by Craig on
+2026-09-16. Do not treat the HOLD lines below as current.
 
 Programme order from Craig (registered as Prompt 53), effective now:
 HOLD all live-platform actions: do not create or modify any hosted project, do not send anything external, do not enable any provider, and do not seed anything beyond SYNTH-prefixed fixtures. The 50a Decision 1 go is suspended; the platform decision is Craig's, made after the G1 audit report.

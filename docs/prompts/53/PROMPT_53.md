@@ -1,11 +1,31 @@
 # Prompt 53: The Sequencing Order and the Hold
 
-Registration of Craig's sequencing email. Not a build. Not a feature.
-Not the G1 audit. Athena does not ship. No live apply. No merge as a
-ship. Draft registration only.
+Status: RELEASED by Craig on 2026-09-16.
 
-G1 is not in hand. Do not invent G1. Do not start G1. Do not start the
-Prompt 47 redo. The REV 2 file is not yet supplied.
+Craig decision: Lift all Prompt 53 holds; Craig released the
+programme hold on 2026-09-16.
+
+See [RELEASE.md](RELEASE.md) and [HOLDS.md](HOLDS.md).
+
+Registration of Craig's sequencing email, then of the hold
+lift. Not a build. Not a feature. Not the G1 audit. Athena
+does not ship. No live apply. No merge as a ship. Draft
+registration only.
+
+Hold lift is not an auto-execute. Named human dispatch is
+still required before Bedrock go, Montreal project create,
+non-SYNTH seed, or live schema apply. Hermes ships only
+when Craig names ship.
+
+Do not invent G1. `G1_AUDIT_REPORT.md` from 2026-08-13 is
+not G1 closed. `PROMPT_G1_DISCOVERY_AUDIT` is still not in
+hand. Do not invent that file or its closure.
+
+Do not invent REV 2. Do not start a Prompt 47 redo from
+invented contents.
+
+Decision 2 still stands. Do not create `mpi.person`. Do not
+expand the allow-list.
 
 No em dashes or en dashes anywhere.
 
@@ -13,9 +33,11 @@ No em dashes or en dashes anywhere.
 
 ## What this is
 
-This prompt records the sequencing order and the hold. It does not
-implement a surface, a schema, a seed, or a hosted project. It does not
-start Prompt 47 redo. It does not start G1.
+This prompt records the sequencing order and, as of
+2026-09-16, the RELEASE of the Prompt 53 programme holds.
+It does not implement a surface, a schema, a seed, or a
+hosted project. It does not start Prompt 47 redo. It does
+not start G1.
 
 Athena does not ship.
 
@@ -43,10 +65,12 @@ failure.
 
 ---
 
-## Four holds
+## HISTORY: four holds (no longer binding under Prompt 53)
 
-These four holds stand until the G1 report is in and Craig's platform
-decision lands. Both conditions. Not one.
+Prompt 53 holds were released 2026-09-16 by Craig. The four
+holds below are history, not the current order.
+
+Former list, recorded for audit:
 
 1. HOLD Montreal project create.
 2. HOLD Bedrock inference go.
@@ -55,20 +79,24 @@ decision lands. Both conditions. Not one.
 4. HOLD Section 3 and onward live-platform work under Prompt 51
    (foundations lineage, not the design-system folder).
 
-Do not create a Montreal project. Do not send a Bedrock go. Do not seed
-occupational or reference data beyond SYNTH-prefixed fixtures. Do not
-start Section 3 and onward live-platform work under Prompt 51
-foundations.
+Hold lift is not an auto-execute. Named human dispatch is
+still required before Montreal project create, Bedrock go,
+non-SYNTH seed, or live schema apply.
 
 ---
 
-## Suspension: 50a Decision 1
+## HISTORY: 50a Decision 1 suspension (no longer a Prompt 53 hold)
 
-50a Decision 1 (Supabase as-is GO) is withdrawn as a decision. It
-survives as analysis only. It is not an active GO.
+50a Decision 1 is RELEASED-from-53-hold. Prompt 53 no
+longer suspends it.
 
-The platform decision is reserved to Craig after the G1 report. Do not
-treat Decision 1 as authority to proceed.
+Platform GO still requires a Craig or Hermes named path.
+Do not invent live apply. Decision 1 is not an invented
+live GO.
+
+The former Prompt 53 text: 50a Decision 1 (Supabase as-is
+GO) was withdrawn as a decision and survived as analysis
+only. That suspension is history.
 
 ---
 
@@ -84,7 +112,12 @@ Do not create `mpi.person`. Do not expand the allow-list.
 
 ---
 
-## Verification (answered)
+## HISTORY: Prompt 47 redo wait (no longer a Prompt 53 hold)
+
+The Prompt 53 redo wait is no longer a Prompt 53 hold.
+
+Independent fact: do not invent REV 2. Do not start a
+Prompt 47 redo from invented contents.
 
 The question was: confirm that shipped Prompt 47 came from old Prompt 45
 REV 2 sent 12:32 PM.
@@ -94,9 +127,8 @@ shipped Prompt 47 was not REV 2 from 12:32 PM.
 
 Result: **UNVERIFIED failed / WRONG FILE / REDO REQUIRED.**
 
-Do not start the Prompt 47 redo in this pull request. The REV 2 file is
-not yet supplied. Waiting on Craig for the REV 2 attachment. Do not
-invent a redo plan. Do not invent the missing file.
+The REV 2 file is not yet supplied. Do not invent a redo
+plan. Do not invent the missing file.
 
 ---
 
@@ -122,7 +154,8 @@ complete.
 
 ## Reconciliation and freeze
 
-The hold arrived in time. Nothing live to unwind.
+The hold arrived in time. Nothing live to unwind. That
+history still holds as a fact of the hold era.
 
 - The Montreal Supabase project was never created. The integration
   attempt stopped at its permission prompt. Path B was never taken.
@@ -134,11 +167,14 @@ Prompts 39 to 44 (production submission structurally disabled, no model
 called anywhere) with 45 and 46 assigned. That work predates the email.
 It touched no live platform. It is the kind of thing G1 will inventory.
 
-Freeze it as disclosed. Do not unwind it.
+Do not unwind that local and CI work.
 
 ---
 
 ## G1
+
+Independent fact, not a Prompt 53 hold: do not invent G1.
+Do not start G1 from invented contents.
 
 G1 is assigned as the next task once Gary pastes
 `PROMPT_G1_DISCOVERY_AUDIT`.
@@ -165,12 +201,16 @@ employer surface.
 - 50 is retired, superseded by 51.
 - Prompt 54: Craig chose register only. Registered not released. Do
   not build 54 here.
-- Prompt 47 redo still waits on REV 2. Unchanged.
+- Prompt 47 redo: do not invent REV 2. Do not start a redo from
+  invented contents.
 
 ---
 
 ## Closing
 
-This folder is draft registration only. Athena does not ship. No live
-apply. No merge as a ship. No Montreal project. No Bedrock. No seeding.
-No migrations. No Prompt 47 redo. No G1 start.
+This folder is draft registration of the sequencing order
+and of the 2026-09-16 RELEASE. Athena does not ship. Hold
+lift is not an auto-execute. No live apply. No merge as a
+ship. Named human dispatch still required before Montreal,
+Bedrock, non-SYNTH seed, or live schema apply. Do not
+invent G1 closed. Do not invent REV 2.

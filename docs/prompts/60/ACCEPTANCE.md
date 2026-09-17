@@ -3,7 +3,8 @@
 Product build draft follows docs-only PR 164. This is a local/CI draft
 of Sections 2 to 5 against SYNTH only, plus the worker check-in path.
 It is not a live-platform product release. Athena does not ship.
-Prompt 53 holds stand.
+Prompt 53 holds were released 2026-09-16 by Craig. Hold lift
+is not an auto-execute.
 
 Do not claim Argus CLEAN. Do not claim ship-ready. Hub authentication
 remains UNVERIFIED: STOP for ship, not for this draft.
@@ -42,7 +43,7 @@ No em dashes or en dashes anywhere.
 | 7.6 Add a restriction code with no mapping entry and confirm the engine fails loudly to the coordinator rather than returning the duty as safe | pass | `loudUnmappedFail`, `matchPrompt60Duties.employer_lines` |
 | 7.7 Set a duty's factor score to unscored on a factor tested by an active restriction and confirm it returns conditional, not safe | pass | `prompt60_match.test.mjs` |
 | 7.8 Let a restriction pass its review date and confirm affected duties move from safe to conditional with the reason restriction past review date | pass | `prompt60_match.test.mjs`. Face text: `Conditional: restriction past review date` |
-| 7.9 All 209 modified duties | NOT ATTEMPTED | 209 duties are not in this repository. SYNTH coverage is 6 positions, 13 duties. Scoring 209 is STOPPED under Prompt 53. SYNTH coverage by factor may pass 7.1 to 7.3 |
+| 7.9 All 209 modified duties | NOT ATTEMPTED | 209 duties are not in this repository. SYNTH coverage is 6 positions, 13 duties. Scoring 209 is STOPPED. Do not invent 209. Do not seed beyond SYNTH. Named dispatch required. SYNTH coverage by factor may pass 7.1 to 7.3 |
 | 7.10 Run seven days of check-ins including one worsening that settles inside 24 hours, one that does not, and one where the next day's check-in is missed. Coordinator prompted on the second and third only. Nothing produces a total, average, band or colour | pass | `prompt60_checkin.test.mjs` `sevenDayFixture` spans 10 to 16 Sep 2026. Coordinator two prompts only |
 | 7.11 Build a four step graduated plan, let the planned progression date pass with no clinician authorisation, and confirm the platform holds at the current step and raises an outstanding action instead of advancing | pass | `prompt60_hours_ladder.test.mjs`; `SYNTH_HOURS_LADDER_STEPS` length 4; Calliope hours-hold line exact |
 | 7.12 Schedule a shift exceeding the current step and confirm the conflict surfaces before the shift begins | pass | `shiftConflictsCurrentStep` in `prompt60_hours_ladder.test.mjs` (`before_shift: true`) |
@@ -62,9 +63,14 @@ No em dashes or en dashes anywhere.
 
 ---
 
-## Holds still standing
+## Independent STOPs still standing
 
-- No Montreal. No Bedrock go.
+Prompt 53 holds were released 2026-09-16 by Craig. Former
+Prompt 53 holds are no longer binding under Prompt 53.
+Hold lift is not an auto-execute.
+
+- Named human dispatch still required before Montreal,
+  Bedrock, non-SYNTH seed, or live schema apply.
 - No package.json edits (any package.json).
 - No live schema apply. `clinical/db/023_migration_prompt60_restriction_and_hours.sql` is a file only.
 - No seed beyond SYNTH. SYNTH remains 6 positions, 13 duties, SYNTH- prefixed.

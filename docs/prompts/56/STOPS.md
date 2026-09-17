@@ -1,7 +1,8 @@
 # Prompt 56 stop notes
 
 Real stops only. Prompt 56 is REGISTERED, NOT RELEASED. This
-prompt sits behind G1 and Prompt 53. Athena does not ship. No em
+prompt sits behind G1. Prompt 53 holds were released
+2026-09-16 by Craig. Athena does not ship. No em
 dashes or en dashes anywhere.
 
 Do not execute worker product, persistence, identity provider,
@@ -19,22 +20,22 @@ These files do not.
 
 ---
 
-## Prompt 53 holds
+## Prompt 53 holds were released 2026-09-16 by Craig
 
-From `docs/prompts/53/HOLDS.md`. Still apply. Not relaxed here.
+From `docs/prompts/53/HOLDS.md`. Former Prompt 53 holds are
+no longer binding under Prompt 53. Hold lift is not an
+auto-execute. Not relaxed here as a ship.
 
-- HOLD Montreal project create. Do not create or modify a hosted
-  Montreal project.
-- HOLD Bedrock inference go. Do not send a Bedrock go. Do not
-  enable inference.
-- HOLD occupational or reference seeding beyond SYNTH-prefixed
-  fixtures.
-- HOLD Section 3 and onward live-platform work under Prompt 51
-  foundations (foundations lineage, not the design-system
-  folder).
-- 50a Decision 1 remains SUSPENDED. Decision 2 stands. Do not
-  create `mpi.person`. Do not expand the allow-list.
-- Prompt 47 redo waits REV 2. Do not start the redo here.
+Named human dispatch still required before Montreal
+project create, Bedrock go, non-SYNTH seed, or live
+schema apply.
+
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands. Do not create
+  `mpi.person`. Do not expand the allow-list.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 
 ---
 

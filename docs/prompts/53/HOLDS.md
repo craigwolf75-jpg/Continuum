@@ -1,3 +1,63 @@
+# Prompt 53 holds: RELEASE record
+
+Status: RELEASED by Craig on 2026-09-16.
+
+Craig decision: Lift all Prompt 53 holds; Craig released the
+programme hold on 2026-09-16.
+
+See [RELEASE.md](RELEASE.md).
+
+Former HOLDs are no longer binding under Prompt 53:
+
+- Montreal project create
+- Bedrock inference go
+- occupational/reference seed beyond SYNTH
+- Section 3+ live-platform foundations lineage (Prompt 51
+  foundations, not the design-system folder)
+- 50a Decision 1 SUSPENDED
+- G1 wait freeze
+- Prompt 47 redo wait as listed in Prompt 53
+
+Hold lift is not an auto-execute. Named human dispatch is
+still required before Bedrock go, Montreal project create,
+non-SYNTH seed, or live schema apply.
+
+No em dashes or en dashes anywhere.
+
+---
+
+## STANDS (not Prompt 53 holds)
+
+These remain. They are not Prompt 53 holds.
+
+- Athena still does not ship unless Craig names ship.
+- Decision 2 schema boundaries still stand unless Craig
+  separately changes them. Do not create `mpi.person`. Do
+  not expand the allow-list.
+- Do not invent G1_AUDIT_REPORT closure. Do not invent G1.
+  `G1_AUDIT_REPORT.md` from 2026-08-13 is not G1 closed.
+  `PROMPT_G1_DISCOVERY_AUDIT` is still not in hand. Do not
+  invent that file or its closure.
+- Do not invent REV 2. Do not start a Prompt 47 redo from
+  invented contents.
+- Named human dispatch still required before Bedrock go,
+  Montreal project create, non-SYNTH seed, or live schema
+  apply.
+- Hermes ships only when Craig names ship.
+- Prompt 54 is registered not released.
+- Master Architecture is number 48. On arrival it must be
+  RREV 2 sent 12:34 PM. Do not invent it.
+- More prompts exist that have not been sent. The current
+  set is not the complete programme.
+
+---
+
+## HISTORY (former binding list)
+
+The body below is the former Prompt 53 HOLDS.md, marked as
+history so Argus can audit the change. It is not the current
+order. Those HOLDs are no longer binding under Prompt 53.
+
 # Prompt 53 holds
 
 Binding list for agents. Effective now. One page. A hold is an order,

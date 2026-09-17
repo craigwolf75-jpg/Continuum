@@ -1,13 +1,28 @@
 # Prompt 53 stop notes
 
-Real stops only. This prompt is registration, not a build. Athena does
-not ship. No live apply. No merge as a ship. Draft registration only.
-Hermes ships only when Craig names ship.
+Status: RELEASED by Craig on 2026-09-16.
+
+Craig decision: Lift all Prompt 53 holds; Craig released the
+programme hold on 2026-09-16.
+
+See [RELEASE.md](RELEASE.md) and [HOLDS.md](HOLDS.md).
+
+Real stops only. This prompt is registration, not a build.
+Athena does not ship. No live apply. No merge as a ship.
+Draft registration only. Hermes ships only when Craig names
+ship.
+
+Hold lift is not an auto-execute. Named human dispatch is
+still required before Bedrock go, Montreal project create,
+non-SYNTH seed, or live schema apply.
+
 No em dashes or en dashes anywhere.
 
 ---
 
-## G1 waits for paste
+## G1 is not invented
+
+Independent fact, not a Prompt 53 hold.
 
 `PROMPT_G1_DISCOVERY_AUDIT` is not in this repository and was not
 attached. Do not invent G1. Do not start G1.
@@ -22,7 +37,7 @@ Honesty: `G1_AUDIT_REPORT.md` already exists on main from 2026-08-13 as
 a prior read-only inventory. That file is not completion of the Prompt
 53-assigned `PROMPT_G1_DISCOVERY_AUDIT`. The assigned prompt file is
 still not in hand. Do not start G1. Do not overwrite the August report
-as if this mission ran G1.
+as if this mission ran G1. Do not invent G1 closed.
 
 ---
 
@@ -32,7 +47,9 @@ Do not build Prompt 54. Register-only, not released. Separate PR.
 
 ---
 
-## Prompt 47 lineage is not canonical
+## Do not invent REV 2
+
+Independent fact, not a Prompt 53 hold.
 
 Shipped Prompt 47 is not canonical until it is redone from old Prompt 45
 REV 2 sent 12:32 PM.
@@ -41,15 +58,17 @@ Craig confirmed the clinic and enterprise file used for shipped Prompt
 47 was not that REV 2. Result: **UNVERIFIED failed / WRONG FILE / REDO
 REQUIRED.**
 
-Waiting on Craig for the REV 2 attachment. Do not start the redo in this
-pull request. Do not invent the missing file. Do not invent a redo plan.
+Do not invent the missing file. Do not invent a redo plan. Do not
+start a Prompt 47 redo from invented contents.
 
 ---
 
-## Four live-platform holds
+## HISTORY: four live-platform holds (no longer binding)
 
-These four holds stand until the G1 report is in and Craig's platform
-decision lands.
+Prompt 53 holds were released 2026-09-16 by Craig. Former
+Prompt 53 holds are no longer binding under Prompt 53.
+
+Former list, recorded for audit:
 
 - HOLD Montreal project create.
 - HOLD Bedrock inference go.
@@ -58,16 +77,25 @@ decision lands.
 - HOLD Section 3 and onward live-platform work under Prompt 51
   foundations (not the design-system folder).
 
-Do not create a hosted project. Do not send anything external. Do not
-enable a provider. Do not seed beyond SYNTH-prefixed fixtures.
+Hold lift is not an auto-execute. Named human dispatch is
+still required before Montreal project create, Bedrock go,
+non-SYNTH seed, or live schema apply. Do not create a hosted
+project, send a Bedrock go, enable a provider, seed beyond
+SYNTH, or apply live schema without that named dispatch.
 
 ---
 
-## 50a Decision 1 is suspended
+## HISTORY: 50a Decision 1 suspension (no longer a Prompt 53 hold)
 
-50a Decision 1 (Supabase as-is GO) is withdrawn as a decision. Do not
-treat it as an active GO. It survives as analysis only. The platform
-decision is reserved to Craig after the G1 report.
+50a Decision 1 is RELEASED-from-53-hold. Prompt 53 no
+longer suspends it.
+
+Platform GO still requires a Craig or Hermes named path.
+Do not invent live apply.
+
+The former Prompt 53 text: 50a Decision 1 (Supabase as-is
+GO) was withdrawn as a decision and survived as analysis
+only. That suspension is history.
 
 ---
 
@@ -88,13 +116,14 @@ created. Bedrock go was drafted but not sent. Nothing has been seeded.
 
 Local and CI work already complete (Prompts 39 to 44 pure-code, 45 and
 46 assigned, production submission structurally disabled, no model
-called) stays as disclosed. Freeze it. Do not unwind it.
+called) stays as disclosed. Do not unwind it.
 
 ---
 
 ## Athena does not ship
 
 No live apply. No merge as a ship. No deploy. Draft registration only.
+Hermes ships only when Craig names ship.
 
 ---
 

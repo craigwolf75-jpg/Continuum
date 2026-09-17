@@ -14,17 +14,24 @@ allow-list. 0018 and 0019 remain files only, unapplied.
 
 ---
 
-## Prompt 53 banner: Decision 1 is SUSPENDED
+## Prompt 53 banner: Decision 1 is RELEASED-from-53-hold
 
-Decision 1 is SUSPENDED by Prompt 53: withdrawn as a decision, survives
-as analysis only. The platform decision is Craig's after the G1 report.
-See `docs/prompts/53/`.
+50a Decision 1 is no longer SUSPENDED by Prompt 53. Status:
+RELEASED-from-53-hold. Prompt 53 holds were released 2026-09-16
+by Craig. See `docs/prompts/53/RELEASE.md`.
 
-## Decision 1: GO against Supabase as-is (SUSPENDED by Prompt 53)
+Platform GO still requires a Craig or Hermes named path. Do
+not invent live apply. Hold lift is not an auto-execute.
+Decision 2 still stands.
 
-Status: SUSPENDED. This is not an active GO. Agents must not treat this
-as permission to proceed against Supabase as-is for live-platform or
-Section 3 and onward foundations work.
+## Decision 1: GO against Supabase as-is (RELEASED-from-53-hold)
+
+Status: RELEASED-from-53-hold. Prompt 53 no longer suspends
+this decision. This is not an invented live GO. Agents must
+not treat this as a live apply. Platform GO still requires a
+Craig or Hermes named path. Named human dispatch still
+required before Montreal, Bedrock, non-SYNTH seed, or live
+schema apply.
 
 Approved with four binding guardrails. The stop clause in Section 00
 covers Master Architecture content beyond what Prompt 51 restates.
@@ -55,7 +62,7 @@ an absent Master Architecture document.
 
 ## Decision 2: scope of every table
 
-Prompt 53 reconfirms that Decision 2 still stands: platform versus hub,
+Decision 2 still stands: platform versus hub,
 site, demo, and worker; exclusion by schema; one-entry `mpi.person`
 allow-list.
 
@@ -110,7 +117,8 @@ named. Athena does not ship.
 
 Historical 50a paste-back. Leave this section in place as the historical
 50a paste-back. The paste-back line "Proceed against Supabase as-is" is
-historical and is suspended as a decision by Prompt 53.
+historical. Prompt 53 no longer suspends it. Live apply still
+requires a named path. Do not invent live apply.
 
 Decisions, per the 50a brief, citing Prompt 51 as the governing Core Platform Foundations copy:
 Proceed against Supabase as-is. RLS with a non-owner app role, tenant policies via current_setting, and Management API migrations are approved with four binding guardrails: (a) RLS is defense in depth on top of grant-based physical separation, which remains the primary wall along with the banned-column test and the no-cross-schema-FK rule; (b) application code connects only as the non-owner app role, tenant is injected server side via set_config with the local flag inside the transaction, never from client input, and every policy fails closed with no default tenant; (c) migrations are idempotent, ordered, recorded, ALTER never drop; (d) if the Master Architecture arrives and conflicts, stop and report the delta under the Section 0.1 authority order rather than reworking silently. Report each guardrail with evidence as you land Section 3 and onward.

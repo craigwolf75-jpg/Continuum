@@ -15,7 +15,8 @@ only. Do not execute ICON as product work.
 Requested. Do not invent it.
 
 This file adds no module, no dashboard, no AI component,
-and no screen. Behind G1 and Prompt 53. Athena does not
+and no screen. Behind G1. Prompt 53 holds were released
+2026-09-16 by Craig. Athena does not
 ship.
 
 No em dashes or en dashes anywhere.
@@ -94,19 +95,22 @@ file here.
 
 ---
 
-## Prompt 53 live-platform HOLDS still apply
+## Prompt 53 holds were released 2026-09-16 by Craig
 
-From [../53/HOLDS.md](../53/HOLDS.md). Unchanged. Not
-relaxed by ICON registration.
+From [../53/HOLDS.md](../53/HOLDS.md). Former Prompt 53
+holds are no longer binding under Prompt 53. Hold lift
+is not an auto-execute. Not relaxed here as a ship.
 
-- No Montreal.
-- No Bedrock go.
-- No occupational or reference seed beyond SYNTH.
-- No Section 3 and onward live-platform work under
-  Prompt 51 foundations (foundations lineage, not the
-  design-system folder).
-- 50a Decision 1 is SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+Named human dispatch still required before Montreal,
+Bedrock, non-SYNTH seed, or live schema apply. Do not
+start Section 3 and onward live-platform work under
+Prompt 51 foundations without that named dispatch.
+
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 - Do not invent G1.
 
 `G1_AUDIT_REPORT.md` exists at repo root (2026-08-13,
@@ -131,7 +135,9 @@ read-only discovery). That file is not G1 closed.
 - Claim Argus CLEAN.
 
 Athena does not ship. REGISTERED, NOT RELEASED. Not a
-live-platform product release. Prompt 53 holds stand.
+live-platform product release. Prompt 53 holds were
+released 2026-09-16 by Craig. Hold lift is not an
+auto-execute.
 
 ---
 

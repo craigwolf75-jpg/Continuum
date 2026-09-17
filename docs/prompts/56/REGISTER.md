@@ -20,8 +20,11 @@ No em dashes or en dashes anywhere.
 
 Prompt 56 is REGISTERED, NOT RELEASED.
 
-Section 00.1 is binding. This prompt sits behind G1 and Prompt 53.
-Nothing in this prompt executes. A later sequenced mission may
+Section 00.1 is binding. This prompt sits behind G1.
+Prompt 53 holds were released 2026-09-16 by Craig.
+Former Prompt 53 holds are no longer binding under
+Prompt 53. Hold lift is not an auto-execute. Nothing
+in this prompt executes. A later sequenced mission may
 release it. This file set does not.
 
 Section 1 prerequisite checks are answered in
@@ -92,11 +95,19 @@ that 44 to 49 list. Version canonicality is **UNCONFIRMED**.
 
 ## Prompt 53 programme order
 
-Prompt 53 programme order holds. See
-[../53/HOLDS.md](../53/HOLDS.md).
+Prompt 53 holds were released 2026-09-16 by Craig. See
+[../53/HOLDS.md](../53/HOLDS.md) and
+[../53/RELEASE.md](../53/RELEASE.md). Former Prompt 53
+holds are no longer binding under Prompt 53. Hold lift
+is not an auto-execute.
 
-Nothing executes against a live platform until Gary's assigned G1
-discovery audit is in and Craig sequences the build.
+Named human dispatch still required before Montreal,
+Bedrock, non-SYNTH seed, or live schema apply.
+
+Nothing executes against a live platform until Craig
+sequences the Prompt 56 worker-experience build.
+Named human dispatch still required. Do not invent G1
+closed.
 
 Craig has not sequenced a Prompt 56 worker-experience build.
 
@@ -136,7 +147,9 @@ The wait remains G1 plus Craig sequence.
 - Apply live schema. `0018` and `0019` stay unapplied.
 - Start Section 3 and onward live-platform work under Prompt 51
   foundations.
-- Treat 50a Decision 1 as an active GO.
+- Invent a live apply of 50a Decision 1. Decision 1 is
+  RELEASED-from-53-hold. Platform GO still requires a
+  Craig or Hermes named path.
 - Start the Prompt 47 redo.
 - Edit any `package.json`.
 - Overwrite `docs/prompts/54/`.
@@ -147,24 +160,27 @@ RELEASED. Not a live-platform product release.
 
 ---
 
-## Standing holds
+## Standing independent STOPs
 
-Unchanged. Not this mission.
+Not Prompt 53 holds. Hold lift is not an auto-execute.
+Not this mission.
 
-- No Montreal.
-- No Bedrock.
-- No occupational seed beyond SYNTH.
-- No live schema apply. `0018` and `0019` unapplied.
-- 50a Decision 1 remains SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+- Named human dispatch still required before Montreal,
+  Bedrock, non-SYNTH seed, or live schema apply.
+  `0018` and `0019` unapplied.
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 - `package.json` locked.
 
 ---
 
 ## Prompt 47 redo is a separate wait
 
-Still waiting on Prompt 45 REV 2 for the Prompt 47 redo. Do not
-start that redo. That wait is separate. Not this mission.
+Do not invent REV 2. Do not start a Prompt 47 redo from
+invented contents. That wait is separate. Not this mission.
 
 ---
 

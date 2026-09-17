@@ -13,12 +13,17 @@ No em dashes or en dashes anywhere.
 
 ---
 
-## Prompt 53 banner: Decision 1 as an active GO is SUSPENDED
+## Prompt 53 banner: Decision 1 is RELEASED-from-53-hold
 
-Decision 1 as an active GO is SUSPENDED by Prompt 53. Guardrail evidence
-below remains as analysis and as an inventory of what the 50a
-recommendation described. It is not permission to proceed. Decision 2
-obligations remain in force.
+Decision 1 as an active live GO is not invented. Status:
+RELEASED-from-53-hold. Prompt 53 holds were released
+2026-09-16 by Craig. Prompt 53 no longer suspends Decision 1.
+
+Platform GO still requires a Craig or Hermes named path. Do
+not invent live apply. Hold lift is not an auto-execute.
+Guardrail evidence below remains as analysis and as an
+inventory of what the 50a recommendation described. It is
+not a live apply. Decision 2 obligations remain in force.
 
 ## Decision 1(a): RLS is defense in depth; banned-column and no-cross-schema-FK unchanged
 

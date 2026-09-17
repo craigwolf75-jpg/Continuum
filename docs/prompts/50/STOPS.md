@@ -26,7 +26,9 @@ from the absent architecture prompts is copied into code or comments.
 Historical 50a ruling, 2026-09-16: Decision 1 is GO against Supabase
 as-is (the actual stack), with four binding guardrails (a)(b)(c)(d).
 See `docs/prompts/50a/DECISIONS.md` and `docs/prompts/50a/GUARDRAILS.md`.
-That GO is SUSPENDED by Prompt 53.
+That GO is RELEASED-from-53-hold. Prompt 53 no longer
+suspends it. Platform GO still requires a Craig or Hermes
+named path. Do not invent live apply.
 
 Do not infer Master Architecture text beyond Prompt 51 restatements. If
 that document arrives and conflicts, stop and report the delta under
@@ -37,11 +39,14 @@ Interoperability Architecture absence is not resolved by 50a. I1, I2,
 and I3 remain substrate only. No adapter, no gateway, no canonical
 model. That history still holds.
 
-### Prompt 53 suspension (sequencing hold)
+### Prompt 53 RELEASED-from-53-hold (was sequencing hold)
 
-Decision 1 is no longer an active GO. It is withdrawn as a decision and
-survives as analysis. The platform decision is reserved to Craig after
-the G1 report. Decision 2 still stands.
+Prompt 53 holds were released 2026-09-16 by Craig. Former
+Prompt 53 holds are no longer binding under Prompt 53.
+50a Decision 1 is RELEASED-from-53-hold. Platform GO still
+requires a Craig or Hermes named path. Do not invent live
+apply. Hold lift is not an auto-execute. Decision 2 still
+stands.
 
 ## Azure Canada assumption (Section 1 check 21)
 
@@ -55,18 +60,24 @@ secondary region. Mechanisms are cloud-agnostic.
 Historical 50a ruling, 2026-09-16: Decision 1 is GO against Supabase
 as-is (the actual stack), with four binding guardrails (a)(b)(c)(d).
 See `docs/prompts/50a/DECISIONS.md` and `docs/prompts/50a/GUARDRAILS.md`.
-That GO is SUSPENDED by Prompt 53.
+That GO is RELEASED-from-53-hold. Prompt 53 no longer
+suspends it. Platform GO still requires a Craig or Hermes
+named path. Do not invent live apply.
 
 Do not invent Azure, ARM, or a secondary region. That part of this stop
 still holds. Historical 50a reading: Decision 1 was a go on the Vercel
-plus Supabase stack, not a claim that Azure arrived. Prompt 53 suspends
-that Decision 1 GO. Azure still has not arrived.
+plus Supabase stack, not a claim that Azure arrived. Prompt 53 no
+longer suspends that Decision 1 GO. Azure still has not arrived.
+Live apply still requires a named path.
 
-### Prompt 53 suspension (sequencing hold)
+### Prompt 53 RELEASED-from-53-hold (was sequencing hold)
 
-Decision 1 is no longer an active GO. It is withdrawn as a decision and
-survives as analysis. The platform decision is reserved to Craig after
-the G1 report. Decision 2 still stands.
+Prompt 53 holds were released 2026-09-16 by Craig. Former
+Prompt 53 holds are no longer binding under Prompt 53.
+50a Decision 1 is RELEASED-from-53-hold. Platform GO still
+requires a Craig or Hermes named path. Do not invent live
+apply. Hold lift is not an auto-execute. Decision 2 still
+stands.
 
 ## Secret manager (Section 1 check 23)
 

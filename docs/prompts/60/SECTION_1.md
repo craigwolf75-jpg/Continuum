@@ -19,7 +19,8 @@ C1447 form extract lives in
 file can stay on the 1.1 to 1.6 checks.
 
 No em dashes or en dashes anywhere. Athena does not ship.
-Do not claim Argus CLEAN. Prompt 53 holds stand.
+Do not claim Argus CLEAN. Prompt 53 holds were released
+2026-09-16 by Craig. Hold lift is not an auto-execute.
 
 **Headline.** There is no first-class case type, no C1447
 cognitive or psychosocial demand matrix in repo, no Prompt
@@ -67,24 +68,27 @@ draft).
 
 ---
 
-## Prompt 53 holds (still apply)
+## Prompt 53 holds were released 2026-09-16 by Craig
 
-From [../53/HOLDS.md](../53/HOLDS.md). Not relaxed by this
-inspection.
+From [../53/HOLDS.md](../53/HOLDS.md). Former Prompt 53
+holds are no longer binding under Prompt 53. Hold lift
+is not an auto-execute. Not relaxed here as a ship.
 
-- No Montreal.
-- No Bedrock go.
-- No occupational or reference seed beyond SYNTH-prefixed
-  fixtures.
-- No live schema apply.
-- 50a Decision 1 is SUSPENDED. Decision 2 stands.
-- Prompt 47 redo waits REV 2.
+Named human dispatch still required before Montreal,
+Bedrock, non-SYNTH seed, or live schema apply.
+
+- 50a Decision 1 is RELEASED-from-53-hold. Platform GO
+  still requires a Craig or Hermes named path. Do not
+  invent live apply. Decision 2 stands.
+- Do not invent REV 2. Do not start a Prompt 47 redo
+  from invented contents.
 - Do not invent G1.
 - Athena does not ship.
 
 Scoring, importing, or implying a score of 209 GardaWorld
-duties is STOPPED. Those 209 duties are not in this
-repository.
+duties is STOPPED. Do not invent 209. Do not seed beyond
+SYNTH. Named dispatch required. Those 209 duties are not
+in this repository.
 
 ---
 
