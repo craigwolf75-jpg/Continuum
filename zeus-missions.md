@@ -24,6 +24,9 @@ folds in.
   verified and skipped (Prompt 60 already built it). Allowed psych
   pathway built against SYNTH. Section 10 open items reported, not
   decided. Draft PR only.
+- Residual named 2026-09-17: `#coordinator` and `#helpnow` ids on
+  `deploy/worker/get-help.html` (draft PR, do not ship). `#resources`
+  already landed in #169. Athena does not ship.
 - Human gate: Section 10.1 counsel, 10.2 counsel, 10.3 Craig, 10.4 Craig.
   Do not decide in code.
 
