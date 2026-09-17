@@ -39,7 +39,7 @@ ok("clinical has no banned clinical terms", !banned.test(clin));
 ok("clinical is not branded Nexus", !/nexus/i.test(clin));
 const physDecidesCount = (clin.match(/The treating physician makes every medical and return-to-work decision\./g) || []).length;
 ok("clinical carries the physician-decides line on both escalation cards", physDecidesCount >= 2);
-ok("recovery card reads progress estimate", /Recovery progress estimate/.test(clin));
+ok("recovery card reads physician estimate", /Physician estimate/.test(clin));
 ok("escalation insight is flagged for the doctor", /Flagged for the doctor to review/.test(clin));
 
 console.log("\nclinical-dashboard suite: " + pass + " passed, " + fail + " failed");
