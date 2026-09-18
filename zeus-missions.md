@@ -24,7 +24,7 @@ folds in.
 - Base tip: `cc017c897fa65e4384ce9faa51cc6f757602be0d` (Prompt 65 #176)
 - Branch: `cursor/prompt-66-agent-ops-7237`
 - Human gate: four new tables are FILE ONLY. Gary or Craig live-apply is not this mission. Standing retrieval policy stays with Gary. B1, G1, HIL-1 to HIL-11 untouched.
-- Result so far: `docs/prompts/66/` holds SECTION_1.md, REGISTER.md, STOPS.md, ACCEPTANCE.md. Auth ruling is LOCAL INTERNAL DASHBOARD on `127.0.0.1`. Product code is under `internal/agent-ops/` with FILE ONLY schema, Continuum Zeus Steering Dispatcher, observation CLI, retrieval refuse gate, and Apollo UI. CI proof is `deploy/prompt66-agent-ops.test.mjs`. Scheduler is `.github/workflows/agent-ops-observe.yml` (`on.schedule`). Origin eight-plus-eleven remains UNVERIFIED. Draft PR only.
+- Result so far: Draft PR 177. `docs/prompts/66/` holds SECTION_1.md, REGISTER.md, STOPS.md, ACCEPTANCE.md. Auth ruling is LOCAL INTERNAL DASHBOARD on `127.0.0.1`. Product code is under `internal/agent-ops/` with FILE ONLY schema, Continuum Zeus Steering Dispatcher, observation CLI, retrieval refuse gate, and Apollo UI. CI proof is `deploy/prompt66-agent-ops.test.mjs` (157 passed). Full deploy suite 88 files GREEN. Argus Prompt 66 scope patrol: no findings. Origin eight-plus-eleven remains UNVERIFIED. Draft PR only. Athena does not ship.
 
 ### P65: Prompt 65 site lane production readiness and staged data purge
 - Status: IN PROGRESS. Sections 1 and 2 complete. Pending Gary purge gate. Draft PR. Section 4 purge MUST NOT run.

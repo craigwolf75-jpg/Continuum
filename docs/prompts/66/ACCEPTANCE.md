@@ -22,12 +22,13 @@ and [STOPS.md](STOPS.md). This file
 does not overwrite REGISTER, STOPS,
 or [SECTION_1.md](SECTION_1.md).
 
-Heracles fills PENDING verdicts
-later. Section 1 already proved
-the auth ruling and inventory
-completeness as far as this
-checkout. Origin eight plus eleven
-remains UNVERIFIED.
+Heracles filled 7.1 through 7.7
+on 2026-09-18 from this checkout.
+Section 1 already proved the auth
+ruling and inventory completeness
+as far as this checkout. Origin
+eight plus eleven remains
+UNVERIFIED.
 
 No em dashes or en dashes
 anywhere.
@@ -38,13 +39,13 @@ anywhere.
 
 | Item | Verdict | Evidence |
 |---|---|---|
-| 7.1 Console reachable only through real auth OR local with zero public exposure | PASS (auth ruling documented). Deployed-route proof PENDING | LOCAL INTERNAL DASHBOARD in [SECTION_1.md](SECTION_1.md). Bind 127.0.0.1. Zero public Vercel routes. Marketing gate insufficient. Hub email+password must not host this console. Platform, worker, and physician auth HELD. Heracles later proves deployed site routes do not include the console. |
-| 7.2 Agent inventory complete; each statused RUNTIME IMPLEMENTED or CONTRACT ONLY; matches repositories | PASS (this checkout). Origin UNVERIFIED | Seven RUNTIME IMPLEMENTED here: Zeus 12, Athena 12a, Apollo 12b, Heracles 24c, Hermes 12d, Argus 12e, Calliope 24f. Presenter CONTRACT ONLY. Judge and Firecrawl retrieval CONTRACT ONLY or UNVERIFIED. Gary eight runtime plus eleven contract-only UNVERIFIED. Origin URL UNVERIFIED. Do not invent names. |
-| 7.3 SYNTH finding flows NEW to APPROVED to DISPATCHED to DONE; approving and dispatching human named | PENDING | Heracles fills after product. dispatched_by is always a human name. |
-| 7.4 Change task with no human dispatch cannot execute; attempt and show refusal | PENDING | Heracles fills after product. Autonomy boundary: no autonomous change. |
-| 7.5 Scheduled observation writes heartbeat and finding and nothing else | PENDING | Heracles fills after product. Unused GitHub Actions on.schedule. No pg_cron. No Vercel Cron. |
-| 7.6 Retrieval without authorizer refuses; with authorizer records budget, sources, cost | PENDING | Heracles fills after product. Refuse line: A retrieval run without a recorded authorizer is refused. |
-| 7.7 Python dash audit clean | PENDING | Heracles fills. No em dashes. No en dashes. Do not claim clean here. |
+| 7.1 Console reachable only through real auth OR local with zero public exposure | PASS | LOCAL INTERNAL DASHBOARD in [SECTION_1.md](SECTION_1.md). Bind 127.0.0.1 (`netstat`: `127.0.0.1:8766` LISTEN, not 0.0.0.0). `node deploy/prompt66-agent-ops.test.mjs`: 157 passed, 0 failed. `deploy/vercel.json` and `deploy/middleware.js` have no agent-ops, agent_findings, agent_tasks, or /api/agents. Same walk over deploy html and api js. `internal/` is outside the Vercel deploy root. Live `https://www.continuumrtw.com/agent-ops`, `/internal/agent-ops/`, `/api/agents`, and `/api/findings` each return the marketing holding page (`data-surface=holding`, title Continuum: Coordinated Workplace Injury Recovery), not Agent Operations. Marketing gate insufficient. Hub email+password must not host this console. Platform, worker, and physician auth HELD. |
+| 7.2 Agent inventory complete; each statused RUNTIME IMPLEMENTED or CONTRACT ONLY; matches repositories | PASS (this checkout). Origin UNVERIFIED | Suite: DEFAULT_INVENTORY 10 rows, 7 RUNTIME IMPLEMENTED (zeus, athena, apollo, heracles, hermes, argus, calliope), 3 CONTRACT ONLY (presenter, judge, firecrawl-retrieval). Judge and Firecrawl retrieval home_repository UNVERIFIED. No invented Origin names. Gary eight runtime plus eleven contract-only UNVERIFIED. Origin URL UNVERIFIED. Do not invent names. |
+| 7.3 SYNTH finding flows NEW to APPROVED to DISPATCHED to DONE; approving and dispatching human named | PASS | `prompt66-agent-ops.test.mjs`: insert SYNTH status NEW, approve by Craig to APPROVED, receiveDispatch by Craig. `zeus.mjs` marks DISPATCHED then DONE in that dispatch. Suite asserts NEW, APPROVED, DONE, approved_by Craig, dispatched_by Craig, one task DONE. Fail-first: expect DONE as NEW failed (156 passed, 1 failed, exit 1), then restored to 157 passed, 0 failed. |
+| 7.4 Change task with no human dispatch cannot execute; attempt and show refusal | PASS | receiveDispatch without dispatched_by refuses. Blank dispatched_by refuses. dispatched_by zeus refuses. tryAutonomousChange refuses. After each attempt `listTasks().length === 0`. |
+| 7.5 Scheduled observation writes heartbeat and finding and nothing else | PASS | `runObservation` with mock GET: writes.activity and writes.findings nonempty, writes.tasks.length === 0, writes.other empty, no POST, store tasks remain empty, zeus heartbeat present. Workflow `.github/workflows/agent-ops-observe.yml` uses on.schedule. No pg_cron. No Vercel Cron claimed. |
+| 7.6 Retrieval without authorizer refuses; with authorizer records budget, sources, cost | PASS | queueRetrieval without authorizer refuses, firecrawl_ran is not true, no retrieval row. With authorizer Craig: budget and sources recorded, cost UNKNOWN, never 0. cost 0 stored as UNKNOWN. |
+| 7.7 Python dash audit clean | PASS | python3 scan of 17 Prompt 66 files: scanned_files=17, dash_hits=0, exit 0. Same files listed under Heracles proof. Suite also asserts dash clean on that set. |
 
 ---
 
@@ -56,14 +57,103 @@ UNVERIFIED. Origin URL remains
 UNVERIFIED. Do not invent those
 names. Do not invent a GitHub URL.
 
-7.1 records the Section 1 ruling.
-It does not claim the console is
-built. Heracles still proves
-deployed site routes omit the
-console after product lands.
+7.1 now also records the suite
+proof that deployed site routes
+omit the console. It does not
+claim Argus CLEAN. It does not
+invent G1 closed.
 
-7.3 to 7.7 wait on product. This
-Calliope pass wrote criteria only.
+7.2 Origin eight plus eleven
+stays UNVERIFIED.
+
+---
+
+## Heracles proof (2026-09-18)
+
+Command (same loop as
+`.github/workflows/suites.yml`):
+
+```
+set -e
+shopt -s nullglob
+count=0
+for t in deploy/*.test.mjs; do
+  echo "== $t =="
+  node "$t"
+  count=$((count + 1))
+done
+echo "Ran $count Node suites."
+```
+
+Result: 88 Node suites, 88
+passed, 0 failed. Counted
+checks: 3488 passed, 0 failed
+(70 ok() suites plus 6 node:test
+suites totaling 46). Twelve
+assessment suites print PASS
+without a numeric check count.
+
+Also: `node deploy/prompt66-agent-ops.test.mjs`
+157 passed, 0 failed.
+
+Canon reconciled before those
+assertions, Prompt 66 did not
+change it:
+
+- Worker 15 is day 9, pain 4 in
+  `deploy/worker-dashboard.html`
+  (`day:9`, `pain:4`),
+  `deploy/hse-portal.html`
+  (`day`: 9), and
+  `deploy/clinical-dashboard.html`
+  (`day`: 9, `pain`: 4).
+- Worker 08 is off work as of
+  day 18 in
+  `deploy/hse-portal.html`
+  (`status`: `off_work`, `day`:
+  18) and
+  `deploy/clinical-dashboard.html`.
+- Tenant actives sum: Employer B
+  7 + Employer A 12 + Employer C
+  5 = 24. Sandbox 28 excluded.
+  `deploy/canon.test.mjs`: 11
+  passed, 0 failed.
+
+Fail-first: temporarily expected
+SYNTH status DONE as NEW.
+`node deploy/prompt66-agent-ops.test.mjs`
+then printed `FAIL: SYNTH status
+DONE`, 156 passed, 1 failed,
+exit 1. Assertion restored.
+Rerun: 157 passed, 0 failed.
+
+Python dash audit (7.7), files
+scanned:
+
+- `.github/workflows/agent-ops-observe.yml`
+- `deploy/prompt66-agent-ops.test.mjs`
+- `docs/prompts/66/ACCEPTANCE.md`
+- `docs/prompts/66/REGISTER.md`
+- `docs/prompts/66/SECTION_1.md`
+- `docs/prompts/66/STOPS.md`
+- `internal/agent-ops/.gitignore`
+- `internal/agent-ops/README.md`
+- `internal/agent-ops/db/0001_prompt66_agent_ops.sql`
+- `internal/agent-ops/lib/http.mjs`
+- `internal/agent-ops/lib/observation.mjs`
+- `internal/agent-ops/lib/retrieval.mjs`
+- `internal/agent-ops/lib/store.mjs`
+- `internal/agent-ops/lib/zeus.mjs`
+- `internal/agent-ops/observe.mjs`
+- `internal/agent-ops/server.mjs`
+- `internal/agent-ops/ui/index.html`
+
+Result: scanned_files=17,
+dash_hits=0, exit 0.
+
+Did not claim Argus CLEAN. Did
+not invent G1 closed. Did not
+ship. Did not commit.
 
 ---
 
@@ -104,12 +194,8 @@ an auto-execute.
 
 ## What this draft did not do
 
-- Did not write product code,
-  tests, or UI.
 - Did not overwrite
   [SECTION_1.md](SECTION_1.md).
-- Did not create
-  `internal/agent-ops/`.
 - Did not apply a migration.
 - Did not edit any
   `package.json`.
@@ -119,7 +205,10 @@ an auto-execute.
   REV 2.
 - Did not attach to a Continuum
   environment.
-- Did not claim Argus CLEAN.
+- Did not claim a repo-wide
+  Argus CLEAN. The Prompt 66
+  scope patrol returned no
+  findings.
 - Did not resolve B1, G1, HIL-1
   to HIL-11, standing retrieval
   policy, or platform production.
