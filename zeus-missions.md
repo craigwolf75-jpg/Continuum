@@ -16,6 +16,16 @@ folds in.
 
 ## Active queue
 
+### P66: Prompt 66 admin agent operations and Zeus the Steering Dispatcher
+- Status: IN PROGRESS. Section 1 written. Auth ruling: LOCAL INTERNAL DASHBOARD. Draft PR only.
+- Lead: athena (tables, dispatcher, local console, observation), apollo (internal layout), calliope (register, stops, acceptance, operator copy), heracles (suite), argus (patrol)
+- Gate: draft PR only. Athena does not ship. Hermes ships Continuum only when Craig names ship. Do not dispatch a ship.
+- Scope: Continuum product Zeus role (Steering Dispatcher) plus a locally bound agent operations console. Zero public exposure. Agents observe and report only. Change executes only from a named human dispatch. No Continuum env attach (Prompt 64 B1). No Firecrawl without authorizer (B2). No live schema apply. No platform, worker, or former Prompt 53 surfaces.
+- Base tip: `cc017c897fa65e4384ce9faa51cc6f757602be0d` (Prompt 65 #176)
+- Branch: `cursor/prompt-66-agent-ops-7237`
+- Human gate: four new tables are FILE ONLY. Gary or Craig live-apply is not this mission. Standing retrieval policy stays with Gary. B1, G1, HIL-1 to HIL-11 untouched.
+- Result so far: `docs/prompts/66/SECTION_1.md` records the local-dashboard ruling, unused GitHub Actions `on.schedule` as the scheduler, seven runtime personas found here, Origin eight-plus-eleven UNVERIFIED, and table landing `internal/agent-ops/db/0001_prompt66_agent_ops.sql`.
+
 ### P65: Prompt 65 site lane production readiness and staged data purge
 - Status: IN PROGRESS. Sections 1 and 2 complete. Pending Gary purge gate. Draft PR. Section 4 purge MUST NOT run.
 - Lead: athena (wiring verify and inventory, SELECT only), calliope (register, stops, section 3 gate), argus (patrol)
