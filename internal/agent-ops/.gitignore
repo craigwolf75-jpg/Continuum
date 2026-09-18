@@ -1,0 +1,4 @@
+# Local Agent Operations store dumps. Never commit observation output.
+*.json
+data/
+*.log

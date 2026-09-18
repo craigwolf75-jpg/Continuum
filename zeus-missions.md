@@ -16,6 +16,16 @@ folds in.
 
 ## Active queue
 
+### P66: Prompt 66 admin agent operations and Zeus the Steering Dispatcher
+- Status: IN PROGRESS. Section 1 written. Auth ruling: LOCAL INTERNAL DASHBOARD. Draft PR only.
+- Lead: athena (tables, dispatcher, local console, observation), apollo (internal layout), calliope (register, stops, acceptance, operator copy), heracles (suite), argus (patrol)
+- Gate: draft PR only. Athena does not ship. Hermes ships Continuum only when Craig names ship. Do not dispatch a ship.
+- Scope: Continuum product Zeus role (Steering Dispatcher) plus a locally bound agent operations console. Zero public exposure. Agents observe and report only. Change executes only from a named human dispatch. No Continuum env attach (Prompt 64 B1). No Firecrawl without authorizer (B2). No live schema apply. No platform, worker, or former Prompt 53 surfaces.
+- Base tip: `cc017c897fa65e4384ce9faa51cc6f757602be0d` (Prompt 65 #176)
+- Branch: `cursor/prompt-66-agent-ops-7237`
+- Human gate: four new tables are FILE ONLY. Gary or Craig live-apply is not this mission. Standing retrieval policy stays with Gary. B1, G1, HIL-1 to HIL-11 untouched.
+- Result so far: Draft PR 177. `docs/prompts/66/` holds SECTION_1.md, REGISTER.md, STOPS.md, ACCEPTANCE.md. Auth ruling is LOCAL INTERNAL DASHBOARD on `127.0.0.1`. Product code is under `internal/agent-ops/` with FILE ONLY schema, Continuum Zeus Steering Dispatcher, observation CLI, retrieval refuse gate, and Apollo UI. CI proof is `deploy/prompt66-agent-ops.test.mjs` (157 passed). Full deploy suite 88 files GREEN. Argus Prompt 66 scope patrol: no findings. Origin eight-plus-eleven remains UNVERIFIED. Draft PR only. Athena does not ship.
+
 ### P65: Prompt 65 site lane production readiness and staged data purge
 - Status: IN PROGRESS. Sections 1 and 2 complete. Pending Gary purge gate. Draft PR. Section 4 purge MUST NOT run.
 - Lead: athena (wiring verify and inventory, SELECT only), calliope (register, stops, section 3 gate), argus (patrol)

@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Continuum Agent Operations</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0E1B2C;
+    --navy-mid: #16243B;
+    --ink: #0E1B2C;
+    --ink-700: #2C3E52;
+    --ink-600: #41556B;
+    --ink-500: #55697E;
+    --ink-200: #D6DDE4;
+    --ink-100: #EAEFF3;
+    --ink-050: #F5F7F9;
+    --white: #FFFFFF;
+    --gold: #C39A45;
+    --gold-deep: #8A6414;
+    --gold-wash: #FAF3E4;
+    --line: #E4EAF0;
+    --line-strong: #CFD8E1;
+    --ok-wash: #E6F5EE;
+    --ok-ink: #0B5C40;
+    --shadow: 0 10px 30px -16px rgba(14, 27, 44, 0.22);
+    --r: 12px;
+    --focus: 3px solid var(--gold);
+    --font: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --motion: 280ms ease;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--ink-050);
+    color: var(--ink-700);
+    font: 15.5px/1.5 var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--gold-deep); }
+  h1, h2, h3 { color: var(--navy); margin: 0; font-weight: 700; letter-spacing: -0.015em; }
+  h1 { font-size: 1.35rem; line-height: 1.2; }
+  h2 { font-size: 1.15rem; line-height: 1.25; }
+  p { margin: 0; }
+
+  :focus { outline: none; }
+  :focus-visible {
+    outline: var(--focus);
+    outline-offset: 3px;
+  }
+
+  .skip {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    z-index: 80;
+    transform: translateY(-160%);
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 16px;
+    min-height: 44px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .skip:focus { transform: none; }
+
+  .mast {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--navy);
+    color: var(--white);
+    border-bottom: 2px solid var(--gold);
+  }
+  .mast-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 20px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+  }
+  .mark {
+    width: 28px;
+    height: 28px;
+    margin-top: 4px;
+    border: 2px solid var(--gold);
+    border-radius: 7px;
+    transform: rotate(45deg);
+    flex: none;
+    display: grid;
+    place-items: center;
+  }
+  .mark i {
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 1px;
+  }
+  .zeus {
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 600;
+    margin: 4px 0 6px;
+  }
+  .autonomy {
+    color: #D6DDE4;
+    font-size: 13.5px;
+    max-width: 52ch;
+  }
+  .ops {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ops label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #AFBBC7;
+  }
+  .ops input {
+    width: min(280px, 72vw);
+    min-height: 44px;
+    border: 1px solid #27395A;
+    border-radius: 10px;
+    background: var(--navy-mid);
+    color: var(--white);
+    padding: 0 12px;
+    font: inherit;
+    font-size: 15px;
+  }
+  .ops input::placeholder { color: #9AA9BF; }
+
+  .banner {
+    position: sticky;
+    top: var(--mast-h, 92px);
+    z-index: 35;
+    background: var(--gold-wash);
+    color: var(--gold-deep);
+    border-bottom: 1px solid var(--gold);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .banner p {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .shell { max-width: 1180px; margin: 0 auto; padding: 22px 20px 72px; }
+
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 22px;
+  }
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--navy);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+  .jump a:hover { border-color: var(--gold); }
+
+  .panel {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    padding: 20px 20px 18px;
+    margin-bottom: 18px;
+    scroll-margin-top: 168px;
+  }
+  .panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .src {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .src[data-layer="live"] { color: var(--ok-ink); }
+  .src[data-layer="last-known"] { color: var(--gold-deep); }
+  .src[data-layer="UNKNOWN"] { color: var(--ink-600); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+    gap: 12px;
+  }
+  .agent {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    background: var(--white);
+    min-height: 168px;
+  }
+  .agent-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .agent h3 { font-size: 15.5px; }
+  .agent .id {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-500);
+    margin-top: 2px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--ink-100);
+    color: var(--ink-600);
+    flex: none;
+  }
+  .pill.live, .pill.working, .pill.observing, .pill.running,
+  .pill.high, .pill.critical, .pill.blocking {
+    background: var(--gold-wash);
+    color: var(--gold-deep);
+  }
+  .pill.idle, .pill.waiting { background: var(--ink-100); color: var(--ink-600); }
+  .pill.ready { background: #EAF2FB; color: #0E4680; }
+
+  .kv { margin: 0; }
+  .kv div {
+    display: grid;
+    grid-template-columns: 118px 1fr;
+    gap: 8px;
+    padding: 5px 0;
+    border-top: 1px solid var(--ink-100);
+    font-size: 13.5px;
+  }
+  .kv dt { color: var(--ink-500); font-weight: 600; }
+  .kv dd { margin: 0; color: var(--ink); word-break: break-word; }
+  .miss { color: var(--ink-500); font-style: italic; }
+
+  .finding {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: var(--white);
+  }
+  .finding:last-child { margin-bottom: 0; }
+  .finding-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .finding .when {
+    font-size: 12.5px;
+    color: var(--ink-500);
+    font-family: var(--mono);
+  }
+  .finding .ev, .finding .prop { margin-top: 6px; font-size: 14.5px; }
+  .finding .lbl {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 2px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 16px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--navy);
+    color: var(--white);
+    transition: background var(--motion), opacity var(--motion);
+  }
+  .btn:hover { background: #16243B; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn.gold {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .btn.gold:hover { background: #B58A38; }
+  .btn.ghost {
+    background: var(--white);
+    color: var(--navy);
+    border-color: var(--line-strong);
+  }
+  .btn.ghost:hover { border-color: var(--gold); background: var(--gold-wash); }
+
+  .form {
+    display: grid;
+    gap: 12px;
+  }
+  .form.two {
+    grid-template-columns: 1fr 1fr;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field span, .field label {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--ink);
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 15px;
+  }
+  textarea { min-height: 96px; resize: vertical; line-height: 1.45; }
+  .hint { font-size: 13px; color: var(--ink-500); }
+
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    padding: 10px 12px;
+    background: var(--ink-050);
+    border-bottom: 1px solid var(--line);
+  }
+  td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    color: var(--ink);
+  }
+  tr:last-child td { border-bottom: none; }
+
+  .empty {
+    padding: 18px 4px;
+    color: var(--ink-500);
+    font-style: italic;
+  }
+
+  .refuse {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 14px;
+    min-height: 44px;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    background: var(--gold-wash);
+    color: var(--gold-deep);
+    font-weight: 600;
+  }
+  .refuse.on { display: block; }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(12px);
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 12px 18px;
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 90;
+    max-width: min(520px, 92vw);
+    transition: opacity var(--motion), transform var(--motion);
+  }
+  .toast.on {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .enter {
+    animation: fade-in var(--motion) ease both;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 760px) {
+    .form.two { grid-template-columns: 1fr; }
+    .kv div { grid-template-columns: 1fr; gap: 2px; }
+    .mast-inner { padding: 14px 16px; }
+    .shell { padding: 16px 16px 80px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root { --motion: 0ms; }
+    *, *::before, *::after {
+      animation: none !important;
+      animation-duration: 0ms !important;
+      transition: none !important;
+      transition-duration: 0ms !important;
+      scroll-behavior: auto !important;
+    }
+    .toast { transform: translateX(-50%); }
+    .toast.on { transform: translateX(-50%); }
+    .enter { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#agent-list">Skip to agent list</a>
+
+<header class="mast" id="mast">
+  <div class="mast-inner">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><i></i></div>
+      <div>
+        <h1>Continuum Agent Operations</h1>
+        <p class="zeus">Continuum Zeus, Steering Dispatcher</p>
+        <p class="autonomy">Agents observe and report. A named human must dispatch every change.</p>
+      </div>
+    </div>
+    <div class="ops">
+      <label>
+        Operator name
+        <input id="operator" type="text" name="operator" autocomplete="name" required placeholder="Required for writes">
+      </label>
+      <button type="button" class="btn gold" id="refresh">Refresh</button>
+    </div>
+  </div>
+</header>
+
+<div class="banner" role="status">
+  <p>This console is local only. It is not on the public site.</p>
+</div>
+
+<main class="shell">
+  <nav class="jump" aria-label="Page sections">
+    <a href="#agent-list">Agent list</a>
+    <a href="#findings-feed">Findings feed</a>
+    <a href="#steering-composer">Steering composer</a>
+    <a href="#task-history">Task history</a>
+    <a href="#retrieval-panel">Retrieval panel</a>
+  </nav>
+
+  <section class="panel" id="agent-list" aria-labelledby="agent-list-title">
+    <div class="panel-head">
+      <h2 id="agent-list-title">Agent list</h2>
+      <p class="src" id="src-agents" data-layer="UNKNOWN">Source: UNKNOWN</p>
+    </div>
+    <div id="agents-body" class="grid" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="findings-feed" aria-labelledby="findings-title">
+    <div class="panel-head">
+      <h2 id="findings-title">Findings feed</h2>
+      <p class="src" id="src-findings" data-layer="UNKNOWN">Source: UNKNOWN</p>
+    </div>
+    <div id="findings-body" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="steering-composer" aria-labelledby="composer-title">
+    <div class="panel-head">
+      <h2 id="composer-title">Steering composer</h2>
+      <p class="src" id="src-composer">Write only. Operator name required.</p>
+    </div>
+    <form class="form" id="dispatch-form">
+      <div class="field">
+        <label for="target-agent">Agent</label>
+        <input id="target-agent" type="text" name="target_agent" list="agent-options" required autocomplete="off" placeholder="Choose an agent">
+        <datalist id="agent-options"></datalist>
+      </div>
+      <div class="field">
+        <label for="instruction">Instruction</label>
+        <textarea id="instruction" name="instruction" required maxlength="4000" placeholder="What the named human is dispatching"></textarea>
+      </div>
+      <div class="field">
+        <label for="finding-id">Finding id (optional)</label>
+        <input id="finding-id" type="text" name="finding_id" autocomplete="off">
+      </div>
+      <div>
+        <button type="submit" class="btn" id="dispatch">Dispatch</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" id="task-history" aria-labelledby="tasks-title">
+    <div class="panel-head">
+      <h2 id="tasks-title">Task history</h2>
+      <p class="src" id="src-tasks" data-layer="UNKNOWN">Source: UNKNOWN</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">State</th>
+            <th scope="col">Result</th>
+            <th scope="col">Artifact</th>
+          </tr>
+        </thead>
+        <tbody id="tasks-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="retrieval-panel" aria-labelledby="retrieval-title">
+    <div class="panel-head">
+      <h2 id="retrieval-title">Retrieval panel</h2>
+      <p class="src" id="src-retrieval" data-layer="UNKNOWN">Source: UNKNOWN</p>
+    </div>
+    <form class="form" id="retrieval-form">
+      <div class="form two">
+        <div class="field">
+          <label for="authorizer">Authorizer</label>
+          <input id="authorizer" type="text" name="authorizer" autocomplete="off" required>
+        </div>
+        <div class="field">
+          <label for="budget">Budget</label>
+          <input id="budget" type="text" name="budget" inputmode="decimal" autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label for="sources">Sources</label>
+        <textarea id="sources" name="sources" placeholder="One source per line, or commas"></textarea>
+      </div>
+      <div>
+        <button type="submit" class="btn gold" id="queue-run">Queue run</button>
+        <p class="hint" style="margin-top:8px">A run is refused when the authorizer field is empty. The server refuses the same way.</p>
+      </div>
+      <p class="refuse" id="retrieval-refuse" role="alert">A retrieval run without a recorded authorizer is refused.</p>
+    </form>
+    <h3 style="margin:20px 0 10px;font-size:15px">Past runs</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Authorizer</th>
+            <th scope="col">Budget</th>
+            <th scope="col">Sources</th>
+            <th scope="col">Cost</th>
+            <th scope="col">When</th>
+          </tr>
+        </thead>
+        <tbody id="retrieval-body"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var cache = { agents: null, findings: null, tasks: null, retrieval: null };
+  var layer = { agents: "UNKNOWN", findings: "UNKNOWN", tasks: "UNKNOWN", retrieval: "UNKNOWN" };
+
+  var el = {
+    operator: document.getElementById("operator"),
+    refresh: document.getElementById("refresh"),
+    agents: document.getElementById("agents-body"),
+    findings: document.getElementById("findings-body"),
+    tasks: document.getElementById("tasks-body"),
+    retrieval: document.getElementById("retrieval-body"),
+    target: document.getElementById("target-agent"),
+    agentOptions: document.getElementById("agent-options"),
+    instruction: document.getElementById("instruction"),
+    findingId: document.getElementById("finding-id"),
+    dispatchForm: document.getElementById("dispatch-form"),
+    retrievalForm: document.getElementById("retrieval-form"),
+    authorizer: document.getElementById("authorizer"),
+    budget: document.getElementById("budget"),
+    sources: document.getElementById("sources"),
+    refuse: document.getElementById("retrieval-refuse"),
+    toast: document.getElementById("toast"),
+    mast: document.getElementById("mast")
+  };
+
+  var srcIds = {
+    agents: "src-agents",
+    findings: "src-findings",
+    tasks: "src-tasks",
+    retrieval: "src-retrieval"
+  };
+
+  function reducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function pinBanner() {
+    var h = el.mast ? el.mast.offsetHeight : 92;
+    document.documentElement.style.setProperty("--mast-h", h + "px");
+  }
+
+  function esc(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function pick(obj, keys) {
+    if (!obj || typeof obj !== "object") return undefined;
+    for (var i = 0; i < keys.length; i++) {
+      if (Object.prototype.hasOwnProperty.call(obj, keys[i]) && obj[keys[i]] != null && obj[keys[i]] !== "") {
+        return obj[keys[i]];
+      }
+    }
+    return undefined;
+  }
+
+  function asList(payload, keys) {
+    if (Array.isArray(payload)) return payload;
+    if (!payload || typeof payload !== "object") return [];
+    var tryKeys = keys.concat(["data", "items", "rows", "results"]);
+    for (var i = 0; i < tryKeys.length; i++) {
+      if (Array.isArray(payload[tryKeys[i]])) return payload[tryKeys[i]];
+    }
+    return [];
+  }
+
+  function isBlank(value) {
+    return value == null || value === "";
+  }
+
+  function miss(kind) {
+    return kind === "none" ? "none yet" : "UNKNOWN";
+  }
+
+  function showText(value, kind) {
+    if (isBlank(value)) return miss(kind);
+    return String(value);
+  }
+
+  function showHeartbeat(value) {
+    if (isBlank(value) || value === 0) return "UNKNOWN";
+    if (typeof value === "number") {
+      var d = new Date(value);
+      if (isNaN(d.getTime())) return "UNKNOWN";
+      return d.toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC");
+    }
+    return String(value);
+  }
+
+  function showCost(value) {
+    if (isBlank(value) || value === 0 || value === "0") return "UNKNOWN";
+    if (typeof value === "number" && !isFinite(value)) return "UNKNOWN";
+    return String(value);
+  }
+
+  function showWhen(value) {
+    if (isBlank(value) || value === 0) return "UNKNOWN";
+    if (typeof value === "number") {
+      var d = new Date(value);
+      if (isNaN(d.getTime())) return "UNKNOWN";
+      return d.toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC");
+    }
+    var parsed = Date.parse(value);
+    if (!isNaN(parsed)) {
+      return new Date(parsed).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC");
+    }
+    return String(value);
+  }
+
+  function timeVal(item) {
+    var v = pick(item, ["created_at", "ts", "timestamp", "at", "updated_at"]);
+    if (typeof v === "number") return v;
+    if (isBlank(v)) return 0;
+    var t = Date.parse(v);
+    return isNaN(t) ? 0 : t;
+  }
+
+  function newestFirst(list) {
+    return list.slice().sort(function (a, b) { return timeVal(b) - timeVal(a); });
+  }
+
+  function cls(value) {
+    return String(value || "").toLowerCase().replace(/[^a-z0-9_-]+/g, "");
+  }
+
+  function wrapMiss(text) {
+    var klass = (text === "UNKNOWN" || text === "none yet") ? " class=\"miss\"" : "";
+    return "<span" + klass + ">" + esc(text) + "</span>";
+  }
+
+  function setSource(kind) {
+    var node = document.getElementById(srcIds[kind]);
+    if (!node) return;
+    var label = layer[kind] || "UNKNOWN";
+    node.setAttribute("data-layer", label);
+    node.textContent = "Source: " + label;
+  }
+
+  function toast(msg) {
+    el.toast.textContent = msg;
+    el.toast.classList.add("on");
+    window.clearTimeout(toast._t);
+    toast._t = window.setTimeout(function () {
+      el.toast.classList.remove("on");
+    }, 3200);
+  }
+
+  function operatorName() {
+    return (el.operator.value || "").replace(/^\s+|\s+$/g, "");
+  }
+
+  function requireOperator() {
+    var name = operatorName();
+    if (name) return name;
+    el.operator.focus();
+    toast("Operator name is required for this write.");
+    return "";
+  }
+
+  function persistOperator() {
+    try { sessionStorage.setItem("agent_ops_operator", el.operator.value); } catch (err) {}
+  }
+
+  function restoreOperator() {
+    try {
+      var saved = sessionStorage.getItem("agent_ops_operator");
+      if (saved) el.operator.value = saved;
+    } catch (err) {}
+  }
+
+  async function readJson(url) {
+    var res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error("http " + res.status);
+    return res.json();
+  }
+
+  async function loadLayer(kind, url, keys) {
+    try {
+      var data = await readJson(url);
+      cache[kind] = data;
+      layer[kind] = "live";
+      setSource(kind);
+      return asList(data, keys);
+    } catch (err) {
+      if (cache[kind] != null) {
+        layer[kind] = "last-known";
+        setSource(kind);
+        return asList(cache[kind], keys);
+      }
+      layer[kind] = "UNKNOWN";
+      setSource(kind);
+      return [];
+    }
+  }
+
+  async function postJson(url, body) {
+    var res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(body)
+    });
+    var parsed = null;
+    try { parsed = await res.json(); } catch (err) { parsed = null; }
+    return { ok: res.ok, status: res.status, data: parsed };
+  }
+
+  function renderAgents(list) {
+    if (!list.length) {
+      el.agents.innerHTML = "<p class=\"empty\">none yet</p>";
+      fillAgentSelect([]);
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i] || {};
+      var id = showText(pick(a, ["id", "agent_id", "code"]), "unknown");
+      var name = showText(pick(a, ["name", "display_name", "agent"]), "unknown");
+      if (name === "UNKNOWN" && id !== "UNKNOWN") name = id;
+      var status = showText(pick(a, ["runtime_status", "status", "state"]), "unknown");
+      var task = showText(pick(a, ["current_task", "live_current_task", "live_task", "task"]), "none");
+      var beat = showHeartbeat(pick(a, ["last_heartbeat", "heartbeat", "heartbeat_at", "last_seen_at", "last_seen"]));
+      var done = showText(pick(a, ["last_completed_action", "last_action", "last_completed"]), "none");
+      html += "<article class=\"agent" + (reducedMotion() ? "" : " enter") + "\">" +
+        "<div class=\"agent-top\"><div><h3>" + esc(name) + "</h3>" +
+        "<p class=\"id\">" + esc(id) + "</p></div>" +
+        "<span class=\"pill " + esc(cls(status)) + "\">" + esc(status) + "</span></div>" +
+        "<dl class=\"kv\">" +
+        "<div><dt>Current task</dt><dd>" + wrapMiss(task) + "</dd></div>" +
+        "<div><dt>Last heartbeat</dt><dd>" + wrapMiss(beat) + "</dd></div>" +
+        "<div><dt>Last completed</dt><dd>" + wrapMiss(done) + "</dd></div>" +
+        "</dl></article>";
+    }
+    el.agents.innerHTML = html;
+    fillAgentSelect(list);
+  }
+
+  function fillAgentSelect(list) {
+    var opts = "";
+    var seen = {};
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i] || {};
+      var id = pick(a, ["id", "agent_id", "code", "name"]);
+      var name = pick(a, ["name", "display_name", "agent"]) || id;
+      if (isBlank(id) || seen[id]) continue;
+      seen[id] = true;
+      opts += "<option value=\"" + esc(id) + "\">" + esc(name) + "</option>";
+    }
+    el.agentOptions.innerHTML = opts;
+  }
+
+  function renderFindings(list) {
+    var rows = newestFirst(list);
+    if (!rows.length) {
+      el.findings.innerHTML = "<p class=\"empty\">none yet</p>";
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < rows.length; i++) {
+      var f = rows[i] || {};
+      var id = pick(f, ["id", "finding_id"]);
+      var body = showText(pick(f, ["finding", "summary", "title"]), "unknown");
+      var evidence = showText(pick(f, ["evidence", "evidence_link"]), "none");
+      var prop = showText(pick(f, ["proposed_improvement", "proposed", "improvement", "proposal"]), "none");
+      var sev = showText(pick(f, ["severity"]), "unknown");
+      var status = showText(pick(f, ["status"]), "unknown");
+      var when = showWhen(pick(f, ["created_at", "ts", "timestamp", "at"]));
+      var sid = id == null ? "" : String(id);
+      var canDispose = String(pick(f, ["status"]) || "").toUpperCase() === "NEW";
+      html += "<article class=\"finding" + (reducedMotion() ? "" : " enter") + "\" data-id=\"" + esc(sid) + "\">" +
+        "<div class=\"finding-top\">" +
+        "<span class=\"pill " + esc(cls(sev)) + "\">" + esc(sev) + "</span>" +
+        "<span class=\"pill " + esc(cls(status)) + "\">" + esc(status) + "</span>" +
+        "<span class=\"when\">" + esc(when) + "</span></div>" +
+        "<p class=\"ev\"><span class=\"lbl\">Finding</span> " + wrapMiss(body) + "</p>" +
+        "<p class=\"ev\"><span class=\"lbl\">Evidence</span> " + wrapMiss(evidence) + "</p>" +
+        "<p class=\"prop\"><span class=\"lbl\">Proposed improvement</span> " + wrapMiss(prop) + "</p>";
+      if (canDispose) {
+        html += "<div class=\"actions\">" +
+        "<button type=\"button\" class=\"btn gold\" data-act=\"approve\" data-id=\"" + esc(sid) + "\">Approve</button>" +
+        "<button type=\"button\" class=\"btn ghost\" data-act=\"dismiss\" data-id=\"" + esc(sid) + "\">Dismiss</button>" +
+        "</div>";
+      }
+      html += "</article>";
+    }
+    el.findings.innerHTML = html;
+  }
+
+  function artifactHref(item) {
+    return pick(item, ["artifact_url", "diff_url", "artifact", "diff", "link", "url"]);
+  }
+
+  function renderTasks(list) {
+    if (!list.length) {
+      el.tasks.innerHTML = "<tr><td colspan=\"3\" class=\"empty\">none yet</td></tr>";
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i] || {};
+      var state = showText(pick(t, ["state", "status"]), "unknown");
+      var result = showText(pick(t, ["result"]), "none");
+      var href = artifactHref(t);
+      var art;
+      if (isBlank(href)) {
+        art = wrapMiss("none yet");
+      } else {
+        art = "<a href=\"" + esc(href) + "\">" + esc(String(href)) + "</a>";
+      }
+      html += "<tr class=\"" + (reducedMotion() ? "" : "enter") + "\">" +
+        "<td>" + wrapMiss(state) + "</td>" +
+        "<td>" + wrapMiss(result) + "</td>" +
+        "<td>" + art + "</td></tr>";
+    }
+    el.tasks.innerHTML = html;
+  }
+
+  function sourcesText(value) {
+    if (isBlank(value)) return "none yet";
+    if (Array.isArray(value)) {
+      var parts = [];
+      for (var i = 0; i < value.length; i++) {
+        if (!isBlank(value[i])) parts.push(String(value[i]));
+      }
+      return parts.length ? parts.join(", ") : "none yet";
+    }
+    return String(value);
+  }
+
+  function renderRetrieval(list) {
+    var rows = newestFirst(list);
+    if (!rows.length) {
+      el.retrieval.innerHTML = "<tr><td colspan=\"5\" class=\"empty\">none yet</td></tr>";
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i] || {};
+      var who = showText(pick(r, ["authorizer"]), "unknown");
+      var budget = showText(pick(r, ["budget"]), "unknown");
+      var sources = sourcesText(pick(r, ["sources"]));
+      var hasCost = Object.prototype.hasOwnProperty.call(r, "cost") && r.cost != null && r.cost !== "";
+      var cost = hasCost ? showCost(r.cost) : "UNKNOWN";
+      var when = showWhen(pick(r, ["created_at", "ts", "timestamp", "at", "ran_at"]));
+      html += "<tr class=\"" + (reducedMotion() ? "" : "enter") + "\">" +
+        "<td>" + wrapMiss(who) + "</td>" +
+        "<td>" + wrapMiss(budget) + "</td>" +
+        "<td>" + wrapMiss(sources) + "</td>" +
+        "<td>" + wrapMiss(cost) + "</td>" +
+        "<td>" + wrapMiss(when) + "</td></tr>";
+    }
+    el.retrieval.innerHTML = html;
+  }
+
+  async function refreshAll() {
+    el.refresh.disabled = true;
+    var agents = await loadLayer("agents", "/api/agents", ["agents"]);
+    var findings = await loadLayer("findings", "/api/findings", ["findings"]);
+    var tasks = await loadLayer("tasks", "/api/tasks", ["tasks"]);
+    var retrieval = await loadLayer("retrieval", "/api/retrieval", ["retrieval", "runs"]);
+    renderAgents(agents);
+    renderFindings(findings);
+    renderTasks(tasks);
+    renderRetrieval(retrieval);
+    el.refresh.disabled = false;
+  }
+
+  async function onFindingAction(act, id) {
+    if (id == null || id === "") {
+      toast("Finding id is UNKNOWN. The write was not sent.");
+      return;
+    }
+    var human = requireOperator();
+    if (!human) return;
+    var path = act === "approve"
+      ? "/api/findings/" + encodeURIComponent(id) + "/approve"
+      : "/api/findings/" + encodeURIComponent(id) + "/dismiss";
+    var res = await postJson(path, { human: human });
+    if (!res.ok) {
+      toast("The " + act + " request did not complete.");
+      return;
+    }
+    toast(act === "approve" ? "Finding approved." : "Finding dismissed.");
+    await refreshAll();
+  }
+
+  el.findings.addEventListener("click", function (ev) {
+    var btn = ev.target.closest("button[data-act]");
+    if (!btn) return;
+    onFindingAction(btn.getAttribute("data-act"), btn.getAttribute("data-id"));
+  });
+
+  el.dispatchForm.addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+    var human = requireOperator();
+    if (!human) return;
+    var target = (el.target.value || "").replace(/^\s+|\s+$/g, "");
+    var instruction = (el.instruction.value || "").replace(/^\s+|\s+$/g, "");
+    if (!target || !instruction) {
+      toast("Agent and instruction are required.");
+      return;
+    }
+    var body = {
+      target_agent: target,
+      instruction: instruction,
+      dispatched_by: human
+    };
+    var fid = (el.findingId.value || "").replace(/^\s+|\s+$/g, "");
+    if (fid) body.finding_id = fid;
+    var res = await postJson("/api/dispatch", body);
+    if (!res.ok) {
+      toast("Dispatch did not complete.");
+      return;
+    }
+    el.instruction.value = "";
+    el.findingId.value = "";
+    toast("Dispatch recorded.");
+    await refreshAll();
+  });
+
+  function parseSources(raw) {
+    var text = (raw || "").replace(/^\s+|\s+$/g, "");
+    if (!text) return [];
+    return text.split(/[\n,]+/).map(function (s) {
+      return s.replace(/^\s+|\s+$/g, "");
+    }).filter(function (s) { return s.length > 0; });
+  }
+
+  el.retrievalForm.addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+    el.refuse.classList.remove("on");
+    var human = requireOperator();
+    if (!human) return;
+    var authorizer = (el.authorizer.value || "").replace(/^\s+|\s+$/g, "");
+    if (!authorizer) {
+      el.refuse.classList.add("on");
+      el.authorizer.focus();
+      return;
+    }
+    var body = {
+      authorizer: authorizer,
+      budget: (el.budget.value || "").replace(/^\s+|\s+$/g, ""),
+      sources: parseSources(el.sources.value)
+    };
+    if (body.budget === "") delete body.budget;
+    var res = await postJson("/api/retrieval", body);
+    if (!res.ok) {
+      if (res.status === 400 || res.status === 403) {
+        el.refuse.classList.add("on");
+      }
+      toast("Retrieval queue did not complete.");
+      return;
+    }
+    el.sources.value = "";
+    toast("Retrieval run queued.");
+    await refreshAll();
+  });
+
+  el.authorizer.addEventListener("input", function () {
+    if ((el.authorizer.value || "").replace(/^\s+|\s+$/g, "")) {
+      el.refuse.classList.remove("on");
+    }
+  });
+
+  el.refresh.addEventListener("click", function () { refreshAll(); });
+  el.operator.addEventListener("input", persistOperator);
+
+  window.addEventListener("resize", pinBanner);
+  restoreOperator();
+  pinBanner();
+  renderAgents([]);
+  renderFindings([]);
+  renderTasks([]);
+  renderRetrieval([]);
+  setSource("agents");
+  setSource("findings");
+  setSource("tasks");
+  setSource("retrieval");
+  refreshAll();
+})();
+</script>
+</body>
+</html>
