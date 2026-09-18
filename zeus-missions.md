@@ -24,7 +24,7 @@ folds in.
 - Base tip: `cc017c897fa65e4384ce9faa51cc6f757602be0d` (Prompt 65 #176)
 - Branch: `cursor/prompt-66-agent-ops-7237`
 - Human gate: four new tables are FILE ONLY. Gary or Craig live-apply is not this mission. Standing retrieval policy stays with Gary. B1, G1, HIL-1 to HIL-11 untouched.
-- Result so far: `docs/prompts/66/SECTION_1.md` records the local-dashboard ruling, unused GitHub Actions `on.schedule` as the scheduler, seven runtime personas found here, Origin eight-plus-eleven UNVERIFIED, and table landing `internal/agent-ops/db/0001_prompt66_agent_ops.sql`.
+- Result so far: `docs/prompts/66/` holds SECTION_1.md, REGISTER.md, STOPS.md, ACCEPTANCE.md. Auth ruling is LOCAL INTERNAL DASHBOARD on `127.0.0.1`. Product code is under `internal/agent-ops/` with FILE ONLY schema, Continuum Zeus Steering Dispatcher, observation CLI, retrieval refuse gate, and Apollo UI. CI proof is `deploy/prompt66-agent-ops.test.mjs`. Scheduler is `.github/workflows/agent-ops-observe.yml` (`on.schedule`). Origin eight-plus-eleven remains UNVERIFIED. Draft PR only.
 
 ### P65: Prompt 65 site lane production readiness and staged data purge
 - Status: IN PROGRESS. Sections 1 and 2 complete. Pending Gary purge gate. Draft PR. Section 4 purge MUST NOT run.
