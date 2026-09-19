@@ -16,6 +16,16 @@ folds in.
 
 ## Active queue
 
+### P-G1: Prompt G1 discovery audit of the live platform
+- Status: IN PROGRESS. Audit task REGISTERED AND RELEASED. Reading lane. Draft PR. Report landed at `docs/prompts/G1/G1_AUDIT_REPORT.md`. Not G1 closed. Not a stack decision. Not a Continuum product release. Athena does not ship. Do not dispatch Hermes.
+- Lead: athena (hosting, residency, schema, auth, consent, identity, change path), argus (Section 5 privacy, Prompt 34 search, dash patrol). Zeus integrates. Hermes only when Craig names ship.
+- Gate: draft PR only. Section 5 urgent finding is documented first in the PR for Craig. Do not fix it. Heracles suite is not this mission (docs only). Argus patrolled Section 5; do not claim product-surface CLEAN. Hermes ships Continuum only when Craig names ship.
+- Scope: read only discovery audit. Craig prompt written 8 August 2026. Builds nothing. Changes nothing. Facts only: VERIFIED with evidence or UNVERIFIED with the blocker. No patient row contents. Credentials by storage name only. Citation map: Craig 47 through 50 resolve to unified 51, Master Person Index, unified 52, and Product Behaviour. Prompt 10, 27/28/29, 33, 34 are original live-platform numbers. Prompt 53 holds were RELEASED 2026-09-16; hold lift is not an auto-execute; do not invent G1 closed. Root `G1_AUDIT_REPORT.md` dated 2026-08-13 is a prior claim, not this report.
+- Base tip: `69615358f1ca20c93ffdf65532121d9d6d163a28` (PR 181 / Prompt 69 register)
+- Branch: `cursor/g1-discovery-audit-11af`
+- Human gate: Craig platform decision after this report. Section 5 urgent finding is Craig's immediately. Do not begin Azure versus Supabase migration. Do not change any region. Do not apply live schema.
+- Result so far: `docs/prompts/G1/` holds REGISTER.md, G1_AUDIT_REPORT.md, STOPS.md. Live Supabase `agzhnmunodrhsjbogzae` region `ca-central-1` CANADA VERIFIED. Vercel `continuum-o51l` production from main, regions `iad1`, NOT CANADA. Section 5 URGENT: HSE HTML carries diagnosis, pain, mobility, and clinical narrative. Live P56 views no longer expose those SQL columns. Preview shares production DB keys. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
+
 ### P69: Prompt 69 Canadian physician systems research
 - Status: REGISTERED. Reading lane, hold compatible. Draft PR. Registration only. Not a Continuum product release. Not a product PASS. Research claims remain UNVERIFIED for product use until dated re-check.
 - Lead: calliope (register, section 00, stops, acceptance, report source record), argus (patrol). Athena does not ship. Do not dispatch Hermes.
