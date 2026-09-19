@@ -1,24 +1,31 @@
 # Prompt 67. The public landing page
 implementation note.
 
-REGISTERED NOT RELEASED. Draft PR.
-Registration plus honesty STOP. Not a
-Continuum product release.
+REGISTERED. Gate holds lifted by
+Craig 2026-09-19. Draft PR. Not a
+Continuum product release. Athena
+does not ship.
 
 Write date: 19 September 2026.
 Registration date in the stream:
 20 August 2026.
+Named BUILD date: 2026-09-19.
 
-Craig named BUILD Prompt 67: THE PUBLIC
-LANDING PAGE IMPLEMENTATION NOTE.
-Registered unified Prompt 67 on
-20 August 2026. This pass is
-REGISTRATION plus honesty STOP only.
+Craig named BUILD Prompt 67 public
+landing onto continuumrtw.com WITH
+GATE HOLDS LIFTED.
 
-No visitor-facing product copy. No
-product or runtime change. Athena does
-not ship. This file is not a ship
-order.
+This pass is no longer
+registration-only. It records the
+named BUILD and the closed human
+gates. Still a draft PR. Still not
+a ship order. Do not invent a
+Continuum product release.
+
+No visitor-facing product copy
+beyond quoting the already-approved
+hero line. Athena does not ship.
+This file is not a ship order.
 
 No em dashes or en dashes anywhere.
 
@@ -26,160 +33,221 @@ No em dashes or en dashes anywhere.
 
 ## Status
 
-Prompt 67 is REGISTERED NOT RELEASED
-in Continuum docs. Draft PR.
-Registration plus honesty STOP. Not a
-Continuum product release.
+Prompt 67 is REGISTERED. Gate holds
+lifted by Craig 2026-09-19. Draft
+PR. Not a Continuum product
+release. Athena does not ship.
 
-This file set registers identity, what
-is not in hand, Gary's two gate
-rulings, route confirmations, the
-Calendly close, Craig ICON hero
-approval, conformance claims from the
-other session, unseen docs, the
-carried og-image blocker, later-repo
-checkout observations, stops, and
-acceptance that stays BLOCKED.
+Craig named BUILD Prompt 67 public
+landing onto continuumrtw.com WITH
+GATE HOLDS LIFTED, dated
+2026-09-19.
 
-Do not invent G1 closed. Do not invent
-REV 2. Do not apply live schema. Do
-not edit any `package.json`. Do not
-claim Argus CLEAN.
+This file set records the named
+BUILD, the closed human gates, the
+checkout landing used after
+verification, the ICON hero named
+by Craig, route facts verified in
+this repo, remaining ask-list
+items, standing stops, and
+acceptance that is not ship-ready.
 
----
-
-## What this is
-
-An implementation record from a
-separate build session that built and
-browser-verified a new landing page
-but could not commit or deploy it, as
-of the 20 August 2026 registration
-note.
-
-The note records a complete
-`index.html` (48 KB, self contained,
-no dependencies) built to an approved
-specification and verified in real
-Chromium at eight widths. Continuum
-has not verified that browser pass.
+Do not invent G1 closed. Do not
+invent REV 2. Do not apply live
+schema. Do not edit any
+`package.json`. Do not claim Argus
+CLEAN. Do not treat this as a ship
+order.
 
 ---
 
-## Artifact NOT IN HAND
+## What Craig authorized (named,
+dated 2026-09-19)
 
-The complete 48 KB self contained
-`index.html` was not supplied to this
-stream with this prompt. It exists
-only with Gary and that session, as
-the 20 August note states.
+1. Public landing is the site root
+   for continuumrtw.com.
+2. Gate holds lifted: `/` and
+   required static assets join the
+   gate middleware allow list
+   (publicly readable). Prefer
+   allow-list, not ungating the
+   whole site.
+3. Access code experience moves
+   behind Sign In. Reuse existing
+   gate markup. Leave POST
+   `/api/site-access` untouched.
+4. ICON hero approval: use Prompt
+   67 approved wording ("Where
+   medical decisions become safe
+   work" plus AI-powered
+   positioning). Founding line
+   "Where care ends, Continuum
+   begins" stays retired on the
+   new landing.
+5. Calendly
+   `https://calendly.com/craig-continuumrtw`
+   closes booking-url-pending.
+6. Footer and contact:
+   `info@continuumrtw.com`
+   (Prompt 62a).
 
-Do not invent, reconstruct, or
-fabricate that HTML. Do not rewrite
-`deploy/index.html` or the holding
-page to pretend the artifact exists.
-
-Ask Gary to upload or commit the
-original `index.html`, or to confirm
-whether checkout `deploy/index.html`
-is that file. Confirmation is Gary's.
-
-A later-repo file at
-`deploy/index.html` is recorded in
-[SECTION_00.md](SECTION_00.md) as a
-checkout observation. That presence
-does not close NOT IN HAND. Identity
-of the checkout file as THE August 21
-session artifact is UNVERIFIED. Do
-not treat checkout presence as
-in-hand for release.
+Gate rulings (1) and (2) named
+closed by Craig 2026-09-19. ICON
+hero named by Craig 2026-09-19.
 
 ---
 
-## Ask list
+## Artifact used after verification
 
-- Gary: upload or commit the original
-  `index.html`, or confirm the
-  checkout file.
-- Gary: two gate rulings. (1) Do `/`
-  and its static assets join the gate
-  middleware allow list, becoming
-  publicly readable? (2) Does the
-  access code experience move behind
-  Sign In, reusing the existing
-  markup, leaving `/api/site-access`
-  untouched?
-- Craig: named ICON approval for the
-  hero line before ship.
-- Unseen docs: the approved landing
-  specification, and
-  `Continuum_MVP.html`.
-- Gary: confirm what "Nexus" names in
-  the Calendly distinction.
+Checkout `deploy/index.html`
+(48965 bytes) is the Prompt 67
+landing used for this named BUILD.
+
+Verified in this checkout, this
+pass:
+
+- self-contained
+- PALETTE
+- ROUTES object
+- pathway
+- no access-code box
+- approved hero
+- Calendly as named
+- `info@continuumrtw.com`
+
+Athena USES THIS FILE as the
+public root after allow-list work.
+Do not invent or reconstruct HTML.
+Do not tell Athena to rewrite the
+landing.
+
+Identity note, kept honest: the
+file matches the Gary 20 August
+2026 landing commit lineage
+(`94e3a994` / later header tweak
+`fd52d0b`). Craig named USE IT if
+clearly Prompt 67. This mission
+treats it as the landing in hand
+for the build.
+
+Do not claim Continuum verified
+the other session's eight-width
+Chromium pass.
+
+---
+
+## Ask list (still open, not
+invented)
+
+Gate rulings and ICON hero are
+off this list. They were named
+2026-09-19.
+
+Still on the ask list:
+
+- Unseen docs: the approved
+  landing specification, and
+  `Continuum_MVP.html`. Do not
+  invent them.
+- Gary: confirm what "Nexus"
+  names in the Calendly
+  distinction. Do not invent it.
+- og-image identity as the Prompt
+  40 founding-line asset stays
+  UNVERIFIED. The missing-file
+  blocker is closed. Do not
+  invent a close of that identity
+  question.
+- Live outside-the-gate browser
+  confirm of routes stays
+  UNVERIFIED. That label does not
+  block this named BUILD.
 
 ---
 
 ## Base tip
 
-This registration starts from current
-main
-`a29084ea96782b3930b6919f9e60d49a313f4523`
-(PR 178: ARGUS-HYG-177-001).
+This named BUILD starts from
+current main
+`326cc065c9d8657a3f4695c9c958c59c5f80398a`
+(PR 182: docs, Prompt G1
+discovery audit report, URGENT
+Section 5, not closed).
 
 Branch:
-`cursor/prompt-67-register-b0f8`.
+`cursor/prompt-67-public-landing-6065`.
 
 ---
 
-## What this registration may do
+## What this named BUILD may do
 
-Docs only.
+Docs in this folder, this pass:
 
-- Write `docs/prompts/67/REGISTER.md`.
-- Write `docs/prompts/67/SECTION_00.md`.
-- Write `docs/prompts/67/STOPS.md`.
-- Write `docs/prompts/67/ACCEPTANCE.md`.
-- Register identity, NOT IN HAND, the
-  ask list, stops, and blocked
-  acceptance.
-- Record later-repo checkout facts as
-  observations, labeled UNVERIFIED
-  for identity, not a release.
+- Update `docs/prompts/67/REGISTER.md`.
+- Update `docs/prompts/67/SECTION_00.md`.
+- Update `docs/prompts/67/STOPS.md`.
+- Update `docs/prompts/67/ACCEPTANCE.md`.
 
-## What this registration must not do
+Athena's named work (not this
+file, not this voice pass):
 
-- Invent, reconstruct, or fabricate
-  landing-page HTML.
-- Rewrite `deploy/index.html` or
-  `deploy/gate/holding.html`.
-- Change `deploy/middleware.js` or
-  any gate allow list.
-- Ship the hero copy change.
-- Change schema. Apply live schema.
+- Allow-list `/` and `/index.html`
+  so the public landing is the
+  site root.
+- Reuse checkout
+  `deploy/index.html`. Do not
+  rewrite it.
+- Move the access-code experience
+  behind Sign In `/hub`, reusing
+  existing gate markup on the
+  holding page.
+- Leave POST `/api/site-access`
+  untouched.
+- Keep `/hub` and portals gated.
+
+## What this named BUILD must not
+do
+
+- Invent, reconstruct, or
+  fabricate landing-page HTML.
+- Tell Athena to rewrite
+  `deploy/index.html`.
+- Ungate the whole site.
+- Change POST `/api/site-access`.
+- Change schema. Apply live
+  schema.
 - Edit any `package.json`.
 - Claim Argus CLEAN.
 - Fix unrelated HYG-177-002,
   HYG-175, or HYG-176 unless they
   block this PR.
 - Invent G1 closed or REV 2.
-- Treat checkout presence as artifact
-  in hand.
-- Treat these files as a ship order.
+- Start G1. Touch Section 5 HSE
+  clinical content.
+- Mark other-session WCAG or
+  browser-pass as PASS.
+- Treat these files as a ship
+  order.
+- Invent a Continuum product
+  release.
 
-Draft PR. Registration plus honesty
-STOP. Not a Continuum product
+Draft PR. Not a Continuum product
 release. Prompt 53 holds were
 released 2026-09-16 by Craig. Hold
 lift is not an auto-execute.
+Athena does not ship. Hermes ships
+Continuum only when Craig names
+ship.
 
 ---
 
-## Prompt 53 holds were released 2026-09-16 by Craig
+## Prompt 53 holds were released
+2026-09-16 by Craig
 
 From [../53/HOLDS.md](../53/HOLDS.md).
-Former Prompt 53 holds are no longer
-binding under Prompt 53. Hold lift is
-not an auto-execute.
+Former Prompt 53 holds are no
+longer binding under Prompt 53.
+Hold lift is not an auto-execute.
 
 Named human dispatch still required
 before Montreal, Bedrock, non-SYNTH
@@ -193,15 +261,19 @@ seed, or live schema apply.
 - Do not invent REV 2.
 - Do not invent G1.
 
-`G1_AUDIT_REPORT.md` exists at repo
-root (2026-08-13, read-only
-discovery). That file is not G1
-closed. `PROMPT_G1_DISCOVERY_AUDIT`
-is not in this repository. Do not
-invent G1. Do not start G1.
+G1 report exists and is not
+closed. `docs/prompts/G1/G1_AUDIT_REPORT.md`
+is on this tip (PR 182). That file
+says it is not G1 closed. The
+2026-08-13 root
+`G1_AUDIT_REPORT.md` is the prior
+file and is not G1 closed. Do not
+invent G1 closed. Do not start G1.
+Do not touch Section 5 HSE
+clinical content.
 
-The locked root `package.json` stays
-locked.
+The locked root `package.json`
+stays locked.
 
 ---
 
@@ -240,7 +312,7 @@ Prompt 53 RELEASE record:
 
 ## Do not claim Argus CLEAN
 
-This registration does not run an
+This named BUILD does not run an
 Argus patrol that closes findings.
 Do not claim Argus CLEAN.
 
@@ -248,12 +320,12 @@ Do not claim Argus CLEAN.
 
 ## Deploy gate
 
-Draft PR. Registration plus honesty
-STOP. Not a Continuum product
+Draft PR. Not a Continuum product
 release. Athena does not ship. Do
-not treat this file as a ship order.
+not treat this file as a ship
+order.
 
 Hermes ships Continuum only when
 Craig names ship. Do not dispatch
-Hermes. Do not treat this draft as a
-Continuum ship.
+Hermes. Do not treat this draft as
+a Continuum ship.
