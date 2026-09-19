@@ -54,7 +54,7 @@ folds in.
 - Base tip: `326cc065c9d8657a3f4695c9c958c59c5f80398a` (PR 182)
 - Branch: `cursor/prompt-67-public-landing-6065`
 - Human gate: Hermes only when Craig names ship. Calendly hand confirm is go-live caution. og-image file exists (1200 by 630); identity as Prompt 40 founding-line asset UNVERIFIED. Unseen: approved landing spec, `Continuum_MVP.html`, Nexus name. Live outside-the-gate browser confirm UNVERIFIED.
-- Result so far: Athena restored `/` and `/index.html` on `ALWAYS_PUBLIC_EXACT`. Holding page keeps the code box. Landing reused. Calliope updated `docs/prompts/67/`. Do not claim Argus CLEAN. Draft PR only. Athena does not ship.
+- Result so far: Draft PR 183. Tip `81fb85e`. Athena restored `/` and `/index.html` on `ALWAYS_PUBLIC_EXACT`. Holding page keeps the code box behind gated Sign In `/hub`. Landing reused. Calliope updated `docs/prompts/67/`. Heracles full suite GREEN: 88 of 88 Node suites, 3503 passed, 0 failed. Argus scoped patrol: no findings on this patrol. Do not claim Argus CLEAN. Local gate-sim walk: `/` is the landing, `/hub` is holding with the code box. Draft PR only. Athena does not ship.
 
 ### P66: Prompt 66 admin agent operations and Zeus the Steering Dispatcher
 - Status: IN PROGRESS. Section 1 written. Auth ruling: LOCAL INTERNAL DASHBOARD. Draft PR only.
