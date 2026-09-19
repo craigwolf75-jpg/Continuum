@@ -1,6 +1,6 @@
 /* Continuum Prompt 40 site middleware suite. node deploy/site-middleware.test.mjs
    Proves decideSiteAccess (deploy/middleware.js): the kill switch, the
-   ALWAYS_PUBLIC allowlist, the special "/" case, gated paths with and
+   ALWAYS_PUBLIC allowlist, the public landing / and /index.html, gated paths with and
    without a valid cookie, and (post security review) that gated static
    bundles are never exempted by file extension, that the public allowlist
    uses bounded matches instead of loose prefixes, and that path traversal
@@ -57,12 +57,14 @@ ok("/continuum-logo-dark.svg allows without a cookie", decideSiteAccess("/contin
 ok("/gate/holding.html allows without a cookie", decideSiteAccess("/gate/holding.html", false, undefined) === "allow");
 ok("/gate/some-asset.css allows without a cookie", decideSiteAccess("/gate/some-asset.css", false, undefined) === "allow");
 
-// -- The landing ("/" and "/index.html") is GATED again (pre-landing-page
-// behavior): no cookie shows the holding page, a valid cookie allows through.
-// The public assessment stays open (asserted below). --
-ok("/ without a cookie shows the holding page", decideSiteAccess("/", false, undefined) === "holding");
+// -- Prompt 67: the landing ("/" and "/index.html") is PUBLIC again
+// (Craig named gate holds lifted 2026-09-19). No cookie allows through.
+// A valid cookie still allows. Access code stays on the holding page,
+// reached via gated paths such as Sign In /hub. --
+ok("/ without a cookie allows (public landing)", decideSiteAccess("/", false, undefined) === "allow");
 ok("/ with a valid cookie allows", decideSiteAccess("/", true, undefined) === "allow");
-ok("/index.html without a cookie shows the holding page", decideSiteAccess("/index.html", false, undefined) === "holding");
+ok("/index.html without a cookie allows (public landing)", decideSiteAccess("/index.html", false, undefined) === "allow");
+ok("/index.html with a valid cookie allows", decideSiteAccess("/index.html", true, undefined) === "allow");
 
 // -- Prompt 67: the public assessment and its shared script deps allow without
 // a cookie. --

@@ -18,14 +18,20 @@ Companions:
 index.html
 
 Checkout `deploy/index.html`
-(48965 bytes) was verified this
-pass as the Prompt 67 landing
+(48965 bytes at verification)
+was verified this pass as the
+Prompt 67 landing
 (self-contained, PALETTE, ROUTES
 object, pathway, no access-code
 box, approved hero, Calendly,
 `info@continuumrtw.com`) and is
-used. Athena USES THIS FILE. Do
-not invent HTML. Do not rewrite
+used. After Athena comment-only
+edits the working-tree file is
+48749 bytes. Visitor copy
+unchanged. Do not treat the trim
+as a rewrite of the landing.
+Athena USES THIS FILE. Do not
+invent HTML. Do not rewrite
 `deploy/index.html`.
 
 Identity note, kept honest: the

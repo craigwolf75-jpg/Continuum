@@ -65,8 +65,15 @@ untouched.
 ## Artifact used after verification
 
 Checkout `deploy/index.html`
-(48965 bytes) is the Prompt 67
-landing used for this named BUILD.
+(48965 bytes at verification) is
+the Prompt 67 landing used for
+this named BUILD. After Athena
+comment-only edits (ROUTES
+comment plus og-image comment)
+the working-tree file is 48749
+bytes. Visitor copy unchanged.
+Do not treat the trim as a
+rewrite of the landing.
 
 Verified in this checkout, this
 pass:
@@ -232,12 +239,16 @@ founding-line asset stays
 UNVERIFIED. Do not invent a close
 of that identity question.
 
-The landing HTML still carries a
-comment that the file needs to be
-added. The file is on disk. The
-comment is stale relative to the
-checkout file. That comment is
-not a missing-file STOP.
+Athena replaced the stale
+"needs to be added" comment in
+the landing HTML with a
+comment-only note: the file
+exists at `/og-image.png` (1200
+by 630); missing-file blocker
+closed; Prompt 40 identity
+UNVERIFIED. Visitor copy
+unchanged. That HTML comment is
+no longer stale.
 
 ---
 
@@ -252,8 +263,14 @@ Observations on tip
 - `docs/prompts/67/` exists from
   the registration pass. This
   pass updates those four files.
-- `deploy/index.html` exists,
-  48965 bytes. Git lineage:
+- `deploy/index.html` exists.
+  48965 bytes at verification.
+  48749 bytes after Athena
+  comment-only trim (ROUTES
+  comment plus og-image
+  comment). Visitor copy
+  unchanged. Do not treat the
+  trim as a rewrite. Git lineage:
   `94e3a994` (20 August 2026),
   author Gary Ferenczi, "Add
   public landing page (Prompt
@@ -276,7 +293,11 @@ Observations on tip
   `/index.html` on the allow list
   under the named rulings.
   Prefer allow-list, not ungating
-  the whole site. This voice pass
+  the whole site. Athena's
+  working-tree allow-list now
+  includes `/` and `/index.html`.
+  That working-tree change is
+  not shipped. This voice pass
   did not edit middleware.
 - `deploy/og-image.png` exists
   (34817 bytes, PNG 1200 by 630,

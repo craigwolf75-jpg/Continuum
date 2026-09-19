@@ -100,8 +100,15 @@ hero named by Craig 2026-09-19.
 ## Artifact used after verification
 
 Checkout `deploy/index.html`
-(48965 bytes) is the Prompt 67
-landing used for this named BUILD.
+(48965 bytes at verification) is
+the Prompt 67 landing used for
+this named BUILD. After Athena
+comment-only edits (ROUTES
+comment plus og-image comment)
+the working-tree file is 48749
+bytes. Visitor copy unchanged.
+Do not treat the trim as a
+rewrite of the landing.
 
 Verified in this checkout, this
 pass:

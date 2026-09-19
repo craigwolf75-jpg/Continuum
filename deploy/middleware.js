@@ -57,16 +57,29 @@ const config = {
 // force the prefix rule to also accept an attacker suffix like
 // continuum-logo-evil.
 const ALWAYS_PUBLIC_EXACT = new Set([
-  // The landing page ("/" and "/index.html") is GATED again, as it was before
-  // the Prompt 67 landing page: a visitor without a valid ct_site cookie gets
-  // the holding page (with the code box) at the site root. The public
-  // ASSESSMENT and /book (access request) stay open. The live worker app at
-  // /worker stays open too: those pages carry their own Supabase session
-  // guard. The hub sign in and every portal stay gated; the holding page
-  // keeps the code box, so "Sign In" still leads to the access code
-  // experience with the endpoint untouched. Never open the gated bundles
-  // (store.js, hub/roles.js). /worker-dashboard is NOT swallowed by the
-  // /worker prefix (hyphen is not a path boundary).
+  // Prompt 67 public landing: "/" and "/index.html" are PUBLIC again because
+  // Craig named gate holds lifted 2026-09-19. Access code experience stays
+  // on the holding page, reached when a visitor hits a still-gated path
+  // (Sign In /hub stays gated). POST /api/site-access stays on this allow
+  // list. The public ASSESSMENT and /book (access request) stay open. The
+  // live worker app at /worker stays open too: those pages carry their own
+  // Supabase session guard. Never open the gated bundles (store.js,
+  // hub/roles.js). /worker-dashboard is NOT swallowed by the /worker
+  // prefix (hyphen is not a path boundary).
+  //
+  // Exact allow-list after this change:
+  // ALWAYS_PUBLIC_EXACT: "/", "/index.html", "/config.js", "/supabase.js",
+  // "/site-links.js", "/privacy", "/privacy.html", "/terms", "/terms.html",
+  // "/book", "/book.html", "/robots.txt", "/sitemap.xml",
+  // "/api/site-access", "/api/marketing-lead", "/continuum-logo-dark.svg",
+  // "/continuum-vars.css", "/continuum_tokens.css", "/legal-config.js"
+  // ALWAYS_PUBLIC_BOUNDED_PREFIX: "/favicon", "/og-image",
+  // "/continuum-logo", "/assessment", "/worker"
+  // ALWAYS_PUBLIC_RAW_PREFIX: "/gate/"
+  // Still gated: /hub, all portals, /store.js, /hub/roles.js, and
+  // everything else.
+  "/",
+  "/index.html",
   "/config.js",
   "/supabase.js",
   "/site-links.js",

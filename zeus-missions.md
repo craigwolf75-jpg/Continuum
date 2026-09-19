@@ -46,15 +46,15 @@ folds in.
 - Human gate: Craig or Gary upload the two companion HTML files or confirm they will not be supplied; Craig verifies hub auth; G1 and platform decision; Craig version flag 00.5; OQ-016 recording retention before consent text ships; OQ-008 who completes the return to work section; nurse practitioner board contradiction (do not claim NP support); Saskatchewan and Ontario sequencing.
 - Result so far: `docs/prompts/68/` holds REGISTER.md, SECTION_00.md, STOPS.md, ACCEPTANCE.md, PACKAGE.md. Companions NOT IN HAND. Hub auth UNVERIFIED. G1 not closed. Prompt 53 holds were released 2026-09-16 by Craig; hold lift is not an auto-execute; do not invent a Prompt 68 release. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
 
-### P67: Prompt 67 public landing page implementation note
-- Status: REGISTERED NOT RELEASED. Artifact missing (NOT IN HAND as supplied). Draft PR. Honesty STOP. Not a Continuum product release.
-- Lead: calliope (register, section 00, stops, blocked acceptance), argus (patrol). Athena does not ship. Do not dispatch Hermes.
-- Gate: draft PR only. Acceptance BLOCKED until (a) artifact in hand or Gary confirms checkout `deploy/index.html` is the session file, (b) both Gary gate rulings, (c) Craig named ICON approval for the hero. Hermes ships Continuum only when Craig names ship.
-- Scope: registration plus honesty STOP only. The 48 KB self contained `index.html` was not supplied to this stream. Do not invent or reconstruct it. Do not rewrite `deploy/index.html`, the holding page, or gate middleware.
-- Base tip: `a29084ea96782b3930b6919f9e60d49a313f4523` (PR 178)
-- Branch: `cursor/prompt-67-register-b0f8`
-- Human gate: Gary upload/commit or confirm the artifact; Gary (1) `/` and static assets on the allow list, (2) access code moves behind Sign In, reuse markup, leave `/api/site-access` untouched (completes Prompt 65 open item on the gate's future at launch when ruled); Craig named ICON approval before the hero ships. Calendly `calendly.com/craig-continuumrtw` hand confirm before go live. `ROUTES.assessment` needs the real path. `ROUTES.signIn` `/hub` UNVERIFIED from outside the gate. og-image blocker carried (checkout file present, identity UNVERIFIED). Unseen: approved landing spec, `Continuum_MVP.html`, Nexus name.
-- Result so far: `docs/prompts/67/` holds REGISTER.md, SECTION_00.md, STOPS.md, ACCEPTANCE.md. Checkout observation only: `deploy/index.html` 48965 bytes on this tip, identity as THE August 21 session artifact UNVERIFIED, does not close NOT IN HAND. Conformance claims from the other session are UNVERIFIED by Continuum. Do not claim Argus CLEAN. Draft PR only. Athena does not ship.
+### P67: Prompt 67 public landing onto continuumrtw.com, gate holds lifted
+- Status: IN PROGRESS. REGISTERED. Craig named BUILD 2026-09-19 with gate holds lifted. Draft PR. Not a Continuum product release. Athena does not ship. Do not dispatch Hermes.
+- Lead: athena (allow-list `/` and `/index.html`; reuse checkout landing; keep `/hub` and portals gated), calliope (register, section 00, stops, acceptance progress), heracles (full suite), argus (patrol). Apollo confirm-only on the existing landing. Hermes only when Craig names ship.
+- Gate: draft PR only. Named human gates progressed: (a) checkout `deploy/index.html` verified as Prompt 67 landing and used; (b) both gate rulings named by Craig 2026-09-19; (c) ICON hero named by Craig 2026-09-19. Not ship-ready. Do not claim Argus CLEAN. Hermes ships Continuum only when Craig names ship.
+- Scope: public landing is the site root. Allow-list `/` and `/index.html` plus existing public assets. Access code stays on `deploy/gate/holding.html`, reached via gated Sign In `/hub`. POST `/api/site-access` untouched. Reuse checkout landing (48965 bytes at verification, 48749 after comment-only trim). Do not invent HTML. Do not ungate the whole site. Do not touch G1 Section 5 HSE clinical content. Do not touch clinician or platform lane.
+- Base tip: `326cc065c9d8657a3f4695c9c958c59c5f80398a` (PR 182)
+- Branch: `cursor/prompt-67-public-landing-6065`
+- Human gate: Hermes only when Craig names ship. Calendly hand confirm is go-live caution. og-image file exists (1200 by 630); identity as Prompt 40 founding-line asset UNVERIFIED. Unseen: approved landing spec, `Continuum_MVP.html`, Nexus name. Live outside-the-gate browser confirm UNVERIFIED.
+- Result so far: Athena restored `/` and `/index.html` on `ALWAYS_PUBLIC_EXACT`. Holding page keeps the code box. Landing reused. Calliope updated `docs/prompts/67/`. Do not claim Argus CLEAN. Draft PR only. Athena does not ship.
 
 ### P66: Prompt 66 admin agent operations and Zeus the Steering Dispatcher
 - Status: IN PROGRESS. Section 1 written. Auth ruling: LOCAL INTERNAL DASHBOARD. Draft PR only.

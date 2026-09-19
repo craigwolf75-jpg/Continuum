@@ -51,12 +51,18 @@ not ship-ready.
 - (a) Artifact used after
   verification. Checkout
   `deploy/index.html` (48965
-  bytes) is the Prompt 67 landing
+  bytes at verification) is the
+  Prompt 67 landing
   (self-contained, PALETTE,
   ROUTES object, pathway, no
   access-code box, approved hero,
   Calendly, `info@continuumrtw.com`)
-  and is used. Athena USES THIS
+  and is used. After Athena
+  comment-only edits the
+  working-tree file is 48749
+  bytes. Visitor copy unchanged.
+  Do not treat the trim as a
+  rewrite. Athena USES THIS
   FILE. Do not invent HTML.
   Identity note: matches the Gary
   20 August 2026 landing commit
