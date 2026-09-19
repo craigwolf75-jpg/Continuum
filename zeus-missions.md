@@ -16,6 +16,16 @@ folds in.
 
 ## Active queue
 
+### P69: Prompt 69 Canadian physician systems research
+- Status: REGISTERED. Reading lane, hold compatible. Draft PR. Registration only. Not a Continuum product release. Not a product PASS. Research claims remain UNVERIFIED for product use until dated re-check.
+- Lead: calliope (register, section 00, stops, acceptance, report source record), argus (patrol). Athena does not ship. Do not dispatch Hermes.
+- Gate: draft PR only. Registration complete when docs landed. Research claims remain UNVERIFIED for product use until dated re-check. Not a product PASS. Hermes ships Continuum only when Craig names ship.
+- Scope: registration only. Unified Prompt 69, registered 21 August 2026. Reading lane, hold compatible, like architecture documents. Architecture recommendation and top five integration targets are INPUT to human decisions. Platform decision is Craig's after G1. Any integration build touching clinician product sits in the platform lane behind the same gates as unified Prompt 68. Nothing in this registration releases anything. Evidence discipline flag: 54 source links lack retrieval dates; Prompt 64 source rules before source registry or customer-facing use; quarterly re-verify for board channel claims. Coherence with Board Integration Matrix: disagreements are findings to re-verify, not a silent preference. Feeds Prompt 68, Prompt 45, and the integration roadmap. Handed to a second reader as the preamble invites. Do not start Ocean, Accuro, TELUS, or board integrations. Do not touch clinician product or public site. Do not invent API credentials. Do not convert the OntarioMD table to a national share. SMART on FHIR eliminated per Continuum build package 13.4 for Alberta. Do not claim board APIs that do not exist.
+- Base tip: `8b9b097963e6b425d727e852230bafea6ad30752` (PR 180)
+- Branch: `cursor/prompt-69-register-0acb`
+- Human gate: Craig platform decision after G1; dated re-check of sources before registry or customer-facing use; disagreements with the Board Integration Matrix stop and re-verify; any later integration build sits behind Prompt 68 gates.
+- Result so far: `docs/prompts/69/` holds REGISTER.md, SECTION_00.md, STOPS.md, ACCEPTANCE.md, REPORT.md. Research claims UNVERIFIED for product use. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
+
 ### P68: Prompt 68 clinician experience build package
 - Status: REGISTERED NOT RELEASED. Companions missing (NOT IN HAND as supplied). Draft PR. Registration only. Not a Continuum product release. Not a clinician product PASS.
 - Lead: calliope (register, section 00, stops, blocked acceptance, package source record), argus (patrol). Athena does not ship. Do not dispatch Hermes.
