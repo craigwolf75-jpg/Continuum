@@ -27,10 +27,12 @@ Section 00.6 discrepancy, logged, not resolved: Prompt 53 email named old stream
 
 - Repo: `github.com/craigwolf75-jpg/Continuum`, default branch `main`, public. VERIFIED (`gh repo view` via Athena census; production deploy meta `githubOrg` / `githubRepo`).
 - Working tree: tip `69615358f1ca20c93ffdf65532121d9d6d163a28` on branch `cursor/g1-discovery-audit-11af`. VERIFIED (`git rev-parse`).
-- Live Supabase: project id `agzhnmunodrhsjbogzae`, name `craigwolf75-jpg's Project`, region string `ca-central-1`, status `ACTIVE_HEALTHY`, Postgres `17.6.1.147`, host `db.agzhnmunodrhsjbogzae.supabase.co`. Org `jghzileidjxrbfyffkie` named `craigwolf75-jpg's Org`, plan `pro`. `list_projects` returned exactly one project. VERIFIED (Supabase MCP `list_projects`, `get_project`, `get_organization`).
+- Live Supabase: project id `agzhnmunodrhsjbogzae`, name `craigwolf75-jpg's Project`, region string `ca-central-1`, status `ACTIVE_HEALTHY`, Postgres `17.6.1.147`, host `db.agzhnmunodrhsjbogzae.supabase.co`. Org `jghzileidjxrbfyffkie` named `craigwolf75-jpg's Org`, plan `pro`. `list_projects` returned exactly one project. Region string re-read from `get_project.region` on the Athena live-fill pass: `ca-central-1`. VERIFIED (Supabase MCP `list_projects`, `get_project`, `get_organization`).
 - Live Vercel: project name `continuum-o51l`, id `prj_jbuGiSlcwM5PMxtBFxCBr2vYidoM`, accountId `team_ooNT4hM36tH125Vlgt23ZnXk`. Production deploy `dpl_91diubN6XBDtGVdmLZcZYny8Qz1y`, target `production`, source `git`, `githubCommitRef` `main`, `githubCommitSha` `69615358f1ca20c93ffdf65532121d9d6d163a28`, `regions` `["iad1"]`. VERIFIED (Vercel MCP `get_project`, `list_deployments`, `get_deployment`).
+- Vercel function region pin: ABSENT from `deploy/vercel.json` (no `regions` key). `get_project` payload has no function-region or `serverlessFunctionRegion` field. VERIFIED absence of a config pin. Named project-level function region setting: UNVERIFIED (field not in this API payload). Deployment `regions` `["iad1"]` is deploy metadata, not a `vercel.json` pin.
 - Vercel team plan: UNVERIFIED. `get_team` with that account scope returned 403.
 - SQL in this report is count(*), `information_schema`, `pg_class` RLS flags, `pg_enum`, `cron.job` names, and `storage.buckets` names. No patient row contents.
+- Athena live fill (this pass): public schema 26 tables via `list_tables` verbose, then column flags re-verified from `information_schema` before any VERIFIED claim. Prefer `count(*)` over `list_tables` row estimates. See Section 4.1.
 - `supabase/config.toml`: ABSENT. VERIFIED (workspace glob).
 - Root `vercel.json` and root `package.json`: ABSENT. Site config is `deploy/vercel.json` and `deploy/package.json`. VERIFIED.
 
@@ -85,7 +87,7 @@ FALSE for the live public stream. `public.users` where `full_name`, `email`, or 
 | Worker mobile package | Capacitor + Next 14 in `worker-app/` | Local/package app, not its own Vercel project | n/a | n/a | `worker-app/package.json`; Vercel search returned one project | VERIFIED no separate worker Vercel project |
 | Hub role bundle | Vite IIFE in `hub-roles/` | Built into static hub | n/a | n/a | `hub-roles/package.json` | VERIFIED as a build tool, not a host |
 | Site gate access codes | `public.access_codes` (count(*) 2) + `deploy/api/site-access.js` | Unlocks `ct_site` cookie | same project | n/a | count(*); `middleware.js` | VERIFIED |
-| Marketing lead capture | `public.marketing_leads` (count(*) 1) + `/api/marketing-lead` | Public email capture | same | n/a | count(*) | VERIFIED |
+| Marketing lead capture | `public.marketing_leads` (count(*) 1) + `/api/marketing-lead` | Public email capture | same | n/a | count(*) 1. Athena `list_tables` and `n_live_tup` both said 2. Drift: prefer count(*). | VERIFIED count(*); list_tables estimate UNVERIFIED as a count |
 | Public assessment | `/assessment` static + `public.public_assessment_response` (count(*) 0) | Public, not site-gated | Vercel | n/a | Athena HTTP 200; count(*) 0 | VERIFIED |
 | Edge functions | Supabase Edge (Deno) | ACTIVE: `auto-actions-worker` v11, `injuries` v8, `escalation-engine` v8, `cases` v6, `wcb-generator` v6, `framer-demo` v5. All `verify_jwt` false | same project | included | `list_edge_functions` | VERIFIED |
 | Custom Vercel environment | slug `supabaseaccesstoken` | Holds env key `supabase_access_token` | Vercel | accountLimit total 1 (Athena) | env list | VERIFIED name only |
@@ -113,7 +115,7 @@ Health information CAN reach a service means a path exists that could carry iden
 | Supabase Storage | No separate bucket region string returned. Hosted on the same project. Bucket-specific region UNVERIFIED | Yes. `wcb-documents` is private and used by `wcb-generator`. `Hero Videos` is public (world readable if an object is placed). `Continuum` bucket private. 2 objects exist (names not listed) | CANADA VERIFIED at project; bucket region string UNVERIFIED |
 | Supabase Auth | Same project `ca-central-1` | Yes. Emails, phone, auth ids | CANADA VERIFIED |
 | Supabase Edge Functions | Execution region not pinned in function source. `verify_jwt` false on all six. Service role used in function source | Yes. `cases`, `injuries`, `escalation-engine`, `wcb-generator` read/write case tables | Execution region UNVERIFIED (residency risk). Project home CANADA VERIFIED |
-| Vercel functions and middleware | Deployment `regions` `["iad1"]`. Live `x-vercel-id` starts with `iad1`. `iad1` is Washington Dulles, United States. `CONTINUUM_REGION` and `VERCEL_REGION` are not in the project env key list | Yes. Hub signin/signup, admin user provision, site-access, marketing-lead, and service-role calls to Supabase run here. Access invite email builder can include name, email, role, temporary password | NOT CANADA (`iad1` VERIFIED) |
+| Vercel functions and middleware | `deploy/vercel.json` has no `regions` key (VERIFIED file). `get_project` returned no function-region field. Production deploy `dpl_91diubN6XBDtGVdmLZcZYny8Qz1y` has `regions` `["iad1"]` (VERIFIED `get_deployment`). Live `x-vercel-id` starts with `iad1`. `CONTINUUM_REGION` and `VERCEL_REGION` are not in the project env key list. `/api/status` would read those env names and fall back to the string UNKNOWN (`deploy/api/status.js:13-19`); that route is site-gated | Yes. Hub signin/signup, admin user provision, site-access, marketing-lead, and service-role calls to Supabase run here. Access invite email builder can include name, email, role, temporary password | NOT CANADA for the production deploy region list (`iad1` VERIFIED). Config pin UNVERIFIED / absent. Not a Canadian pin |
 | Vercel CDN / static HTML | Global CDN. Edge middleware also in `iad1` per `x-vercel-id` | Static portals can render case UI after gates. Holding page itself is marketing. `/worker` pages are public | CDN not pinned to Canada. UNVERIFIED as a single region |
 | Twilio | Not wired | Today: mock `console.log` only, so no Twilio network path | UNVERIFIED (not live) |
 | Resend | `api.resend.com`. No Canadian region pin in code. Provider default is outside Canada | Yes for identity: signup email, lead email, access invite with name, email, role, temporary password. Templates do not include diagnosis | NOT CANADA (provider path VERIFIED; processing region UNVERIFIED, default not Canada) |
@@ -161,38 +163,47 @@ Three code streams, one live database.
 4. Clinician fork schema `clinician.*`: applied live (`clinician_001`-`009`). Archive README calls the fork unused. Rows exist.
 5. Worker schema `worker.*`: applied live (20260915* migrations).
 
-Counts labelled `count(*)` were taken with `SELECT count(*)`. Counts labelled `approx` are `pg_stat_user_tables.n_live_tup` on 2026-09-19. Tenant/org means a column named like `tenant_id` or `organisation_id`. Provenance means a column named `provenance` or `authorship`. RLS is `pg_class.relrowsecurity`.
+Public schema rows below are `count(*)` from the Athena live-fill re-verify on 2026-09-19. Other schemas still use `approx` where only `n_live_tup` was taken. RLS is `pg_class.relrowsecurity`.
+
+Flag definitions used for the public census (Athena live fill, then re-verified from `information_schema.columns` before any VERIFIED claim):
+- tenantish: any of `tenant_id`, `organisation_id`, `organization_id`, `org_id`, `clinic_id`.
+- provenanceish: any of `created_by`, `authored_by`, `provenance`, `actor_id`, `updated_by`.
+- `approved_by` on `hub_profiles` is not in that provenanceish set, so the flag is false.
 
 ### 4.1 public (hub / Craig live platform)
 
-| Table | count | tenant/org | RLS | provenance / authorship |
-|---|---|---|---|---|
-| access_codes | count(*) 2 | no | yes | no |
-| access_grants | approx 2 | tenant_id | yes | no |
-| access_log | approx 125 | no | yes | no |
-| audit_log | approx 38 | tenant_id | yes | actor_id (not named provenance) |
-| auto_actions | approx 0 | tenant_id | yes | no |
-| case_metrics | approx 0 | tenant_id | yes | no |
-| consents | count(*) 1 | tenant_id | yes | no |
-| escalation_checks | approx 0 | tenant_id | yes | no |
-| escalation_keywords | approx 5 | no | yes | no |
-| escalations | approx 0 | tenant_id | yes | no |
-| framer_demo_state | approx 1 | no | yes | no |
-| hub_profiles | approx 3 | no | yes | approved_by text |
-| injuries | count(*) 1 | tenant_id | yes | no |
-| light_duties | approx 0 | tenant_id | yes | no |
-| marketing_leads | count(*) 1 | no | yes | no |
-| notifications | approx 0 | tenant_id | yes | no |
-| opportunity_weights | approx 6 | no | yes | no |
-| province_form_codes | approx 13 | no | yes | no |
-| public_assessment_response | count(*) 0 | no (no tenant_id column) | yes | provenance jsonb |
-| recovery_logs | approx 0 | tenant_id | yes | no |
-| status_transitions | approx 6 | no | yes | no |
-| tenants | count(*) 1 | is the tenant | yes | no |
-| users | count(*) 6 | tenant_id | yes | no |
-| wcb_notifications | approx 1 | tenant_id | yes | no |
-| wearable_data | approx 0 | tenant_id | yes | no |
-| workers | approx 1 | tenant_id | yes | no |
+26 tables. Format: name | rows (`count(*)`) | rls | has_tenantish_col | has_provenanceish_col. Matching column names from `information_schema` are in the notes column.
+
+| name | rows | rls | has_tenantish_col | has_provenanceish_col | matching cols |
+|---|---|---|---|---|---|
+| tenants | 1 | true | false | false | none (`tenants` is the tenant) |
+| users | 6 | true | true | false | tenant_id |
+| workers | 1 | true | true | false | tenant_id |
+| injuries | 1 | true | true | false | tenant_id |
+| recovery_logs | 0 | true | true | false | tenant_id |
+| light_duties | 0 | true | true | false | tenant_id |
+| wcb_notifications | 1 | true | true | false | tenant_id |
+| escalations | 0 | true | true | false | tenant_id |
+| consents | 1 | true | true | false | tenant_id |
+| access_grants | 2 | true | true | false | tenant_id |
+| audit_log | 38 | true | true | true | tenant_id, actor_id |
+| wearable_data | 0 | true | true | false | tenant_id |
+| case_metrics | 0 | true | true | false | tenant_id |
+| province_form_codes | 13 | true | false | false | none |
+| status_transitions | 6 | true | false | false | none |
+| auto_actions | 0 | true | true | false | tenant_id |
+| escalation_keywords | 5 | true | false | false | none |
+| escalation_checks | 0 | true | true | false | tenant_id |
+| notifications | 0 | true | true | false | tenant_id |
+| framer_demo_state | 1 | true | false | false | none |
+| access_codes | 2 | true | false | false | none |
+| access_log | 125 | true | false | false | none |
+| hub_profiles | 3 | true | false | false | none (`approved_by` is not in the provenanceish set) |
+| marketing_leads | 1 | true | false | false | none |
+| public_assessment_response | 0 | true | false | true | provenance |
+| opportunity_weights | 6 | true | false | false | none |
+
+Athena `list_tables` verbose and `pg_stat_user_tables.n_live_tup` both reported `marketing_leads` = 2. `SELECT count(*) FROM public.marketing_leads` on the same project returned 1. Prompt 65 already named this list_tables versus count(*) drift. This report prefers count(*). The 2 is an estimate, not a VERIFIED row count.
 
 `auth.users` count(*) 7 (one more than `public.users`).
 
@@ -330,7 +341,7 @@ Listed so "every table" is not silently dropped. Tenant/provenance: no Continuum
 - `supabase_migrations.schema_migrations` 31. RLS no.
 - `realtime.schema_migrations` 83. RLS no.
 
-Hook for a later exact count(*) pass on every remaining `approx` row: a single read-only `count(*)` sweep. No schema change required.
+Public 26-table `count(*)` is done. Hook for a later exact count(*) pass on every remaining `approx` row (other schemas): a single read-only `count(*)` sweep. No schema change required.
 
 ### 4.7 Authentication and role model (Prompt 33)
 
@@ -601,7 +612,7 @@ No `*.pem` or `id_rsa` in history. A full entropy scan of every historical blob 
 
 Against the six conflicts in Prompt G1 Section 1:
 
-1. **Stack and residency (Azure vs Supabase/Vercel/Twilio).** CONFIRMED at the stack level. The live platform is Supabase + Vercel + Resend + planned Twilio, not Azure. VERIFIED (Section 2). Residency is mixed: Supabase project `ca-central-1` is CANADA VERIFIED; Vercel compute is NOT CANADA (`iad1`); Resend is NOT CANADA; Edge Function execution region is UNVERIFIED.
+1. **Stack and residency (Azure vs Supabase/Vercel/Twilio).** CONFIRMED at the stack level. The live platform is Supabase + Vercel + Resend + planned Twilio, not Azure. VERIFIED (Section 2). Residency is mixed: Supabase project `ca-central-1` is CANADA VERIFIED (`get_project.region`); Vercel compute is NOT CANADA for the production deploy region list (`iad1` via `get_deployment`); `deploy/vercel.json` does not pin a function region; Resend is NOT CANADA; Supabase Edge Function execution region is UNVERIFIED.
 2. **Prompt 33 auth/role model vs unified Prompt 51.** CONFIRMED. Live visitor roles are `public.users.role` plus hub cookies. Prompt 51 org/region/location tenancy and `app_*` nologin roles exist with zero organisations. Unreconciled. Evidence: `pg_enum` `user_role`; `tenancy.organisation` count(*) 0; `platform.schema_migration` 17.
 3. **Prompt 10 consent vs Prompt 51 ledger.** CONFIRMED. Live `public.consents` is a mutable versioned record with in-place `revoked_at`. Prompt 51 `consent.ledger_entry` exists with 0 rows. Evidence: `foundation_core.sql:185-196`; `consent.ledger_entry` count(*) 0.
 4. **Prompts 27 to 29 measurement vs band one-way door.** CONFIRMED as a census fact: live condition modules store restriction labels (`injuries.current_restrictions` text) and 1 to 10 scores, not kg/hours measurements. Physician-stream kg/hours columns exist and hold 0 rows. Whether that violates the door is Craig's judgement.
@@ -616,7 +627,8 @@ Against the six conflicts in Prompt G1 Section 1:
 2. Branch protection and required reviewers. Unblocks with GitHub admin read (API 403 here).
 3. Credentialed hub login outcome. Unblocks with a Craig-named test account. Do not invent credentials.
 4. `hub_profiles.access_group` values and email uniqueness. Unblocks with a schema/constraint query (values need not be copied if they are emails).
-5. Exact `count(*)` for every row still marked `approx`. Unblocks with a read-only count sweep. Hook left for Athena.
+5. Exact `count(*)` for every non-public row still marked `approx` (clinical, clinician, worker, platform-adjacent). Public 26-table `count(*)` is now VERIFIED. Unblocks with a read-only count sweep. Hook left for Athena.
+5a. Vercel named project-level function region setting. `deploy/vercel.json` has no `regions` key (VERIFIED). `get_project` payload has no function-region field. Unblocks with a dashboard screenshot of the project Function Region control, or an API field that names it.
 6. SYNTH prefix on `clinician.*` and `worker.*` name columns. Unblocks with count-only ILIKE, not row dump.
 7. Storage object names and which bucket holds the 2 objects. Skip if names encode a person.
 8. Edge Function execution region string. Unblocks with Supabase dashboard or function logs.

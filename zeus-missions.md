@@ -24,7 +24,7 @@ folds in.
 - Base tip: `69615358f1ca20c93ffdf65532121d9d6d163a28` (PR 181 / Prompt 69 register)
 - Branch: `cursor/g1-discovery-audit-11af`
 - Human gate: Craig platform decision after this report. Section 5 urgent finding is Craig's immediately. Do not begin Azure versus Supabase migration. Do not change any region. Do not apply live schema.
-- Result so far: Draft PR 182. `docs/prompts/G1/` holds REGISTER.md, G1_AUDIT_REPORT.md, STOPS.md. Live Supabase `agzhnmunodrhsjbogzae` region `ca-central-1` CANADA VERIFIED. Vercel `continuum-o51l` production from main, regions `iad1`, NOT CANADA. Section 5 URGENT: HSE HTML carries diagnosis, pain, mobility, and clinical narrative. Live P56 views no longer expose those SQL columns. Preview shares production DB keys. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
+- Result so far: Draft PR 182. `docs/prompts/G1/` holds REGISTER.md, G1_AUDIT_REPORT.md, STOPS.md. Athena live fill landed: `get_project.region` `ca-central-1` CANADA VERIFIED; public 26-table `count(*)` and tenantish/provenanceish flags re-verified from `information_schema`; `marketing_leads` count(*) 1 vs list_tables 2 (prefer count(*)); `deploy/vercel.json` has no function region pin; production deploy regions `iad1` NOT CANADA. Section 5 URGENT: HSE HTML carries diagnosis, pain, mobility, and clinical narrative. Preview shares production DB keys. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
 
 ### P69: Prompt 69 Canadian physician systems research
 - Status: REGISTERED. Reading lane, hold compatible. Draft PR. Registration only. Not a Continuum product release. Not a product PASS. Research claims remain UNVERIFIED for product use until dated re-check.
