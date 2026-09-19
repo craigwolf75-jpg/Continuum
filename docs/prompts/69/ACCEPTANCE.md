@@ -104,7 +104,7 @@ these are true:
   TELUS owns the channel
   (Prompt 69). Do not
   silently prefer either. See
-  [../../specs/CONTINUUM_PROMPT_29.md](../../specs/CONTINUUM_PROMPT_29.md).
+  [../../../specs/CONTINUUM_PROMPT_29.md](../../../specs/CONTINUUM_PROMPT_29.md).
 - Craig platform decision
   after G1 before any
   integration build. Do not

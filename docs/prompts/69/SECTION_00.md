@@ -104,7 +104,7 @@ inherits the standing
 quarterly re-verify law from
 the Canadian WCB Board
 Integration Matrix. See
-[../../specs/CONTINUUM_PROMPT_29.md](../../specs/CONTINUUM_PROMPT_29.md).
+[../../../specs/CONTINUUM_PROMPT_29.md](../../../specs/CONTINUUM_PROMPT_29.md).
 
 ---
 
@@ -230,4 +230,4 @@ preamble invites.
 - [../64/REGISTER.md](../64/REGISTER.md)
 - [../53/HOLDS.md](../53/HOLDS.md)
 - [../53/RELEASE.md](../53/RELEASE.md)
-- [../../specs/CONTINUUM_PROMPT_29.md](../../specs/CONTINUUM_PROMPT_29.md)
+- [../../../specs/CONTINUUM_PROMPT_29.md](../../../specs/CONTINUUM_PROMPT_29.md)

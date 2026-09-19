@@ -155,7 +155,7 @@ quarterly re-verify law from
 the Canadian WCB Board
 Integration Matrix (Prompt
 29). See
-[../../specs/CONTINUUM_PROMPT_29.md](../../specs/CONTINUUM_PROMPT_29.md).
+[../../../specs/CONTINUUM_PROMPT_29.md](../../../specs/CONTINUUM_PROMPT_29.md).
 
 Research claims remain
 UNVERIFIED for product use
@@ -393,7 +393,7 @@ Prompt 53 RELEASE record:
 
 Board Integration Matrix:
 
-- [../../specs/CONTINUUM_PROMPT_29.md](../../specs/CONTINUUM_PROMPT_29.md)
+- [../../../specs/CONTINUUM_PROMPT_29.md](../../../specs/CONTINUUM_PROMPT_29.md)
 
 ---
 

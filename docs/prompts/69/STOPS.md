@@ -112,7 +112,7 @@ Board Integration Matrix
 Stop and re-verify. Do not
 silently prefer either
 document. See
-[../../specs/CONTINUUM_PROMPT_29.md](../../specs/CONTINUUM_PROMPT_29.md).
+[../../../specs/CONTINUUM_PROMPT_29.md](../../../specs/CONTINUUM_PROMPT_29.md).
 
 Named finding: Ontario WSIB
 B2B XML (Prompt 29,
