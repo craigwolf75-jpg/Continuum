@@ -24,7 +24,7 @@ folds in.
 - Base tip: `8b9b097963e6b425d727e852230bafea6ad30752` (PR 180)
 - Branch: `cursor/prompt-69-register-0acb`
 - Human gate: Craig platform decision after G1; dated re-check of sources before registry or customer-facing use; disagreements with the Board Integration Matrix stop and re-verify; any later integration build sits behind Prompt 68 gates.
-- Result so far: `docs/prompts/69/` holds REGISTER.md, SECTION_00.md, STOPS.md, ACCEPTANCE.md, REPORT.md. Research claims UNVERIFIED for product use. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
+- Result so far: `docs/prompts/69/` holds REGISTER.md, SECTION_00.md, STOPS.md, ACCEPTANCE.md, REPORT.md. Research claims UNVERIFIED for product use. Python dash audit on the five Prompt 69 files plus this P69 insert: zero em or en dashes. REPORT.md body matches the supplied transcript (182 lines). Scoped Argus patrols on those files returned no findings. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
 
 ### P68: Prompt 68 clinician experience build package
 - Status: REGISTERED NOT RELEASED. Companions missing (NOT IN HAND as supplied). Draft PR. Registration only. Not a Continuum product release. Not a clinician product PASS.
