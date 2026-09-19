@@ -16,6 +16,16 @@ folds in.
 
 ## Active queue
 
+### P68: Prompt 68 clinician experience build package
+- Status: REGISTERED NOT RELEASED. Companions missing (NOT IN HAND as supplied). Draft PR. Registration only. Not a Continuum product release. Not a clinician product PASS.
+- Lead: calliope (register, section 00, stops, blocked acceptance, package source record), argus (patrol). Athena does not ship. Do not dispatch Hermes.
+- Gate: draft PR only. Acceptance BLOCKED until (a) companions in hand or Craig confirms they will not be supplied, (b) hub auth verified by Craig, (c) G1 discovery audit and Craig platform decision release this lane, (d) Craig confirmation on the Section 00.5 version flag if needed. Hermes ships Continuum only when Craig names ship.
+- Scope: registration only. Unified Prompt 68, registered 21 August 2026, ContinuumRTW Inc. Version 1.0. Supersession scoped to clinician SCREEN DESCRIPTIONS only. Citation map: Craig 38 to unified 41, 51 to 58, 42 to 45. `clinician-home.html` md5 `64ff54939f597c8cee3cecb5f730d29d` and `first-report.html` md5 `bb4a14c8c036d2990777612f02828511` were not supplied. Do not invent or reconstruct them. Do not rewrite existing clinician screens. Do not touch the public website, marketing homepage, public sign in, or public branding. Do not apply live migrations. Do not release the bulk accelerator withdrawal. SYNTH only. OQ-016 blocks consent Card A text. No dollar figures in clinician UI. Saskatchewan and Ontario architecture only.
+- Base tip: `5beea705d4ea16be8fa9e1769df691b4cc92fc64` (PR 179)
+- Branch: `cursor/prompt-68-register-61dd`
+- Human gate: Craig or Gary upload the two companion HTML files or confirm they will not be supplied; Craig verifies hub auth; G1 and platform decision; Craig version flag 00.5; OQ-016 recording retention before consent text ships; OQ-008 who completes the return to work section; nurse practitioner board contradiction (do not claim NP support); Saskatchewan and Ontario sequencing.
+- Result so far: `docs/prompts/68/` holds REGISTER.md, SECTION_00.md, STOPS.md, ACCEPTANCE.md, PACKAGE.md. Companions NOT IN HAND. Hub auth UNVERIFIED. G1 not closed. Prompt 53 holds were released 2026-09-16 by Craig; hold lift is not an auto-execute; do not invent a Prompt 68 release. Do not claim Argus CLEAN. Do not claim product PASS. Draft PR only. Athena does not ship.
+
 ### P67: Prompt 67 public landing page implementation note
 - Status: REGISTERED NOT RELEASED. Artifact missing (NOT IN HAND as supplied). Draft PR. Honesty STOP. Not a Continuum product release.
 - Lead: calliope (register, section 00, stops, blocked acceptance), argus (patrol). Athena does not ship. Do not dispatch Hermes.
