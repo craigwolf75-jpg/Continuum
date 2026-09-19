@@ -206,9 +206,12 @@ an auto-execute.
 - Did not attach to a Continuum
   environment.
 - Did not claim a repo-wide
-  Argus CLEAN. The Prompt 66
-  scope patrol returned no
-  findings.
+  Argus CLEAN. Do not claim
+  the Prompt 66 scope patrol
+  returned no findings.
+  ARGUS-HYG-177-001 remains
+  open until this honesty
+  fix.
 - Did not resolve B1, G1, HIL-1
   to HIL-11, standing retrieval
   policy, or platform production.
