@@ -13,7 +13,7 @@
 <meta property="og:description" content="Where medical decisions become safe work. Continuum keeps clinicians, workers and employers connected as restrictions change, recovery progresses and the worker moves safely back to work.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://continuumrtw.com/">
-<!-- BLOCKER carried forward from the previous homepage: og-image.png 1200x630 still needs to be added. -->
+<!-- /og-image.png exists (1200 by 630). Missing-file blocker is closed. Identity as the Prompt 40 founding-line asset stays UNVERIFIED. -->
 <meta property="og:image" content="https://continuumrtw.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -901,16 +901,13 @@ ul,ol{margin:0;padding:0;list-style:none}
      either verified on the live site or deliberately left as an in-page
      anchor so nothing on this page can 404.
 
-       signIn      "/hub"          NEEDS CONFIRMATION. The hub sign-in exists;
-                                   the path is from the July 30 walkthrough,
-                                   not re-verified from outside the gate.
-       assessment  "/assessment"   ROUTE NEEDS CONFIRMATION. No approved
-                                   assessment destination is known. While this
-                                   value stays "/assessment" the button does
-                                   NOT navigate: it falls back to the contact
-                                   section, so it cannot land on a 404. Set the
-                                   real path here and the fallback switches off
-                                   by itself.
+       signIn      "/hub"          Path exists in this repo as
+                                   deploy/hub/index.html. Still gated, so
+                                   unauthenticated Sign In shows holding.
+       assessment  "/assessment/"  Assessment path is verified in this repo
+                                   as /assessment/ (deploy/assessment/).
+                                   Placeholder "/assessment" means scroll
+                                   fallback is already OFF.
        contact     Calendly        The Continuum booking page. This replaces the
                                    "#booking-url-pending" placeholder that was
                                    left on the previous homepage.

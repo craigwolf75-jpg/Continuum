@@ -47,3 +47,18 @@ test("no banned clinical-authority terms", () => {
   }
 });
 test("homepage is em-dash clean", () => { assert.ok(!/[\u2013\u2014]/.test(home)); });
+
+// Prompt 67 public landing: the access-code box stays on the holding page,
+// not on index.html. Sign In /hub is still gated, so unauthenticated Sign In
+// rewrites to holding, which posts to /api/site-access.
+test("public landing has no access-code box and does not post to site-access", () => {
+  assert.ok(!/name="code"/.test(home), "index.html must not carry an access-code input");
+  assert.ok(!home.includes("/api/site-access"), "index.html must not post to /api/site-access");
+  assert.ok(!home.includes("Have an access code?"), "index.html must not offer the access-code toggle");
+});
+test("holding page still has the access-code markup and site-access post", () => {
+  const holding = readFileSync(join(dir, "gate/holding.html"), "utf8");
+  assert.ok(/name="code"/.test(holding), "holding.html must keep the access-code input");
+  assert.ok(holding.includes("/api/site-access"), "holding.html must still post to /api/site-access");
+  assert.ok(holding.includes("Have an access code?"), "holding.html must keep the access-code toggle");
+});
