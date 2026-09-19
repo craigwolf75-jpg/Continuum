@@ -16,6 +16,16 @@ folds in.
 
 ## Active queue
 
+### P67: Prompt 67 public landing page implementation note
+- Status: REGISTERED NOT RELEASED. Artifact missing (NOT IN HAND as supplied). Draft PR. Honesty STOP. Not a Continuum product release.
+- Lead: calliope (register, section 00, stops, blocked acceptance), argus (patrol). Athena does not ship. Do not dispatch Hermes.
+- Gate: draft PR only. Acceptance BLOCKED until (a) artifact in hand or Gary confirms checkout `deploy/index.html` is the session file, (b) both Gary gate rulings, (c) Craig named ICON approval for the hero. Hermes ships Continuum only when Craig names ship.
+- Scope: registration plus honesty STOP only. The 48 KB self contained `index.html` was not supplied to this stream. Do not invent or reconstruct it. Do not rewrite `deploy/index.html`, the holding page, or gate middleware.
+- Base tip: `a29084ea96782b3930b6919f9e60d49a313f4523` (PR 178)
+- Branch: `cursor/prompt-67-register-b0f8`
+- Human gate: Gary upload/commit or confirm the artifact; Gary (1) `/` and static assets on the allow list, (2) access code moves behind Sign In, reuse markup, leave `/api/site-access` untouched (completes Prompt 65 open item on the gate's future at launch when ruled); Craig named ICON approval before the hero ships. Calendly `calendly.com/craig-continuumrtw` hand confirm before go live. `ROUTES.assessment` needs the real path. `ROUTES.signIn` `/hub` UNVERIFIED from outside the gate. og-image blocker carried (checkout file present, identity UNVERIFIED). Unseen: approved landing spec, `Continuum_MVP.html`, Nexus name.
+- Result so far: `docs/prompts/67/` holds REGISTER.md, SECTION_00.md, STOPS.md, ACCEPTANCE.md. Checkout observation only: `deploy/index.html` 48965 bytes on this tip, identity as THE August 21 session artifact UNVERIFIED, does not close NOT IN HAND. Conformance claims from the other session are UNVERIFIED by Continuum. Do not claim Argus CLEAN. Draft PR only. Athena does not ship.
+
 ### P66: Prompt 66 admin agent operations and Zeus the Steering Dispatcher
 - Status: IN PROGRESS. Section 1 written. Auth ruling: LOCAL INTERNAL DASHBOARD. Draft PR only.
 - Lead: athena (tables, dispatcher, local console, observation), apollo (internal layout), calliope (register, stops, acceptance, operator copy), heracles (suite), argus (patrol)
